@@ -1,13 +1,5 @@
-<!doctype html>
-<html>
-  <head>
-    <title> {{ .Title }} &middot; {{ .Site.Title }} </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/pivotal-ui.css">
-    <link rel="stylesheet" href="/styleguide.css">
-    <link rel="stylesheet" href="/github.css">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  </head>
+<!doctype html> <html>
+  {{ partial "head.html" . }}
   <body class="bg-cloud">
     <div class="pane bg-dark-1">
       <div class="container bg-glow">
@@ -26,7 +18,7 @@
 
             <span class="post-date"></span>
 
-            {{ .Summary }}
+            {{ .Params.short }}
           </div>
         {{ end }}
       </div>

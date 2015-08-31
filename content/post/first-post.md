@@ -1,12 +1,16 @@
-+++
-categories = ["BOSH", "CF Runtime", "API", "Logging & Metrics", "Agile"]
-date = "2015-08-31T10:56:50+01:00"
-draft = true
-title = "first post"
-
-+++
-
-Everything above the "more" comment below is a summary of the post. Don't make this too long, as it will be shown on the index page as well as here. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. 
+---
+categories:
+- BOSH
+- CF Runtime
+- API
+- Logging & Metrics
+- Agile
+date: 2015-08-31T12:54:52+01:00
+draft: true
+short: |
+  Short Description... Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+title: first post
+---
 
 <!--more-->
 

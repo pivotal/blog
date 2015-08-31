@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+rm -rf public
+hugo --theme=pivotal-ui --buildDrafts

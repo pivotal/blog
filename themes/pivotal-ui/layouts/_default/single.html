@@ -1,0 +1,25 @@
+<!doctype html> <html>
+  {{ partial "head.html" . }}
+  <body class="bg-cloud">
+    <div class="pane bg-dark-1">
+      <div class="container bg-glow">
+        <h1 class="title type-neutral-11">{{.Site.Title }}</h1>
+        <h3 class="type-accent-5">{{.Site.Params.SubTitle }}</h3>
+      </div>
+    </div>
+    <div class="post">
+      <div class="pane bg-brand-5">
+        <div class="post-title container">
+          <h1>{{ .Title }}</h1>
+          <span class="post-date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
+          <h3 class="">{{.Params.short }}</h3>
+        </div>
+      </div>
+      <div class="content container">
+        {{ .Content }}
+      </div>
+    </div>
+  </body>
+</html>
+
+
