@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title> {{ .Title }} &middot; {{ .Site.Title }} </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/pivotal-ui.css">
+    <link rel="stylesheet" href="/styleguide.css">
+    <link rel="stylesheet" href="/github.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  </head>
+  <body class="bg-cloud">
+    <div class="pane bg-dark-1">
+      <div class="container bg-glow">
+        <h1 class="title type-neutral-11">{{.Site.Title }}</h1>
+        <h3 class="type-accent-5">{{.Site.Params.SubTitle }}</h3>
+      </div>
+    </div>
+    <div class="content container">
+      <div class="posts">
+        {{ range .Data.Pages }}
+          <div class="post">
+            <h1 class="post-title">
+              <a href="{{ .Permalink }}">{{ .Title }}</a>
+              <p class="type-xs">{{ .Date.Format "Jan 2, 2006" }}</p>
+            </h1>
+
+            <span class="post-date"></span>
+
+            {{ .Summary }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </body>
+</html>
+
