@@ -1,7 +1,7 @@
 ---
 draft: true
 categories: ["BOSH", "CF Runtime", "API", "Logging & Metrics", "Agile"]
-author: Tammer
+author: tammer
 short: >
   Short Description... Lorem ipsum dolor sit amet, consectetur adipisicing
   elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
