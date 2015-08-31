@@ -8,11 +8,23 @@
       </div>
     </div>
     <div class="post">
-      <div class="pane bg-brand-5">
-        <div class="post-title container">
-          <h1>{{ .Title }}</h1>
-          <span class="post-date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
-          <h3 class="">{{.Params.short }}</h3>
+      <div class="post-header">
+        <div class="pane bg-brand-5">
+          <div class="container">
+            <h1>{{ .Title }}</h1>
+            <div class="txt-r">
+              Posted on <span class="post-date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
+              {{ with (index .Site.Data.authors (lower .Params.author)) }}
+                by <a href="https://twitter.com/{{ index . "Twitter" }}">{{ index . "Name" }}</a>
+              {{ end }}
+            </div>
+          </div>
+
+        </div>
+        <div class="pane  bg-brand-3 type-neutral-11">
+          <div class="container">
+            <h3 class="">{{.Params.short }}</h3>
+          </div>
         </div>
       </div>
       <div class="content container">
