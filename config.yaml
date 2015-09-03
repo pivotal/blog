@@ -1,6 +1,7 @@
-baseurl: http://cloudbuilders.pivotal.io/
+baseurl: http://localhost
 languageCode: en-us
 Title: Pivotal Cloud Builders
+Theme: "pivotal-ui"
 Params:
   SubTitle: Articles from the engineers building Pivotal Cloud Foundry.
 ...
