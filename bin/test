@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-rm -rf public
-hugo --buildDrafts
+$(dirname $0)/build

@@ -1,21 +1,7 @@
 #!/usr/bin/env bash
 
-# Cargo-culted from 
-# http://www.damian.oquanta.info/posts/one-line-deployment-of-your-site-to-gh-pages.html
-
 # Safety first!
 set -e
 
-echo "Building..."
-git checkout master
-$(dirname $0)/build
-
-echo "Splitting Subtree (whatever that means)..."
-git subtree split --prefix public -b gh-pages
-
-echo "Force-Pushing to origin/gh-pages..."
-git push -f origin gh-pages:gh-pages
-
-echo "Deleting local gh-pages..."
-git branch -D gh-pages
+cf push -f manifest.yml
 
