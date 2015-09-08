@@ -2,3 +2,22 @@
   padding-top: 0;
   padding-bottom: 0;
 }
+#post-summary { margin-bottom: 2em; }
+
+figure.left.small img, figure.right.small img { max-width: 33%; }
+figure.left.big img,   figure.right.big img   { max-width: 66%; }
+
+figure.left img, figure.right img { max-width: 50%; clear: both; }
+
+figure.left  img { float: left;  padding-right: 1em; }
+figure.right img { float: right; padding-left: 1em; }
+
+.post .content h1 { clear: both; }
+.post .content h2 { clear: both; }
+.post .content h3 { clear: both; }
+.post .content h4 { clear: both; }
+.post .content h5 { clear: both; }
+.post .content h6 { clear: both; }
+
+.content ul, .content ol { width: auto; overflow: hidden; }
+

@@ -12,13 +12,14 @@
         {{ range .Data.Pages }}
           <div class="post">
             <h1 class="post-title">
+              {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
               <a href="{{ .Permalink }}">{{ .Title }}</a>
               <p class="type-xs">{{ .Date.Format "Jan 2, 2006" }}</p>
             </h1>
 
             <span class="post-date"></span>
 
-            {{ .Params.short }}
+            {{ .Params.short | markdownify }}
           </div>
         {{ end }}
       </div>

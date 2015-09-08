@@ -11,19 +11,25 @@
       <div class="post-header">
         <div class="pane bg-brand-5">
           <div class="container">
-            <h1>{{ .Title }}</h1>
+            <h1>{{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }} {{ .Title }}</h1>
             <div class="txt-r">
-              Posted on <span class="post-date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
+              Posted on 
+              <span class="post-date">
+                {{ .Date.Format "Mon, Jan 2, 2006" }}
+              </span>
               {{ with (index .Site.Data.authors (lower .Params.author)) }}
-                by <a href="https://twitter.com/{{ index . "Twitter" }}">{{ index . "Name" }}</a>
+                by 
+                <a href="https://twitter.com/{{ index . "Twitter" }}">
+                  {{ index . "Name" }}
+                </a>
               {{ end }}
             </div>
           </div>
 
         </div>
         <div class="pane  bg-brand-3 type-neutral-11">
-          <div class="container">
-            <h3 class="">{{.Params.short }}</h3>
+          <div class="container" id="post-summary">
+            <h4>{{.Params.short | markdownify}}</h4>
           </div>
         </div>
       </div>

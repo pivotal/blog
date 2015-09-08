@@ -1,3 +1,4 @@
+baseurl: http://localhost
 languageCode: en-us
 Title: Pivotal Cloud Builders
 Theme: "pivotal-ui"

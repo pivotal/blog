@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 rm -rf public
-hugo -b http://localhost -d public/prod
+# hugo -b http://localhost -d public/prod
 hugo -b http://localhost -d public/staging --buildDrafts  $@
 
