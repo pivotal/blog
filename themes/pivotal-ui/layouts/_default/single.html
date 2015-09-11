@@ -1,8 +1,8 @@
 <!doctype html> <html>
   {{ partial "head.html" . }}
   <body class="bg-cloud">
-    <div class="pane bg-dark-1">
-      <div class="container bg-glow">
+    <div class="pane" id="main-banner">
+      <div class="container">
         <h1 class="title type-neutral-11">{{.Site.Title }}</h1>
         <h3 class="type-accent-5">{{.Site.Params.SubTitle }}</h3>
       </div>
@@ -10,19 +10,24 @@
     <div class="post">
       <div class="post-header">
         <div class="pane bg-brand-5">
-          <div class="container">
-            <h1>{{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }} {{ .Title }}</h1>
-            <div class="txt-r">
+          <div class="container row">
+            <div class="col-md-16">
+              <h1 class="post-title">
+                {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }} 
+                {{ .Title }}
+              </h1>
+            </div>
+            <div class="txt-r col-md-8 ptxl">
               Posted on 
-              <span class="post-date">
-                {{ .Date.Format "Mon, Jan 2, 2006" }}
-              </span>
+              <span class="post-date"> {{ .Date.Format "Mon, Jan 2, 2006" }} </span>
               {{ with (index .Site.Data.authors (lower .Params.author)) }}
                 by 
                 <a href="https://twitter.com/{{ index . "Twitter" }}">
                   {{ index . "Name" }}
                 </a>
               {{ end }}
+              <br>
+              <a href="https://github.com/pivotal-cf/blog/tree/master/content/post">Edit this post on github!</a>
             </div>
           </div>
 

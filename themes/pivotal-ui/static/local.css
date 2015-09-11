@@ -1,3 +1,9 @@
+#main-banner {
+  background-image: linear-gradient(to right, #243640 50%, rgba(0,0,0,0)), url("/images/tony_info_radiator.jpg");
+  background-position: 100% 0%;
+  background-repeat: no-repeat;
+}
+
 .post .post-header .container {
   padding-top: 0;
   padding-bottom: 0;
