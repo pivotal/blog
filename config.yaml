@@ -1,6 +1,6 @@
 baseurl: http://localhost
 languageCode: en-us
-Title: Pivotal Cloud Builders
+Title: Cloudy with a Chance of Engineering
 Theme: "pivotal-ui"
 Params:
   SubTitle: Articles from the engineers building Pivotal Cloud Foundry.

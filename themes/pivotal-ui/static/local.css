@@ -1,6 +1,6 @@
 #main-banner {
-  background-image: linear-gradient(to right, #243640 50%, rgba(0,0,0,0)), url("/images/tony_info_radiator.jpg");
-  background-position: 100% 0%;
+  background-image: linear-gradient(to right, #243640 40%, rgba(0,0,0,0)), url("/images/team.jpg");
+  background-position: 100% 40%;
   background-repeat: no-repeat;
 }
 
