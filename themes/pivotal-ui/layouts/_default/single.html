@@ -1,12 +1,7 @@
 <!doctype html> <html>
   {{ partial "head.html" . }}
   <body class="bg-cloud">
-    <div class="pane" id="main-banner">
-      <div class="container">
-        <h1 class="title type-neutral-11">{{.Site.Title }}</h1>
-        <h3 class="type-accent-5">{{.Site.Params.SubTitle }}</h3>
-      </div>
-    </div>
+    {{ partial "heading.html" . }}
     <div class="post">
       <div class="post-header">
         <div class="pane bg-brand-5">

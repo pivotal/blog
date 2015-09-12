@@ -4,6 +4,10 @@
   background-repeat: no-repeat;
 }
 
+#main-banner .title a {
+  color: white !important;
+}
+
 .post .post-header .container {
   padding-top: 0;
   padding-bottom: 0;
