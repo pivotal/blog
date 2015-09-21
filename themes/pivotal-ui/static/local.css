@@ -22,6 +22,10 @@ figure.left img, figure.right img { max-width: 50%; clear: both; }
 figure.left  img { float: left;  padding-right: 1em; }
 figure.right img { float: right; padding-left: 1em; }
 
+figure img {
+  margin-bottom: 1em;
+}
+
 .post .content h1 { clear: both; }
 .post .content h2 { clear: both; }
 .post .content h3 { clear: both; }
@@ -30,4 +34,25 @@ figure.right img { float: right; padding-left: 1em; }
 .post .content h6 { clear: both; }
 
 .content ul, .content ol { width: auto; overflow: hidden; }
+
+blockquote:before {
+  content: none;
+}
+
+blockquote {
+  border: none;
+  font-family: inherit;
+  font-style: italic;
+  margin: 12px;
+  padding: 12px 24px;
+}
+
+h1, .h1    { font-size: 33px; }
+h2, .h2    { font-size: 27px; }
+h3, .h3    { font-size: 22px; }
+body       { font-size: 18px; }
+blockquote { font-size: 18px; }
+h4, .h4    { font-size: 20px; }
+h5, .h5    { font-size: 18px; }
+h6, .h6    { font-size: 15px; }
 
