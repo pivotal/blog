@@ -1,7 +1,7 @@
 baseurl: http://localhost
 languageCode: en-us
-Title: Cloudy with a Chance of Engineering
 Theme: "pivotal-ui"
+Title: Fulcrum
 Params:
-  SubTitle: Articles from the engineers building Pivotal Cloud Foundry.
+  SubTitle: Articles from the Pivotal engineers behind Cloud Foundry.
 ...
