@@ -1,7 +1,7 @@
 baseurl: http://localhost
 languageCode: en-us
 Theme: "pivotal-ui"
-Title: Fulcrum
+Title: Pivotal Engineering Journal
 Params:
   SubTitle: Articles from the Pivotal engineers behind Cloud Foundry.
 ...
