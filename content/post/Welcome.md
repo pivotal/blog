@@ -1,6 +1,6 @@
 ---
-title: Welcome to Fulcrum
-short: "Hello World"
+title: A Team Sport
+short: Our people, our process, our values.
 author: tammer
 date: 2015-09-08T13:08:20+01:00
 draft: false
@@ -16,14 +16,13 @@ draft: false
 
 But, until now, we've lacked an engineering focused forum by the Pivots on the ground. A place where the Pivotal engineers working in the Cloud Foundry trenches can tell their war stories and discuss strategies and tactics.
 
-### Welcome to Fulcrum
+### A Team Sport
 
 {{< figure src="/images/discussion.jpg" class="right small" >}}
 
-Why "Fulcrum?"  Placing a fulcrum in the right place allows someone small to move something massive.  This speaks both to the tools we build, and the culture we believe in. 
-Our products allow massive organizations to be changed by small and passionate small teams.  The pivotal culture that produced these tools is about brains over brawn and teamwork over heroes.  As our founder recently said:
+Placing a fulcrum in the right place allows someone small to move something massive.  This speaks both to the tools we build, and the culture we believe in.  Our products allow massive organizations to be changed by small and passionate small teams.  The pivotal culture that produced these tools is about brains over brawn and teamwork over heroes.  As our founder recently said:
 
-> We are a special company, defined by our special culture. While others in Silicon Valley chase individual accolades and hacker stereotypes, Pivotal’s culture dictates that together we can make the once impossible probable. We do it by being kind to one another. Giving more than we expect to receive. Standing up and sharing, everyday. In sum, for us, software is a team sport.  -- Rob Mee
+> We are a special company, defined by our special culture. While others in Silicon Valley chase individual accolades and hacker stereotypes, Pivotal's culture dictates that together we can make the once impossible probable. We do it by being kind to one another. Giving more than we expect to receive. Standing up and sharing, everyday. In sum, for us, software is a team sport.  -- Rob Mee
 
 {{< figure src="/images/pairing.jpg" class="left small" >}}
 
