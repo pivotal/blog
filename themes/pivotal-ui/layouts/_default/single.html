@@ -6,13 +6,11 @@
       <div class="post-header">
         <div class="pane bg-brand-5">
           <div class="container row">
-            <div class="col-md-16">
-              <h1 class="post-title">
-                {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }} 
-                {{ .Title }}
-              </h1>
-            </div>
-            <div class="txt-r col-md-8 ptxl">
+            <h1 class="post-title col-md-16">
+              {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }} 
+              {{ .Title }}
+            </h1>
+            <div class="txt-r col-md-8 ptxl small">
               Posted on 
               <span class="post-date"> {{ .Date.Format "Mon, Jan 2, 2006" }} </span>
               {{ with (index .Site.Data.authors (lower .Params.author)) }}
@@ -29,7 +27,7 @@
         </div>
         <div class="pane  bg-brand-3 type-neutral-11">
           <div class="container" id="post-summary">
-            <h4>{{.Params.short | markdownify}}</h4>
+            <h6>{{.Params.short | markdownify}}</h6>
           </div>
         </div>
       </div>

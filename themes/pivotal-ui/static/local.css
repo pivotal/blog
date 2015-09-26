@@ -13,6 +13,7 @@
   padding-bottom: 0;
 }
 #post-summary { margin-bottom: 2em; }
+.post-title { padding-left: 0px; }
 
 figure.left.small img, figure.right.small img { max-width: 33%; }
 figure.left.big img,   figure.right.big img   { max-width: 66%; }
