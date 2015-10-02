@@ -12,26 +12,33 @@ $ hugo version
 Hugo Static Site Generator v0.14 BuildDate: 2015-06-16T21:41:12+01:00
 ~~~
 
-Now, run `./bin/run_local` in a terminal, and browse to [http://localhost:1313](http://localhost:1313) to see your local copy.
+Now, run `./bin/watch` in a terminal, and browse to [http://localhost:1313](http://localhost:1313) to see your local copy.
 
 Hugo has [LiveReload](http://livereload.com/) built in, so if you have that configured in your browser, your window will update as soon as you make a change.  Hugo is *fast*, so you might not realize the reload has already happened.
 
 ## Writing a Post
 
-Before you write a new post, you should add yourself as an author.  Just copy an existing author file and edit it to match your info:
+1. Fork this repo to a copy you can push to.
+1. Add yourself as an author (first time only, obvs.):
 
-~~~
-$ cp ./data/authors/tammer.yml ./data/authors/bob.yml
-$ vi ./data/authors/bob.yml
-~~~
+    ~~~
+    $ cp ./data/authors/tammer.yml ./data/authors/bob.yml
+    $ vi ./data/authors/bob.yml
+    ~~~
 
-Now, create a new draft post with `./bin/new_post name-of-post`.  It's just markdown, and the template provides instructions on any advanced bits.  Be sure to change the metadata in the file's YAML front-matter -- one thing to change immediately is the `author:` value should be the name of your author file (`bob` in the example above).
+1. Create a new draft post with `./bin/new_post name-of-post`.  It's just markdown, and the template provides instructions on any advanced bits.  Be sure to change the metadata in the file's YAML front-matter -- one thing to change immediately is the `author:` value should be the name of your author file (`bob` in the example above).
 
-*Meta:* If you want to change the default new post template, it's in `./archetypes/post.md`.
+1. *Meta:* If you want to change the default new post template, it's in `./archetypes/post.md`.
 
-## Publishing
+## Publishing Your Copy
 
-TODO.
+You can publish your fork to your own cf org by running `./bin/publish`.  That script will push your blog to `pivotal-cf-blog-$USER` (where `$USER` is your local unix username.  You'll need to make sure you've `cf target`ed the org and space you want to push to.
+
+## Publishing to Production
+
+It's all about PRs.  Submit your post as a pull-request, gather feedback, iterate, etc.
+
+Once the PR's ready, the engineering directors can then publish via `./bin/publish prod`.
 
 ## Changing the style
 
