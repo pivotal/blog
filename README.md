@@ -1,6 +1,6 @@
 # The Pivotal Engineering Journal
 
-Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Cloud Foundry Engineering team.  If that's you, then *please*, *please*, *please* contribute!
+Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
 ## Running Locally
 
