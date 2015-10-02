@@ -1,4 +1,4 @@
-# Pivotal Cloud Foundry Blog
+# The Pivotal Engineering Journal
 
 Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Cloud Foundry Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
@@ -36,7 +36,7 @@ You can publish your fork to your own cf org by running `./bin/publish`.  That s
 
 ## Publishing to Production
 
-It's all about PRs.  Submit your post as a pull-request, gather feedback, iterate, etc.
+It's all about PRs.  Submit your post as a pull-request, ping `@pivotal/pivotal-engineering-directors` and anyone else you like, gather feedback, iterate, etc.
 
 Once the PR's ready, the engineering directors can then publish via `./bin/publish prod`.
 
