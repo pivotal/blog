@@ -22,7 +22,7 @@ Placing a fulcrum in the right place allows someone small to move something mass
 * [This Week in Cloud Foundry](http://www.thisweekincf.com/) provides an update on development progress and CF specific news and events;
 * The underground stylings of [Cloud Foundry After Dark](https://twitter.com/hashtag/CFAD?src=hash) provide high-level thought leadership and vision.
 
-But, until now, we've lacked an engineering focused platform for the voice of the Pivots on the ground. A place where the Pivotal engineers working on Cloud Foundry, Consul, BOSH, our data products, and our client projects can tell their stories and discuss techniques.
+But, until now, we've lacked an engineering focused platform for the voice of the Pivots on the ground. A place where the Pivotal engineers working on Cloud Foundry, Concourse, BOSH, our data products, and our client projects can tell their stories and discuss techniques.
 
 ## Welcome to our new Pivotal Engineering Journal!
 
