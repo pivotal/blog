@@ -42,6 +42,6 @@ We monitor, adjust, monitor, adjust...
 
 We do all of this with kindness, professionalism and empathy, and we want to share it all with you.
 
-## Join us in transforming the way the world writes software.
+## Join us in transforming how the world builds software.
 
 
