@@ -2,5 +2,5 @@ languageCode: en-us
 Theme: "pivotal-ui"
 Title: Pivotal Engineering Journal
 Params:
-  SubTitle: Articles from the Pivotal engineers behind Cloud Foundry.
+  SubTitle: Technical articles from Pivotal engineers.
 ...
