@@ -1,22 +1,26 @@
-<!doctype html> <html>
+<!doctype html> <html class="bg-dark-10">
   {{ partial "head.html" . }}
-  <body class="bg-cloud">
+  <body>
     {{ partial "heading.html" . }}
-    <div class="content container">
-      <div class="posts">
-        {{ range .Data.Pages }}
-          <div class="post">
-            <h1 class="post-title">
-              {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
-              <a href="{{ .Permalink }}">{{ .Title }}</a>
-              <p class="type-xs">{{ .Date.Format "Jan 2, 2006" }}</p>
-            </h1>
+    <div class="container">
+      <div class="bg-neutral-11">
+        <div class="pan">
+          <div class="posts">
+            {{ range .Data.Pages }}
+            <a href="{{ .Permalink }}" class="post">
+              <div>
+                <h1 class="post-title mvn type-dark-1">
+                  {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
+                  {{ .Title }}
+                </h1>
+                <p class="mvn post-date type-dark-4">{{ .Date.Format "Jan 2, 2006" }}</p>
 
-            <span class="post-date"></span>
-
-            {{ .Params.short | markdownify }}
+              <p class="type-dark-3">{{ .Params.short | markdownify }}</p>
+              </div>
+            </a>
+            {{ end }}
           </div>
-        {{ end }}
+        </div>
       </div>
     </div>
   </body>
