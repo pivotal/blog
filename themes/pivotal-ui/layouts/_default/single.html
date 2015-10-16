@@ -1,41 +1,36 @@
-<!doctype html> <html>
-  {{ partial "head.html" . }}
-  <body class="bg-cloud">
-    {{ partial "heading.html" . }}
-    <div class="post">
-      <div class="post-header">
-        <div class="pane bg-brand-5">
-          <div class="container row">
-            <h1 class="post-title col-md-16">
-              {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }} 
-              {{ .Title }}
-            </h1>
-            <div class="txt-r col-md-8 ptxl small">
-              Posted on 
-              <span class="post-date"> {{ .Date.Format "Mon, Jan 2, 2006" }} </span>
-              {{ with (index .Site.Data.authors (lower .Params.author)) }}
-                by 
-                <a href="https://twitter.com/{{ index . "Twitter" }}">
-                  {{ index . "Name" }}
-                </a>
-              {{ end }}
-              <br>
-              <a href="https://github.com/pivotal-cf/blog/tree/master/content/post">Edit this post on GitHub.</a>
-            </div>
-          </div>
+<!doctype html> <html class="bg-dark-10">
 
-        </div>
-        <div class="pane  bg-brand-3 type-neutral-11">
-          <div class="container" id="post-summary">
-            <h6>{{.Params.short | markdownify}}</h6>
+{{ partial "head.html" . }}
+
+<body>
+  {{ partial "heading.html" . }}
+  <div class="container">
+    <div class="bg-neutral-11 pbxxxl">
+      <div class="post-header">
+        <div class="phxxl pvl">
+          <h1 class="title em-low type-dark-1 mvn">
+            {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
+            {{ .Title }}
+          </h1>
+          <h2 class="h3 type-dark-3 em-default mvn" id="post-summary">{{.Params.short | markdownify}}</h2>
+          <div class="type-dark-5 em-default">
+            Posted on
+            <span class="post-date"> {{ .Date.Format "Mon, Jan 2, 2006" }} </span>
+            {{ with (index .Site.Data.authors (lower .Params.author)) }}
+            by
+            <a href="https://twitter.com/{{ index . "Twitter" }}">
+              {{ index . "Name" }}
+            </a>
+            {{ end }}
+            <br>
+            <a href="https://github.com/pivotal-cf/blog/tree/master/content/post" class="type-sm">Edit this post on GitHub.</a>
           </div>
+          <hr />
         </div>
       </div>
-      <div class="content container">
+      <div class="panel-body phxxl pvn">
         {{ .Content }}
       </div>
     </div>
-  </body>
+</body>
 </html>
-
-
