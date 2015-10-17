@@ -38,7 +38,7 @@ You can publish your fork to your own cf org by running `./bin/publish`.  That s
 
 It's all about PRs.  Submit your post as a pull-request, ping `@pivotal/pivotal-engineering-directors` and anyone else you like, gather feedback, iterate, etc.
 
-Once the PR's ready, the engineering directors can then publish via `./bin/publish prod`.
+Once the PR's ready, the engineering directors can then publish by targeting our `pivotal` org and `blog` space, and then running `./bin/publish prod`.
 
 ## Changing the style
 
