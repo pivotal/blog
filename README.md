@@ -12,7 +12,7 @@ $ hugo version
 Hugo Static Site Generator v0.14 BuildDate: 2015-06-16T21:41:12+01:00
 ~~~
 
-Now, run `./bin/watch` in a terminal, and browse to [http://localhost:1313](http://localhost:1313) to see your local copy.
+After cloning this repository, navigate into the new directory, run `./bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
 
 Hugo has [LiveReload](http://livereload.com/) built in, so if you have that configured in your browser, your window will update as soon as you make a change.  Hugo is *fast*, so you might not realize the reload has already happened.
 
