@@ -10,8 +10,8 @@ title: Agile and program logic
 ---
 
 I just started at Pivotal a couple of months ago. Before that, I worked on
-formal methods, program logic, and semantics. My old collegues in academia and
-my new collegues in industry are all aiming at the same thing -- we want to
+formal methods, program logic, and semantics. My old colleagues in academia and
+my new colleagues in industry are all aiming at the same thing -- we want to
 build awesome software. In this post I want to talk about some of our
 differences in perspective, and some possibly-interesting similarities in
 perspective that we might be able to use.
@@ -27,16 +27,16 @@ make awesome software, you need to do three things:
 Academic computer scientists - quite rightly - tend to focus on (2). There are
 good reasons for this - success in (2) is relatively easy to measure, even if
 you're developing a small prototype in isolation from the market it's
-ultimately aimed at. On the other hand, I think Agile/TDD is really good at
-(1). When I was living in academia I often found myself arguing that formal
-methods and proof-based techniques were better at (2) than TDD can ever be.
-This might be true<sup>2</sup>, but it misses the point. The point is that it doesn't
-matter how good an engineer is at (2) if they have no plan for (1). For the
-rest of this post, I'm going to explore the strategy we use at Pivotal for (1)
-and what that might mean for academic toolsmiths who want us to use their
-methods and tools when we come to do (2). Many of the things I mention here
-will also turn out to be quite handy for (3) as well, but to do that justice
-will require another post.
+ultimately aimed at. On the other hand, I think Agile/TDD (Test Driven
+Development) is really good at (1). When I was living in academia I often found
+myself arguing that formal methods and proof-based techniques were better at
+(2) than TDD can ever be.  This might be true<sup>2</sup>, but it misses the
+point. The point is that it doesn't matter how good an engineer is at (2) if
+they have no plan for (1). For the rest of this post, I'm going to explore the
+strategy we use at Pivotal for (1) and what that might mean for academic
+toolsmiths who want us to use their methods and tools when we come to do (2).
+Many of the things I mention here will also turn out to be quite handy for (3)
+as well, but to do that justice will require another post.
 
 ## Agile/TDD at Pivotal
 
@@ -45,7 +45,7 @@ certainly read this before. I'm repeating it here for easy context, and because
 I don't want to describe and evangelise some TDD theory that no-one practices
 -- I want to describe what I actually do every day. If you don't currently do
 these things and you want to give them a try, that's awesome. But in the
-context of this post it's more important to describe to my old collegues what
+context of this post it's more important to describe to my old colleagues what
 sort of process their tools are going to need to slot in to if they want me to
 use them.
 
@@ -109,7 +109,7 @@ Describe("Pinger", func() {
 })
 ```
 
-I've writen this example test in golang (missing a few details about how we
+I've written this example test in golang (missing a few details about how we
 actually start our imaginary server and so on), following the patterns
 encouraged by the testing library "ginkgo". We will see as tests get more
 complicated that the strings in the blocks labelled `Describe`, `It`, and
@@ -268,14 +268,14 @@ thing. But I think we can do better.
 Separation logic people like to talk about "local specifications". They write
 specifications that talk about the state of the program-memory before and after
 running whatever piece of code they're talking about. By "local" they mean that
-they only talk about the bits of memory that the program cares about (neads to
+they only talk about the bits of memory that the program cares about (needs to
 read from or write to). Advantages of local separation logic specifications are
 that they compose neatly, and they reduce the amount of effort (mental for a
 human, computational for a tool) needed to prove that a given program does as
 it claims to.
 
 I've just claimed that Pivotal people care about "local partial
-specifications". By this, I mean specifications that trivialy compose, and
+specifications". By this, I mean specifications that trivially compose, and
 which say the absolute minimum needed to describe a single feature.
 
 Tools like Infer do a great job of allowing engineers to reap some of the
@@ -299,7 +299,7 @@ expression `bar` to infer the footprint of the function `foo`, and then attempt
 to prove memory-safety given that footprint as a precondition. I think this
 barely scratches the surface of what might be possible.
 
-Recall the list of three things I caimed you need to build awesome software
+Recall the list of three things I claimed you need to build awesome software
 (right at the top of this page). Wouldn't it be great if engineers working on
 (1) and academics working on (2) had independently stumbled on the same idea of
 "locality" ?
