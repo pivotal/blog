@@ -6,18 +6,20 @@ date: 2015-10-17T14:48:36+01:00
 draft: true
 short: |
   On some of the differences and similarities in perspective between Agile/TDD programmers and developers of program-logic tools. 
-title: Agile and program logic
+title: Agile and Program Logic
 ---
 
 I just started at Pivotal a couple of months ago. Before that, I worked on
-formal methods, program logic, and semantics. My old colleagues in academia and
-my new colleagues in industry are all aiming at the same thing -- we want to
-build awesome software. In this post I want to talk about some of our
-differences in perspective, and some possibly-interesting similarities in
-perspective that we might be able to use.
+formal methods, program logic, and semantics. My [old
+colleagues](http://www.resourcereasoning.com/people.html) in academia and my
+new colleagues in industry are all aiming at the same thing -- we want to build
+awesome software. In this post I want to talk about some of our differences in
+perspective; and how that affects the sorts of tools that my old colleagues
+produce, and the sorts of tools my new colleagues are likely to want to use.
 
 Here's the most important bit of this blog post. I think that if you want to
-make awesome software, you need to do three things:
+make awesome software (which is reliable, and which does something that's
+useful to someone), you need to do three things:
 
 1.    Figure out what you want
 1.    Write code that does what you said you wanted
@@ -30,24 +32,26 @@ you're developing a small prototype in isolation from the market it's
 ultimately aimed at. On the other hand, I think Agile/TDD (Test Driven
 Development) is really good at (1). When I was living in academia I often found
 myself arguing that formal methods and proof-based techniques were better at
-(2) than TDD can ever be.  This might be true<sup>2</sup>, but it misses the
-point. The point is that it doesn't matter how good an engineer is at (2) if
-they have no plan for (1). For the rest of this post, I'm going to explore the
-strategy we use at Pivotal for (1) and what that might mean for academic
-toolsmiths who want us to use their methods and tools when we come to do (2).
-Many of the things I mention here will also turn out to be quite handy for (3)
-as well, but to do that justice will require another post.
+(2) than TDD can ever be<sup>2</sup>.  This might be true<sup>3</sup>, but it
+misses the point. The point is that it doesn't matter how good an engineer is
+at (2) if they have no plan for (1). For the rest of this post, I'm going to
+explore the strategy we use at Pivotal for (1) and what that might mean for
+academic toolsmiths who want us to use their methods and tools when we come to
+do (2).  Many of the things I mention here will also turn out to be quite handy
+for (3) as well, but to do that justice will require another post.
 
 ## Agile/TDD at Pivotal
 
-There are lot of places to read about Agile/TDD online, and you've almost
-certainly read this before. I'm repeating it here for easy context, and because
-I don't want to describe and evangelise some TDD theory that no-one practices
--- I want to describe what I actually do every day. If you don't currently do
-these things and you want to give them a try, that's awesome. But in the
-context of this post it's more important to describe to my old colleagues what
-sort of process their tools are going to need to slot in to if they want me to
-use them.
+There are [lot](https://en.wikipedia.org/wiki/Extreme_programming)
+[of](https://en.wikipedia.org/wiki/Test-driven_development)
+[places](https://www.destroyallsoftware.com/screencasts) to read about
+Agile/TDD online, and you've almost certainly read this sort of thing before.
+I'm repeating it here for easy context, and because I don't want to describe
+and evangelise some TDD theory that no-one practices -- I want to describe what
+I actually do every day. If you don't currently do these things and you want to
+give them a try, that's awesome. But in the context of this post it's more
+important to describe to my old colleagues what sort of process their tools are
+going to need to slot in to if they want me to use them.
 
 So here we go:
 
@@ -99,7 +103,7 @@ Describe("Pinger", func() {
     server = NewServer(....)
     testLogger = TestLogger{}
     client = NewClient(.... testLogger ... )
-    client.connect(server.address())
+    client.Connect(server.Address())
   })
 
   It("Can ping the client", func() {
@@ -109,9 +113,10 @@ Describe("Pinger", func() {
 })
 ```
 
-I've written this example test in golang (missing a few details about how we
-actually start our imaginary server and so on), following the patterns
-encouraged by the testing library "ginkgo". We will see as tests get more
+I've written this example test in [go](https://golang.org/) (missing a few
+details about how we actually start our imaginary server and so on), following
+the patterns encouraged by the testing library
+[ginkgo](https://github.com/onsi/ginkgo). We will see as tests get more
 complicated that the strings in the blocks labelled `Describe`, `It`, and
 similar encourage us to write our tests in a specification-like way. We
 describe things, and properties of things. Later we will see how to describe
@@ -146,7 +151,7 @@ Describe("Pinger", func() {
     server = NewServer(....)
     testLogger = TestLogger{}
     client = NewClient(.... testLogger ... )
-    client.connect(server.address())
+    client.Connect(server.Address())
   })
 
   It("can ping the client", func() {
@@ -160,8 +165,8 @@ Describe("Pinger", func() {
 
     BeforeEach(func() {
       secondLogger = Logger{}
-      secondClient = newClient( ... secondLogger ... )
-      secondClient.connect(server.address())
+      secondClient = NewClient( ... secondLogger ... )
+      secondClient.Connect(server.Address())
     })
 
     It("pings all of them", func() {
@@ -202,7 +207,7 @@ Describe("Pinger", func() {
     server = NewServer(....)
     testLogger = TestLogger{}
     client = NewClient(.... testLogger ... )
-    client.connect(server.address())
+    client.Connect(server.Address())
   })
 
   It("can ping the client", func() {
@@ -216,11 +221,11 @@ Describe("Pinger", func() {
 
     BeforeEach(func() {
       secondLogger = Logger{}
-      secondClient = newClient( ... secondLogger ... )
+      secondClient = NewClient( ... secondLogger ... )
     })
 
     It("pings both of them", func() {
-      secondClient.connect(server.address())
+      secondClient.Connect(server.Address())
       server.Ping()
       Eventually(testLogger).Should(Say("Ping!"))
       Eventually(secondLogger).Should(Say("Ping!"))
@@ -230,7 +235,7 @@ Describe("Pinger", func() {
       It("pings the second client when it does connect", func() {
         server.Ping()
         Eventually(testLogger).Should(Say("Ping!"))
-        secondClient.connect(server.address())
+        secondClient.Connect(server.Address())
         Eventually(secondLogger).Should(Say("Ping!"))
       })
     })
@@ -243,22 +248,23 @@ composes perfectly with the existing tests. We didn't waste any effort when we
 were working on the first thing the client thought they wanted. When the client
 changed/clarified their mind, we were able to evolve the code we'd already
 written into what they now realised they wanted. For this to work we absolutely
-need a very local kind expressivity in our specification language. We want to
-be able to write large numbers of tiny partial-specifications, and we want them
-to trivially compose.
+need a very local kind of expressivity in our specification language. We want
+to be able to write large numbers of tiny partial-specifications, and we want
+them to trivially compose.
 
 So what can formal methods research do for us?
 
 I'm going to guess some answers to this question biased heavily by my
-experience with separation logic, but I hope some ideas may be more generally
-applicable.
+experience with [separation
+logic](http://www0.cs.ucl.ac.uk/staff/p.ohearn/papers/Marktoberdorf11LectureNotes.pdf),
+but I hope some ideas may be more generally applicable.
 
-Recently, facebook open-sourced the [Infer](http://fbinfer.com/) tool. This is
+Recently, Facebook open-sourced the [Infer](http://fbinfer.com/) tool. This is
 a separation-logic based shape-analysis tool, which can detect things like
 memory leaks, buffer overruns, null pointer accesses and so on. My imperfect
 understanding of their use of that tool is that it runs in their CI after code
 has been pushed to their version-control system, and often provides useful
-input to the code-review process which (at facebook) happens after the code has
+input to the code-review process which (at Facebook) happens after the code has
 been written, but before it gets into production. This seems to be (*very*)
 loosely analogous to the time when the PM checks the acceptance criteria in the
 Pivotal process. FB-Pivotal process differences aside, having a broad-sweep
@@ -289,7 +295,7 @@ Expect(foo()).DoesNotLeakMemory()
 
 Expect(foo()).CannotCrash()
 
-Expect(foo()).CannotCrash(SoLongAs(bar) // Where `bar` is a boolean expression
+Expect(foo()).CannotCrash(SoLongAs(bar)) // Where `bar` is a boolean expression
 ```
 
 The first two aren't necessarily very interesting (Infer will already do this
@@ -302,7 +308,16 @@ barely scratches the surface of what might be possible.
 Recall the list of three things I claimed you need to build awesome software
 (right at the top of this page). Wouldn't it be great if engineers working on
 (1) and academics working on (2) had independently stumbled on the same idea of
-"locality" ?
+"locality"? If so, then that commonality might be interesting in its own right;
+but perhaps it could also be exploited by academic toolsmiths to produce some
+awesome new tools that fit well into our processes here in industry.
+
+In this post I was aiming to make the connection between the TDD virtue of
+small tests, and the separation logic concept of locality. In a future post,
+I'd like to talk about [property-based
+testing](http://www.cse.chalmers.se/~rjmh/QuickCheck/manual.html) (which is
+also available [to Go programmers](https://golang.org/pkg/testing/quick/) out
+of the box) and how that may or may not fit into my day to day workflow.
 
 ----------------
 
@@ -317,5 +332,12 @@ life of your citizens without making any money ; or you might be working on an
 open source project fueled by volunteer time, looking to improve your
 reputational value by doing something people think is cool.
 
-<sup>2</sup>   Or it might not. It's beyond the scope of this little blog post.
+<sup>2</sup>   Or at least at verifying that you did (2) right when you wrote
+the code. [Some formal
+methods](https://en.wikipedia.org/wiki/Refinement_(computing)#Program_refinement)
+will tell you how to write the code such that it does the right thing, while
+others will only reassure you that the code you were writing anyway was good
+code.
+
+<sup>3</sup>   Or it might not. It's beyond the scope of this little blog post.
 
