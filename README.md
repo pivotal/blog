@@ -2,6 +2,8 @@
 
 Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
+[Live site](http://engineering.pivotal.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/)
+
 ## Running Locally
 
 This site uses [Hugo](http://gohugo.io) v0.14, which is easy to install:
