@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 rm -rf public
-hugo -d public/prod
-hugo -b http://localhost -d public/staging --buildDrafts  $@
+hugo -b http://engineering.pivotal.io -d public/prod
+hugo -b http://localhost              -d public/staging --buildDrafts  $@
 
