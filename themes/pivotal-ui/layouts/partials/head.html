@@ -6,4 +6,8 @@
   <link rel="stylesheet" href="/github.css">
   <link rel="stylesheet" href="/local.css">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  {{ if .RSSlink }}
+  <link href="{{ .RSSlink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+  <link href="{{ .RSSlink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
+  {{ end }}
 </head>
