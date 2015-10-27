@@ -1,12 +1,14 @@
 ---
 draft: true
 categories: ["BOSH", "CF Runtime", "API", "Logging & Metrics", "Agile"]
-author: Change this to your name, and make sure you have an entry in data/authors
+authors:
+- Change this to your name, and make sure you have an entry in data/authors.
+- Add another author here
 short: >
-  Short description for index pages, and under 
-  title when viewing a post. Lorem ipsum dolor sit amet, 
-  consectetur adipisicing elit, sed do eiusmod tempor 
-  incididunt ut labore et dolore magna aliqua. Ut 
+  Short description for index pages, and under
+  title when viewing a post. Lorem ipsum dolor sit amet,
+  consectetur adipisicing elit, sed do eiusmod tempor
+  incididunt ut labore et dolore magna aliqua. Ut
   enim ad minim veniam.
 ---
 

@@ -16,12 +16,18 @@
           <div class="type-dark-5 em-default">
             Posted on
             <span class="post-date"> {{ .Date.Format "Mon, Jan 2, 2006" }} </span>
-            {{ with (index .Site.Data.authors (lower .Params.author)) }}
+            {{ $all := .Site.Data.authors}}
+            {{ $authors := .Params.authors}}
             by
-            <a href="https://twitter.com/{{ index . "Twitter" }}">
-              {{ index . "Name" }}
-            </a>
+            <ul class="authors">
+            {{ range $author := $authors }}
+              {{ with $a := (index $all $author)}}
+                <li><a href="https://twitter.com/{{ index $a.Twitter }}">
+                  {{ $a.Name }}
+                </a></li>
+              {{ end}}
             {{ end }}
+            </ul>
             <br>
             <a href="https://github.com/pivotal-cf/blog/tree/master/content/post" class="type-sm">Edit this post on GitHub.</a>
           </div>
