@@ -5,7 +5,8 @@ categories:
 date: 2015-10-17T14:48:36+01:00
 draft: true
 short: |
-  On some of the differences and similarities in perspective between Agile/TDD programmers and developers of program-logic tools. 
+  On some of the differences and similarities in perspective between Agile/TDD
+  programmers and developers of program-logic tools. 
 title: Agile and Program Logic
 ---
 
@@ -21,24 +22,31 @@ Here's the most important bit of this blog post. I think that if you want to
 make awesome software (which is reliable, and which does something that's
 useful to someone), you need to do three things:
 
-1.    Figure out what you want
-1.    Write code that does what you said you wanted
-1.    Manage (1) and (2) within the constraints of your local economics<sup>1</sup>.
+Discovery
+: Figure out what you want
 
+Implementation
+: Write code that does what you said you wanted
 
-Academic computer scientists - quite rightly - tend to focus on (2). There are
-good reasons for this - success in (2) is relatively easy to measure, even if
-you're developing a small prototype in isolation from the market it's
-ultimately aimed at. On the other hand, I think Agile/TDD (Test Driven
-Development) is really good at (1). When I was living in academia I often found
-myself arguing that formal methods and proof-based techniques were better at
-(2) than TDD can ever be<sup>2</sup>.  This might be true<sup>3</sup>, but it
-misses the point. The point is that it doesn't matter how good an engineer is
-at (2) if they have no plan for (1). For the rest of this post, I'm going to
-explore the strategy we use at Pivotal for (1) and what that might mean for
-academic toolsmiths who want us to use their methods and tools when we come to
-do (2).  Many of the things I mention here will also turn out to be quite handy
-for (3) as well, but to do that justice will require another post.
+Cost
+: Manage _Discovery_ and _Implementation_ within the constraints of your local
+  economics[^1].
+
+Academic computer scientists - quite rightly - tend to focus on
+_Implementation_. There are good reasons for this - success in _Implementation_
+is relatively easy to measure, even if you're developing a small prototype in
+isolation from the market it's ultimately aimed at. On the other hand, I think
+Agile/TDD (Test Driven Development) is really good at _Discovery_. When I
+was living in academia I often found myself arguing that formal methods and
+proof-based techniques were better at _Implementation_ than TDD can ever
+be[^2].  This might be true[^3], but it misses the point. The
+point is that it doesn't matter how good an engineer is at _Implementation_ if
+they have no plan for _Discovery_. For the rest of this post, I'm going to
+explore the strategy we use at Pivotal for _Discovery_ and what that might
+mean for academic toolsmiths who want us to use their methods and tools when we
+come to do _Implementation_.  Many of the things I mention here will also turn
+out to be quite handy for managing _Cost_ as well, but to do that justice will
+require another post.
 
 ## Agile/TDD at Pivotal
 
@@ -307,10 +315,11 @@ barely scratches the surface of what might be possible.
 
 Recall the list of three things I claimed you need to build awesome software
 (right at the top of this page). Wouldn't it be great if engineers working on
-(1) and academics working on (2) had independently stumbled on the same idea of
-"locality"? If so, then that commonality might be interesting in its own right;
-but perhaps it could also be exploited by academic toolsmiths to produce some
-awesome new tools that fit well into our processes here in industry.
+_Discovery_ and academics working on _Implementation_ had independently
+stumbled on the same idea of "locality"? If so, then that commonality might be
+interesting in its own right; but perhaps it could also be exploited by
+academic toolsmiths to produce some awesome new tools that fit well into our
+processes here in industry.
 
 In this post I was aiming to make the connection between the TDD virtue of
 small tests, and the separation logic concept of locality. In a future post,
@@ -323,21 +332,22 @@ of the box) and how that may or may not fit into my day to day workflow.
 
 Notes
 
-<sup>1</sup>   Of course your local economic constraints could be very
-different to someone else's. You might be working in Silicon Valley on a VC
-funded project, looking to demonstrate market value by selling app
-subscriptions ; or you might be working for a European government on a publicly
-funded project, looking to demonstrate public value by improving the quality of
-life of your citizens without making any money ; or you might be working on an
-open source project fueled by volunteer time, looking to improve your
-reputational value by doing something people think is cool.
+[^1]:   Of course your local economic constraints could be very
+        different to someone else's. You might be working in Silicon Valley on
+        a VC funded project, looking to demonstrate market value by selling app
+        subscriptions; or you might be working for a European government on a
+        publicly funded project, looking to demonstrate public value by
+        improving the quality of life of your citizens without making any
+        money; or you might be working on an open source project fueled by
+        volunteer time, looking to improve your reputational value by doing
+        something people think is cool.
 
-<sup>2</sup>   Or at least at verifying that you did (2) right when you wrote
-the code. [Some formal
-methods](https://en.wikipedia.org/wiki/Refinement_(computing)#Program_refinement)
-will tell you how to write the code such that it does the right thing, while
-others will only reassure you that the code you were writing anyway was good
-code.
+[^2]:   Or at least at verifying that you did your _Implementation_ work right 
+        when you wrote the code. [Some formal
+        methods](https://en.wikipedia.org/wiki/Refinement_\(computing\)#Program_refinement)
+        will tell you how to write the code such that it does the right thing,
+        while others will only reassure you that the code you were writing
+        anyway was good code.
 
-<sup>3</sup>   Or it might not. It's beyond the scope of this little blog post.
+[^3]:   Or it might not. It's beyond the scope of this little blog post.
 
