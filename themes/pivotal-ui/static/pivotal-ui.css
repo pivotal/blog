@@ -2571,6 +2571,24 @@ pre {
   max-height: 340px;
   overflow-y: scroll; }
 
+.authors {
+  display: inline;
+  list-style: none;
+  padding: 0;
+}
+
+.authors li {
+  display: inline;
+}
+
+.authors li:after {
+  content: ", ";
+}
+
+.authors li:last-child:after {
+    content: "";
+}
+
 .container {
   margin-right: auto;
   margin-left: auto;
