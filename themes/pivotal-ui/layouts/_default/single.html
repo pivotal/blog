@@ -22,9 +22,7 @@
             <ul class="authors">
             {{ range $author := $authors }}
               {{ with $a := (index $all $author)}}
-                <li><a href="https://twitter.com/{{ index $a.Twitter }}">
-                  {{ $a.Name }}
-                </a></li>
+                <li><a href="https://twitter.com/{{ index $a.Twitter }}">{{ $a.Name }}</a></li>
               {{ end}}
             {{ end }}
             </ul>
