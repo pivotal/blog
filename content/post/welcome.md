@@ -1,7 +1,8 @@
 ---
 title: A Team Sport
 short: Welcome to our new Engineering Journal!
-author: tammer
+authors: 
+- tammer
 date: 2015-09-08T13:08:20+01:00
 draft: false
 ---
