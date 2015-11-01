@@ -1,12 +1,12 @@
 ---
-author: cunnie
+authors: 
+- cunnie
 categories:
 - BOSH
 - Concourse
 date: 2015-10-24T13:52:48-07:00
-draft: true
 short: |
-  How to deploy a publicly-accessible, extremely lean Concourse CI server
+  How to deploy a publicly-accessible, extremely lean Concourse CI server.
 title: The World's Smallest Concourse CI Server
 ---
 
@@ -170,7 +170,7 @@ the complete output of the *bosh-init* deployment.
 
 We browse to [https://ci.blabbertabber.com](https://ci.blabbertabber.com).
 
-<img style="max-width:100%;" src="/images/concourse-000/no_pipelines.png" />
+{{< figure src="/images/concourse-000/no_pipelines.png" >}}
 
 We download the `fly` CLI by clicking on the Apple icon (assuming that your workstation is an OS X machine) and move it into place:
 
@@ -222,7 +222,7 @@ Type **y** when prompted to apply the configuration.
 Refresh [https://ci.blabbertabber.com](https://ci.blabbertabber.com) to
 see our newly-created pipeline:
 
-<img style="max-width:100%;" src="/images/concourse-000/new_pipeline.png" />
+{{< figure src="/images/concourse-000/new_pipeline.png" >}}
 
 Next we unpause the job
 
@@ -237,7 +237,7 @@ Next we unpause the job
 The banner at the top of the screen will switch from light-blue to black.
 The page should look like this:
 
-<img style="max-width:100%;" src="/images/concourse-000/unpaused_pipeline.png" />
+{{< figure src="/images/concourse-000/unpaused_pipeline.png" >}}
 
 ### 0.9 Our First Integration Test: Hello World
 
@@ -249,7 +249,7 @@ We kick off our job:
 We see that the  job completes successfully by the
 pea-green color. We click "**>_ say-hello**" to see the output:
 
-<img style="max-width:100%;" src="/images/concourse-000/success.png" />
+{{< figure src="/images/concourse-000/success.png" >}}
 
 ## 1.0 Conclusion
 
