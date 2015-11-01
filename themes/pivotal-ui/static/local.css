@@ -103,3 +103,5 @@ h6, .h6    { font-size: 15px; }
   border-bottom: none;
   border-radius: 4px;
 }
+
+table { width: 100%; }
