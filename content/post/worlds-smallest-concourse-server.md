@@ -1,6 +1,7 @@
 ---
 authors: 
 - cunnie
+- dimsdale
 categories:
 - BOSH
 - Concourse
@@ -280,11 +281,6 @@ Here are our costs:
 |-------|------|----|----------
 |*ci.blabbertabber.com* cert|cheapsslshop.com|$14.85 3-year  <sup>[[inexpensive-SSL]](#inexpensive-SSL)</sup>|$4.95
 |EC2 t2.micro instance|Amazon AWS|$0.0086 / hour <sup>[[t2.micro]](#t2.micro)</sup>|$75.39
-
-## Acknowledgements
-
-We'd like to thank [Rob Dimsdale](https://github.com/robdimsdale) of the Concourse team
-for reviewing the manuscript for accuracy and completeness.
 
 ## Footnotes
 
