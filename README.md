@@ -28,7 +28,7 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
     $ vi ./data/authors/bob.yml
     ~~~
 
-1. Create a new draft post with `./bin/new_post name-of-post`.  This will create a new file at location `./content/post/name-of-post.md`. It's just markdown, and the template provides instructions on any advanced bits.  Be sure to change the metadata in the file's YAML front-matter -- one thing to change immediately is the `author:` value should be the name of your author file (`bob` in the example above).
+1. Create a new draft post with `./bin/new_post name-of-post`.  This will create a new file at location `./content/post/name-of-post.md`. It's just markdown, and the template provides instructions on any advanced bits.  Be sure to change the metadata in the file's YAML front-matter -- one thing to change immediately is the `authors:` value should include the name of your author file (`bob` in the example above) in the list.
 
 1. *Meta:* If you want to change the default new post template, it's in `./archetypes/post.md`.
 
