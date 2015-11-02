@@ -4,6 +4,14 @@ Welcome to our little slice of the internets!  This blog is dedicated to technic
 
 [Live site](http://engineering.pivotal.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/)
 
+## Contributing
+
+1. Fork this repository
+1. Pull your fork, and [run it locally](https://github.com/pivotal/blog#running-locally), so you can see what you're writing.
+1. [Write your post](https://github.com/pivotal/blog#writing-a-post).
+1. Gather feedback from your engineering peers.  Iterate, repeat.
+1. Ping `@pivotal/pivotal-engineering-directors` when you feel it's ready for the world.
+
 ## Running Locally
 
 This site uses [Hugo](http://gohugo.io) v0.14, which is easy to install:
