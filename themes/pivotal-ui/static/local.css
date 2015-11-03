@@ -105,3 +105,8 @@ h6, .h6    { font-size: 15px; }
 }
 
 table { width: 100%; }
+
+table tr td {
+  word-break: break-all;
+  word-wrap: break-word;
+}
