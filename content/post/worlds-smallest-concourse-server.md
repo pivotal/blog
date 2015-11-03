@@ -73,6 +73,7 @@ We create a *concourse* Security Group via the Amazon AWS Console:
 * click **Edit**
 * add the following rules:
 
+{{% table class="table-data table-light" %}}
 | Type of Traffic | Protocol  | Port Range | Source IP CIDR   | Notes |
 | :-------------  | :-------- | ---------: | --------: | :---- |
 | SSH (22)        | TCP (6)   | 22         | 0.0.0.0/0 | debugging, agents |
@@ -80,6 +81,7 @@ We create a *concourse* Security Group via the Amazon AWS Console:
 | HTTPS (443)     | TCP (6)   | 443        | 0.0.0.0/0 | web |
 | Custom TCP Rule | TCP (6)   | 2222       | 0.0.0.0/0 | agents |
 | Custom TCP Rule | TCP (6)   | 6868       | 0.0.0.0/0 | bosh-init |
+{{% /table %}}
 
 * click **Save**
 
@@ -277,10 +279,12 @@ would have increased our yearly cost by $713.54 <sup>[[m3.large]](#m3.large)</su
 
 Here are our costs:
 
+{{% table class="table-data table-light" %}}
 |Expense|Vendor|Cost|Cost / year
 |-------|------|----|----------
 |*ci.blabbertabber.com* cert|cheapsslshop.com|$14.85 3-year  <sup>[[inexpensive-SSL]](#inexpensive-SSL)</sup>|$4.95
 |EC2 t2.micro instance|Amazon AWS|$0.0086 / hour <sup>[[t2.micro]](#t2.micro)</sup>|$75.39
+{{% /table %}}
 
 ## Footnotes
 
