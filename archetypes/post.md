@@ -1,6 +1,6 @@
 ---
 draft: true
-categories: ["BOSH", "CF Runtime", "API", "Logging & Metrics", "Agile"]
+categories: ["BOSH", "CF Runtime", "API", "Logging & Metrics", "Agile", "Humans"]
 authors:
 - Add another author here
 - tammer
