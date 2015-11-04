@@ -141,24 +141,28 @@ to guess what extra things they might want. This test deliberately says nothing
 about multiple clients, or offline clients.
 
 The pair of engineers working on this story are now free to make this test pass
-any way they like. 
+any way they like -- so long as the code they write is test-driven with
+unittests.
 
 ### Clarifying the Spec
 
 {{< figure src="/images/magnifying-code.jpg" class="left small" >}}
 
-For our narrative, let us assume that the engineers made
-this test pass (by test-driving the server and client-code with unittests), and
-they check in a working feature to master. But their implementation only sends
-the message to a single client -- it makes no attempt to message more than one.
-The engineers noticed this corner case when they were writing the test above,
-and asked the PM: "Do you think the client meant for all clients to get the
-message or just one?". Our pedagogical PM replied "Yes, thanks -- I think it's
-safe to assume the client wanted a broadcast message, not just a message to
-some random client.". So, once the tests are all green, our engineers are free
-to write a new test for this new, inferred part of the spec (meanwhile, the PM
-might update the acceptance criteria to repeat the informal test with two
-clients). The tests for this story now look like this:
+For our narrative, let us assume that while the engineers were writing the test
+above, they realised that it would pass even if the server never attempts to
+send messages to more than one client. On this occasion, the engineers decide
+to ask the PM for clarification. The PM replies "Oh yes -- I think we want a
+proper broadcast message there, not just a message to a single random client".
+In the ensuing conversation, the PM and the engineers could choose to finish
+this story quickly with just the one integration test, and to open a new story
+for making our ping into a broadcast message... Or they could choose to update
+the existing story (which is still "in-flight") to reflect their new shared
+understanding of the problem. In our example, they choose the second option:
+the PM updates the acceptance criteria to mention multiple clients, and the
+engineers make a note to write a second integration test once they have the
+first one passing.
+
+With the new test added, the tests for this story now look like this:
 
 
 ```
