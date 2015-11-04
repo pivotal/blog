@@ -1,5 +1,5 @@
 ---
-author: Gareth Smith
+author: gareth
 categories:
 - Agile
 date: 2015-10-17T14:48:36+01:00
@@ -50,6 +50,8 @@ require another post.
 
 ## Agile/TDD at Pivotal
 
+{{< figure src="/images/pairing.jpg" class="left small" >}}
+
 There are [lot](https://en.wikipedia.org/wiki/Extreme_programming)
 [of](https://en.wikipedia.org/wiki/Test-driven_development)
 [places](https://www.destroyallsoftware.com/screencasts) to read about
@@ -73,6 +75,10 @@ contains all the things all of us are currently working on, and all the tests
 always pass.
 
 Let's look in to some of that in more detail.
+
+### Imaginary Case Study: The Machine That Goes Ping
+
+{{< figure src="/images/ping-machine.jpg" class="right small" >}}
 
 Suppose we're building a client-server application for some customer. The
 customer has asked for a whole bunch of things, and (with more or less help
@@ -135,7 +141,13 @@ to guess what extra things they might want. This test deliberately says nothing
 about multiple clients, or offline clients.
 
 The pair of engineers working on this story are now free to make this test pass
-any way they like. For our narrative, let us assume that the engineers made
+any way they like. 
+
+### Clarifying the Spec
+
+{{< figure src="/images/magnifying-code.jpg" class="left small" >}}
+
+For our narrative, let us assume that the engineers made
 this test pass (by test-driving the server and client-code with unittests), and
 they check in a working feature to master. But their implementation only sends
 the message to a single client -- it makes no attempt to message more than one.
@@ -188,6 +200,10 @@ Describe("Pinger", func() {
 
 The engineers make this test pass (with unittests for every change they make on
 the way), mark the story as finished, and move on to something else. Job done.
+
+### Changing Your Mind
+{{< figure src="/images/change-mind.jpg" class="right small" >}}
+
 The PM is now free to bring the current version of the software to the client,
 to see what they think. The client might be entirely happy with what the team
 gives them, or they might realise they actually wanted something a little
@@ -260,12 +276,17 @@ need a very local kind of expressivity in our specification language. We want
 to be able to write large numbers of tiny partial-specifications, and we want
 them to trivially compose.
 
+## Formal Methods
+
 So what can formal methods research do for us?
 
 I'm going to guess some answers to this question biased heavily by my
 experience with [separation
 logic](http://www0.cs.ucl.ac.uk/staff/p.ohearn/papers/Marktoberdorf11LectureNotes.pdf),
 but I hope some ideas may be more generally applicable.
+
+### Tools
+{{< figure src="/images/infer.png" class="left small" >}}
 
 Recently, Facebook open-sourced the [Infer](http://fbinfer.com/) tool. This is
 a separation-logic based shape-analysis tool, which can detect things like
@@ -278,6 +299,9 @@ loosely analogous to the time when the PM checks the acceptance criteria in the
 Pivotal process. FB-Pivotal process differences aside, having a broad-sweep
 static analysis as powerful as Infer in the CI is an awesome and beautiful
 thing. But I think we can do better.
+
+### Locality 
+{{< figure src="/images/east-london-massive.png" class="right small" >}}
 
 Separation logic people like to talk about "local specifications". They write
 specifications that talk about the state of the program-memory before and after
@@ -321,16 +345,15 @@ interesting in its own right; but perhaps it could also be exploited by
 academic toolsmiths to produce some awesome new tools that fit well into our
 processes here in industry.
 
+## Coming Soon
+
 In this post I was aiming to make the connection between the TDD virtue of
-small tests, and the separation logic concept of locality. In a future post,
-I'd like to talk about [property-based
+small tests, and the separation logic concept of locality. If this sort of
+cross-over between formal methods and Agile interests you, then drop me a line,
+or keep an eye on this blog. Next up, I'd like to write about [property-based
 testing](http://www.cse.chalmers.se/~rjmh/QuickCheck/manual.html) (which is
 also available [to Go programmers](https://golang.org/pkg/testing/quick/) out
 of the box) and how that may or may not fit into my day to day workflow.
-
-----------------
-
-Notes
 
 [^1]:   Of course your local economic constraints could be very
         different to someone else's. You might be working in Silicon Valley on
