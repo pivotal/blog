@@ -10,7 +10,7 @@ Welcome to our little slice of the internets!  This blog is dedicated to technic
 1. Pull your fork, and [run it locally](https://github.com/pivotal/blog#running-locally), so you can see what you're writing.
 1. [Write your post](https://github.com/pivotal/blog#writing-a-post).
 1. Gather feedback from your engineering peers.  Iterate, repeat.
-1. Ping `@pivotal/pivotal-engineering-directors` when you feel it's ready for the world.
+1. Ping `@pivotal/engineering-directors` when you feel it's ready for the world.
 
 ## Running Locally
 
@@ -46,9 +46,9 @@ You can publish your fork to your own cf org by running `./bin/publish`.  That s
 
 ## Publishing to Production
 
-It's all about PRs.  Submit your post as a pull-request, ping `@pivotal/pivotal-engineering-directors` and anyone else you like, gather feedback, iterate, etc.
+It's all about PRs.  Submit your post as a pull-request, ping anyone else you like, gather feedback, iterate, etc.
 
-Once the PR's ready, the engineering directors can then publish by targeting our `pivotal` org and `blog` space, and then running `./bin/publish prod`.
+Once the PR's ready, tell `@pivotal/engineering-directors`, and we can then publish by targeting our `pivotal` org and `blog` space, and then running `./bin/publish prod`.
 
 ## Changing the style
 
