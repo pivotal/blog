@@ -78,9 +78,9 @@ In case you get any errors, just hold on to your towel.
 
 | Error | Solution |
 |----------------------------------------------------------------------------|----------------------------------------------------------|
-| `Unauthorized error: You are not authorized. Error: Invalid authorization` | Just regenerate your auth-token like so: `cf oauth-token` |
-| `Unable to recognize filter HtttpStarrrt` | Check your spelling |
-| `Invalid filter choice` | Check your index choice. Enter a number from 2 through 9 |
+| **Unauthorized error: You are not authorized. Error: Invalid authorization** | Just regenerate your auth-token like so: `cf oauth-token` |
+| **Unable to recognize filter HtttpStarrrt** | Check your spelling |
+| **Invalid filter choice** | Check your index choice. Enter a number from 2 through 9 |
 
 ### How we use this plugin?
 We use `cf nozzle -n` primarily for debugging and acceptance purposes. It's a quick way to look for expected component and application logs. Recently, our PM used this tool to look for logs originating from the DEA after pushing an app to PCF. Before this tool, he would have had to

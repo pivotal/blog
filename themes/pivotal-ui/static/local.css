@@ -107,7 +107,15 @@ h6, .h6    { font-size: 15px; }
 
 table { width: 100%; }
 
-table tr td {
-  word-break: break-all;
-  word-wrap: break-word;
+table tr { border-bottom: 1px solid #d4d9d9; }
+
+table tr th { 
+  background: black;
+  color: white;
+  text-align: center;
+}
+
+table tr * {
+  vertical-align: top;
+  padding: 0.33em 0.10em 0.33em 0;
 }
