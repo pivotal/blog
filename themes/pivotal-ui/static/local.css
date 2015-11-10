@@ -43,17 +43,18 @@ body {
 #post-summary { margin-bottom: 2em; }
 .post-title { padding-left: 0px; }
 
-figure.left.small img, figure.right.small img { max-width: 33%; }
-figure.left.big img,   figure.right.big img   { max-width: 66%; }
 
-figure.left img, figure.right img { max-width: 50%; clear: both; }
+figure img {
+  margin-bottom: 1em;
+  max-width: 100%;
+}
 
 figure.left  img { float: left;  padding-right: 1em; }
 figure.right img { float: right; padding-left: 1em; }
 
-figure img {
-  margin-bottom: 1em;
-}
+figure.left img, figure.right img { max-width: 50%; clear: both; }
+figure.left.small img, figure.right.small img { max-width: 33%; }
+figure.left.big img,   figure.right.big img   { max-width: 66%; }
 
 .post .content h1 { clear: both; }
 .post .content h2 { clear: both; }
