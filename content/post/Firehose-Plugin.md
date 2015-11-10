@@ -6,10 +6,9 @@ categories:
 - CF CLI
 - Logging & Metrics
 date: 2015-10-20T20:54:48-06:00
-draft: true
 short: |
   Get your Cloud Foundry Firehose logs and metrics straight to your fingertips.
-title: Firehose Plugin
+title: Using the Cloud Foundry Firehose Plugin
 ---
 
 ## Firehose at your fingertips
