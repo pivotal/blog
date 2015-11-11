@@ -1,5 +1,6 @@
 ---
-author: warren
+authors: 
+- warren
 categories:
 - Firehose
 - Loggregator
@@ -17,7 +18,7 @@ On the Logging and Metrics team, we recently found ourselves in a need to debug 
 ### What is the firehose?
 In all seriousness, the Firehose can be very useful. It is a stream of all application logs and all component metrics from the CF components. Unfortunately, so far it has been really difficult to access (you had to write some code in go to get access to that stream). But with our brand new Firehose CLI plugin, all you have to do is install the plugin from the plugin repository and you are good to go.
 
-{{< responsive-figure src="/images/Loggregator/diagram.gif" class="center">}}
+{{< responsive-figure src="/images/loggregator/diagram.gif" class="center">}}
 
 ### How can I obtain admin access?
 As mentioned earlier, you need either admin access or some special permission to access the Firehose. Fortunately, the Loggregator [README](https://github.com/cloudfoundry/loggregator/#configuring-the-firehose) provides good details on how to set this up.
