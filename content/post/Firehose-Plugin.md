@@ -35,7 +35,7 @@ Installing, the plugin is really simple.
 1. Add the plugin repository
 
     ~~~bash
-      cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
+    cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
     ~~~
 1. Install the plugin
 
@@ -49,7 +49,7 @@ There are two ways of using the plugin. There is an interactive mode and non-int
 The interactive mode requires some user input and will look something like below. You may select the type of messages you'd like to have streaming on your terminal by selecting an index. If you are curious as to why it doesn't start with 1, look [here](https://github.com/cloudfoundry/dropsonde-protocol/blob/master/events/envelope.proto#L13) and [here](https://github.com/cloudfoundry/firehose-plugin/blob/master/firehose/client.go#L85)
 
 ```
-○ → cf nozzle
+$ cf nozzle
 What type of firehose messages do you want to see?
 Please enter one of the following choices:
     hit 'enter' for all messages
