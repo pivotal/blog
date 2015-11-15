@@ -12,6 +12,7 @@ deploy:
     username: tsaleh@pivotal.io
     organization: pivotal
     space: blog
+    application: pivotal-cf-blog
     on:
       repo: pivotal/blog
       branch: master
@@ -25,6 +26,7 @@ deploy:
     username: tsaleh@pivotal.io
     organization: pivotal
     space: blog
+    application: pivotal-cf-blog-staging
     on:
       repo: pivotal/blog
       branch: master

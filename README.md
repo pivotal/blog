@@ -2,7 +2,7 @@
 
 Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
-[Live site](http://engineering.pivotal.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/)
+[![Build Status](https://travis-ci.org/pivotal/blog.svg?branch=master)](https://travis-ci.org/pivotal/blog) | [Live site](http://engineering.pivotal.io/)| [Staging](http://pivotal-cf-blog-staging.cfapps.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/)
 
 ## Contributing
 
