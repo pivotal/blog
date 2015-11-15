@@ -2,15 +2,16 @@
 
 Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
-[![Build Status](https://travis-ci.org/pivotal/blog.svg?branch=master)](https://travis-ci.org/pivotal/blog) | [Live site](http://engineering.pivotal.io/)| [Staging](http://pivotal-cf-blog-staging.cfapps.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/)
+[Live site](http://engineering.pivotal.io/) | [Staging](http://pivotal-cf-blog-staging.cfapps.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/) | [![Build Status](https://travis-ci.org/pivotal/blog.svg?branch=master)](https://travis-ci.org/pivotal/blog)
 
 ## Contributing
 
-1. Fork this repository
-1. Pull your fork, and [run it locally](https://github.com/pivotal/blog#running-locally), so you can see what you're writing.
-1. [Write your post](https://github.com/pivotal/blog#writing-a-post).
-1. Gather feedback from your engineering peers.  Iterate, repeat.
-1. Ping `@pivotal/engineering-directors` when you feel it's ready for the world.
+1. [Write your post](https://github.com/pivotal/blog#writing-a-post) as a draft.
+1. [Preview it](http://pivotal-cf-blog-staging.cfapps.io/) on staging.
+1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
+1. Ship it!
+
+Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog) (only staging shows drafts).
 
 ## Running Locally
 
@@ -28,7 +29,6 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 
 ## Writing a Post
 
-1. Fork this repo to a copy you can push to.
 1. Add yourself as an author (first time only, obvs.):
 
     ~~~
@@ -40,15 +40,19 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 
 1. *Meta:* If you want to change the default new post template, it's in `./archetypes/post.md`.
 
+## Writing a _Good_ Post
+
+**Keep things technical.**  People want to see blog posts that educate them or make them things from a different light.  Our audience are engineers, so the way to reach them is through code.  The more code samples, the better.
+
+**Nobody likes a wall of text.**  Use headers to break up your text.  Each image you add to your post increases it's XP by 100.  Diagrams, screen shots, or humorous "meme" (|memā|) gifs...  They all add color and make your post much more readable.  If you don't have OmniGraffle, then submit an ask ticket.  There's no excuse for monotony.
+
+**Your 10th grade teacher was right.**  Make use of the hamburger technique.  Your audience doesn't have a lot of time.  Tell them what you're going to write, write it, and then tell them what you've written.  Spend time on your opening.  Make it click.
+
+**Pair all the time.**  We do everything as a team, and this is no different.  Get feedback from your friends and coworkers.  Show them the post on the staging site, and ask them to tear it apart.
+
 ## Publishing Your Copy
 
-You can publish your fork to your own cf org by running `./bin/publish`.  That script will push your blog to `pivotal-cf-blog-$USER` (where `$USER` is your local unix username.  You'll need to make sure you've `cf target`ed the org and space you want to push to.
-
-## Publishing to Production
-
-It's all about PRs.  Submit your post as a pull-request, ping anyone else you like, gather feedback, iterate, etc.
-
-Once the PR's ready, tell `@pivotal/engineering-directors`, and we can then publish by targeting our `pivotal` org and `blog` space, and then running `./bin/publish prod`.
+Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog) (only staging shows drafts).  To publish your draft post, simply remove the `draft: true` line from the top of your post.
 
 ## Changing the style
 
