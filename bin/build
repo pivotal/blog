@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 rm -rf public
-hugo -b http://engineering.pivotal.io -d public/prod
-hugo -b http://localhost              -d public/staging --buildDrafts  $@
+echo "Production..."
+hugo -b http://engineering.pivotal.io             -d public/prod
+echo "Staging..."
+hugo -b http://pivotal-cf-blog-staging.cfapps.io/ -d public/staging --buildDrafts
+echo "Local..."
+hugo -b http://localhost                          -d public/local --buildDrafts $@
 
