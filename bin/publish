@@ -3,46 +3,12 @@
 # Safety first!
 set -e
 
-usage() {
-  echo "Usage: $(basename $0) [prod|help]" 
-  echo
-  echo "  $0"
-  echo
-  echo "Pushes the staging version of this blog, including drafts,"
-  echo "to pivotal-cf-blog-USER (where USER is your local \$USER)"
-  echo
-  echo "  $0 prod"
-  echo
-  echo "Pushes only published posts to pivotal-cf-blog."
-  echo
-  echo "Either way, this script assumes you've already logged in"
-  echo "and targeted the correct org and space."
-  echo
-  echo "  $0 help"
-  echo
-  echo "Gives this messagae."
-  echo
-}
-
 run() {
-  CMD=$@
-  echo
-  echo ">>> $CMD"
-  $CMD
+  CMD=$@ && echo && echo ">>> $CMD" && $CMD
 }
-
-[[ x$1 == "xhelp" ]] && usage && exit 1
-
-TARGET=$1
-TARGET=${TARGET:-pivotal-cf-blog-$USER}
-DIR="public/staging"
-
-if [[ $TARGET == "prod" ]]; then
-  TARGET="pivotal-cf-blog"
-  DIR="public/prod"
-fi
 
 run $(dirname $0)/build
-run cf push -n $TARGET -p $DIR -f $DIR/manifest.yml
+run cf push pivotal-cf-blog         -f public/prod/manifest.yml    -n pivotal-cf-blog
+run cf push pivotal-cf-blog-staging -f public/staging/manifest.yml -n pivotal-cf-blog-staging
 
 
