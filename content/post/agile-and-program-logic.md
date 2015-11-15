@@ -1,5 +1,6 @@
 ---
-author: gareth
+authors: 
+- gareth
 categories:
 - Agile
 date: 2015-10-17T14:48:36+01:00

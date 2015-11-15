@@ -1,5 +1,6 @@
 ---
-author: gregg
+authors: 
+- gregg
 categories:
 - jasmine
 - javascript

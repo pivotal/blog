@@ -1,5 +1,6 @@
 ---
-author: kai
+authors: 
+- kai
 categories:
 - BOSH
 date: 2015-10-16T15:43:00-07:00
