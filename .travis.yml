@@ -1,8 +1,8 @@
 language: go
 go: '1.5'
 install:
-- go get github.com/spf13/hugo
-script: ./bin/build
+  - go get github.com/spf13/hugo
+script: ./bin/build && ./bin/generate_manifests
 deploy:
   - provider: cloudfoundry
     manifest: public/prod/manifest.yml
@@ -12,7 +12,6 @@ deploy:
     username: tsaleh@pivotal.io
     organization: pivotal
     space: blog
-    application: pivotal-cf-blog
     on:
       repo: pivotal/blog
       branch: master
@@ -26,7 +25,6 @@ deploy:
     username: tsaleh@pivotal.io
     organization: pivotal
     space: blog
-    application: pivotal-cf-blog-staging
     on:
       repo: pivotal/blog
       branch: master

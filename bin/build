@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 rm -rf public
 echo "Production..."
 hugo -b http://engineering.pivotal.io             -d public/prod

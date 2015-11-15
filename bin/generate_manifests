@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+dir=$(dirname $0)/../public
+prod=$dir/prod/manifest.yml
+staging=$dir/staging/manifest.yml
+
+echo "Generating prod manifest"
+
+rm $prod
+echo '---'                                                                 >> $prod
+echo 'name: pivotal-cf-blog'                                               >> $prod
+echo 'memory: 64M'                                                         >> $prod
+echo 'buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git' >> $prod
+echo 'path: .'                                                             >> $prod
+
+echo "Generating staging manifest"
+
+rm $staging
+echo '---'                                                                 >> $staging
+echo 'name: pivotal-cf-blog-staging'                                       >> $staging
+echo 'memory: 64M'                                                         >> $staging
+echo 'buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git' >> $staging
+echo 'path: .'                                                             >> $staging
+
