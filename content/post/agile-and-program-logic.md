@@ -4,7 +4,6 @@ authors:
 categories:
 - Agile
 date: 2015-10-17T14:48:36+01:00
-draft: false
 short: |
   On some of the differences and similarities in perspective between Agile/TDD
   programmers and developers of program-logic tools. 
