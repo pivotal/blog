@@ -4,13 +4,12 @@ authors:
 categories:
 - BOSH
 date: 2015-10-16T15:43:00-07:00
-draft: true
 short: |
   In order to know if we can deploy 2000 vms with BOSH, we did a scaling test and this blog post list how we did it and the caveats we found.
 title: Scaling up to 2000 vms with BOSH
 ---
 
-Pivotal’s Cloud Ops team provide production operation support for [Pivotal Web Services](https://run.pivotal.io/), which is a public facing PaaS service based on [cloudfoundry](https://github.com/cloudfoundry).
+Pivotal's Cloud Ops team provide production operation support for [Pivotal Web Services](https://run.pivotal.io/), which is a public facing PaaS service based on [cloudfoundry](https://github.com/cloudfoundry).
 
 Managing such a big cluster (hundreds of vms) is not easy, and here are some of the challenges we are facing from day to day:
 
