@@ -11,7 +11,7 @@ Welcome to our little slice of the internets!  This blog is dedicated to technic
 1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
 1. Ship it!
 
-Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts).
+Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org.
 
 ## Running Locally
 
@@ -54,7 +54,7 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 
 ## Publishing Your Copy
 
-Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog) (only staging shows drafts).  To publish your draft post, simply remove the `draft: true` line from the top of your post.
+Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
 
 ## Changing the style
 
