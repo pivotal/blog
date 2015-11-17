@@ -73,15 +73,13 @@ We create a *concourse* Security Group via the Amazon AWS Console:
 * click **Edit**
 * add the following rules:
 
-{{% table class="table-data table-light" %}}
-| Type of Traffic | Protocol  | Port Range | Source IP CIDR   | Notes |
-| :-------------  | :-------- | ---------: | --------: | :---- |
-| SSH (22)        | TCP (6)   | 22         | 0.0.0.0/0 | debugging, agents |
-| HTTP (80)       | TCP (6)   | 80         | 0.0.0.0/0 | redirect |
-| HTTPS (443)     | TCP (6)   | 443        | 0.0.0.0/0 | web |
-| Custom TCP Rule | TCP (6)   | 2222       | 0.0.0.0/0 | agents |
-| Custom TCP Rule | TCP (6)   | 6868       | 0.0.0.0/0 | bosh-init |
-{{% /table %}}
+    | Type of Traffic | Protocol  | Port Range | Source IP CIDR   | Notes |
+    | :-------------  | :-------- | ---------: | --------: | :---- |
+    | SSH (22)        | TCP (6)   | 22         | 0.0.0.0/0 | debugging, agents |
+    | HTTP (80)       | TCP (6)   | 80         | 0.0.0.0/0 | redirect |
+    | HTTPS (443)     | TCP (6)   | 443        | 0.0.0.0/0 | web |
+    | Custom TCP Rule | TCP (6)   | 2222       | 0.0.0.0/0 | agents |
+    | Custom TCP Rule | TCP (6)   | 6868       | 0.0.0.0/0 | bosh-init |
 
 * click **Save**
 
