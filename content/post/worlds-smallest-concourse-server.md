@@ -277,12 +277,10 @@ would have increased our yearly cost by $713.54 <sup>[[m3.large]](#m3.large)</su
 
 Here are our costs:
 
-{{% table class="table-data table-light" %}}
 |Expense|Vendor|Cost|Cost / year
 |-------|------|----|----------
 |*ci.blabbertabber.com* cert|cheapsslshop.com|$14.85 3-year  <sup>[[inexpensive-SSL]](#inexpensive-SSL)</sup>|$4.95
 |EC2 t2.micro instance|Amazon AWS|$0.0086 / hour <sup>[[t2.micro]](#t2.micro)</sup>|$75.39
-{{% /table %}}
 
 ## Footnotes
 
