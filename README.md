@@ -13,20 +13,6 @@ Welcome to our little slice of the internets!  This blog is dedicated to technic
 
 Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org.
 
-## Running Locally
-
-This site uses [Hugo](http://gohugo.io) v0.14, which is easy to install:
-
-~~~
-$ brew install hugo
-$ hugo version
-Hugo Static Site Generator v0.14 BuildDate: 2015-06-16T21:41:12+01:00
-~~~
-
-After cloning this repository, navigate into the new directory, run `./bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
-
-Hugo has [LiveReload](http://livereload.com/) built in, so if you have that configured in your browser, your window will update as soon as you make a change.  Hugo is *fast*, so you might not realize the reload has already happened.
-
 ## Writing a Post
 
 1. Add yourself as an author (first time only, obvs.):
@@ -51,6 +37,30 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 **Pair all the time.**  We do everything as a team, and this is no different.  Get feedback from your friends and coworkers.  Show them the post on the staging site, and ask them to tear it apart.
 
 **Make it pretty.** Pivotal-ui comes with a bunch of nice helpers.  Make use of them.  Check out the example styles in the default post template.
+
+## Running Locally
+
+This site uses [Hugo](http://gohugo.io) v0.14, which is easy to install:
+
+~~~
+$ brew install hugo
+$ hugo version
+Hugo Static Site Generator v0.14 BuildDate: 2015-06-16T21:41:12+01:00
+~~~
+
+After cloning this repository, navigate into the new directory, run `./bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
+
+Hugo has [LiveReload](http://livereload.com/) built in, so if you have that configured in your browser, your window will update as soon as you make a change.  Hugo is *fast*, so you might not realize the reload has already happened.
+
+## Errors???
+
+If you get an error like:
+
+```
+Error while rendering page foo: reflect: call of reflect.Value.Interface on zero Value
+```
+
+Then you _may_ have forgotten to include a twitter account in your `data/authors/foo.yml` file.  There's [an issue for this](https://github.com/pivotal/blog/issues/40) if you're so inclined to help fix it.
 
 ## Publishing Your Copy
 
