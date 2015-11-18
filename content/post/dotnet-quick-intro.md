@@ -5,11 +5,12 @@ authors:
 - myoung
 - jshahid
 date: 2015-11-03T10:41:30-05:00
+title: Deploying your first .NET app on Cloud Foundry
 short: >
-  Deploying your first .NET app on Cloud Foundry
+  PCF 1.6 brings with it support for .NET. Here's how to get started.
 ---
 
-Cloud Foundry is a great platform for deploying all of your web applications. Did you know that includes many of your .NET apps too?
+Cloud Foundry is a great platform for deploying all of your web applications. Did you know that now includes many of your .NET apps too?
 
 Let's take a walk through deploying a simple .NET app to your existing Cloud Foundry.
 
@@ -29,7 +30,7 @@ With that out of the way, now lets get to deploying. We'll start with a simple e
 
         git clone https://github.com/cloudfoundry-incubator/.NET-sample-app.git my-app
 
-   You can also download the source from the [GitHub page](https://github.com/cloudfoundry-incubator/.NET-sample-app)
+    You can also download the source from the [GitHub page](https://github.com/cloudfoundry-incubator/.NET-sample-app)
 
 1. Push your app and wait for it to start:
 
