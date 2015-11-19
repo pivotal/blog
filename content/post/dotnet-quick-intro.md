@@ -10,7 +10,7 @@ short: >
   PCF 1.6 brings with it support for .NET. Here's how to get started.
 ---
 
-Cloud Foundry is a great platform for deploying all of your web applications. Did you know that now includes many of your .NET apps too?
+Cloud Foundry is a great platform for deploying your web applications. As of PCF 1.6, CF supports deploying .NET apps too!
 
 Let's take a walk through deploying a simple .NET app to your existing Cloud Foundry.
 
@@ -32,39 +32,23 @@ With that out of the way, now lets get to deploying. We'll start with a simple e
 
     You can also download the source from the [GitHub page](https://github.com/cloudfoundry-incubator/.NET-sample-app)
 
-1. Push your app and wait for it to start:
+1. If Diego is enabled by default on your CF deployment, you can just push your app and wait for it to start:
 
         cf push my-app -s windows2012R2 -b binary_buildpack -p ./my-app/ViewEnvironment/
 
-1. Now direct your browser to http://my-app.your-domain and you'll see the app's environment details.
+1. If it's not, or if you're not sure, you'll need to install the [Diego Enabler](https://github.com/cloudfoundry-incubator/diego-enabler) CLI plugin and then enable Diego on the application before starting it:
 
-
-## Debugging: Enabling Diego
-
-If you get this error, then you will need to enable diego
-
-
-		Starting app my-app in org ORG / space SPACE as admin...
-		FAILED
-		Server error, status code: 404, error code: 250003, message: The stack could not be found: The requested app stack windows2012R2 is not available on this system.
-
-1. Install the Diego-enabler plugin:
-
-  * [CF Diego Enabler Plugin](https://github.com/cloudfoundry-incubator/Diego-Enabler)
-
-1. Enable diego for your app:
-
+        cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
+        cf install-plugin Diego-Enabler -r CF-Community
+        cf push my-app -s windows2012R2 -b binary_buildpack --no-start -p ./my-app/ViewEnvironment/
         cf enable-diego my-app
+        cf start my-app
 
-1. Then restart:
-
-        cf restart my-app
+1. Once your app is pushed, you can navigate to the app's URL and you will see all the VCAP variables.  Add `?all=` to the URL to see all the system variables too.
 
 ## General Debugging
 
-If you still have errors, check our application logs
-
-1. To follow your app's logs use:
+If you have any errors, check your application logs:
 
         cf logs my-app --recent
 
