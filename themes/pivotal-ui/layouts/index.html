@@ -6,19 +6,29 @@
       <div class="bg-neutral-11">
         <div class="pan">
           <div class="posts">
-            {{ range .Data.Pages }}
-            <a href="{{ .Permalink }}" class="post">
-              <div>
-                <h1 class="post-title mvn type-dark-1">
-                  {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
+            <ol class="list-timeline">
+              {{ range .Data.Pages }}
+              <li class="list-timeline-item post">
+                <span class="list-timeline-date">
+                  <ul class="authors">
+                  {{ $all := .Site.Data.authors}}
+                  {{ $authors := .Params.authors}}
+                  {{ range $author := $authors }}
+                    {{ with $a := (index $all $author)}}
+                      <li>{{ $a.Name }}</li>
+                    {{ end}}
+                  {{ end }}
+                  </ul>
+                  <time datetime="{{ .Date.Format "2014-20-01" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+                </span>
+                <a class="h3 list-timeline-title" href="{{ .Permalink }}" class="post">
+                  {{ if .Draft }}<span class="strong">DRAFT:</span>{{ end }}
                   {{ .Title }}
-                </h1>
-                <p class="mvn post-date type-dark-4">{{ .Date.Format "Jan 2, 2006" }}</p>
-
-              <p class="type-dark-3">{{ .Params.short | markdownify }}</p>
-              </div>
-            </a>
-            {{ end }}
+                  <span class="list-timeline-subtitle">{{ .Params.short | markdownify }}</span>
+                </a>
+              </li>
+              {{ end }}
+            </ol>
           </div>
         </div>
       </div>
