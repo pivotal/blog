@@ -12,7 +12,7 @@
             {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
             {{ .Title }}
           </h1>
-          <h2 class="h3 type-dark-3 em-default mvn" id="post-summary">{{.Params.short | markdownify}}</h2>
+          <h2 class="h3 type-dark-3 em-default mvn post-summary">{{.Params.short | markdownify}}</h2>
           <div class="type-dark-5 em-default">
             Posted on
             <span class="post-date"> {{ .Date.Format "Mon, Jan 2, 2006" }} </span>
