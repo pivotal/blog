@@ -22,7 +22,7 @@
                   <time datetime="{{ .Date.Format "2014-20-01" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
                 </span>
                 <a class="h3 list-timeline-title" href="{{ .Permalink }}" class="post">
-                  {{ if .Draft }}<span class="strong">DRAFT:</span>{{ end }}
+                  {{ if .Draft }}<span class="type-xs label label-primary">Draft</span>{{ end }}
                   {{ .Title }}
                   <span class="list-timeline-subtitle">{{ .Params.short | markdownify }}</span>
                 </a>
