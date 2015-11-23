@@ -6,14 +6,13 @@ categories:
 - HTTP
 - MySQL
 date: 2015-11-05T13:55:53-07:00
-draft: true
 short: |
   Signaling failure during an HTTP stream
-title: http trailers
+title: HTTP Trailers
 ---
 
 ## Motivation
-We, the core-services team, are responsible for the MySQL service. This service runs alongside a CloudFoundry installation and creates MySQL databases for your CloudFoundry applications to use.
+We, the core-services team, are responsible for the MySQL service. This service runs alongside a Cloud Foundry installation and creates MySQL databases for your Cloud Foundry applications to use.
 
 Operators have been requesting automated database backups so they can restore their MySQL instances in case of failure. A MySQL backup is a tarball containing all the data in the MySQL instance, which can become very large. We ultimately want to upload that file to S3 or another external blobstore so that it will be available to recreate the MySQL instance if it is destroyed.
 
