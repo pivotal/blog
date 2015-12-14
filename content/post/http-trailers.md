@@ -18,19 +18,20 @@ Operators have been requesting automated database backups so they can restore th
 
 When the MySQL server gets a request to take a backup, it can do one of two things:
 
-First generate the backup on local disk and then upload it to our blobstore
-Generate it and stream it as it’s being generated.
-The problem with the two-step generate-then-upload approach is that we would have to reserve twice as much space on the MySQL server’s file system as we would otherwise need.
+- First generate the backup on local disk and then upload it to our blobstore
+- Generate it and stream it as it's being generated.
+- 
+The problem with the two-step generate-then-upload approach is that we would have to reserve twice as much space on the MySQL server's file system as we would otherwise need.
 
 We settled on trying to generate and simultaneously stream the backup.
 
 ## Streaming in HTTP
 
-In HTTP/1.0, you had specify the length of your response in advance via the Content-Length Header field. HTTP/1.1 removed that limitation — allowing senders to stream content — with the addition of [Chunked Transfer Coding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1). According to [Wikipedia](https://en.wikipedia.org/wiki/Chunked_transfer_encoding), this enabled “senders [to] begin transmitting dynamically-generated content before knowing the total size of that content.”
+In HTTP/1.0, you had to specify the length of your response in advance via the Content-Length Header field. HTTP/1.1 removed that limitation — allowing senders to stream content — with the addition of [Chunked Transfer Coding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1). According to [Wikipedia](https://en.wikipedia.org/wiki/Chunked_transfer_encoding), this enabled "senders [to] begin transmitting dynamically-generated content before knowing the total size of that content."
 
 ## The problems with streaming in HTTP
 
-The first problem we encountered when trying to stream data as it’s generated is how to indicate failure.
+The first problem we encountered when trying to stream data as it's generated is how to indicate failure.
 
 In a traditional HTTP response, if something went wrong during the processing of the request, you would use the HTTP status code of 5xx to indicate a failure.
 
@@ -64,7 +65,7 @@ If you had a way of sending metadata at the end of the response, then no matter 
 
 HTTP Trailers are like HTTP Headers sent at the end of an HTTP response. They can be used to send metadata separate from the response body. Trailers are only available when using Chunked Transfer Coding.
 
-Even though trailers are a part of the official HTTP spec, they are rarely used. According to the Golang documentation, “few HTTP clients, servers, or proxies support HTTP trailers.”
+Even though trailers are a part of the official HTTP spec, they are rarely used. According to the Golang documentation, "few HTTP clients, servers, or proxies support HTTP trailers."
 
 ## HTTP/1.1 Trailer Spec
 
@@ -129,7 +130,7 @@ func writeTrailer(writer http.ResponseWriter, key string, value string) {
 }
 ```
 
-The trailers from the response are stored in the [`Response.Trailer`](http://golang.org/src/net/http/response.go?s=2161:2254) field, which is of type `Header` (just a `map[string][]string`). It’s important to note that this field will not be populated until you finish reading the entire response body.
+The trailers from the response are stored in the [`Response.Trailer`](http://golang.org/src/net/http/response.go?s=2161:2254) field, which is of type `Header` (just a `map[string][]string`). It's important to note that this field will not be populated until you finish reading the entire response body.
 
 ```
 It("has HTTP 200 status code but writes the error to the trailer", func() {
