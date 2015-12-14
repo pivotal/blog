@@ -20,14 +20,14 @@ When the MySQL server gets a request to take a backup, it can do one of two thin
 
 - First generate the backup on local disk and then upload it to our blobstore
 - Generate it and stream it as it's being generated.
-- 
+
 The problem with the two-step generate-then-upload approach is that we would have to reserve twice as much space on the MySQL server's file system as we would otherwise need.
 
 We settled on trying to generate and simultaneously stream the backup.
 
 ## Streaming in HTTP
 
-In HTTP/1.0, you had to specify the length of your response in advance via the Content-Length Header field. HTTP/1.1 removed that limitation — allowing senders to stream content — with the addition of [Chunked Transfer Coding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1). According to [Wikipedia](https://en.wikipedia.org/wiki/Chunked_transfer_encoding), this enabled "senders [to] begin transmitting dynamically-generated content before knowing the total size of that content."
+In HTTP/1.0, you had to specify the length of your response in advance via the Content-Length Header field. HTTP/1.1 removed that limitation, allowing senders to stream content, with the addition of [Chunked Transfer Coding](http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1). According to [Wikipedia](https://en.wikipedia.org/wiki/Chunked_transfer_encoding), this enabled "senders [to] begin transmitting dynamically-generated content before knowing the total size of that content."
 
 ## The problems with streaming in HTTP
 
@@ -35,7 +35,7 @@ The first problem we encountered when trying to stream data as it's generated is
 
 In a traditional HTTP response, if something went wrong during the processing of the request, you would use the HTTP status code of 5xx to indicate a failure.
 
-An HTTP status code is actually encoded in the [Status Line](http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1) of the raw response — the first line of the response as seen below (HTTP/1.1 200 OK):
+An HTTP status code is actually encoded in the [Status Line](http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1) of the raw response, the first line of the response as seen below (HTTP/1.1 200 OK):
 
 ```
 $ curl -i --raw http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1
