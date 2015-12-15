@@ -8,7 +8,7 @@ date: 2015-11-11T14:39:05-08:00
 short: |
   First impressions of Kotlin
 title: Setting up Kotlin with Android and tests
-draft: true
+draft: false
 ---
 
 I recently heard about [Kotlin](https://kotlinlang.org/) with the release of their 1.0 Beta last week. Kotlin is a modern programming language that runs in the JVM and is interoperable with Java. Kotlin can also be used to create Android apps.  
