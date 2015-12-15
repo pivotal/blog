@@ -9,7 +9,7 @@
             <ol class="list-timeline">
               {{ range .Data.Pages }}
               <li class="list-timeline-item post">
-                <span class="list-timeline-date">
+                <div class="list-timeline-date">
                   <ul class="authors">
                   {{ $all := .Site.Data.authors}}
                   {{ $authors := .Params.authors}}
@@ -20,7 +20,7 @@
                   {{ end }}
                   </ul>
                   <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-                </span>
+                </div>
                 <a class="h3 list-timeline-title" href="{{ .Permalink }}" class="post">
                   {{ if .Draft }}<span class="type-xs label label-primary">Draft</span>{{ end }}
                   {{ .Title }}
