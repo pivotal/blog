@@ -4,8 +4,8 @@ authors:
 categories:
 - Agile
 - Humans
-date: 2015-12-18T08:45:40-05:00
-draft: true
+date: 2015-12-18T12:55:40-05:00
+draft: false
 short: |
   Our brains are naturally limited. This can be a curse, or it can be a gift, depending on how you look at it.
 title: Abstraction, or, The Gift of Our Weak Brains
