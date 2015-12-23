@@ -12,7 +12,7 @@ date: 2015-12-21T15:55:56-07:00
 draft: true
 short: |
   The first steps along the path of converting a fully functional Java8/Spring Boot/Spring Cloud application to Kotlin.
-title: The Journey of a Spring Boot application from Java 8 to Kotin: The Application Class
+title: "The Journey of a Spring Boot application from Java 8 to Kotin: The Application Class"
 ---
 After writing a significant amount of Ruby/Rails for many years, lately I have found myself writing a ton of Spring Boot applications. [Spring Boot](http://projects.spring.io/spring-boot/) is a great framework for the JVM that focues on developer productivity by making "it easy to create stand-alone, production-grade Spring based Applications that you can 'just run'". It has a lot of the feel of Rails in the "convention over configuration" department but becuase I end up using Java 8, I have lost some of the "joy" that you get when writing in Ruby. Even though Java 8 provides significant improvements over Java 7, I wanted to find out if I could get some more of that joy back by using [Kotlin](https://kotlinlang.org/) to write Sring Boot applications. 
 
