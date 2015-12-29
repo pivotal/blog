@@ -23,7 +23,11 @@ Data Science can be fairly broad and exploratory. In such an environment, an agi
 
 We are integrating classic labs techniques like having daily stand-ups, regular retros, pivotal tracker, pair programming, continuous integration, test-driven development in our day to day work. I won’t say everything has fallen into place yet, we are still exploring how (or to what level) these techniques fit the data science world. This time, I’ll discuss my experience with Pair Programming in data science so far.
 
+
 ## Pair Programming
+
+{{< responsive-figure src="/images/pairing_ds_logo.png" class="right small" >}}
+
 Hmmmm… Pair Programming is exactly what it sounds. If you ever get a chance to visit the Labs office you will see two developers sharing a big desk space and working on two mirrored screens simultaneously. Sounds interesting and a bit challenging…. Honestly when I first saw this alien style of programming I had concerns about how productive it could be in a DS environment. Yes we have to code as data scientist!
 
 For those who didn’t know, DS involves programming right from the initial feature creation and exploratory phase to model development and its operationalization. For those who didn’t know, DS involves programming right from the initial feature creation and exploratory phase to model development and its operationalization.
@@ -46,7 +50,7 @@ My initial concerns about working with people of varied level of experience ease
 
 We follow extreme programming practices in Pivotal. Ian was kind and encouraged me to be inquisitive and welcomed a newbie’s ideas. I really enjoyed my initial pairing experience and started getting used to it. Since then, I have paired with other colleagues and clients and I really enjoy pairing.
 
-{{< responsive-figure src="/images/DS_Pairing.jpg" >}}
+{{< responsive-figure src="/images/pairing_ds.jpg" >}}
 
 It’s a great enablement technique. While pairing with clients, it makes them feel more involved and by developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better. Pairing with a colleague makes exploration and development much more fun. Pairing helps in exchanging knowledge and skills.
 
