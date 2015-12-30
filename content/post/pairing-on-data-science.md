@@ -34,7 +34,6 @@ Hmmmm… Pair Programming is exactly what it sounds. If you ever get a chance to
 * While pairing remotely, make sure you have a seamless Internet connection. Trust me it pairing can get fairly frustrating otherwise.
 * If you are new to a certain language, brush it up before hand. In case both you and your pair is in doubt, Google comes to rescue :)
 
-
 ### Hoops to Jump through
 When you start on a DS use case your objective is fairly broad. You need to spend a lot of time to find the right way to materialize the objective. You have to flare and focus repeatedly between coming up with a more definite objective and shipping it as an end product.
 
@@ -43,7 +42,6 @@ I had my doubts about how pairing would fit this flare and focus process. It’s
 For DS, there is no best tool for the task at hand. If one DS is comfortable using python that might not necessarily be the same for his/her pair. Although, this is a great opportunity to expand one’s skill set but it might be a little disconcerting to run to Google for some basic syntax check with your pair watching over you!
 
 In general another hoop a pair might come across is when the two individuals pairing have different levels of expertise. I didn’t know how daunting an experience it would be for a newbie to code in this environment or how frustrating could it be for the experienced one to trying to get the noobie up to speed.
-
 
 ### Day 3 _@Pivotal_ and henceforth..
 I started pairing with Ian, a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that more the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
