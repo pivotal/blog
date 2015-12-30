@@ -14,7 +14,7 @@ title: Pairing for Data Scientists
 
 He ya! Happy 2016!! I am two months old now at Pivotal Labs Data Science Team at London and the journey so far has been nothing but exciting. I have been introduced to new working methodologies to make data science (DS) agile. For those thinking that there goes another vague buzzword...
 
-To me, data science is essentially getting to know your own venture; knowing it better by delving deeper into all the information you have or can have, discovering its nitty-gritty and using this valuable piece to influence your future affluently. Others might be a bit inquisitive about how Data Science and agile are being used together. I was too when I first interacted with the DS EMEA team in London.
+To me, data science is essentially getting to know your own venture; knowing it better by delving deeper into all the information you have or can have, discovering its nitty-gritty and using this valuable piece to influence your future affluently. Others might be a bit inquisitive about how Data Science and agile is being used together. I was too when I first interacted with the DS EMEA team in London.
 
 ## Data Science the _Agile_ way
 Data Science can be fairly broad and exploratory. In such an environment, an agile way can help to iterate and speed up process and help us to not get lost in the vast problem search space. The DS team at Pivotal recently became a part of Pivotal Labs and we have been trying to adopt the Labs culture and techniques from which data science could benefit.
