@@ -2,8 +2,6 @@
 title: Intro to the Patch Command
 authors:
 - forde
-- warren
-- tammer
 categories:
 - Patch
 - Golang
