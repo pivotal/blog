@@ -60,7 +60,7 @@ If you get an error like:
 Error while rendering page foo: reflect: call of reflect.Value.Interface on zero Value
 ```
 
-Then you _may_ have forgotten to include a twitter account in your `data/authors/foo.yml` file.  There's [an issue for this](https://github.com/pivotal/blog/issues/40) if you're so inclined to help fix it.
+Then you _may_ have forgotten to include a property in your `data/authors/foo.yml` file.
 
 ## Publishing Your Copy
 
