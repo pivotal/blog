@@ -26,7 +26,7 @@ The patch command is great for appyling and reverting changes to any text becaus
 
 Here is a simple Go app.
 
-```
+```go
 $ cat src/code.go
 
 package main
@@ -70,7 +70,7 @@ In our case, we ran a cycle in our test environments with this code to verify th
 
 First, we'll make a copy of the code and make the changes that we want.
 
-```
+```go
 $ cat src_altered/code.go
 
 package main
@@ -134,7 +134,7 @@ patching file src/code.go
 The -p flag is required, which specifies how many prefixed path
 segements you want to remove from the path.
 
-```
+```go
 $ cat src/code.go
 
 package main
@@ -174,7 +174,7 @@ patching file src/code.go
 
 The only change is that we've told patch that we want to reverse (-R).
 
-```
+```go
 $ cat src/code.go
 
 package main
