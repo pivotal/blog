@@ -41,7 +41,7 @@ This is not recommended, we assume we will see the CPU contention but it doesn't
 it bring extra complexity without significant benefit, more points of failure in the control plane.
 
 A deployment manifest snippet as below:
-```
+```yaml
 jobs:
 - name: nats
   templates:
