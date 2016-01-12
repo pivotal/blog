@@ -18,7 +18,7 @@ To me, data science is essentially getting to know your own venture; knowing it 
 
 Others might be a bit inquisitive about how can you pair together as Data Scientists? I was too when I first interacted with the DS EMEA team in London.
 
-I feel pairing is a great enablement technique. While pairing with clients, it makes them feel more involved. By developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better. Pairing with a colleague makes exploration and development of a DS use case much more fun. It helps in exchanging knowledge and skills.
+But after working as a pair on various use cases, I feel pairing can be a great enablement technique. While pairing with clients, it makes them feel more involved. By developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better. Pairing with a colleague makes exploration and development of a DS use case much more fun. It helps in exchanging knowledge and skills.
 
 “Pairing is sharing” as one of my colleagues always tell me :). It is a concentrated cohesive effort that helps in fast iterative development. A great way to enable each other and develop something in synergy.
 
