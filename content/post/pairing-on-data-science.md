@@ -26,7 +26,7 @@ _Pairing is a great bonding exercise, would recommend giving it a shot!_
 
 ## Pair Programming and Data Science??
 {{< responsive-figure src="/images/pairing_ds_logo.png" class="right small" >}}
-**Link to other pairing tags in the start**
+
 Hmmmm… Pair Programming is exactly what it sounds. Pairing has been one of the key programming practices followed at [Pivotal Labs](https://blog.pivotal.io/tag/paired-programming). If you ever get a chance to visit the Labs office you will see two developers sharing a big desk space and working on two mirrored screens simultaneously. Sounds interesting and a bit challenging…. Honestly when I first saw this alien style of programming I had concerns about how productive it could be in a DS environment. Yes we have to code as data scientist! For those who didn’t know, DS involves programming right from the initial feature creation and exploratory phase to model development and its operationalization.
 
 ### Hoops to Jump through
