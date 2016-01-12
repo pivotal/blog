@@ -1,6 +1,8 @@
 # The Pivotal Engineering Journal
 
-Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
+Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!  
+
+This blog is built and maintained entirely by *you*!  Feel free to propose or just implement any improvement you believe in.  ANARCHY!!!!
 
 [Live site](http://engineering.pivotal.io/) | [Staging](http://pivotal-cf-blog-staging.cfapps.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Pull Requests](https://github.com/pivotal/blog/pulls) | [Hugo](http://gohugo.io/) | [![Build Status](https://travis-ci.org/pivotal/blog.svg?branch=master)](https://travis-ci.org/pivotal/blog)
 
@@ -60,7 +62,7 @@ If you get an error like:
 Error while rendering page foo: reflect: call of reflect.Value.Interface on zero Value
 ```
 
-Then you _may_ have forgotten to include a twitter account in your `data/authors/foo.yml` file.  There's [an issue for this](https://github.com/pivotal/blog/issues/40) if you're so inclined to help fix it.
+Then you _may_ have forgotten to include a property in your `data/authors/foo.yml` file.
 
 ## Publishing Your Copy
 
@@ -69,3 +71,9 @@ Every commit to master is [auto-deployed to both production and staging](https:/
 ## Changing the style
 
 `./themes/pivotal-ui` is a port of the [Pivotal UI](https://github.com/pivotal-cf/pivotal-ui) project.  I basically copied the compiled css and image files over.  If you want to change the look of this site, then you should edit the templates in there.
+
+### Syntax highlighting
+
+[Highlight.js](https://highlightjs.org/) is included for syntax highlighting. Any markdown producing `code pre` tags will be highlighted by default.
+
+If the language auto-detection fails you can add a [language identifier](https://help.github.com/articles/github-flavored-markdown/#syntax-highlighting). To disable syntax highlighting specify `no-highlight` as the language identifier.

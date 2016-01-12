@@ -37,7 +37,7 @@ In a traditional HTTP response, if something went wrong during the processing of
 
 An HTTP status code is actually encoded in the [Status Line](http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1) of the raw response, the first line of the response as seen below (HTTP/1.1 200 OK):
 
-```
+```no-language
 $ curl -i --raw http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1
 
 HTTP/1.1 200 OK
@@ -71,7 +71,7 @@ Even though trailers are a part of the official HTTP spec, they are rarely used.
 
 HTTP Trailers are implemented in two parts. First, you must send a regular HTTP Header listing the trailers that you will eventually send.
 
-```
+```no-language
 Trailer: X-Streaming-Error
 ```
 
@@ -94,7 +94,7 @@ Golang provides the HTTP [ResponseWriter](http://golang.org/pkg/net/http/#Respon
 
 As described in that issue, we can use the HTTP `Hijacker` object as a work-around to take over the connection and write raw HTTP data directly:
 
-```
+```go
 func (b *BackupHandler) ServeHTTP(writer http.ResponseWriter, r *http.Request) {
     trailerKey := http.CanonicalHeaderKey("X-Streaming-Error")
 
@@ -132,7 +132,7 @@ func writeTrailer(writer http.ResponseWriter, key string, value string) {
 
 The trailers from the response are stored in the [`Response.Trailer`](http://golang.org/src/net/http/response.go?s=2161:2254) field, which is of type `Header` (just a `map[string][]string`). It's important to note that this field will not be populated until you finish reading the entire response body.
 
-```
+```go
 It("has HTTP 200 status code but writes the error to the trailer", func() {
     resp, err := http.Get(backupUrl)    Expect(err).ShouldNot(HaveOccurred())
 
@@ -153,7 +153,7 @@ It("has HTTP 200 status code but writes the error to the trailer", func() {
 
 In [Go 1.5](http://tip.golang.org/doc/go1.5), the ability to write trailers should be supported natively by [`ResponseWriter`](http://tip.golang.org/pkg/net/http/#example_ResponseWriter_trailers):
 
-```
+```go
 mux := http.NewServeMux()
 mux.HandleFunc("/sendstrailers", func(w http.ResponseWriter, req *http.Request) {
     // Before any call to WriteHeader or Write, declare
