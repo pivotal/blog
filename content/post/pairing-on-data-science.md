@@ -16,11 +16,11 @@ He ya! Happy 2016!! It's been two months working as a part of Pivotal Labs Data 
 
 To me, data science is essentially getting to know your own venture; knowing it better by delving deeper into all the information you have or can have, discovering its nitty-gritty and using this valuable piece to influence your future affluently.
 
-Others might be a bit inquisitive about how can you pair together as Data Scientists? I was too when I first interacted with the DS EMEA team in London.
+Others might be a bit inquisitive about how can you pair together as data scientists? I was too when I first interacted with the DS EMEA team in London.
 
-But after working as a pair on various use cases, I feel pairing can be a great enablement technique. While pairing with clients, it makes them feel more involved. By developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better. Pairing with a colleague makes exploration and development of a DS use case much more fun. It helps in exchanging knowledge and skills.
+But after working as a pair on different DS use cases, I feel pairing can be a great enablement technique. While pairing with clients, it makes them feel more involved. By developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better. Pairing with a colleague makes exploration and development of a DS use case much more fun. It helps in exchanging knowledge and skills.
 
-“Pairing is sharing” as one of my colleagues always tell me :). It is a concentrated cohesive effort that helps in fast iterative development. A great way to enable each other and develop something in synergy.
+“Pairing is sharing” as one of my colleagues always tell me :). It is a concentrated cohesive effort that helps in fast iterative development; a great way to enable each other and develop something in synergy.
 
 Above all ..
 
@@ -57,11 +57,3 @@ We follow extreme programming practices in Pivotal. Ian was kind and encouraged 
 * Difference of opinion? Nothing to worry about. Take a step back, weigh the pros and cons of each approach, go ahead with the winner. In case of a tie, consult someone else on the team or try all of them out on a sample of data. Remember the entire team is responsible for the project. Personal ego can't be on the driver seat here. You'll learn how to deal with disagreements better.
 * Pair with right person for the right job! Pair with fellow designers, developers during relevant stages to make the best use of resources in hand. No reason why data scientist shouldn't be a part of a Balanced Team.
 * Starting on a project with vague objectives? Which DS use case isn't to start with. Make progress iteratively together rather than trying to figure the entire game plan from the start.
-
-
-* If you are new to a certain language, brush it up before hand. In case both you and your pair is in doubt, Google comes to rescue :)
-* Pairing is energy intensive and will be exhausting. Take frequent breaks.
-* Screenhero is quite effective for working on a collaborative screen sharing experience remotely.
-* Be kind, receptive and open to other ideas.
-* Think aloud.
-* While pairing remotely, make sure you have a seamless Internet connection. Trust me it pairing can get fairly frustrating otherwise.
