@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 categories: [".NET", "CF Runtime"]
 authors:
 - myoung
