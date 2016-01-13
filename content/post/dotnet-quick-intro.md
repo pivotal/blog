@@ -4,7 +4,7 @@ categories: [".NET", "CF Runtime"]
 authors:
 - myoung
 - jshahid
-date: 2015-11-03T10:41:30-05:00
+date: 2016-01-13T10:00:00-05:00
 title: Deploying your first .NET app on Cloud Foundry
 short: >
   PCF 1.6 brings with it support for .NET. Here's how to get started.
@@ -16,7 +16,7 @@ Finally, Windows developers will have access to the magic of Cloud Foundry!
 
 We're really excited to bring the magic of Cloud Foundry to Windows developers as well!
 
-##Some Background
+## Some Background
 Cloud Foundry is a great platform for deploying your web applications. Once you've set it up, the experience as a developer is as easy as `cf push` to push your app live to the platform.
 
 You may have heard about the recent [_Diego_](https://docs.cloudfoundry.org/concepts/diego/diego-architecture.html) effort within CF. If not, Onsi has a great primer [here](https://blog.pivotal.io/pivotal-cloud-foundry/features/cf-summit-video-diego-reimagines-the-cloud-foundry-elastic-runtime). At a high level though, Diego is the new _runtime_ for CF.
@@ -66,7 +66,7 @@ With that out of the way, now lets get to deploying. We'll start with a simple s
 
 1. Once your app is pushed, you can navigate to the app's URL and you will see all the VCAP variables.  Add `?all=` to the URL to see all the system variables too.
 
-###Some Notes:
+### Some Notes:
 For Windows applications, we rely on the *binary_buildpack* to push pre-compiled applications. If you want to push your own app, make sure to build it locally and push those compiled binaries, as opposed to the uncompiled source files like you might do on a Linux host.
 
 
