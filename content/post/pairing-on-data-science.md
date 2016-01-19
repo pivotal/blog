@@ -35,7 +35,7 @@ For DS, there is no best tool for the task at hand. If one DS is comfortable usi
 In general another hoop a pair might come across is when the two individuals pairing have different levels of expertise. I don't know how daunting an experience it would be for a newbie to code in this environment or how frustrating could it be for the experienced one to trying to get the noobie up to speed.
 
 ### Day 3 _@Pivotal_ and henceforth..
-I started pairing with Ian, a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that more the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
+I started pairing with [Ian](https://twitter.com/ianhuston), a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that more the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
 
 After an initial brainstorming, we came up with certain set of features we thought would be predictive for the problem case in hand and started to develop it. We followed a test-driven feature generation process. In a ping-pong manner, one would come up with a test case first and then the other would write up the functionality to implement it and then the role would reverse for the next round.
 
