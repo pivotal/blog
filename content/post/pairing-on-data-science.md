@@ -23,7 +23,7 @@ I feel pairing can be a great enablement technique. While pairing with clients, 
 ## Pair Programming and Data Science??
 {{< responsive-figure src="/images/pairing_ds_logo.png" class="right small" >}}
 
-Hmmmm… Pair Programming is exactly what it sounds. Pairing has been one of the key programming practices followed at [Pivotal Labs](https://blog.pivotal.io/tag/paired-programming). If you ever get a chance to visit the Labs office you will see two developers sharing a big desk space and working on two mirrored screens simultaneously. Sounds interesting and a bit challenging…. Honestly when I first saw this alien style of programming I had concerns about how productive it could be in a DS environment. Yes we have to code as data scientist! For those who didn’t know, DS involves programming right from the initial feature creation and exploratory phase to model development and its operationalization.
+Hmmmm… [Pair Programming](https://blog.pivotal.io/tag/paired-programming) is exactly what it sounds. Pairing has been one of the key programming practices followed at Pivotal Labs. If you ever get a chance to visit the Labs office you will see two developers sharing a big desk space and working on two mirrored screens simultaneously. Sounds interesting and a bit challenging…. Honestly when I first saw this alien style of programming I had concerns about how productive it could be in a DS environment. Yes we have to code as data scientist! For those who didn’t know, DS involves programming right from the initial feature creation and exploratory phase to model development and its operationalization.
 
 ### Hoops to Jump through
 When you start on a DS use case your objective is fairly broad. You need to spend a lot of time to find the right way to materialize the objective. You have to 'flare and focus' repeatedly before coming up with a definite objective and shipping it as an end product.
@@ -35,7 +35,7 @@ For DS, there is no best tool for the task at hand. If one DS is comfortable usi
 In general another hoop a pair might come across is when the two individuals pairing have different levels of expertise. I don't know how daunting an experience it would be for a newbie to code in this environment or how frustrating could it be for the experienced one to trying to get the noobie up to speed.
 
 ### Day 3 _@Pivotal_ and henceforth..
-I started pairing with [Ian](https://twitter.com/ianhuston), a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that more the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
+I started pairing with [Ian Huston](https://twitter.com/ianhuston), a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that more the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
 
 After an initial brainstorming, we came up with certain set of features we thought would be predictive for the problem case in hand and started to develop it. We followed a test-driven feature generation process. In a ping-pong manner, one would come up with a test case first and then the other would write up the functionality to implement it and then the role would reverse for the next round.
 
@@ -47,7 +47,7 @@ My initial concerns about working with people of varied level of experience ease
 * Check whether you have enough data scientists to be involved in pairing! Its a resource intensive exercise.
 * Have a brainstorming session at the start. Discuss various techniques that can be applied, be innovative then narrow the choices down and start implementing it.
 * Difference of opinion? Nothing to worry about. Take a step back, weigh the pros and cons of each approach, go ahead with the winner. In case of a tie, consult someone else on the team or try all of them out on a sample of data. Remember the entire team is responsible for the project. Personal ego can't be on the driver seat here. You'll learn how to deal with disagreements better by the end of the exercise.
-* Pair with right person for the right job! Pair with fellow designers, developers during relevant stages to make the best use of resources in hand. No reason why data scientist shouldn't follow [balanced team](https://vimeo.com/136564852) approach.
+* Pair with right person for the right job! Pair with fellow designers, developers during relevant stages to make the best use of resources in hand. No reason why data scientist shouldn't follow balanced team approach.
 * Project with vague objectives? Which DS use case isn't to start with. Make progress iteratively together rather than trying to figure the entire game plan from the start.
 
 “Pairing is sharing” as one of my colleagues always tell me :). It is a concentrated cohesive effort that helps in fast iterative development; a great way to enable each other and develop something in synergy. Above all ..
