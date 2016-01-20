@@ -35,7 +35,7 @@ I started pairing with [Ian Huston](https://twitter.com/ianhuston), a Senior DS 
 
 After an initial brainstorming, we came up with certain set of features we thought would be predictive for the problem case in hand and started to develop it. We followed a test-driven feature generation process. In a ping-pong manner, a team member would come up with a test case first and then the other would write up the functionality to implement it and then the role would reverse for the next round.
 
-My initial concerns about working with people having varied level of experience was eased. Having an experienced person as your pair helps you understand the pros and cons of various approaches better, so you save a lot of time by choosing better. We follow [extreme programming](https://en.wikipedia.org/wiki/Extreme_programming) practices in Pivotal. Ian was kind, encouraged me to be inquisitive and welcomed a newbie’s ideas. I really enjoyed my initial pairing experience and started getting used to it. Since then, I have paired with other colleagues and clients onsite and remotely and I really enjoy pairing.
+My initial concerns about working with people having varied level of experience was eased. Having an experienced person as your pair helps you understand the pros and cons of various approaches better, so you save a lot of time by choosing better. We follow [extreme programming](https://en.wikipedia.org/wiki/Extreme_programming) practices in Pivotal. Ian was kind, encouraged me to be inquisitive and welcomed a newbie’s ideas. I enjoyed my initial pairing experience and started getting used to it. Since then, I have paired with other colleagues and clients onsite and remotely and I really enjoy pairing.
 
 {{< responsive-figure src="/images/pairing_ds.jpg" >}}
 
