@@ -12,7 +12,7 @@ short: |
 title: Pairing for Data Scientists
 ---
 
-He ya! Happy 2016!! It's been two months working on the Pivotal Labs Data Science Team in London now and the journey so far has been nothing but exciting. I have been introduced to new working methodologies in a data science environment; pair programming being one of them. For those thinking that there goes another vague buzzword...
+He ya! Happy 2016!! It's been two months now working on the Pivotal Labs Data Science Team in London and the journey so far has been nothing but exciting. I have been introduced to new working methodologies in a data science environment; pair programming being one of them. For those thinking that there goes another vague buzzword...
 
 Data science (DS), for me, is essentially getting to know your own venture better by delving deeper into all the information you can have, discovering its nitty-gritty and using the valuable details to influence your future affluently.
 
