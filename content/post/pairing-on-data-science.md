@@ -46,6 +46,6 @@ My initial concerns about working with people having varied level of experience 
 * Pair with right person for the right job! Pair with fellow designers or developers during relevant stages to make the best use of resources in hand. There are no reasons why data scientists shouldn't follow balanced team approach.
 * Project with vague objectives? Which DS use case isn't to start with. Make progress iteratively rather than trying to figure the entire game plan from the start.
 
-“Pairing is sharing” as one of my colleagues always tell me :). It is a concentrated cohesive effort that helps in fast iterative development, a great way to enable each other and develop something in synergy.
+“Pairing is sharing” as one of my colleagues always tells me :). It is a concentrated cohesive effort that helps in fast iterative development, a great way to enable each other and develop something in synergy.
 
 _Above all pairing is a great bonding exercise, I would really recommend giving it a shot!_
