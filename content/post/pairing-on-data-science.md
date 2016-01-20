@@ -12,11 +12,11 @@ short: |
 title: Pairing for Data Scientists
 ---
 
-He ya! Happy 2016!! It's been two months working on the Pivotal Labs Data Science Team in London now and the journey so far has been nothing but exciting. I have been introduced to new working methodologies in a data science environment; pair programming being one of them. For those thinking that there goes another vague buzzword...
+He ya! Happy 2016!! It's been two months now working on the Pivotal Labs Data Science Team in London and the journey so far has been nothing but exciting. I have been introduced to new working methodologies in a data science environment; pair programming being one of them. For those thinking that there goes another vague buzzword...
 
 Data science (DS), for me, is essentially getting to know your own venture better by delving deeper into all the information you can have, discovering its nitty-gritty and using the valuable details to influence your future affluently.
 
-Others might be a bit inquisitive about pairing on a DS task? I was too when I first interacted with the DS EMEA team in London. We've found that pairing works well with data science, and I wanted to share some of my experiences and tips for getting started with pair data science.
+Others might be a bit inquisitive about pairing on a DS task? I was too when I first interacted with the DS EMEA team in London. We've found that pairing works well with DS, and I wanted to share some of my experiences and tips for getting started with pairing as data scientists.
 
 I feel pairing can be a great enablement technique. While pairing with clients, it makes them feel more involved. By developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better which helps to speed up the process. Pairing with a colleague makes exploration and development of a DS use case much more fun. It helps in exchanging knowledge and skills.
 
@@ -32,7 +32,7 @@ I had my doubts about how pairing would fit this flare and focus process. It’s
 
 For DS, there is no best tool for the task at hand. If one DS is comfortable using Python that might not necessarily be the same for his/her pair. Although, this is a great opportunity to expand one’s skill set but it might be a little disconcerting to run to Google for some basic syntax check with your pair watching over you!
 
-In general another hoop a pair might come across is when the two individuals pairing have different levels of expertise. I don't know how daunting an experience it would be for a newbie to code in this environment or how frustrating could it be for the experienced one to trying to get the noobie up to speed.
+In general another hoop a pair might come across is when the two individuals pairing have different levels of expertise. I don't know how daunting an experience it would be for a newbie to code in this environment or how frustrating it could be for the experienced one to trying to get the noobie up to speed.
 
 ### Day 3 _@Pivotal_ and henceforth..
 I started pairing with [Ian Huston](https://twitter.com/ianhuston), a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that more the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
