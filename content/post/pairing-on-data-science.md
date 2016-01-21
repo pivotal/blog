@@ -12,7 +12,7 @@ short: |
 title: Pairing for Data Scientists
 ---
 
-Hey! Happy 2016!! I have now spent two months working on the Pivotal Labs Data Science Team in London and the journey so far has been really exciting. I have been introduced to new working methodologies in an agile data science (DS) environment. We've found that pairing works well with DS, and I wanted to share some of my experiences and tips for getting started with DS pairing.
+Hey! Happy 2016!! I have now spent two months working on the Pivotal Labs Data Science Team in London and the journey so far has been really exciting. I have been introduced to new working methodologies in an agile data science (DS) environment, pairing being one of them. We've found that pairing works well with DS, and I wanted to share some of my experiences and tips for getting started with DS pairing.
 
 I feel pairing can be a great enablement technique. While pairing with clients, it makes them feel more involved. By developing a use case together they understand the code base better than a regular handover session at the end of project cycle. In the process, you understand the business requirements better which helps to speed up the process. Pairing with a colleague makes exploration and development of a DS use case much more fun. Besides helping in knowledge and skill exchange it's a good way to mitigate risk.
 
