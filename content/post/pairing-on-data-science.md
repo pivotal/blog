@@ -5,7 +5,7 @@ categories:
 - Data Science
 - Pair Programming
 - Agile
-date: 2015-12-29T10:13:32Z
+date: 2015-01-15T10:13:32Z
 draft: true
 short: |
   Lets see how pair programming fits in the data science world.
@@ -28,7 +28,7 @@ I had my doubts about how pairing would fit this flare and focus process. It’s
 
 For DS, there is no best tool for the task at hand. If one DS is comfortable using Python that might not necessarily be the same for his/her pair. Although, this is a great opportunity to expand one’s skill set but it might be a little disconcerting to run to Google for some basic syntax check with your pair watching over you!
 
-In general when the two individuals pairing have different levels of expertise. I don't know how daunting an experience it would be for a newbie to code in this environment or how frustrating it could be for the experienced counterpart trying to get the noobie up to speed.
+In general when the two individuals pairing have different levels of expertise, I don't know how daunting an experience it would be for a newbie to code in this environment or how frustrating it could be for the experienced counterpart trying to get the noobie up to speed.
 
 ### Day 3 _@Pivotal_ and henceforth..
 I started pairing with [Ian Huston](https://twitter.com/ianhuston), a Senior DS in my team and started jumping through these hoops. He helped me get comfortable with the process in my first few weeks. In the exploratory phase, it actually turned out that greater the number of heads brainstorming about a problem, the faster it is to come up with a variety of routes and then narrowing it down to the most preferred one.
