@@ -6,7 +6,6 @@ categories:
 - Pair Programming
 - Agile
 date: 2016-01-15T10:13:32Z
-draft: false
 short: |
   Lets see how pair programming fits in the data science world.
 title: Pairing for Data Scientists
