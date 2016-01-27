@@ -10,7 +10,7 @@ categories:
 date: 2016-01-26T16:18:13-08:00
 draft: true
 short: |
-  Short description for index pages, and under title when viewing a post. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+  30 years of academic research and 6 years of R&D went into the development of GPORCA, a modular query optimizer. GPORCA has achieved an overall 5X performance improvement across all 99 industry standard benchmark queries. Now we call on the help of the community to help take the project to the next level.
 title: GPORCA, A Modular Query Optimizer, Is Now Open-Source
 ---
 
