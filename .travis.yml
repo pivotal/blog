@@ -1,7 +1,10 @@
 language: go
 go: '1.5'
-install:
-  - go get github.com/spf13/hugo
+before_script:
+  - wget https://github.com/spf13/hugo/releases/download/v0.15/hugo_0.15_linux_amd64.tar.gz
+  - tar xzf hugo_0.15_linux_amd64.tar.gz
+  - mv hugo_0.15_linux_amd64/hugo_0.15_linux_amd64 hugo_0.15_linux_amd64/hugo
+  - export PATH=$PATH:$PWD/hugo_0.15_linux_amd64
 script: ./bin/build && ./bin/generate_manifests
 deploy:
   - provider: cloudfoundry
