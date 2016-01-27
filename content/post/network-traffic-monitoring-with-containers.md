@@ -1,14 +1,11 @@
 ---
 authors:
-- Add another author here
 - david
 categories:
-- BOSH
-- CF Runtime
-- API
+- Containers
+- Docker
+- Network Traffic Monitoring
 - Logging & Metrics
-- Agile
-- Humans
 date: 2016-01-27T13:51:37-05:00
 draft: true
 short: |
@@ -20,12 +17,10 @@ title: Capturing Network Traffic With Docker Containers
 ## Software and Promises
 
 When software makes a promise, engineers need a way to verify that the promise is kept. In modern
-software engineering, the process of “promise checking” is performed by using a __continuous integration__ (CI) system:
+software engineering, the process of “promise checking” is performed by using a __continuous integration__ (CI) system.
+Our CI system is [Concourse](https://concourse.ci/):
 
-<div style="text-align:center">
-{{< figure src="/images/network-monitoring/concourse.png" style="text-align:center" >}}
-<p><em><a href="https://concourse.ci/">Concourse</a>, our CI system at Pivotal</em></p>
-</div>
+{{< responsive-figure src="/images/network-monitoring/concourse.png" class="text-center" title="A CI Pipeline in Concourse" >}}
 
 Whenever a change is made to the code base, a series of automated tests attempt to ensure that the
 software is working as planned.
@@ -35,11 +30,7 @@ on our platform, the software works in an __air-gapped__ environment (i.e., one 
 or not meant to connect to the internet). In these situations we want to maintain a “no-access”
 policy with respect to the outside of a PCF deployment:
 
-
-<div style="text-align:center">
-{{< figure src="/images/network-monitoring/firewall.png" >}}
-<p><em>Non-Connected Networks</em></p>
-</div>
+{{< responsive-figure src="/images/network-monitoring/firewall.png" class="text-center" title="Non-Connected Networks">}}
 
 This is a common use case in enterprise deployments. When a network is air-gapped, we want to guarantee that __no__
 TCP/IP requests are directed to external networks. Even if the attempts fail due to firewalling or lack of
@@ -52,10 +43,7 @@ admin trying to maintain network integrity.
 Testing this is not as trivial as it sounds. PCF is a multi-component deployment platform that
 has a lot of moving parts:
 
-<div style="text-align:center">
-{{< figure src="/images/network-monitoring/diego-architecture.png" >}}
-<p><em>The Place of Buildpacks in Cloud Foundry</em></p>
-</div>
+{{< responsive-figure src="/images/network-monitoring/diego-architecture.png" class="text-center" title="The Place of Buildpacks in Cloud Foundry" >}}
 
 As such, there is a lot of "safe" network traffic that is internal to PCF. To complicate matters,
 applications are set up and scaled on Cloud Foundry using containers within virtual machines,
@@ -74,10 +62,7 @@ rules determined which network packets were “safe” (or internal to the Cloud
 and which were external. Unallowed packets were logged to a file using `rsyslog`, and our tests
 searched for lines of text in the log file.
 
-<div style="text-align:center">
-{{< figure src="/images/network-monitoring/iptables.png" >}}
-<p><em>Monitoring Network Traffic with iptables and rsyslog</em></p>
-</div>
+{{< responsive-figure src="/images/network-monitoring/iptables.png" class="text-center" title="Monitoring Network Traffic with iptables and rsyslog">}}
 
 The problem with this solution is that it was __complex__ and prone to __unreliability__. There were
 many breakage points because of the number of configuration steps. We also observed at
@@ -91,10 +76,7 @@ reliably monitor our network traffic, we can’t keep our promise.
 Recently, we came across a simpler, more robust method for detecting network traffic
 in our cached buildpacks. Enter Docker!
 
-<div style="text-align:center">
-{{< figure src="/images/network-monitoring/docker.png" >}}
-<p><em>Everyone's Favorite Containerization Technology</em></p>
-</div>
+{{< responsive-figure src="/images/network-monitoring/docker.png" class="text-center" title="Everyone's Favorite Containerization Technology" >}}
 
 Docker is a wrapper around Linux __containers__. Containers are userspaces that coexist
 within a single kernel. Containers look and feel (mostly!) like their “own machines,”
@@ -103,10 +85,7 @@ but with a fraction of the resource cost needed to spin up entire virtual machin
 At its core, Docker (and containerization) is about resource isolation. Containers share
 the same storage, memory, and network as the host kernel, but are logically separated from one another:
 
-<div style="text-align:center">
-{{< figure src="/images/network-monitoring/containers.png" >}}
-<p><em>Containers in Linux</em></p>
-</div>
+{{< responsive-figure src="/images/network-monitoring/containers.png" class="text-center" title="Containers in Linux">}}
 
 This logical separation is useful for spinning up virtual servers and deploying applications. Cloud Foundry
 itself uses a containerization system called
