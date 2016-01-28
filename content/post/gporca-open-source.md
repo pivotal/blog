@@ -48,7 +48,7 @@ GPORCA achieves its portability and modularity by running outside the core datab
 
 {{< responsive-figure src="/images/gporca/gporcaArch.png" >}}
 
-For a more technical deep-dive into GPORCA, we encourage you to take a look at the [white paper](http://pivotal.io/big-data/white-paper/orca-a-modular-query-optimizer-architecture-for-big-data),
+For a more technical deep-dive into GPORCA, we encourage you to take a look at the [white paper](http://pivotal.io/big-data/white-paper/orca-a-modular-query-optimizer-architecture-for-big-data).
 
 # What Can’t GPORCA Do?
 
