@@ -10,13 +10,13 @@ categories:
 date: 2016-01-26T16:18:13-08:00
 draft: true
 short: |
-  30 years of academic research and 6 years of R&D went into the development of GPORCA, a modular query optimizer. GPORCA has achieved an overall 5X performance improvement across all 99 industry standard benchmark queries. Now we call on the help of the community to help take the project to the next level.
+  GPORCA has achieved an overall 5X performance improvement across all 99 industry standard benchmark queries. Now we call on the community to help take the project to the next level.
 title: GPORCA, A Modular Query Optimizer, Is Now Open-Source
 ---
 
-# GPORCA, A Cost-Based Modular Query Optimizer, Is Now Open Source
+# GPORCA, A Cost-Based Query Optimizer, Is Now Open Source
 
-Pick your favorite Big Data statistic; we all know that the growth of data has been astounding. What hasn’t kept up is our ability to process this data.  Even the newest big data technologies such as [Apache Spark™](http://spark.apache.org/) are using [rule-based](https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html) approaches to query optimization.
+Pick your favorite Big Data statistic; we all know that the growth of data has been astounding. What hasn’t kept up is our ability to process this data.  Even the newest big data technologies such as [Apache Spark™](http://spark.apache.org/) are using [rule-based](https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html) approaches to query optimization, which often miss potential faster execution plans.
 
 This is why the Pivotal R&D team poured years of work into developing a new query optimizer called GPORCA. Improving the intelligence of query planning was a missed chance in database engineering with huge opportunity for further improving performance.
 
@@ -28,7 +28,7 @@ Currently it is possible to run GPORCA with open source projects [Greenplum Data
 
 Historically, every database has shipped with its own optimizer. That means every software developer spent valuable R&D cycles building one, and maintaining it. This is not a scalable solution, nor does it foster collaborative research.
 
-GPORCA is built as an external dependency, which makes it the perfect test bed for database research that can benefit a wide variety of databases.
+GPORCA is built as an external plugin, which makes it the perfect test bed for database research that can benefit a wide variety of databases.
 
 Furthermore, GPORCA isn’t just a tool for research and development. It is an enterprise-grade, query optimizer that is handling some of the most demanding SQL workloads at truly Big Data scale.
 
@@ -38,7 +38,7 @@ GPORCA is a modular, cost-based query optimizer based on 30 years of [database r
 
 ## What Can GPORCA Do?
 
-At Pivotal, we are constantly benchmarking our database products to ensure they are getting faster. We benchmark GPORCA against a variety of workloads.  Currently we are achieving an overall 5X improvement compared to Pivotal Greenplum’s  legacy planner across all 99 of the industry’s most trusted benchmark queries. Some of the very complex queries are up to 1000x faster!
+At Pivotal, we are constantly benchmarking our database products to ensure they are getting faster. Currently GPORCA is achieving an overall 5X improvement compared to Pivotal Greenplum’s legacy planner across all 99 of the industry’s most trusted benchmark queries. Some of the very complex queries are up to 1000x faster!
 
 {{< responsive-figure src="/images/gporca/gporcaPerf.png" >}}
 
@@ -58,7 +58,7 @@ Furthermore, GPORCA is not feature complete compared to the current planner in G
 
 # Where Is GPORCA Going?
 
-We plan to make GPORCA feature complete, matching PostgreSQL’s current support and beyond. Support for external parameters, cubes, multiple grouping sets, inverse distribution functions, ordered aggregates, and indexed expressions is all on the GPORCA roadmap.
+GPORCA needs to become feature complete, matching PostgreSQL’s current support and beyond. Support for external parameters, cubes, multiple grouping sets, inverse distribution functions, ordered aggregates, and indexed expressions is all on the GPORCA roadmap.
 
 With parity and better performance for shorter running queries comes the ultimate goal of GPORCA. We hope one day, GPORCA is the defacto query optimizer in PostgreSQL.
 
