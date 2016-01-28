@@ -7,8 +7,8 @@ categories:
 - Query Optimization
 - SQL
 
-date: 2016-01-26T16:18:13-08:00
-draft: true
+date: 2016-01-28T07:00:00-08:00
+draft: false
 short: |
   GPORCA has achieved an overall 5X performance improvement across all 99 industry standard benchmark queries. Now we call on the community to help take the project to the next level.
 title: GPORCA, A Modular Query Optimizer, Is Now Open-Source
