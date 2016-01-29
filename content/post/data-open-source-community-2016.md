@@ -2,16 +2,18 @@
 authors:
 - rvs
 categories:
-- Big Data
 - Open Source
+- Community
+- Big Data
 - Databases
 
 date: 2016-01-29T07:00:00-08:00
 draft: true
-short: When it comes to Open Source, Pivotal had one kick ass of a year in 2015. Here's a sneak peak for 2016.   
-title: Pivotal Data Open Source in 2016: community, community, community!
+short: |
+  When it comes to Open Source, Pivotal had one kick ass of a year in 2015. Here's a sneak peak for 2016.
+title: |
+  Pivotal Data Open Source in 2016: community, community, community!
 ---
-
 When it comes to Open Source, it wouldn’t be too much of a stretch to say that 2015 was a [defining year](https://www.youtube.com/watch?v=XxXgAPANmWw) for Pivotal Data. Almost a year ago, on February 17th 2015, we [announced](https://www.youtube.com/watch?v=dTG5TAbzUAY) our overarching strategy to complete the transition towards Pivotal becoming a quintessential Open Source company. We called it a New Approach to Big Data and we gave ourselves slightly less than a year to deliver on that promise. What happened in the rest of 2015 was nothing short of amazing. In 7 month from strategy to execution we open sourced our entire portfolio of Data products (Pivotal Gemfire, Pivotal HAWQ and Pivotal Greenplum) and jump started an industry collaboration on standardizing  Big Data platforms via [ODPi](http://odpi.org) collaborative project. But most importantly we put a very strong foundation in place to start growing amazing communities around our newly minted open source projects.
  
 It is on that foundation that we intend to build in 2016. And we’re kicking it off in style.
