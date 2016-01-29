@@ -8,7 +8,7 @@ categories:
 - Databases
 
 date: 2016-01-29T07:00:00-08:00
-draft: true
+draft: false
 short: |
   When it comes to Open Source, Pivotal had one kick ass of a year in 2015. Here's a sneak peak for 2016.
 title: |
@@ -25,3 +25,6 @@ At this point, I can hear you asking “but Roman, how do I get a hold of you gu
 We are also very likely to run into each other at one of the big, established gatherings of open source developers. As I am writing this, a whole bunch of us are converging on Brussels to kick off 2016 at the grand daddy of all open source conferences: [FOSDEM](http://fosdem.org/). At FOSDEM you can find us at [FOSDEM PGDay](http://fosdem2016.pgconf.eu/), [Apache Software Foundation](http://www.apache.org/) booth and most importantly a [HPC, Big Data and Data Science devroom](https://fosdem.org/2016/schedule/track/hpc,_big_data_and_data_science/). To show our appreciation for all of our community members we are also hosting a dinner on Saturday, Feb 30 at 7pm in this lovely place called [La Mirabelle](http://www.mirabelle.be/). There we will be toasting our latest addition to Pivotal Open Source family: [Orca](https://github.com/greenplum-db/gporca). Orca is a [modular query optimizer for big data](http://pivotal.io/big-data/white-paper/orca-a-modular-query-optimizer-architecture-for-big-data) and we are really excited to share this breakthrough research in databases with all of you.
  
 With that, I really hope see all of you soon. Drop by. Say hi. It’ll be a fun 2016!
+
+Roman Shaposhnik, 
+Director of Open Source Strategy at Pivotal
