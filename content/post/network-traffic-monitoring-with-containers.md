@@ -6,8 +6,8 @@ categories:
 - Docker
 - Network Traffic Monitoring
 - Logging & Metrics
-date: 2016-01-27T13:51:37-05:00
-draft: true
+date: 2016-01-29T14:51:37-05:00
+draft: false
 short: |
   How to capture and log internet traffic from programs using Docker containers.
 title: Capturing Network Traffic With Docker Containers
@@ -17,7 +17,7 @@ title: Capturing Network Traffic With Docker Containers
 ## Software and Promises
 
 When software makes a promise, engineers need a way to verify that the promise is kept. In modern
-software engineering, the process of “promise checking” is performed by using a __continuous integration__ (CI) system.
+software engineering, the process of “promise checking” is performed with a __continuous integration__ (CI) system.
 Our CI system is [Concourse](https://concourse.ci/):
 
 {{< responsive-figure src="/images/network-monitoring/concourse.png" class="text-center" title="A CI Pipeline in Concourse" >}}
@@ -34,7 +34,7 @@ policy with respect to the outside of a PCF deployment:
 
 This is a common use case in enterprise deployments. When a network is air-gapped, we want to guarantee that __no__
 TCP/IP requests are directed to external networks. Even if the attempts fail due to firewalling or lack of
-physical connection, making request attempts would almost certainly cause logging headaches for an
+physical connection, making requests would almost certainly cause logging headaches for an
 admin trying to maintain network integrity.
 
 
@@ -93,7 +93,7 @@ itself uses a containerization system called
 to create containers that run deployed apps.
 
 So, Cloud Foundry deploys apps within containers using buildpacks, and we want to know if the buildpacks
-are emitting network traffic. Instead of trying to log at the level of the physical or virtual machines
+are emitting network traffic. Instead of trying to log at the level of the physical or virtual machines,
 why not execute a buildpack on a sample app inside a Docker container?
 
 There is a common Unix utility called `tcpdump` that outputs a log of all packets transmitted
