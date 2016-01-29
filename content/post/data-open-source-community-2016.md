@@ -8,8 +8,7 @@ categories:
 
 date: 2016-01-29T07:00:00-08:00
 draft: true
-short: |
-  When it comes to Open Source, Pivotal had one kick ass of a year in 2015. Here's a sneak peak for 2016.   
+short: When it comes to Open Source, Pivotal had one kick ass of a year in 2015. Here's a sneak peak for 2016.   
 title: Pivotal Data Open Source in 2016: community, community, community!
 ---
 
