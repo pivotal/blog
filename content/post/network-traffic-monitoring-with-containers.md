@@ -49,7 +49,17 @@ As such, there is a lot of "safe" network traffic that is internal to PCF. To co
 applications are set up and scaled on Cloud Foundry using containers within virtual machines,
 adding an additional layer of complexity.
 
-So how can we reliably test that our buildpacks, operating inside of Linux containers inside
+__Buildpacks__ (see figure) are what provide runtime support for apps deployed in PCF containers.
+Cloud Foundry automatically detects the language and (if applicable)
+framework of an app's code. Buildpacks then combine the code with necessary compilers, interpreters, and other
+dependencies.
+
+For example, if an application is written in Java using the [Spring](https://spring.io/) framework, the
+[Java Buildpack](https://github.com/cloudfoundry/java-buildpack) installs a Java Virtual
+Machine, Spring, and any other dependencies that are needed. It also configures the app to work with
+any services that are bound to it, such as databases.
+
+So, how can we reliably test that our buildpacks, operating inside of Linux containers inside
 virtual machines, which may or may not be running on top of cloud IaaS services, never have
 external network traffic?
 
