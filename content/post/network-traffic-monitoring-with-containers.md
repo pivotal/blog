@@ -6,8 +6,8 @@ categories:
 - Docker
 - Network Traffic Monitoring
 - Logging & Metrics
-date: 2016-01-27T13:51:37-05:00
-draft: true
+date: 2016-01-29T14:51:37-05:00
+draft: false
 short: |
   How to capture and log internet traffic from programs using Docker containers.
 title: Capturing Network Traffic With Docker Containers
@@ -17,7 +17,7 @@ title: Capturing Network Traffic With Docker Containers
 ## Software and Promises
 
 When software makes a promise, engineers need a way to verify that the promise is kept. In modern
-software engineering, the process of “promise checking” is performed by using a __continuous integration__ (CI) system.
+software engineering, the process of “promise checking” is performed with a __continuous integration__ (CI) system.
 Our CI system is [Concourse](https://concourse.ci/):
 
 {{< responsive-figure src="/images/network-monitoring/concourse.png" class="text-center" title="A CI Pipeline in Concourse" >}}
@@ -34,7 +34,7 @@ policy with respect to the outside of a PCF deployment:
 
 This is a common use case in enterprise deployments. When a network is air-gapped, we want to guarantee that __no__
 TCP/IP requests are directed to external networks. Even if the attempts fail due to firewalling or lack of
-physical connection, making request attempts would almost certainly cause logging headaches for an
+physical connection, making requests would almost certainly cause logging headaches for an
 admin trying to maintain network integrity.
 
 
@@ -49,7 +49,17 @@ As such, there is a lot of "safe" network traffic that is internal to PCF. To co
 applications are set up and scaled on Cloud Foundry using containers within virtual machines,
 adding an additional layer of complexity.
 
-So how can we reliably test that our buildpacks, operating inside of Linux containers inside
+__Buildpacks__ (see figure) are what provide runtime support for apps deployed in PCF containers.
+Cloud Foundry automatically detects the language and (if applicable)
+framework of an app's code. Buildpacks then combine the code with necessary compilers, interpreters, and other
+dependencies.
+
+For example, if an application is written in Java using the [Spring](https://spring.io/) framework, the
+[Java Buildpack](https://github.com/cloudfoundry/java-buildpack) installs a Java Virtual
+Machine, Spring, and any other dependencies that are needed. It also configures the app to work with
+any services that are bound to it, such as databases.
+
+So, how can we reliably test that our buildpacks, operating inside of Linux containers inside
 virtual machines, which may or may not be running on top of cloud IaaS services, never have
 external network traffic?
 
@@ -93,7 +103,7 @@ itself uses a containerization system called
 to create containers that run deployed apps.
 
 So, Cloud Foundry deploys apps within containers using buildpacks, and we want to know if the buildpacks
-are emitting network traffic. Instead of trying to log at the level of the physical or virtual machines
+are emitting network traffic. Instead of trying to log at the level of the physical or virtual machines,
 why not execute a buildpack on a sample app inside a Docker container?
 
 There is a common Unix utility called `tcpdump` that outputs a log of all packets transmitted
