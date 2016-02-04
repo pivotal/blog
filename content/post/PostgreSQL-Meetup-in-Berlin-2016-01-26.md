@@ -5,10 +5,10 @@ categories:
 - PostgreSQL
 - Meetup
 date: 2016-01-29T16:54:32+01:00
-draft: true
+draft: false
 short: |
-  Pivotal hosted a PostgreSQL Meetup in Berlin.
-title: PostgreSQL Meetup in Berlin 2016 01 26
+  Pivotal hosted a PostgreSQL Meetup in Berlin. Speakers: Andres Freund and Oleksandr Shulgin.
+title: PostgreSQL Meetup in Berlin, 2016-01-26
 ---
 
 [Meetups](http://www.meetup.com/) serve two main purposes: listen to good talks, and meet other people who share a common interest in a topic.
@@ -17,7 +17,7 @@ title: PostgreSQL Meetup in Berlin 2016 01 26
 
 {{< responsive-figure src="/images/PostgreSQL-Meetup-2016-01-26/entrance.png" class="right small" >}}
 
-Berlin has a very active [Meetup](http://www.meetup.com/) scene - and [PostgreSQL](http://www.meetup.com/PostgreSQL-Meetup-Berlin/) is no exception. [This time](http://www.meetup.com/PostgreSQL-Meetup-Berlin/events/227391375/), "meet other people" was hosted by Pivotal, and took place in the [EMC Berlin](http://www.emc.com/de-de/index.htm) office. Pizza and beverages help starting a conversation about different [PostgreSQL](https://www.postgresql.org/) topics.
+Berlin has a very active [Meetup](http://www.meetup.com/) scene - and [PostgreSQL](http://www.meetup.com/PostgreSQL-Meetup-Berlin/) is no exception. [This time](http://www.meetup.com/PostgreSQL-Meetup-Berlin/events/227391375/), "meet other people" was hosted by Pivotal, and took place in the [EMC Berlin](http://www.emc.com/de-de/index.htm) office. Pizza and beverages help starting a conversation on different [PostgreSQL](https://www.postgresql.org/) topics, which kept going after the talks. Finally security asked us to leave the office, because they wanted to lock the office.
 
 
 ## Talks
