@@ -8593,6 +8593,18 @@ ul[class*="lv"] > li {
   font-weight: 400;
   display: block; }
 
+.list-timeline-tags {
+  font-size: 14px;
+  color: #424242;
+  font-weight: 400;
+  display: block; }
+
+.list-timeline-categories {
+  font-size: 14px;
+  color: #424242;
+  font-weight: 400;
+  display: block; }
+
 .list-timeline-title {
   font-size: 14px;
   color: #424242;

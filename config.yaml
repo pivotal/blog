@@ -1,6 +1,9 @@
 languageCode: en-us
 Theme: "pivotal-ui"
 Title: Pivotal Engineering Journal
+taxonomies:
+  tag: "tags"
+  category: "categories"
 Params:
   SubTitle: Technical articles from Pivotal engineers.
 ...
