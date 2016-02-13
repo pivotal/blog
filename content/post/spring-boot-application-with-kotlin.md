@@ -4,8 +4,8 @@ authors:
 categories:
 - Spring Boot
 - Kotin
-date: 2015-12-21T15:55:56-07:00
-draft: true
+date: 2016-02-13T09:35:56-07:00
+draft: false
 short: |
   The first steps along the path of converting a fully functional Java 8/Spring Boot/Spring Cloud application to Kotlin.
 title: "The Journey of a Spring Boot application from Java 8 to Kotlin: The Application Class"
