@@ -7,7 +7,7 @@ categories:
 - Charter
 - CF Runtime
 date: 2016-02-15T20:18:28-04:00
-draft: true
+draft: false
 short: A candid insight into the adoption of the exploratory testing practice at Pivotal Labs.
 title: Exploring at Pivotal
 ---
