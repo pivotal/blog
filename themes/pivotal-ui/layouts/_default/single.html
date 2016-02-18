@@ -34,6 +34,14 @@
             {{ end }}
             </ul>
             <br>
+            {{ if .Params.categories }}
+              Categories: &nbsp;
+                {{ range .Params.categories }}
+                  <a href="/categories/{{ . | urlize }}">{{ . }}</a> &nbsp;&nbsp;
+                {{ end }}
+                <br/>
+              </span>
+            {{ end }}
             <a href="https://github.com/pivotal-cf/blog/edit/master/content/{{.File.Path}}" class="type-sm">Edit this post on GitHub.</a>
             <div class="pull-right">
               <a href="https://twitter.com/share" class="twitter-share-button"{count} data-via="{{ range $index, $author := $authors }}{{ with $a := (index $all $author) }}{{ if eq $index 0 }}{{ printf "%s " $a.Twitter }}{{ else }}{{ printf "@%s " $a.Twitter }}{{ end }}{{ end }}{{ end }}">Tweet</a>

@@ -11,12 +11,12 @@
               {{ range .Data.Pages }}
               <li class="list-timeline-item post">
                 <div class="list-timeline-date">
-                  <ul class="authors">
+                  <ul class="authors em-alt">
                   {{ $all := .Site.Data.authors}}
                   {{ $authors := .Params.authors}}
                   {{ range $author := $authors }}
                     {{ with $a := (index $all $author)}}
-                      <li>{{ $a.Name }}</li>
+                      <li><a href="/author/{{ $author | urlize }}">{{ $a.Name }}</a></li>
                     {{ end}}
                   {{ end }}
                   </ul>

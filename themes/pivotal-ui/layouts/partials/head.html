@@ -1,6 +1,19 @@
+{{ $.Scratch.Set "replace_title" .Title }}
+{{ if .Data.Singular }}
+  {{ range .Data.Pages }}
+    {{ range $title1 := .Params.categories }}
+      {{ $tmp_title1 := printf "%s" $title1 | urlize }}
+      {{ $tmp_title2 := printf "%s" $.Title | urlize }}
+      {{ if eq $tmp_title1 $tmp_title2 }}
+        {{ $.Scratch.Set "replace_title" $title1 }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $replace_title := $.Scratch.Get "replace_title" }}
 <head>
   <meta charset="utf-8">
-  <title> {{ .Title }} </title>
+  <title> {{ if eq $replace_title .Site.Title }}{{ $replace_title }}{{else}}{{ $replace_title }} &middot; {{ .Site.Title }}{{ end }} </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/pivotal-ui.css">
   <link rel="stylesheet" href="/styleguide.css">
