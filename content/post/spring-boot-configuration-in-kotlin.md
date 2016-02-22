@@ -5,13 +5,15 @@ categories:
 - Spring Boot
 - Kotlin
 date: 2016-02-18T8:29:50-07:00
-draft: true
+draft: false
 short: |
   What do Spring Boot configuration classes look like in Kotlin?
 title: "The Journey of a Spring Boot application from Java 8 to Kotlin, part 2: Configuration Classes"
 ---
 
-In the [first post](/post/spring-boot-application-with-kotlin/) of this series, we looked at the conversion of a Spring Boot application class from Java 8 to Kotlin. In this second post, we will look at the conversion of a configuration class into Kotlin.
+In the [first post](/post/spring-boot-application-with-kotlin/) of this series, we looked at the conversion of a Spring Boot application class from Java 8 to Kotlin. The nice thing about these migrations is that they can be done incrementally since Kotlin plays very nicely with legacy Java. In fact, it was one of the design considerations for the language.
+
+In this second post, we will look at the conversion of a configuration class into Kotlin.
 
 Here is an example of a Spring Boot configuration class as written in Java 8:
 
@@ -59,7 +61,7 @@ open class Configuration {
 
 There aren't a bunch of huge differences but here are some of the smaller differences that stand out to me:
 
-* The Configuration class must be declared open. This is because Spring Boot subclasses your configuration class and Kotlin makes them final by default. See [here](https://kotlinlang.org/docs/reference/classes.html#inheritance) for details.
+* The Configuration class must be declared open. This is because Spring Boot subclasses your configuration class but Kotlin makes them final by default. See [here](https://kotlinlang.org/docs/reference/classes.html#inheritance) for details.
 * The @Bean functions must be declared open for the same reason as above.
 * There are no return types on the functions because Kotlin will infer the types. This type inference is one of
 my favorite features of Kotlin.
