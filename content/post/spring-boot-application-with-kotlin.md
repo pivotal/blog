@@ -120,6 +120,7 @@ springBoot {
     mainClass = 'com.example.billing.Application'
 }
 ```
+*Update - Feb, 16 2016: You do not need to tell Spring Boot where the application class is any longer. I got this from an early JetBrains blog post.*
 
 # An alternate application class
 
@@ -154,6 +155,7 @@ springBoot {
     mainClass = 'com.example.billing.ApplicationKt'
 }
 ```
+*Update - Feb, 16 2016: You do not need to tell Spring Boot where the application class is any longer. I got this from an early JetBrains blog post.*
 
 This definition simplifies the signature of the `main()` method a bit. Gone are the annotations and the explicit companion object so the code is a little less cluttered.
 
