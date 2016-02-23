@@ -5,7 +5,6 @@ categories:
 - Spring Boot
 - Kotlin
 date: 2016-02-23T14:29:50-07:00
-draft: false
 short: |
   What do Spring Boot configuration classes look like in Kotlin?
 title: "The Journey of a Spring Boot application from Java 8 to Kotlin, part 2: Configuration Classes"
