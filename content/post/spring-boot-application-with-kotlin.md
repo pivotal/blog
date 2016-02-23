@@ -15,6 +15,8 @@ After writing a significant amount of Ruby/Rails for many years, lately I have f
 Kotlin is a new language from the folks at [JetBrains](https://www.jetbrains.com/), creators of IntelliJ and RubyMine, as a replacement for Java in developing their products. Their goal was to create a more concise JVM based language that helps increase developer productivity, avoid some common pitfalls in Java development and be 100% compatible with existing Java programs. It targets Java 6 as the baseline while still adding some great language features so it is quite useful for Android development as well.
 
 This post, and all that follow, will use an existing Java 8/Spring Boot [application](https://github.com/mikegehard/user-management-evolution-kotlin/tree/running-java) as a starting point for the exploration. This will allow me to see direct comparisons between Java 8 syntax and Kotlin syntax. The journey will allow me to experience first hand what a Spring Boot/Kotlin application might look like as well as learn the language as I go that is a bit more than a "Hello World" application.
+If you want to follow along as I travel, you can check out the evolving source on [GitHub here](https://github.com/mikegehard/user-management-evolution-kotlin).
+
 
 In addition, these posts are not meant to be a full tutorial on Kotlin and will only cover the language features pertinent to the transformation. If you want a full tutorial, the Kotlin website has a lot of [great information](https://kotlinlang.org/docs/reference/).
 
