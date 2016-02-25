@@ -46,23 +46,29 @@ With that out of the way, now lets get to deploying. We'll start with a simple s
 
 1. First clone our basic sample app to a new directory:
 
-        git clone https://github.com/cloudfoundry-incubator/NET-sample-app.git
+    ``` bash
+    $ git clone https://github.com/cloudfoundry-incubator/NET-sample-app.git
+    ```
 
     You can also download the source from the [GitHub page](https://github.com/cloudfoundry-incubator/.NET-sample-app)
 
 1. If _Diego is enabled by default_ on your CF deployment, you can just push your app and wait for it to start:
 
-        cf push my-app -s windows2012R2 -b binary_buildpack -p ./my-app/ViewEnvironment/
-        
+    ``` bash
+    $ cf push my-app -s windows2012R2 -b binary_buildpack -p ./my-app/ViewEnvironment/
+    ```
+
    This is telling CF to push your app with the name `my-app`, using the **stack** `windows2012R2`, with the **buildpack** `binary_buildpack` from the **path** of `./my-app/ViewEnvironment/`.
 
 1. If it's not, or if you're not sure, you'll need to install the [Diego Enabler](https://github.com/cloudfoundry-incubator/diego-enabler) CLI plugin and then enable Diego onn the application before starting it:
 
-        cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
-        cf install-plugin Diego-Enabler -r CF-Community
-        cf push my-app -s windows2012R2 -b binary_buildpack -p --no-start ./my-app/ViewEnvironment/
-        cf enable-diego my-app
-        cf start my-app
+    ``` bash
+    $ cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
+    $ cf install-plugin Diego-Enabler -r CF-Community
+    $ cf push my-app -s windows2012R2 -b binary_buildpack -p --no-start ./my-app/ViewEnvironment/
+    $ cf enable-diego my-app
+    $ cf start my-app
+    ```
 
 1. Once your app is pushed, you can navigate to the app's URL and you will see all the VCAP variables.  Add `?all=` to the URL to see all the system variables too.
 
@@ -72,8 +78,9 @@ For Windows applications, we rely on the *binary_buildpack* to push pre-compiled
 
 If you have any errors, check your application logs:
 
-        cf logs my-app --recent
-        
+``` bash
+$ cf logs my-app --recent
+```
 
 In general, once you've built an application in Visual Studio, you'll want to publish the application in VS (see [MSDN instructions](https://msdn.microsoft.com/library/1y1404zt(v=vs.100).aspx)) and then push the folder that you've published to, and not the root folder for your app.
 

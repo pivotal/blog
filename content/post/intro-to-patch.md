@@ -208,7 +208,7 @@ Patch works off of diffs so it can figure out if you're trying to patch
 or reverse a file twice so that you don't end up in an unrecoverable
 state.
 
-```
+``` bash
 $ patch -p0 -i code.patch
 
 patching file src/code.go

@@ -16,10 +16,10 @@ helpful folks in the [Concourse Slack room](http://slack.concourse.ci/), I was a
 set of curl commands that allows you to set the logging level via the API.
 
 ~~~bash
-$ curl http://my-concourse-server.com/api/v1/log-level
+$ curl "http://my-concourse-server.com/api/v1/log-level"
 info
-$ curl -X PUT -H "Authorization: Bearer my-big-long-oauth-token" -d 'debug' http://my-concourse-server.com/api/v1/log-level
-$ curl http://my-concourse-server.com/api/v1/log-level
+$ curl -X PUT -H "Authorization: Bearer my-big-long-oauth-token" -d "debug" "http://my-concourse-server.com/api/v1/log-level"
+$ curl "http://my-concourse-server.com/api/v1/log-level"
 debug
 ~~~
 
@@ -29,5 +29,5 @@ for `my-big-long-oauth-token` from your `~/.flyrc` file. Make sure you have logg
 If you are using basic authentication, you can use the following curl command.
 
 ~~~bash
-$ curl --user name:password -X PUT -d 'debug' http://my-concourse-server.com/api/v1/log-level
+$ curl --user name:password -X PUT -d "debug" "http://my-concourse-server.com/api/v1/log-level"
 ~~~
