@@ -61,8 +61,13 @@ data class EmailMessage(val toAddress: String, val subject: String, val body: St
 
 ```
 
-Not only is this code much shorter than it's Java counterpart, it also has more functionality. As a Kotlin data class, this tiny amount of code gets generated implementations for a `equals()/hashCode()` pair, a default `toString()` method, a `copy()` method that allows for easy altering of individual attributes of the object and the ability to [destructure](https://kotlinlang.org/docs/reference/data-classes.html#data-classes-and-destructuring-declarations) the object in an assignment statement.
+Not only is this code much shorter than it's Java counterpart, it also has more functionality. As a Kotlin data class, this tiny amount of code gets:
+
+* generated implementations for a `equals()/hashCode()` pair
+* a default `toString()` method
+* a `copy()` method that allows for easy altering of individual attributes of the object
+* the ability to [destructure](https://kotlinlang.org/docs/reference/data-classes.html#data-classes-and-destructuring-declarations) the object in an assignment statement.
 
 Other places this feature will come in handy is with [JSON deserialization](https://spring.io/blog/2016/02/15/developing-spring-boot-applications-with-kotlin#jackson-kotlin-module) and [Spring Data JPA classes](https://spring.io/blog/2016/02/15/developing-spring-boot-applications-with-kotlin#jackson-kotlin-module).
 
-These data classes are one of the major reasons that adopting Kotlin for your Spring Boot applications is a great move because it helps you write, and thus maintain, less code.
+As someone evaluating a switch from Java to Kotlin, these data classes are a major reasons for adopting Kotlin in your Spring Boot application. They help you write, and thus maintain, less code and the less code we have to maintain the better in my mind.
