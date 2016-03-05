@@ -6,7 +6,6 @@ categories:
 - Kotlin
 - Java
 date: 2016-02-29T17:53:56-07:00
-draft: true
 short: |
   Kotlin data classes reduce a lot of boilerplate code when it comes to writing POJOs that are used for data exchange.
 title: "The Journey of a Spring Boot application from Java 8 to Kotlin, part 3: Data Classes"
