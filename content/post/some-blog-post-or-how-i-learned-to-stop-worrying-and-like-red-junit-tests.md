@@ -11,7 +11,7 @@ short: |
   Tips and tricks for writing tests that fail well.  What to mock, what to name your tests, and how to `when`.
 title: "\"Some Blog Post\" or, How I Learned to Stop Worrying and Like Red Junit Tests"
 ---
-{{< responsive-figure src="/images/tira/testFailureDisaster.png" class="right small" >}}
+{{< responsive-figure src="/images/tira/test_failure_disaster.png" class="right small" >}}
 
 Let me throw this scenario at you: A test is failing. You didn't write it, and the error is really weird. The test name doesn't tell you what the code is supposed to do, but whatever it is, your code isn't doing that. 
 
@@ -42,7 +42,7 @@ Now when your test is failing, there's not a lot of code to look at, and the tes
 You might be thinking, "Wait, I'm writing more than one test per method? Where does it end? How many tests do I write?" I'll get to that. It's at the very end though, so if you're holding your breath, you might need to scroll down.
 
 ## Empty Assertions
-{{< responsive-figure src="/images/tira/emptyAssertions.png" class="right small" >}}
+{{< responsive-figure src="/images/tira/empty_assertions.png" class="right small" >}}
 
 This code looks fine, right?:
 
@@ -63,7 +63,7 @@ assertThat(savedUser.getName()).isEqualTo("Some Name");
 
 ## Weird Null Pointers
 
-{{< responsive-figure src="/images/tira/eIsForException.jpg" class="right small" >}}
+{{< responsive-figure src="/images/tira/e_is_for_exception.jpg" class="right small" >}}
 
 Okay, this is really specific to Java. You know how there is `int` and `Integer` and `long` and `Long` and so on? Well, it turns out that when you try to set one of the lowercase ones to `null`, you get a null pointer exception. It makes sense; the whole point of the wrapper classes is to make the primitives into nullable `Object`s. But still, every time I see a null pointer exception being thrown from an innocent-looking line like:
 
@@ -109,7 +109,7 @@ User user = User.builder()
 ~~~
 Wow! This test data is so boring, but so helpful!
 
-{{< responsive-figure src="/images/tira/somethingIsBlue.png" >}}
+{{< responsive-figure src="/images/tira/something_is_blue.png" >}}
 
 ## Mockito: How to `when`
 
@@ -152,7 +152,7 @@ Imagine that incrementer is working as expected, but this test is failing. It sa
 
 ## How Many Tests do I write?
 
-{{< responsive-figure src="/images/tira/tooManyTests.png" class="right small" >}}
+{{< responsive-figure src="/images/tira/too_many_tests.png" class="right small" >}}
 
 When I was first getting into writing unit tests, I kept hearing about how I needed to test edge cases. So I wrote code with all these null checks and exception handling, and almost none of it was necessary and all of it was ugly. Don't think about edge cases. Think about real cases.
 
