@@ -109,6 +109,8 @@ User user = User.builder()
 ~~~
 Wow! This test data is so boring, but so helpful!
 
+{{< responsive-figure src="/images/tira/somethingIsBlue.png" >}}
+
 ## Mockito: How to `when`
 
 A lot of times I see mocks set up like this:
@@ -149,6 +151,8 @@ public void addOne_returnsTheIncrementedValue(){
 Imagine that incrementer is working as expected, but this test is failing. It says`"it is not true that null is equal to 11"`. Why? because `valuable` is a mock object. Sure, you could say `when(valuable.getValue()).thenReturn(10)` and your test would work, but it's just really weird and harder to use than newing up an instance of the real thing.
 
 ## How Many Tests do I write?
+
+{{< responsive-figure src="/images/tira/tooManyTests.png" class="right small" >}}
 
 When I was first getting into writing unit tests, I kept hearing about how I needed to test edge cases. So I wrote code with all these null checks and exception handling, and almost none of it was necessary and all of it was ugly. Don't think about edge cases. Think about real cases.
 
