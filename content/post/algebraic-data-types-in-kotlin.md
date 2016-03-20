@@ -22,7 +22,7 @@ sealed class CreateSubscriptionResult {
 }
 ```
 
-In this case I am using the [`sealed` keyword](https://kotlinlang.org/docs/reference/classes.html#sealed-classes) to tell the type system that there will not be any more possible outcomes for a `CreateSubscriptionResult`. Now I can use the `where` keyword to force the consumer of the `CreateSubscriptionResult` to make sure it handles all of the possible outcomes.
+In this case I am using the [`sealed` keyword](https://kotlinlang.org/docs/reference/classes.html#sealed-classes) to tell the type system that there will not be any more possible outcomes for a `CreateSubscriptionResult`. Now I can use the `when` keyword to force the consumer of the `CreateSubscriptionResult` to make sure it handles all of the possible outcomes.
 
 ```kotlin
 return when (result) {
