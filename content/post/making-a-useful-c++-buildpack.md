@@ -4,10 +4,9 @@ authors:
 categories:
 - CF Runtime
 date: 2016-03-20T17:00:00-04:00
-draft: true
 short: >
-  A useful C++ buildpack needs to consider header files and
-  libraries. Here's a short story about how I made a useful buildpack
+  A useful C++ buildpack needs to consider header files and libraries,
+  not just `make`. Here's a story about how I made a useful buildpack
   for a C++ web framework.
 title: Making A Useful C++ Buildpack
 ---
