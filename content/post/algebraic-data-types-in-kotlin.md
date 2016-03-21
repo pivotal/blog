@@ -6,7 +6,7 @@ categories:
 - functional programming
 date: 2016-03-19T12:15:15-06:00
 short: |
-  Getting feedback quickly about mistakes in your code is a key tenet of agile development. This article will show you how to use algebraic data types and the Kotlin compiler to get fast feedback when you have missed handling a response type for a business use case.
+  Getting feedback quickly about mistakes in your code is a key tenet of agile development. This article will show you how to use algebraic data types and the Kotlin compiler to get fast feedback when you have missed handling an outcome for a business use case.
 title: Algebraic Data Types In Kotlin
 ---
 
