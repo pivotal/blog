@@ -5,7 +5,6 @@ categories:
 - Kotlin
 - functional programming
 date: 2016-03-19T12:15:15-06:00
-draft: true
 short: |
   Getting feedback quickly about mistakes in your code is a key tenet of agile development. This article will show you how to use algebraic data types and the Kotlin compiler to get fast feedback when you have missed handling a response type for a business use case.
 title: Algebraic Data Types In Kotlin
@@ -52,6 +51,6 @@ Well isn't that nice. I now can use the type system to remind myself, and my fel
 
 By using the type system to do this, I enable a faster feedback loop than had I written a test for it. Yes I may still need a test for the logic inside of each branch but I would postulate that if I keep it simple enough (like a difference in response code) that a test may be overkill because of the type system assurance. I'll leave that decision up to you.
 
-One place I have been experimenting with this type of pattern is in my [Spring controllers](https://github.com/mikegehard/user-management-evolution-kotlin/blob/master/applications/ums/src/main/kotlin/com/example/ums/subscriptions/SubscriptionsController.kt#L36-L47). In addition to providing another layer of security, I like how easy it makes the code to read and understand. A tertiary benefit is that is decouples my domain use cases from my framework code so that I can more easily test the use case (`CreateSubscription`) separate from my HTTP transport layer (`SubscriptionsController`).
+One place I have been experimenting with this type of pattern is in my [Spring controllers](https://github.com/mikegehard/user-management-evolution-kotlin/blob/master/applications/ums/src/main/kotlin/com/example/ums/subscriptions/SubscriptionsController.kt#L36-L47). I like how it makes the code that handles the outcomes easy to read and understand. Another benefit is that I now have an explicit contract between the use case and the consumer that outlines all of the possible outcomes for the use case. When I combine this contract with the `when` keyword, the compiler will enforce that the client either handles each outcome or decides to explicitly punt on some by using the `else` keyword.
 
 Have some feedback? I'd love to hear it. Reach out to me on Twitter @mikegehard and we can have a conversation about it.
