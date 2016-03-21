@@ -144,7 +144,7 @@ int main(int argc,char ** argv)
 
 The obvious challenge, however, being the compile-time requirement of
 `cppcms` header files and the runtime requirement on both
-`libcppcms.so` and `libbooster.co` shared object libraries.
+`libcppcms.so` and `libbooster.so` shared object libraries.
 
 
 ## Let's Adopt Some Conventions
