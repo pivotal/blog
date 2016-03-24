@@ -7,7 +7,6 @@ categories:
 - Procedural Languages
 - Python
 date: 2016-03-20T18:00:17-07:00
-draft: true
 short: |
   Building machine learning models (ex: scikit-learn) at scale for data parallel problems on Pivotal's MPP databases (Greenplum/HAWQ).
 title: Building machine learning models at scale for data parallel problems on Pivotal's MPP databases
