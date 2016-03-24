@@ -5,8 +5,8 @@ categories:
 - Java
 - Testing
 
-date: 2016-03-12T09:53:51-05:00
-draft: true
+date: 2016-03-24T13:16:51-05:00
+draft: false
 short: |
   Tips and tricks for writing tests that fail well.  What to mock, what to name your tests, and how to `when`.
 title: "\"Some Blog Post\" or, How I Learned to Stop Worrying and Like Red Junit Tests"
@@ -17,7 +17,7 @@ Let me throw this scenario at you: A test is failing. You didn't write it, and t
 
 That's pretty much worst case scenario for test failures, and it happened to me earlier today.
 
-I don't blame the people who wrote the test. It's tricky to figure out how to write a good test in Java. Seriously! There's no `describe` blocks, no `it`s. How do you even structure a test? I'm not really a fan of Java (Who needs type safety anyway?), but I've learned a few things in the two years I've been here that let me hate it a lot less.
+I don't blame the people who wrote the test. It's tricky to figure out how to write a good test in Java. Seriously! There's no `describe` blocks or `it`s like in [jasmine](http://jasmine.github.io/2.4/introduction.html) and [rspec](http://rspec.info/). How do you even structure a test? I'm not really a fan of Java (Who needs type safety anyway?), but I've learned a few things in the two years I've been here at Pivotal Labs that let me hate it a lot less.
 
 ## Test Name Structure
 
@@ -59,7 +59,7 @@ Oh no, that's not what you meant at all! So, to avoid that, I recommend always i
 ~~~java
 assertThat(savedUser.getName()).isEqualTo("Some Name");
 ~~~
-"But Tira, that isn't dry!" Nope, it isn't. Because this is a test, and tests are special. Tests don't need to be dry. Tests need to tell you what they're doing.
+"But Tira, that isn't dry!" Nope, it isn't. Because this is a test, and tests are special. Tests don't need to be dry, at least not as much as they need to be transparent. If your test data is meaningful and your test failures are ovbious, that's a pretty good test in my book.
 
 ## Weird Null Pointers
 
