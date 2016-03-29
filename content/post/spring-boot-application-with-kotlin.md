@@ -3,7 +3,7 @@ authors:
 - mikegehard
 categories:
 - Spring Boot
-- Kotin
+- Kotlin
 date: 2016-02-13T09:35:56-07:00
 draft: false
 short: |
