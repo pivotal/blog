@@ -161,9 +161,9 @@ All PL/Python UDFs have two dictionaries, [SD and GD](http://www.postgresql.org/
 2. GD is global dictionary, it is available to all UDFs within a transaction.
 
 Here's the approach we'll take:
-![large scale sklearn models on mpp](https://raw.githubusercontent.com/pivotal/blog/master/static/images/largescale_sklearn_models_mpp.png)
+![large scale sklearn models on mpp](https://raw.githubusercontent.com/pivotal/blog/master/static/images/largescale_sklearn_models_mpp.png =600x400)
 
-We will work with the [Wine Quality](https://archive.ics.uci.edu/ml/datasets/Wine+Quality=600x400) dataset from the UCI machine learning repository.
+We will work with the [Wine Quality](https://archive.ics.uci.edu/ml/datasets/Wine+Quality) dataset from the UCI machine learning repository.
 We've replicated the rows of the dataset several times, to create a database table with cells which well exceed the `max_field_size` limit.
 
 ```sql
