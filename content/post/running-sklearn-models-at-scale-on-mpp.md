@@ -161,6 +161,7 @@ All PL/Python UDFs have two dictionaries, [SD and GD](http://www.postgresql.org/
 2. GD is global dictionary, it is available to all UDFs within a transaction.
 
 Here's the approach we'll take:
+
 ![large scale sklearn models on mpp](https://raw.githubusercontent.com/pivotal/blog/master/static/images/largescale_sklearn_models_mpp.png)
 
 We will work with the [Wine Quality](https://archive.ics.uci.edu/ml/datasets/Wine+Quality) dataset from the UCI machine learning repository.
