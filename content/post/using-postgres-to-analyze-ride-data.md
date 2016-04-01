@@ -11,7 +11,7 @@ categories:
 - postgres
 - sql
 
-date: 2016-01-30T20:54:48-06:00
+date: 2016-04-01T20:54:48-06:00
 draft: true
 ---
 
@@ -19,7 +19,7 @@ Many web applications show some sort of data analysis based on the state of the 
 
 Far too often application developers query the database for the raw data and perform aggregates and other basic analysis in the programming language of choice (aka our "comfort zone"). This not only wastes valuable CPU cycles (especially for larger data sets), but introduces more opportunities for bugs.
 
-In this article we'll learn a few nice sql and postgres features that make the analysis easy to understand and doable in a single query!  We'll start with some basics such as joins and aggregates, and then move on to less known functionality such as window functions.
+In this article we'll learn a few nice sql and postgres features that make the analysis easy to understand and doable in a single query!  We'll start with some basics such as joins and aggregates, and then move on to less known functionality such as window functions. Check out all the code in the [github repo](https://github.com/joerodriguez/activities-postgres-queries).
 
 ## The schema
 
@@ -70,8 +70,8 @@ Then we update each ride, setting the completed_at (which we didn't set during t
 
 Let's kick things off by finding out how many times each trail has been ridden each month. Let's aim for our result set to look like this:
 
- trail_id | trail_name   | pretty_month | times_ridden  
-----------|--------------|--------------|-------------- 
+ id       | trail_name   | month        | count  
+----------|--------------|--------------|-------
  4        | Picture Rock | Jan 2014     | 127           
  2        | Betasso      | Mar 2014     | 126           
  3        | Walker Ranch | Aug 2015     | 124           
@@ -82,10 +82,10 @@ We can see that information from both of our tables (trail and ride) will be nee
 
 ```sql
 SELECT
-  trail_id,
+  trail_id                                               AS id,
   trail.name                                             AS trail_name,
-  to_char(date_trunc('month', completed_at), 'Mon YYYY') AS pretty_month,
-  count(*)                                               AS times_ridden
+  to_char(date_trunc('month', completed_at), 'Mon YYYY') AS month,
+  count(*)                                               AS count
 FROM ride
   JOIN trail ON trail_id = trail.id
 GROUP BY 1, 2, 3
@@ -137,7 +137,7 @@ The final query should look pretty similar. It's nearly identical to the previou
 
 Now let's see who the top 3 fastest riders are for each trail:
 
- trail_id | user_id | ride_time | rank  
+ id       | user_id | ride_time | rank  
 ----------|---------|-----------|------ 
  1        | 10      | 01:00:01  | 1     
  1        | 8       | 01:00:19  | 2     
@@ -168,10 +168,10 @@ WITH fastest_ride_per_user AS (
 )
   , all_ranks as (
     SELECT
-      trail_id,
+      trail_id AS id,
       user_id,
       to_char(ride_time, 'HH24:MI:SS') AS ride_time,
-      rank() OVER (PARTITION BY trail_id ORDER BY ride_time) as rank
+      rank() OVER (PARTITION BY trail_id ORDER BY ride_time) AS rank
     FROM fastest_ride_per_user
 )
 
@@ -189,7 +189,7 @@ The all_ranks CTE is where things get a bit more interesting. As previously ment
  
 What if we wanted to find out the longest consecutive number of days each trail has been ridden? Let's aim for the following result:
  
- trail_id | trail_name    | streak  
+ id       | trail_name    | streak  
 ----------|---------------|-------- 
  3        | Walker Ranch  | 128     
  4        | Picture Rock  | 78      
@@ -272,7 +272,7 @@ WITH trail_day_ridden AS (
 )
 
 SELECT
-  trail.id as trail_id,
+  trail.id as id,
   trail.name as trail_name,
   max(streak) as streak
 FROM all_streak_counts
