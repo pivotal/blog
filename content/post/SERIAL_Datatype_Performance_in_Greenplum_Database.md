@@ -8,7 +8,7 @@ categories:
 - Datatypes
 - SERIAL
 date: 2016-03-31T10:57:27+01:00
-draft: true
+draft: false
 short: |
   How to improve the performance of the SERIAL datatype in Greenplum Database
 title: SERIAL Datatype Performance in Greenplum Database
