@@ -59,7 +59,7 @@ Oh no, that's not what you meant at all! So, to avoid that, I recommend always i
 ~~~java
 assertThat(savedUser.getName()).isEqualTo("Some Name");
 ~~~
-"But Tira, that isn't dry!" Nope, it isn't. Because this is a test, and tests are special. Tests don't need to be dry, at least not as much as they need to be transparent. If your test data is meaningful and your test failures are ovbious, that's a pretty good test in my book.
+"But Tira, that isn't dry!" Nope, it isn't. Because this is a test, and tests are special. Tests don't need to be dry, at least not as much as they need to be transparent. If your test data is meaningful and your test failures are obvious, that's a pretty good test in my book.
 
 ## Weird Null Pointers
 
