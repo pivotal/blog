@@ -9,7 +9,7 @@ categories:
 - postgres
 - database
 date: 2016-03-02T17:24:27-07:00
-draft: true
+draft: false
 
 short: |
   How we transferred a legacy Oracle database to a new Postgres database in a 3 hour window.
