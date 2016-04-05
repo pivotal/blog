@@ -40,6 +40,7 @@ to S3.
 
 Previously we have approached this problem of testing the `s3cli` with the
 following steps:
+
   1. Run CloudFormation to create the IAM role and instance profile along with
      a full networking stack and a brand new instance to allow for SSH access
      from our CI workers.
@@ -137,6 +138,7 @@ zip -j deployment.zip src/s3cli/integration/integration.test s3cli lambda_functi
 ### Preparing the AWS Environment
 
 The only setup we do outside of the `s3cli` testing are the following:
+
   - Create a bucket in S3 for testing.
   - [Create an AWS IAM user][create_iam_user] with permissions to A) execute a
     basic Lambda Function, and B) read and write to/from CloudWatch logs. Follow
@@ -191,7 +193,7 @@ aws lambda invoke \
   lambda.log
 ~~~
 
-> Note: The `fileb://` above is [not a typo][fileb]
+> Note: The `fileb://` above is [not a typo][fileb].
 
 The output of the `aws lambda invoke` command will be a JSON document with
 schema
