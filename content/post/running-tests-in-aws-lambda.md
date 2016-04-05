@@ -7,7 +7,6 @@ categories:
 - Testing
 
 date: 2016-04-04T14:48:06-07:00
-draft: true
 short: |
   Quickly and easily run your tests on AWS without the hassle of starting new
   EC2 instances.
