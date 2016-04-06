@@ -168,4 +168,4 @@ In my mind, Kotlin is a step in the right direction as a "better Java". It seems
 
 Yes there are some slight gotchas when it comes to smoothly integrating with Spring Boot but those are outweighed by the benefits of the new syntax and language constructs.
 
-In our next installment, we will take a look at Java Spring Boot configuration classes and compare them to their Kotlin brethren. I'm hoping that we will continue to see gains from Kotlin that will outweigh the friction with Spring Boot.
+In our [next installment](/post/spring-boot-configuration-in-kotlin/), we will take a look at Java Spring Boot configuration classes and compare them to their Kotlin brethren. I'm hoping that we will continue to see gains from Kotlin that will outweigh the friction with Spring Boot.
