@@ -11,6 +11,8 @@ short: |
 title: The World's Smallest Concourse CI Server
 ---
 
+### *[2016-04-06: This Blog Post is out-of-date; Please refer to the official [Concourse documentation](http://concourse.ci/installing.html) for instructions how to install a Concourse server]*
+
 [Continuous Integration](https://en.wikipedia.org/wiki/Continuous_integration)
 (CI) is often used in conjunction with test-driven development (TDD);
 however, CI servers often
