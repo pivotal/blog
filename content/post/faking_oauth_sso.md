@@ -9,7 +9,7 @@ date: 2016-04-11T06:34:12-04:00
 short: |
   When your Java Spring web application depends on a third-party OAuth2 single sign-on service,
   tests can be slow, brittle, or difficult to control. I'll describe two ways to address these
-  issues by faking OAuth2 single-sign on in your tests. 
+  issues by faking OAuth2 single sign-on in your tests. 
 title: Faking OAuth2 Single Sign-on in Spring, Two Ways
 ---
 
