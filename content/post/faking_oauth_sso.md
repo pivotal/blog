@@ -5,8 +5,7 @@ categories:
 - Spring
 - Java
 - Testing
-date: 2016-03-22T06:34:12-04:00
-draft: true
+date: 2016-04-11T06:34:12-04:00
 short: |
   When your Java Spring web application depends on a third-party OAuth2 single sign-on service,
   tests can be slow, brittle, or difficult to control. I'll describe two ways to address these
@@ -17,7 +16,7 @@ title: Faking OAuth2 Single Sign-on in Spring, Two Ways
 When writing a Java Spring web application that uses an OAuth2 single sign-on (SSO) service for
 authentication, testing can be difficult, especially if the SSO service is provided by a third party.
 In such cases, it may be more expedient to fake the SSO service in your tests. I'll describe two ways to
-structure your tests so they no longer depend on a third-party SSO service.
+structure your tests so that they no longer depend on a third-party SSO service.
 
 Let's assume we're writing a web application with a controller that uses information gathered from the
 OAuth2 SSO service. It could be that our controller needs a properly configured `Oauth2RestTemplate` to make
@@ -35,10 +34,14 @@ public class TokenController {
 
     @RequestMapping(path="/api/token", method=RequestMethod.GET)
     public TokenData getAuthenticationInfo() {
-        HashMap<String, String> userDetails = (HashMap<String, String>)SecurityContextHolder.getContext()
-            .getAuthentication()
+        OAuth2Authentication authentication = (OAuth2Authentication) SecurityContextHolder
+            .getContext()
+            .getAuthentication();
+        
+        HashMap<String, String> userDetails = (HashMap<String, String>)authentication
             .getUserAuthentication()
             .getDetails();
+        
         return new AuthenticationInfo(oauthRestTemplate.getAccessToken(), userDetails);
     }
 
@@ -84,7 +87,7 @@ security:
 ## Strategy #1: Bypass Authentication with MockMvc
 
 We want to write a test that describes the behavior of our controller method without actually contacting the
-third-party SSO service. For our first attempt at achieving this goal, we will structure our test so that it
+third-party SSO service. For our first attempt at achieving this goal, we'll structure our test so that it
 bypasses the authentication process altogether. We'll use Spring's `MockMvc` class to make
 requests on behalf of a user who appears to have already been authenticated.
 
@@ -217,7 +220,7 @@ public void testShowAuthenticationInfo () {
     fill("input[name='password']").with("password");
     find("input[type='submit']").click();
 
-    assertThat(pageSource()).contains("username\":\"bwatkins\"");
+    assertThat(pageSource()).contains("username\":\"bwatkins\");
     assertThat(pageSource()).contains("my-fun-token");
 }
 ~~~
@@ -268,7 +271,7 @@ public void setUp() {
 
 When an unauthenticated user requests a protected resource in our app, Spring Security will first redirect that user to the SSO service
 for authentication, passing several parameters on the query string, including a generated `state` parameter to
-guard against CSRF attacks, which will discuss later. 
+guard against CSRF attacks, which we'll discuss later. 
 The stub for `/oauth/authorize?.*` handles this redirect request and provides a login page.
 
 This login page can be configured as necessary, but it should mimic the form that the real single sign-on service
@@ -363,7 +366,7 @@ stubFor(get(urlPathEqualTo("/userinfo"))
         .withBody("{\"user_id\":\"my-id\",\"user_name\":\"bwatkins\",\"email\":\"bwatkins@test.com\"}")));
 ~~~
 
-With these four stubs in place, we've provided a fake OAuth2 SSO service to use during testing. With this approach, we can
+With these four stubs in place, we've provided a fake OAuth2 SSO service to use during testing. Using this approach, we can
 write acceptance tests that describe the bahvior of our application when errors are encountered during the single sign-on process.
-Better yet, we can use this approach to write tests that are faster and more resilient since they no longer depend on a
+Better yet, we can write tests that are faster and more resilient since they no longer depend on a
 third-party service for authentication. 
