@@ -330,4 +330,4 @@ function fetchCurrentTemperature() {
 
 That's it! You made it. We now have a working, tested JS service. There's still some things we can improve upon -- for example, creating a nicer abstraction around our `promiseHelper`, but we can leave that for another post.
 
-Have any questions or comments? Please leave them below!
+Have any questions or comments? Follow up with any discussion over on the corresponding [gist](https://gist.github.com/pmeskers/2530773be429d522db17f224973c8654).
