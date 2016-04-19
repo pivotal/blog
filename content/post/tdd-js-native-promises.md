@@ -7,7 +7,7 @@ categories:
 - Promises
 - Testing
 date: 2016-04-19T10:19:36-04:00
-draft: true
+draft: false
 short: |
   A straightforward look at how to apply test-driven development to native JavaScript promises.
 title: Testing JavaScript's native Promises
