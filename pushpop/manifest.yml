@@ -1,0 +1,10 @@
+---
+name: blog-pushpop
+memory: 64M
+command: bundle exec pushpop jobs:run
+no-route: true
+services:
+  - keen.io
+  - pushpop-sendgrid-account
+env:
+  DEBUG: true

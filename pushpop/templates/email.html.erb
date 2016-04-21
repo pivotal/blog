@@ -1,0 +1,24 @@
+<h1>
+  Daily Report
+</h1>
+<p>
+  We got 
+  <strong>
+  <%= step_responses["traffic-over-last-30-days"] %> 
+  hits 
+  </strong> in the last 30 days!
+</p>
+
+
+<table>
+  <tr>
+    <th>Count</th>
+    <th>Path</th>
+  </tr>
+  <% step_responses["page-loads-by-url"].each do |entry| %> 
+    <tr>
+      <td><%= entry["result"] %></td>
+      <td><%= entry["parsed_page_url.path"] %></td>
+    </tr>
+  <% end %>
+</table>
