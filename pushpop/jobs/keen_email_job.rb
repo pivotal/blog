@@ -14,8 +14,8 @@ require 'pushpop-sendgrid'
 # Define our job and name it
 job 'keen email' do
 
-  # every 24.hours, at: '00:00'
-  every 1.hours, at: '**:00'
+  every 24.hours, at: '00:00'
+  # every 1.hours, at: '**:00'
 
   step "page-loads-by-url" do
     Keen.count('Loaded a Page', timeframe: 'last_30_days', group_by:  'parsed_page_url.path')
