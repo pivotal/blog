@@ -88,10 +88,6 @@ If the language auto-detection fails you can add a [language identifier](https:/
 
 ## Under the Hood...
 
-You'll notice that we're not building directly into `./public`, but rather into all of `public/local`, `public/prod ` and `public/staging` -- each representing a different environment.  This magic is done by the [bin/build](https://github.com/pivotal/blog/blob/master/bin/build) script.  `cf push` will [push all of the apps](https://github.com/pivotal/blog/blob/master/manifest.yml) one at a time.
+You'll notice that we're not building directly into `./public`, but rather into all of `public/local`, `public/prod ` and `public/staging` -- each representing a different environment.  This magic is done by the [bin/build](https://github.com/pivotal/blog/blob/master/bin/build) script.  The [travis config](https://github.com/pivotal/blog/blob/master/.travis.yml) also uses [bin/generate_manifests](https://github.com/pivotal/blog/blob/master/bin/generate_manifests) to drop the CF manifest files into place.
 
-We also use: 
-
-* [Feedburner](https://feedburner.google.com/fb/a/dashboard?id=lkvb0prnrmdpd4tdcvgd6uorpo) to track RSS subscriptions
-* A [twitter account](https://twitter.com/pivotaleng) ([automatically publishes each post](https://feedburner.google.com/fb/a/socialize?id=lkvb0prnrmdpd4tdcvgd6uorpo) via feedburner).
-* Keen.io and Segment.com for tracking analytics.
+We also use [Feedburner](https://feedburner.google.com/fb/a/dashboard?id=lkvb0prnrmdpd4tdcvgd6uorpo) to track RSS subscriptions, and to [automatically publish each post](https://feedburner.google.com/fb/a/socialize?id=lkvb0prnrmdpd4tdcvgd6uorpo) to our dedicated [twitter account](https://twitter.com/pivotaleng).
