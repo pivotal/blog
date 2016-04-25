@@ -72,7 +72,14 @@ Every commit to master is [auto-deployed to both production and staging](https:/
 
 ## Changing the style
 
-`./themes/pivotal-ui` is a port of the [Pivotal UI](https://github.com/pivotal-cf/pivotal-ui) project.  I basically copied the compiled css and image files over.  If you want to change the look of this site, then you should edit the templates in there.
+All of the HTML and CSS live in `./themes/pivotal-ui`, which is a port of the [Pivotal UI](https://github.com/pivotal-cf/pivotal-ui) project.  I basically copied the compiled css and image files over.  If you want to change the look of this site, then you should edit the templates in there.
+
+The key files you'll want to look at are:
+
+* `themes/pivotal-ui/layouts/index.html` for the main page...
+* `themes/pivotal-ui/layouts/_default/single.html` for the layout around each blog post...
+* `themes/pivotal-ui/static/local.css` for CSS changes...
+* ...and basically everything else under `themes/pivotal-ui/layouts/`
 
 ## Syntax highlighting
 
