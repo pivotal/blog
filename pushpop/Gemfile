@@ -4,3 +4,4 @@ source "https://rubygems.org"
 gem "pushpop"
 gem "pushpop-keen"
 gem "pushpop-sendgrid"
+gem 'roadie', '~> 3.1.1'

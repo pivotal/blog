@@ -1,24 +1,123 @@
-<h1>
-  Daily Report
-</h1>
-<p>
-  We got 
-  <strong>
-  <%= step_responses["traffic-over-last-30-days"] %> 
-  hits 
-  </strong> in the last 30 days!
-</p>
+<!doctype html>
+<html>
+<head>
+<style type="text/css">
+* {
+  font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  line-height: 1.6em;
+  margin: 0;
+  padding: 0;
+}
+img {
+  max-width: 600px;
+  width: auto;
+}
+/* -------------------------------------
+    ELEMENTS
+------------------------------------- */
+a {
+  color: #348eda;
+}
+/* -------------------------------------
+    TYPOGRAPHY
+------------------------------------- */
+h1, 
+h2, 
+h3 {
+  color: #111111;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 200;
+  line-height: 1.2em;
+  margin: 40px 0 10px;
+}
+h1 {
+  font-size: 36px;
+}
+h2 {
+  font-size: 28px;
+}
+h3 {
+  font-size: 22px;
+}
+p, 
+ul, 
+ol {
+  font-size: 14px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+ul li, 
+ol li {
+  margin-left: 5px;
+  list-style-position: inside;
+}
 
+/* -------------------------------------
+    TABLES
+------------------------------------- */
+table {
+  border: 1px solid #DFDFDF;
+  background-color: #F9F9F9;
+  width: 100%;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  color: #333;
+}
+table tr {
+  color: #555;
+}
+table td, table th {
+  border-top-color: white;
+  border-bottom: 1px solid #DFDFDF;
+}
+table th {
+  font-weight: bold;
+  padding: 7px 7px 8px;
+  text-align: left;
+  line-height: 1.3em;
+  font-size: 14px;
+}
+table td {
+  font-size: 12px;
+  padding: 4px 7px 2px;
+  vertical-align: top;
+}
+</style>
+</head>
+<body>
+  <h3> <%= step_responses["traffic-over-last-30-days"] %> </h3>
+  <p> hits in the last 30 days.</p>
 
-<table>
-  <tr>
-    <th>Count</th>
-    <th>Path</th>
-  </tr>
-  <% step_responses["page-loads-by-url"].each do |entry| %> 
+  <h3>Top pages</h3>
+
+  <table>
     <tr>
+      <th>Hits</th>
+      <th>Title</th>
+    </tr>
+    <% step_responses["top-pages"].each do |entry| %> 
+      <tr>
       <td><%= entry["result"] %></td>
-      <td><%= entry["parsed_page_url.path"] %></td>
+      <td><%= entry["title"] %></td>
     </tr>
   <% end %>
-</table>
+  </table>
+
+  <h3>Referrers</h3>
+
+  <table>
+    <tr>
+      <th>Hits</th>
+      <th>Referrer</th>
+    </tr>
+    <% step_responses["referrers"].each do |entry| %> 
+      <tr>
+      <td><%= entry["result"] %></td>
+      <td><%= entry["referrer_info.source"] or "Unkown" %></td>
+    </tr>
+  <% end %>
+  </table>
+</body>
+</html>
