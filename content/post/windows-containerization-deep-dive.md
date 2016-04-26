@@ -50,6 +50,7 @@ For the most part, users can treat a container on Linux just like you would
 treat a VM -- though containers are lighter-weight and have less overhead.
 
 Specifically, containerization on Linux provides isolation in the following ways:
+
 * Filesystem isolation: one container cannot read or modify the files outside of
   its own container filesystem (i.e. those of the host or of other containers).
 * Disk usage: disk usage can be limited with a quota.
@@ -77,6 +78,7 @@ Windows differ from those on Linux. As a result, the functionality of our Garden
 implementation on Windows is slightly different.
 
 Here are some of the details on how Garden-Windows secures applications:
+
 * Filesystem isolation: In order to take advantage of native Windows Access
   Control Lists (ACLs), IronFrame creates a unique, standard user for each
   container created. Files in the containerizer directory (C:\containerizer by
