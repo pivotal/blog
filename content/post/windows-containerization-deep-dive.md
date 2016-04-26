@@ -11,8 +11,7 @@ categories:
 date: 2016-04-26T11:25:15-04:00
 draft: true
 short: |
-  Technical details for how we implemented containers on Windows for Pivotal
-  Cloud Foundry.
+  Technical details for how we implemented containers on Windows for Pivotal Cloud Foundry.
 title: Implementing Containers on Windows: A Deep Dive
 ---
 
