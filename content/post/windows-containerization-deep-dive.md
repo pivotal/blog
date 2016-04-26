@@ -51,14 +51,14 @@ treat a VM -- though containers are lighter-weight and have less overhead.
 
 Specifically, containerization on Linux provides isolation in the following ways:
 
-* Filesystem isolation: one container cannot read or modify the files outside of
+* __Filesystem isolation__: one container cannot read or modify the files outside of
   its own container filesystem (i.e. those of the host or of other containers).
-* Disk usage: disk usage can be limited with a quota.
-* Network isolation: the ports available to processes within a Linux container
+* __Disk usage__: disk usage can be limited with a quota.
+* __Network isolation__: the ports available to processes within a Linux container
   are namespaced to that container. Other containers on the same host can bind
   to the same ports, and by default traffic is disallowed to those ports unless
   mapped to the outside world.
-* Memory usage: one application cannot use more than a pre-set amount of the
+* __Memory usage__: one application cannot use more than a pre-set amount of the
   memory on a single VM host.
 
 Windows Container Isolation
@@ -79,7 +79,7 @@ implementation on Windows is slightly different.
 
 Here are some of the details on how Garden-Windows secures applications:
 
-* Filesystem isolation: In order to take advantage of native Windows Access
+* __Filesystem isolation__: In order to take advantage of native Windows Access
   Control Lists (ACLs), IronFrame creates a unique, standard user for each
   container created. Files in the containerizer directory (C:\containerizer by
   default) are ACL’d such that they are only readable by the temporary user that
@@ -88,7 +88,7 @@ Here are some of the details on how Garden-Windows secures applications:
   (e.g. system DLLs and C:\Program Files\), so care should be taken not to store
   sensitive or confidential information in a place where the containers can
   access it.
-* Disk usage: Disk usage limits are enforced by NTFS [disk
+* __Disk usage__: Disk usage limits are enforced by NTFS [disk
   quotas](https://technet.microsoft.com/en-us/library/cc938945.aspx#XSLTsection128121120120).
   Per-user disk quotas will apply to all files owned by a given user -- but
   because each container is run as a unique local user account, this is exactly
@@ -96,7 +96,7 @@ Here are some of the details on how Garden-Windows secures applications:
   contains the containerizer directory (C:\ by default). Quotas are currently
   enabled when running the setup.ps1 script included in the
   garden-windows-release distribution.
-* Network isolation: applications launched inside a container bind directly to
+* __Network isolation__: applications launched inside a container bind directly to
   the external IP of the cell. Applications utilizing port mapping functions of
   the garden API must be adapted to map internal container ports to external
   ports.  See the
@@ -104,7 +104,7 @@ Here are some of the details on how Garden-Windows secures applications:
   or
   [diego-sshd](https://github.com/cloudfoundry-incubator/diego-ssh/blob/master/cmd/sshd/main_windows.go#L28-L35)
   for examples of how this works.
-* Memory usage: To ensure that individual applications do not overrun their
+* __Memory usage__: To ensure that individual applications do not overrun their
   allocated memory limits, we utilize [Job
   Objects](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684161(v=vs.85).aspx).
   A job object may specify an upper bound on memory utilization of a group of
