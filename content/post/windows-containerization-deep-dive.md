@@ -67,7 +67,7 @@ Windows Container Isolation
 In designing Windows support for Cloud Foundry, we decided to take a
 containerized approach to application deployment. We chose containers over
 virtual machines due to the lightweight nature of containers when compared to
-their VM counterparts. This also bring the experience in line with that of
+their VM counterparts. This also brings the experience in line with that of
 Linux.
 
 Windows Server 2012 provides process isolation primitives, similar to those
