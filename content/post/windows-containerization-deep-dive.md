@@ -106,7 +106,7 @@ Here are some of the details on how Garden-Windows secures applications:
   for examples of how this works.
 * __Memory usage__: To ensure that individual applications do not overrun their
   allocated memory limits, we utilize [Job
-  Objects](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684161(v=vs.85).aspx).
+  Objects](https://msdn.microsoft.com/en-us/library/windows/desktop/ms684161.aspx).
   A job object may specify an upper bound on memory utilization of a group of
   processes. The operating system will not allow this limit to be exceeded.
 
