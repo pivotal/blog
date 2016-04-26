@@ -130,4 +130,5 @@ and closer every day.
 
 We hope that this serves as a good introduction to containers as they have been
 implemented on Windows 2012. Our team is always available on
-[Slack](https://cloudfoundry.slack.com/messages/greenhouse/).
+[Slack](https://cloudfoundry.slack.com/messages/greenhouse/) to answer any
+questions you may have.
