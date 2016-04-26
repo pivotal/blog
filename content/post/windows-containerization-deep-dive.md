@@ -35,7 +35,7 @@ that isolates the contents of each container from one another, and from the
 host. This is the same technology used by Docker and other high-level container
 technologies.
 
-In Diego, this component is called Garden, and is currently being rewritten to
+In Diego, this component is called Garden and is currently being rewritten to
 use the same API as Docker, [RunC](https://github.com/opencontainers/runc).
 
 Containers are popular because they provide strong isolation between
@@ -121,7 +121,7 @@ Additionally, if a process attempts to escape a Job Object, The Guard will stop
 this rogue behavior and kill the process if needed. This ensures that memory
 limits and job teardown can be enforced.
 
-We at Pivotal believe that .NET is an important enterprise platform, and are
+We at Pivotal believe that .NET is an important enterprise platform and are
 committed to the success of the project. We’re also excited about future
 opportunities for .NET on Cloud Foundry, including .NET Core and our [Steel
 Toe](http://steeltoe.io/) initiative. Though the details of containerization on
