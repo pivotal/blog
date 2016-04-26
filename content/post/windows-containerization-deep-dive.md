@@ -21,9 +21,9 @@ applications on Windows. As part of the process for supporting this, we
 implemented Diego’s [Garden](https://github.com/cloudfoundry-incubator/garden)
 API on [Windows](https://github.com/cloudfoundry/garden-windows), and
 cross-compiled [Diego](https://github.com/cloudfoundry-incubator/diego-release)
-and [Loggregator](https://github.com/cloudfoundry/loggregator) components. This
-meant coming up with a way to “containerize” applications on Windows (which is
-what Garden does). Here’s how we did it.
+and [Loggregator](https://github.com/cloudfoundry/loggregator) components for
+Windows. Implementing garden-windows required us to come up with a way to
+“containerize” applications on Windows. Here’s how we did it.
 
 Linux Container Isolation
 -------------------------
