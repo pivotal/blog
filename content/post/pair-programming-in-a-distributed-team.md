@@ -5,7 +5,7 @@ categories:
 - Agile
 - Pair Programming
 date: 2016-04-20T17:25:05-04:00
-draft: true
+draft: false
 short: |
   Tales of pair programming on a distributed team.
 title: 'Distributed Pair Programming: What Works!'
