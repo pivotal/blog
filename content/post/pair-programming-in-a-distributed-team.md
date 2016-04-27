@@ -13,7 +13,9 @@ title: 'Distributed Pair Programming: What Works!'
 
 For the past two years, the Cloud Foundry Toolsmiths team here at Pivotal has been distributed, spanning the Eastern and Pacific time zones. Two years makes 522 weekdays. For me personally, that means that for 522 days I have been remote pairing with my team members. In those days, we have iterated on a lot of potential solutions for addressing the needs of our team!
 
-As an agile engineering teams, our core values include:
+Having a distributed team allows us to support teams across the various Pivotal offices (London, New York, Toronto, SF) as the team's work days now spans across 12 hours. As the Pivotal Cloud Foundry organization grows, sharing knowledge across the different offices and being available to other team's will help grow and expand the knowledge and skillset across **all** the engineering teams.
+
+As an agile engineering team, our core values include:
 
 * Pairing
 * Brainstorming as a team
@@ -51,7 +53,7 @@ We use the [TeamSpeak BOSH release](https://github.com/pivotal-cf-experimental/t
 
 ## Working with other teams
 
-Working with other teams can be difficult when the team is distributed. The fact is that **nothing** trumps in-person conversations. We use [Slack](https://slack.com/) so other teams can reach out to us, and if conversations take longer than 2-3 minutes, we ask the other team to join an [appear.in](https://appear.in) room. Our appear.in caht is open, and anyone with the link can join.
+Working with other teams can be difficult when the team is distributed. The fact is that **nothing** trumps in-person conversations. We use [Slack](https://slack.com/) so other teams can reach out to us, and if conversations take longer than 2-3 minutes, we ask the other team to join an [appear.in](https://appear.in) room. Our appear.in chat is open, and anyone with the link can join.
 
 Collaborating and working with other teams is the area I personally feel needs the most improvement. Slack messages can be slow, and having multiple team members join a video call requires a lot of effort (finding a conference room, getting on the call, setting up mic/speaker settings). I'd love to hear what other tooling you have used to help with this scenario.
 
@@ -60,6 +62,22 @@ Collaborating and working with other teams is the area I personally feel needs t
 Colocated retros are typically done on a whiteboard. We use [Trello](https://trello.com/) for our retros. In Trello, you are able to create teams and, within the team, create boards. Team members can then use the web client or the mobile app to write on the retro board. Trello also allows us to easily keep a history of all our retros, which is good for reference.
 
 {{< figure src="/images/distributed_pairing/sample-retro.png" class="center" >}}
+
+## Additional notes
+
+All the tooling mentioned above can only help your team be effective at remote pairing. Below are some processes we have learned can make your remote pairing experience even better:
+
+* Respect each other's timezones - This means if it one team member's lunchtime, they take their lunch. If it is 6pm where you currently are, you are done for the day. This makes remote pairing both enjoyable and sustainable
+
+* Always cross-pair between offices/locations - We currently have 2 members in Toronto and 2 members in SF and we always set up our pairs so that one person from Toronto is always pairing with a member from SF during the core work hours. Doing this allows us to accomplish a few things:
+  * No one ever feels left out since everyone is always cross-office pairing
+  * Since all the pairs are cross-office pairing, everyone is always involved in group conversations
+  * Cross-office pairing ensures everyone can share and gain context
+  * Our headsets are always hooked up to our workstations. Useful tools like TeamSpeak allows us to have group conversations easily
+
+* Leave context in the Pivotal Tracker story - We use Pivotal Tracker for story tracking but this can be accomplished using any issue tracking system. Leaving context in the Tracker story allows team members in different timezones to pick up the story. It is always better to over communicate.
+
+* Takes breaks - Play a remote game online for 5 minutes as opposed to a ping-pong game. _Talk_ to your pair and get to know them. Getting to know your team member at a personal level makes pairing with them that much more enjoyable.
 
 ## Summary
 
