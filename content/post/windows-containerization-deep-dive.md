@@ -9,7 +9,7 @@ categories:
 - Containers
 - .NET
 date: 2016-04-26T11:25:15-04:00
-draft: true
+draft: false
 short: |
   Technical details for how we implemented containers on Windows for Pivotal
   Cloud Foundry.
