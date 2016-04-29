@@ -8,11 +8,12 @@ authors:
 - joseph
 
 categories:
-- postgres
-- sql
+- PostgreSQL
+- SQL
+- Databases
 
-date: 2016-04-01T20:54:48-06:00
-draft: true
+date: 2016-04-28T20:54:48-06:00
+draft: false
 ---
 
 Many web applications show some sort of data analysis based on the state of the database. These analyses are sometimes used for dashboards, to power charts, graphs, and tables, or in more advanced cases to determine decisions that the application will make (smart apps). 
