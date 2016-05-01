@@ -12,19 +12,18 @@ require "pushpop-keen"
 require "pushpop-sendgrid"
 require "roadie"
 
-# Define our job and name it
 job "keen email" do
-
-  every 24.hours, at: "00:00"
-  # every 1.hours, at: "**:00"
+  every 1.week, :at => 'Sunday 01:00'
 
   step do
-    Keen.count("Loaded a Page", timeframe: "last_30_days", group_by: "title", filters: [{
-        "property_name" => "parsed_page_url.path",
-        "operator" => "contains",
-        "property_value" => "/post/"
-      }
-    ])
+    Keen.count("Loaded a Page", 
+               timeframe: "previous_week", 
+               group_by: "title", 
+               filters: [{
+                 "property_name" => "parsed_page_url.path",
+                 "operator" => "contains",
+                 "property_value" => "/post/"
+               }])
   end
 
   step "top-pages" do |response, step_responses|
@@ -33,17 +32,17 @@ job "keen email" do
     end.first(10)
   end
 
-  step "traffic-over-last-30-days" do
-    Keen.count("Loaded a Page", timeframe: "last_30_days")
+  step "traffic-last-week" do
+    Keen.count("Loaded a Page", timeframe: "previous_week")
   end
 
   step "referrers" do
-    Keen.count("Loaded a Page", timeframe: "last_30_days", group_by: "referrer_info.source").sort do |this, that|
+    Keen.count("Loaded a Page", timeframe: "previous_week", group_by: "referrer_info.source").sort do |this, that|
       that["result"].to_i <=> this["result"].to_i
     end.first(10)
   end
 
-  if ENV["LOCAL"]
+  if ENV["DRYRUN"]
     step "write-to-file" do |response, step_responses|
       open("/tmp/keen-#{$$}.html", "w") do |f|
         f.puts(Roadie::Document.new(template("email.html.erb", response, step_responses)).transform)
@@ -52,9 +51,9 @@ job "keen email" do
     end
   else
     sendgrid do |response, step_responses|
-      to        "Tammer Saleh <tsaleh@pivotal.io>"
-      from      "Blog Stats <stats@engineering.pivotal.io>"
-      subject   "Engineering Blog Traffic Report"
+      to        "CF Eng Directors <cf-eng-directors@pivotal.io>"
+      from      "Blog Stats <cf-eng-directors@pivotal.io>"
+      subject   "Engineering Blog Weekly Traffic Report"
       body      Roadie::Document.new(template("email.html.erb", response, step_responses)).transform
     end
   end
