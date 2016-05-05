@@ -7,7 +7,6 @@ categories:
 - Redux
 - Javascript
 date: 2016-05-04T16:39:01-04:00
-draft: true
 short: |
   Helpful patterns for unit testing a React-Redux app
 title: TDDing React + Redux
