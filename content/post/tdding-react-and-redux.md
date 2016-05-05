@@ -29,7 +29,7 @@ The true test to see whether Redux and React have been wired up correctly is to 
 
 Take, for example, the following React component:
 
-```
+```javascript
 // app.js
 
 var React = require('react');
@@ -47,7 +47,7 @@ module.exports = App;
 
 ...and it's associated connected component:
 
-```
+```javascript
 // connected_app.js
 
 var React = require('react');
@@ -76,7 +76,7 @@ module.exports = ConnectedApp;
 
 The `<Provider>` component provided by ReactRedux is the gateway by which the Redux store can be accessed by an app's components.  Therefore, when testing a connected component, make sure to wrap the component in a `<Provider>` component:
 
-```
+```javascript
 // connected_app_spec.js
 
 var React = require('react');
@@ -112,7 +112,7 @@ Note that we are leveraging Redux's mock store because a store is needed to for 
 
 And now for the assertions...
 
-```
+```javascript
 // connected_app_spec.js
 
 var React = require('react');
@@ -152,7 +152,7 @@ Let's pause here.  Pay attention to the component that we rendered into the docu
 
 Testing that the proper action dispatches are passed down is similar:
 
-```
+```javascript
 // connected_app_spec.js
 
 var React = require('react');
@@ -199,7 +199,7 @@ describe('ConnectedApp', function() {
 ### Synchronous
 Testing synchronous Actions (or officially, Action Creators) is easy because of the way Redux is designed.  Because the Actions are simply functions that return an object, there are no Redux-specific dependencies, making the tests straightforward.  For example, given an action creator like:
 
-```
+```javascript
 // actions.js
 
 function addOne() {
@@ -216,7 +216,7 @@ module.exports = {
 
 You can assert that the action returns the correct object:
 
-```
+```javascript
 // actions_spec.js
 
 describe('.addOne', function() {
@@ -237,7 +237,7 @@ Testing asynchronous actions is a multi-step process.
 
 Compared to testing synchronous actions, testing asynchronous actions is bit trickier because they return a function, not an object.  The logic that we would be testing comes from invoking that function.  In addition, the implementation requires the presence of a store, and more specifically, its dispatch method.  For example:
 
-```
+```javascript
 // actions.js
 
 var axios = require('axios'); // axios is a promise-based HTTP client
@@ -267,7 +267,7 @@ module.exports = {
 
 While the Redux docs suggest utilizing a mockStore via `configureMockStore` for unit testing actions, the only value it provides is ensuring that the appropriate middlewares (e.g., Thunk) have been added, which doesn't really need to be tested. Instead, we just need a stub in place of the actual dispatch method, and use it to invoke the result of calling the asynchronous action:
 
-```
+```javascript
 // actions_spec.js
 
 var axios = require('axios');
@@ -289,7 +289,7 @@ describe('.fetchData', function() {
 
 To test the expected behavior after the asynchronous function is complete in the above example, I like to use Q library because it simulates a Promise without requiring the test writer to worry about asynchronicity while writing tests:
 
-```
+```javascript
 // actions_spec.js
 
 var axios = require('axios');
@@ -338,7 +338,7 @@ Testing reducers is also simple because their implementations in Redux are essen
 
 For example, given the following action and reducer:
 
-```
+```javascript
 // actions.js
 
 function addItem(newItem) {
@@ -354,7 +354,7 @@ module.exports = {
 }
 ```
 
-```
+```javascript
 // reducer.js
 
 var _ = require('lodash');
@@ -383,7 +383,7 @@ module.exports = reducer;
 
 We can test for the expected initial state, and its handling of each action like:
 
-```
+```javascript
 // reducer_spec.js
 
 var reducer = require('../js/reducers/reducer.js');
