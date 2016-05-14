@@ -39,7 +39,6 @@ We use a BOSH [v2 deployment manifest](http://bosh.io/docs/manifest-v2.html) and
 to deploy our BOSH director. Here is our BOSH director's manifest:
 
 ```yaml
----
 director_uuid: __DIRECTOR_UUID__
 name: bosh
 
@@ -73,15 +72,14 @@ jobs:
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
   - {name: vsphere_cpi, release: bosh-vsphere-cpi}
-  - release: networking
-    name: routes
+  - name: routes
+    release: networking
     properties:
-      networking:
-        routes:
-        - net: 172.16.1.0
-          netmask: 255.255.255.0
-          interface: eth1
-          gateway: 172.16.0.1
+      networking.routes:
+      - net: 172.16.1.0
+        netmask: 255.255.255.0
+        interface: eth1
+        gateway: 172.16.0.1
 
   vm_type: medium
 
@@ -128,7 +126,7 @@ jobs:
 
     vcenter: &vcenter # <--- Replace values below
       address: 10.0.0.5
-      user: root # usually root
+      user: root
       password: vmware
       datacenters:
       - name: datacenter
@@ -152,7 +150,6 @@ the deployment will fail.
 Here is our cloud-config manifest:
 
 ```yaml
----
 networks:
 - name: bosh-management-network
   subnets:
@@ -172,10 +169,9 @@ networks:
 
 - name: cf-public-network
   subnets:
-    - range: 172.16.1.0/24
-      gateway: 172.16.1.1
-      static:
-      cloud_properties: { name: cf-public-network }
+  - range: 172.16.1.0/24
+    gateway: 172.16.1.1
+    cloud_properties: { name: cf-public-network }
 
 vm_types:
 - name: tiny
@@ -201,19 +197,19 @@ releases: []
 
 stemcells:
 - alias: default
-  name: bosh-vsphere-esxi-ubuntu-trusty-go_agent
-  version: 3232.3
+  os: ubuntu-trusty
+  version: latest
 
 update:
   canaries: 1
   max_in_flight: 1
-  canary_watch_time: 30000-600000
-  update_watch_time: 5000-600000
+  canary_watch_time: 5000-300000
+  update_watch_time: 5000-300000
 
-jobs:
+instance_groups:
 - name: simple-vm
   instances: 1
-  templates: []
+  jobs: []
   vm_type: tiny
   stemcell: default
   networks:
