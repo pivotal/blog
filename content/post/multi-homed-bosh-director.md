@@ -2,6 +2,7 @@
 authors:
 - dberger
 - cunnie
+- aminjam
 categories:
 - BOSH
 date: 2016-05-13T13:37:44-07:00
@@ -12,10 +13,12 @@ title: How to Deploy a Multi-homed BOSH Director to a vSphere Environment
 ---
 
 vSphere users ask, "How do I configure my BOSH director so that it can
-communicate with my vCenter but my deployed VMs can't?"
+communicate with my vCenter but the director's deployed VMs can't?"
 
-One technique is to use a multi-homed BOSH director. We describe such a
-deployment.
+One technique is to use a multi-homed BOSH director combined with the BOSH [Networking
+Release](https://github.com/cloudfoundry/networking-release) (a BOSH release
+which enables customization of the VM's routing table, allowing more routes
+than the default gateway).
 
 ## Network Diagram
 
@@ -23,12 +26,12 @@ The following is a network diagram of our deployment. We want to protect the
 assets at the top (in blue): the vCenter server and its associated ESXi servers.
 These machines are particularly sensitive as they control hundreds of VMs.
 
-The BOSH Director needs access to the vCenter, but its VMs should not have
-access.
+The BOSH Director needs access to the vCenter, but its deployed VMs should not
+have access.
 
 We provision BOSH as a multi-homed VM attached to both the vCenter management
 network and the BOSH Routing Network. This allows the director to communicate
-with the deployed VMs, but prevents the VMs from communicating with other
+with the deployed VMs, but prevents the VMs from communicating with the
 sensitive networks.
 
 {{< responsive-figure src="https://docs.google.com/drawings/d/1ayd9pCsrAIGqHMXl1LNRHgay_UIBTBQm9GtHC8DKvWY/pub?w=894&amp;h=907" class="full" >}}
@@ -82,6 +85,8 @@ jobs:
         gateway: 172.16.0.1
 
   vm_type: medium
+  persistent_disk: 40_960
+
 
   networks:
   - {name: bosh-management-network, static_ips: [10.0.1.6], default: [dns,gateway]}
@@ -177,7 +182,7 @@ vm_types:
 - name: tiny
   cloud_properties: { cpu: 1, ram: 1024, disk: 1024 }
 - name: medium
-  cloud_properties: { cpu: 2, ram: 2048, disk: 10_240 }
+  cloud_properties: { cpu: 2, ram: 2048, disk: 81_920 }
 
 compilation:
   workers: 6
@@ -186,10 +191,10 @@ compilation:
   cloud_properties: { cpu: 2, ram: 2048, disk: 1024 }
 ```
 
-Here is our manifest for a very basic deployment:
+Here is our deployment manifest (a very simple deployment):
 
 ```yaml
-name: dummy
+name: simple
 
 director_uuid: __BOSH_DIRECTOR_UUID__
 
@@ -219,11 +224,16 @@ instance_groups:
 ## Notes
 
 If one were to dispense with the BOSH Routing Network and deploy VMs on the same
-subnet to which the BOSH director is attached, then one would not need to include
-the [networking-release](https://github.com/cloudfoundry/networking-release) in
-the BOSH manifest (the BOSH will not need to traverse a router to reach its
-deployed VMs, for the VMs will be deployed to the same subnet on which the
-director has an interface).
+subnet to which the BOSH director is attached, then one would not need to
+include the
+[BOSH Networking Release](https://github.com/cloudfoundry/networking-release) in the
+BOSH manifest (the BOSH will not need to traverse a router to reach its deployed
+VMs, for the VMs will be deployed to the same subnet on which the director has
+an interface).
+
+More complex BOSH deployments, e.g. [Cloud Foundry Elastic
+Runtime](https://github.com/cloudfoundry/cf-release/),
+typically assume multiple subnets, requiring the use of the networking-release.
 
 We use BOSH v2 deployment manifest and cloud config to deploy our BOSH director;
 however, BOSH directors are most often deployed with *bosh-init*, which uses a
