@@ -5,23 +5,9 @@ install:
   - tar xzf hugo_0.15_linux_amd64.tar.gz
   - mv hugo_0.15_linux_amd64/hugo_0.15_linux_amd64 hugo_0.15_linux_amd64/hugo
   - export PATH=$PATH:$PWD/hugo_0.15_linux_amd64
-script: ./bin/build && ./bin/generate_manifests
+script: ./bin/build
 deploy:
   - provider: cloudfoundry
-    manifest: public/prod/manifest.yml
-    edge: true
-    skip_cleanup: true
-    api: https://api.run.pivotal.io
-    username: tsaleh@pivotal.io
-    organization: pivotal
-    space: blog
-    on:
-      repo: pivotal/blog
-      branch: master
-    password:
-      secure: sMg9qEzjGX+0fQELoUrk4Di1FpZaYSgr3gQE8xuBqC4p3ZtkRXMNZEQNbM0MASm33EP5sAIpcO7CPcZX19andd2DkOamUaWnd7tH2pfg9g1vyP60OrK/iarQl3YoABKWK7Dosvdw7Yv9vh5i36wb6jEb1RnI/bQYGfmBb3DOo5NFPybdcfgmTuVPm+i71bOffbgOCSX0gxtWDIolt63POj9TpTINrX0HsRwwniKE83Yw6XZjOL/k2LCwdg5ct+j2P7HPl4iIC2D3xJVZMgITHHQ3xblaus2CsaX3fVA6U/RRlaJdOl37Io6lRhVKkpXixODqQ3cjpiX1GrPYitqMNN4b5JQyuCqfQlsHGycsrLn+uzBbBfbEoYn3mEDMZC0UZcvFFQEZg/0v6qCIzLCh+aPFUe1xwCT+P70r7n1nsPdGhKogKWjYRw+9zNi/YeD/ojVuxf3NfyTlbkjH4ywYschAjqEvrvkjVaCpGdW14l0jGuxynK5mrh2P/+bOxOlpN9N73xKe+REpm1S+FJX472EcFmPhcIVt2QgzfP0VrJ6q3+oXodXri30jbopcSs6FVWZbDRD6nurjpOdaLfnqFRR6JvTt8auV6Oe9rMvHcBPnJUCHnDdZWCE5SXSNwNP44shBI7VWLSvvk3LHn1PYq8umu1S2TIQr65Q4uj3K7IE=
-  - provider: cloudfoundry
-    manifest: public/staging/manifest.yml
     edge: true
     skip_cleanup: true
     api: https://api.run.pivotal.io

@@ -69,4 +69,4 @@ my favorite features of Kotlin.
 
 Spring configuration classes are a mixed bag for me in Kotlin. The actual code difference is only 4 lines of code (18 vs 14) but the visual noise is significantly reduced in Kotlin. Having to declare both the class and all of the methods as open seems a bit clunky for me but I'm willing to overlook it due to the type inference, lack of return for single expression functions and the other improvements that these classes gain from Kotlin.
 
-Thanks for reading. In our next installment, we will take a look at Spring controllers in Kotlin.
+Thanks for reading. In our [next installment](/post/spring-boot-kotlin-data-classes/), we will take a look at implementing POJOs using Kotlin's data classes.

@@ -1,0 +1,9 @@
+---
+name: pushpop
+memory: 128M
+command: bundle exec pushpop jobs:run
+no-route: true
+health-check-type: none
+services:
+  - keen.io
+  - pushpop-sendgrid-account
