@@ -5,7 +5,7 @@ categories:
 - PostgreSQL
 - Performance
 date: 2016-05-23T12:57:19+02:00
-draft: true
+draft: false
 short: |
   One of our customers switched from MongoDB to PostgreSQL, and the migration tool created all data fields as ByteA instead of TEXT. Makes one wonder, if there is a performance difference and if TEXT could be a wiser choice.
 title: ByteA versus TEXT in PostgreSQL (for textual data)
@@ -133,4 +133,13 @@ Looking into the detail, there is a very small difference, and using _TEXT_ is o
 Switching from _ByteA_ to _TEXT_ will result in an instant performance improvement for read queries. That is a big gain, given that no application code has to be changed. The write performance will not change much.
 
 Even switching from _ByteA_ to encoded data (like Base64) will improve the read performance - this approach can be considered if the application can be changed, and truly binary data is stored in the database.
+
+
+## Transformation
+
+In our case, the table is created automatically, and it is not a problem to redo the entire operation using _TEXT_ instead of _ByteA_. However if you are in a similar situation, the following SQL command shows how to change the datatype:
+
+~~~sql
+ALTER TABLE <table name> ALTER COLUMN <column name> TYPE TEXT;
+~~~
 
