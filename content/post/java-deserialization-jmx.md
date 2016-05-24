@@ -6,7 +6,7 @@ categories:
 - Java
 - Apache Tomcat
 - Pivotal tc Server
-date: 2016-05-23T15:12:30+01:00
+date: 2016-05-24T15:00:00+01:00
 draft: true
 short: |
   If you use remote JMX, you need to update your JVM to address CVE-2016-3427
