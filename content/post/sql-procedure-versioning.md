@@ -10,7 +10,7 @@ draft: true
 short: |
   A versioning strategy for SQL stored procedures provides flexibility for developers both on the DB and the application side.
 title: SQL Stored Procedure Versioning Strategy
------------------------------------------------
+---
 
 On projects where application components are calling stored procedures in the database, there is always a risk for those components and the DBMS to get out of sync. As the application evolves, there might be a need to change the functionality on the database side based on the changes to other components of the application. In order to avoid confusion and reduce coupling, a versioning strategy can be employed.
 
