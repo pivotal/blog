@@ -7,7 +7,7 @@ categories:
 - TDD
 - Oracle
 date: 2016-06-07T11:00:54+01:00
-draft: true
+draft: false
 short: |
   Test-driving SQL stored procedures using Oracle SQL Developer IDE.
 title: SQL Test Driven Development with Oracle RDBMS
