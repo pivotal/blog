@@ -4,6 +4,7 @@ authors:
 - cunnie
 - aminjam
 - rupa
+- salvi
 categories:
 - BOSH
 date: 2016-05-13T13:37:44-07:00
@@ -27,8 +28,8 @@ The following is a network diagram of our deployment. We want to protect the
 assets at the top (in blue): the vCenter server and its associated ESXi servers.
 These machines are particularly sensitive as they control hundreds of VMs.
 
-The BOSH Director needs access to the vCenter, but its deployed VMs should not
-have access.
+The BOSH Director needs access to the vCenter, but its deployed VMs must *not*
+have access to the vCenter.
 
 We provision BOSH as a multi-homed VM attached to both the vCenter management
 network and the BOSH Routing Network. This allows the director to communicate
@@ -152,9 +153,9 @@ jobs:
 ```
 
 Note that `properties.blobstore.address` and `properties.agent.mbus` use the
-BOSH director's interface that is *closest to its deployed VMs*; if you use
-the other interface, the VMs will not be able to contact the director and
-the deployment will fail.
+BOSH director's interface that is *closest to its deployed VMs* (i.e.
+172.16.0.6); if you use the other interface (i.e. 10.0.1.6), the VMs will not
+be able to contact the director and the deployment will fail.
 
 Here is our cloud-config manifest:
 
@@ -241,7 +242,7 @@ multiple subnets, requiring the use of the networking-release.
 
 We use BOSH v2 deployment manifest and cloud config to deploy our BOSH
 director; however, BOSH directors are most often deployed with *bosh-init*,
-which uses a slightly different manifest format. It should be fairly trivial
+which uses a slightly different manifest format. It should be a fairly trivial
 exercise to convert our manifests to a *bosh-init*-flavored manifest.
 
 ## Gotchas
@@ -253,11 +254,22 @@ interface should succeed).
 
 This problem is caused by [reverse packet
 filtering](https://access.redhat.com/solutions/53031).  To fix, one can enable
-the Director's kernel to accept asymmetrically routed packets (the
-following commands must be run as root; they must be entered into
-`/etc/sysctl.conf` to persist when rebooted):
+the Director's kernel to accept asymmetrically routed packets (the following
+commands must be run as root):
 
 ```bash
 echo 2 > /proc/sys/net/ipv4/conf/default/rp_filter
 echo 2 > /proc/sys/net/ipv4/conf/all/rp_filter
+echo 2 > /proc/sys/net/ipv4/conf/eth0/rp_filter
+echo 2 > /proc/sys/net/ipv4/conf/eth1/rp_filter
+```
+
+To make the changes permanent (to persist on reboot), the following should
+be added to `/etc/sysctl.conf`:
+
+```bash
+net.ipv4.conf.all.rp_filter=2
+net.ipv4.conf.default.rp_filter=2
+net.ipv4.conf.eth0.rp_filter=2
+net.ipv4.conf.eth1.rp_filter=2
 ```
