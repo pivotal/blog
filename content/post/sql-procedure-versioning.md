@@ -6,7 +6,7 @@ categories:
 - SQL
 - Version control
 date: 2016-06-08T09:25:09+01:00
-draft: true
+draft: false
 short: |
   A versioning strategy for SQL stored procedures provides flexibility for developers both on the DB and the application side.
 title: SQL Stored Procedure Versioning Strategy
