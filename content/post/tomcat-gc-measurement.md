@@ -4,6 +4,7 @@ authors:
 categories:
 - Tomcat
 - Performance
+- Migrated Content
 date: 2011-11-16T00:08:15+00:00
 draft: true
 short: |
@@ -53,4 +54,4 @@ This line has essentially the same information, however it is indicating that a 
 
 From this log we can now track how often garbage collections are occurring, how often full garbage collections are occurring and the execution time of a garbage collection. It is with these metrics in mind that we try to tune our Tomcat instance. Continue to modify your configuration and remeasure your performance over and over again until you have reached the goal of having both a minimal number of garbage collections and a minimal amount of time spent on garbage collections.
 
-In the next post, we'll talk further about performance tuning the JVM, including a discussion on some of the JVM options that are commonly used and a discussion on the different collectors which are available.
+In the [next post](../tomcat-tuning), we'll talk further about performance tuning the JVM, including a discussion on some of the JVM options that are commonly used and a discussion on the different collectors which are available.
