@@ -106,7 +106,7 @@ docker rm CONTAINER_ID
 
 > Even if a container is not running, it still exists. Make sure to periodically remove any unnecessary containers and/or images. Also, your container maintains changes even if you exit it. However, if you want changes to persist after you remove the container, you need to commit your changes to the Docker image. 
 
-If we want to create a new container from a Docker image, we can use “docker run -it ID”. However, if we want a new, separate image we use “docker build .”. If we want to use changes from the remote repository, the following will update your local repo and build a new image: 
+If we want to create a new container from a Docker image, we can use “docker run -it ID”. However, if we want a new, separate image we use “docker build .”. If we want to use changes from the remote repository, there are a few ways to do so. The following is one example: 
 
 ```
 cd $HOME/workspace/gpdb
