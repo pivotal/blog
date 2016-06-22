@@ -1,7 +1,7 @@
 ---
 authors:
 - lucas
-categoriese
+categories:
 - GPDB
 - Docker
 date: 2016-06-22T13:24:13-07:00
@@ -12,7 +12,6 @@ title: Running GPDB using Docker
 ---
 
 Compiling in different environments is an incredibly frustrating hurdle in the development process. To combat this, the GPDB R&D team has been using Docker to improve workflow speed and consistency. While a little complicated at first, Docker pushes for a standard compilation environment for GPDB users, sidestepping the compilation confusions that often pop up. Through Docker, the GPDB R&D team synchronizes after the development stage and easily compares results in the Docker-run environment. Testing is also expedited due to the consistent nature of Docker. | [What is Docker?](https://www.docker.com/what-docker) | [Basic Overview](http://www.troubleshooters.com/linux/docker/docker_newbie.htm) |
-
 
 ## Getting Started with Docker
 There are a few pieces to the Docker puzzle, namely the Dockerfile and the container. The Dockerfile is used to build an image, which is then used to run the container. The Dockerfile is currently located in Zaksoup’s branch of GPDB master, so we will need to grab that as well as Docker itself. 
