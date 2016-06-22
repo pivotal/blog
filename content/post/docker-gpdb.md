@@ -11,7 +11,6 @@ short: |
 title: Running GPDB using Docker
 ---
 
-## Why Docker?
 Compiling in different environments is an incredibly frustrating hurdle in the development process. To combat this, the GPDB R&D team has been using Docker to improve workflow speed and consistency. While a little complicated at first, Docker pushes for a standard compilation environment for GPDB users, sidestepping the compilation confusions that often pop up. Through Docker, the GPDB R&D team synchronizes after the development stage and easily compares results in the Docker-run environment. Testing is also expedited due to the consistent nature of Docker. | [What is Docker?](https://www.docker.com/what-docker) | [Basic Overview](http://www.troubleshooters.com/linux/docker/docker_newbie.htm) |
 
 ## Getting Started with Docker
@@ -19,10 +18,10 @@ There are a few pieces to the Docker puzzle, namely the Dockerfile and the conta
 
 ### Step 1: Gather Resources
 To run GPDB on Docker you will need two major tools: Docker and Virtualbox. There are great installation guides on their websites.
-* Downloads: [Docker](https://docs.docker.com/mac/) |
+
+> Downloads: [Docker](https://docs.docker.com/mac/) |
 [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
-##### Copy GPDB repositories from Github
 We will be using two Github repositories: [Master](https://github.com/greenplum-db/gpdb) | [Zaksoup](https://github.com/zaksoup/gpdb) . Zaksoup's branch contains the very necessary Dockerfile, which we will use to create our Docker image. The following commands will clone GPDB master and add Zaksoup's branch. 
 ```
 # Clone and add
@@ -48,7 +47,8 @@ We now have a running virtual machine and have properly set our environment vari
 
 ### Step 3: Build and run the Docker image
 Using the Dockerfile in Zaksoup's repo, we will construct the image. Note that when we build the image, GPDB will compile and install. We will also install several submodules beforehand. The "docker build" step may take awhile.
-* Note: In the current version, you will need to add "RUN yum -y install wget" to /docker/base/Dockerfile. Also, you may need to be connected to ethernet.
+
+> In the current version, you will need to add "RUN yum -y install wget" to /docker/base/Dockerfile. Also, you may need to be connected to ethernet.
 
 ```
 # Update submodules and build image
@@ -101,7 +101,7 @@ docker commit
 docker rm CONTAINER_ID
 ```
 
-* Even if a container is not running, it still exists. Make sure to periodically remove any unnecessary containers and/or images. Also, your container maintains changes even if you exit it. However, if you want changes to persist after you remove the container, you need to commit your changes to the Docker image. 
+> Even if a container is not running, it still exists. Make sure to periodically remove any unnecessary containers and/or images. Also, your container maintains changes even if you exit it. However, if you want changes to persist after you remove the container, you need to commit your changes to the Docker image. 
 
 If we want to create a new container from a Docker image, we can use “docker run -it ID”. However, if we want a new, separate image we use “docker build .”. If we want to use changes from the remote repository, the following will update your local repo and build a new image: 
 
