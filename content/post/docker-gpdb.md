@@ -11,17 +11,17 @@ short: |
 title: Running GPDB using Docker
 ---
 
-Compiling in different environments is an incredibly frustrating hurdle in the development process. To combat this, the GPDB R&D team has been using Docker to improve workflow speed and consistency. While a little complicated at first, Docker pushes for a standard compilation environment for GPDB users, sidestepping the compilation confusions that often pop up. Through Docker, the GPDB R&D team synchronizes after the development stage and easily compares results in the Docker-run environment. Testing is also expedited due to the consistent nature of Docker. | [What is Docker?](https://www.docker.com/what-docker) | [Basic Overview](http://www.troubleshooters.com/linux/docker/docker_newbie.htm) |
+Compiling in different environments is an incredibly frustrating hurdle in the development process. To combat this, the GPDB R&D team uses Docker to improve workflow speed and consistency. While a little complicated at first, Docker pushes for a standard compilation environment for GPDB users, sidestepping the compilation confusions that often pop up. Through Docker, the GPDB R&D team synchronizes after the development stage and easily compares results in the Docker-run environment. Testing is also expedited due to the consistent and streamlined nature of Docker. | [What is Docker?](https://www.docker.com/what-docker) | [Basic Overview](http://www.troubleshooters.com/linux/docker/docker_newbie.htm) | 
 
 ## Getting Started with Docker
-There are a few pieces to the Docker puzzle, namely the Dockerfile and the container. The Dockerfile is used to build an image, which is then used to run the container. The Dockerfile is currently located in Zaksoup’s branch of GPDB master, so we will need to grab that as well as Docker itself. 
+Docker is composed of three core elements: dockerfiles, images, and containers. A dockerfile provides command-line instructions which are used to build an image. An image is a collection of root filesystem changes and the corresponding execution parameters for use in runtime [1](https://docs.docker.com/engine/reference/glossary/#image), and is read-only. Finally, a container is a stateful instance of an image [2](https://docs.docker.com/engine/reference/glossary/#container). GPDB runs inside the container, but is compiled when the image is constructed. Since the dockerfile, the initial piece of the puzzle, is currently only located in Zaksoup's branch of GPDB master, we will need to grab that Github repo in addition to master. 
 
 ### Step 1: Gather Resources
-To run GPDB on Docker you will need two major tools: Docker and Virtualbox. There are great installation guides on their websites.
+Two important tools are needed to run GPDB on Docker: Docker and VirtualBox. VirtualBox manages virtual machines, which is where we will run our instance of GPDB. Detailed installation guides are on their websites. 
 
 > Downloads: [Docker](https://docs.docker.com/mac/) | [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
-We will be using two Github repositories: [Master](https://github.com/greenplum-db/gpdb) | [Zaksoup](https://github.com/zaksoup/gpdb) . Zaksoup's branch contains the very necessary Dockerfile, which we will use to create our Docker image. The following commands will clone GPDB master and add Zaksoup's branch. 
+We need two Github repositories: [Master](https://github.com/greenplum-db/gpdb) | [Zaksoup](https://github.com/zaksoup/gpdb) . Zaksoup's branch contains the necessary dockerfile to create the image. The following commands clone GPDB master and add Zaksoup's branch.
 
 ```
 # Clone and add
@@ -31,11 +31,11 @@ git remote add zaksoup git@github.com:zaksoup/gpdb.git
 # Update
 git fetch --all
 git checkout zaksoup/master
-git rebase origin/master
+git pull -rebase origin/master
 ```
 
 ### Step 2: Create your virtual environment
-In order to create a Docker container, inside of which we will run an instance of the database, we must first create a virtual space where our container will exist. We will do so through VirtualBox. In this step, make sure not to over-allocate resources.
+In order to create a Docker container, inside of which we will run an instance of the database, we need to create a virtual space where our container will exist. We will do so through VirtualBox. In this step, make sure not to over-allocate resources.
 
 ```
 # Create virtual machine
@@ -45,27 +45,25 @@ docker-machine create -d virtualbox --virtualbox-cpu-count 2 --virtualbox-disk-s
 eval $(docker-machine env gpdb)
 ```
 
-We now have a running virtual machine and have properly set our environment variables for Docker.
-
 ### Step 3: Build and run the Docker image
-Using the Dockerfile in Zaksoup's repo, we will construct the image. Note that when we build the image, GPDB will compile and install. We will also install several submodules beforehand. The "docker build" step may take awhile.
+We will use the dockerfile to build an image. Note that when we build, GPDB will compile and install. Beforehand, we need to update submodules. This step uses the GPDB Dockerhub repository, found [here](https://hub.docker.com/r/pivotaldata/gpdb-devel/). After entering the run command, we will be immediately inside the container. 
 
-> In the current version, you will need to add "RUN yum -y install wget" to /docker/base/Dockerfile. Also, you may need to be connected to ethernet.
+> In the current version, you will need to add "RUN yum -y install wget" to /docker/base/dockerfile. Also, you may need to be connected to ethernet.
 
 ```
-# Update submodules and build image
+# Update submodules
 git submodule update --init --recursive
+
+# Build Docker image
 docker build -t pivotaldata/gpdb-devel -f ./docker/base/Dockerfile
 
-# Run the Docker image
+# Run Docker image
 docker images
 docker run -it IMAGE_ID
 ```
 
-We now have a Docker image, which will be used to run the Docker container. After entering the run command, we will be inside our container.
-
 ### Step 4: Starting GPDB
-Finally, we get to the database. We do not need to compile GPDB because it was already done for us when we created the Docker image, so all we have to do is make our database. There are a few ways to do this, but we will stay basic and create a GPDB demo cluster. 
+Now that we are inside of the container, we are able to work with the database itself. We do not need to compile GPDB because it was already done for us when we built the image, sll we have to do is make our database. There are a few different ways to do this, but easiest is creating a GPDB demo cluster. Some steps are important before 'make cluster', especially logging in as a user other than root, in this case as gpadmin.
 
 ```
 # Prerequisites
@@ -85,28 +83,32 @@ createdb test
 psql test
 ```
 
-Congratulations! We officially have a working instance of GPDB running inside Docker. The next steps will cover how to reuse your Docker image and how to make changes to GPDB in Docker.
+Congratulations! An instance of GPDB is running inside of the Docker container. From here, the steps will discuss using your Docker image and making changes to GPDB. 
 
 ### Step 5: Using Docker images and containers
-If you exit your Docker container, you can using these commands to use it again.
+Exiting your Docker container stops it, however it still exists. Periodically remove unnecessary containers and/or images so as to not waste disk space. Another thing to note is that containers maintain changes, even when exited. To maintain changes after deleting a container, first commit the changes to the Docker image. 
+
+> [Using the Docker command line](https://docs.docker.com/engine/reference/commandline/cli/)
 
 ```
 # Show running containers
 docker ps
+
 # Show all containers
 docker ps -a
+
 # Start a container and enter it
 docker start ID
 docker attach ID
+
 # Commit changes in container to image
 docker commit
+
 # Remove container
 docker rm CONTAINER_ID
 ```
 
-> Even if a container is not running, it still exists. Make sure to periodically remove any unnecessary containers and/or images. Also, your container maintains changes even if you exit it. However, if you want changes to persist after you remove the container, you need to commit your changes to the Docker image. 
-
-If we want to create a new container from a Docker image, we can use “docker run -it ID”. However, if we want a new, separate image we use “docker build .”. If we want to use changes from the remote repository, there are a few ways to do so. The following is one example: 
+To reuse the same image, simply enter 'docker run -it IMAGE_ID'. This does not include changes from the remote repository. There are a few ways to do so, but the following is one example: 
 
 ```
 cd $HOME/workspace/gpdb
@@ -122,7 +124,8 @@ docker run -it IMAGE_ID
 The GPDB R&D team uses Docker to compile uniformly, but there are a couple of ways to do so: 
 1. Change the source code inside the container, then compile and install
 2. Make a change to the local repo, then build a new image and run it
-If you want to compile and install GPDB within the container, the following will do so:
+
+In most cases, it is common to make changes locally, then build a new image and run it. On the other hand, if you want to compile and install GPDB within the container, the following will do so:
 
 ```
 # Compile and install
@@ -136,8 +139,6 @@ make
 make install
 ```
 
-Building and running a new image is more common because you are able to include any changes to the repository. You can do so by repeating code from Step 5. 
-
 ### Conclusion
-Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. The long-winded installation process aside, if compilation environments is an issue for you, Docker is worth a look.
+Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. The long-winded installation process aside, if inconsistent compilation environments is an issue, Docker is worth a try.
 
