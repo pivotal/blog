@@ -286,13 +286,14 @@ describe('.fetchData', function() {
 });
 ```
 
-To test the expected behavior after the asynchronous function is complete in the above example, I like to use Q library because it simulates a Promise without requiring the test writer to worry about asynchronicity while writing tests:
+To test the expected behavior after the asynchronous function is complete in the above example, I like to use Q library's deferred object because it simulates a Promise while giving the test writer complete control over when and how the asynchronous function resolves. I then use lodash's `defer` method to run the expectation only after the function within the `then` block has finished running:
 
 ```javascript
 // actions_spec.js
 
 var axios = require('axios');
 var Q = require('q');
+var _ = require('lodash');
 
 describe('.fetchData', function() {
 	var dispatch;
@@ -316,10 +317,11 @@ describe('.fetchData', function() {
 			fetchData()(dispatch);
 			var response = jasmine.createSpyObj('response');
 			deferred.resolve(response);
-			
-			expect(dispatch).toHaveBeenCalledWith({
-				type: 'RECEIVE_DATA',
-				data: response
+			_.defer(function() {
+				expect(dispatch).toHaveBeenCalledWith({
+					type: 'RECEIVE_DATA',
+					data: response
+				});
 			});
 		});
 	});
