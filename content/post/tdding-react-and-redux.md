@@ -180,7 +180,7 @@ describe('ConnectedApp', function() {
 		var addItemValue;
 		
 		beforeEach(function() {
-			addItemValue = jasmine.createSpyObj('addItemValue');
+			addItemValue = jasmine.createSpyObj('addItemValue', ['type']);
 			spyOn(actions, 'addItem').and.returnValue(addItemValue);
 			spyOn(store, 'dispatch');
 		});
@@ -272,10 +272,12 @@ While the Redux docs suggest utilizing a mockStore via `configureMockStore` for 
 var axios = require('axios');
 
 describe('.fetchData', function() {
-	var dispatch;
+	var dispatch,
+	    deferred;
 	
 	beforeEach(function() {
-		spyOn(axios, 'get');
+		deferred = Q.defer();
+		spyOn(axios, 'get').and.returnValue(deferred.promise);
 		dispatch = jasmine.createSpy();	
 	});
 	
@@ -296,32 +298,28 @@ var Q = require('q');
 var _ = require('lodash');
 
 describe('.fetchData', function() {
-	var dispatch;
+	var dispatch,
+	    deferred;
 	
 	beforeEach(function() {
-		spyOn(axios, 'get');
-		dispatch = jasmine.createSpy();
+		deferred = Q.defer();
+		spyOn(axios, 'get').and.returnValue(deferred.promise);
+		dispatch = jasmine.createSpy();	
 	});
 	
 	...
 	
 	describe('with a successful response', function() {
-		var deferred;
-		
-		beforeEach(function() {
-			deferred = Q.defer();
-			spyOn(axios, 'get').and.returnValue(deferred.promise);
-		});
-		
-		it('dispatches receiveData', function() {
+		it('dispatches receiveData', function(done) {
 			fetchData()(dispatch);
-			var response = jasmine.createSpyObj('response');
+			var response = jasmine.createSpyObj('response', ['data']);
 			deferred.resolve(response);
 			_.defer(function() {
 				expect(dispatch).toHaveBeenCalledWith({
 					type: 'RECEIVE_DATA',
 					data: response
 				});
+				done();
 			});
 		});
 	});
