@@ -140,7 +140,7 @@ describe('ConnectedApp', function() {
 		});
 		
 		it('passes down items', function() {
-			app = TestUtils.findRenderedComponentWithType(component, App);
+			app = TestUtils.findRenderedComponentWithType(connectedApp, App);
 			expect(app.props.items).toEqual(initialItems);
 		});
 	});
@@ -186,7 +186,7 @@ describe('ConnectedApp', function() {
 		});
 		
 		it('passes down the action to add an item', function() {
-			app = TestUtils.findRenderedComponentWithType(component, App);
+			app = TestUtils.findRenderedComponentWithType(connectedApp, App);
 			app.props.dispatchAddItem();
 			expect(store.dispatch).toHaveBeenCalledWith(addItemValue);
 		});
