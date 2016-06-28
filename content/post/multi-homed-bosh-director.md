@@ -3,6 +3,8 @@ authors:
 - dberger
 - cunnie
 - aminjam
+- rupa
+- salvi
 categories:
 - BOSH
 date: 2016-05-13T13:37:44-07:00
@@ -26,15 +28,15 @@ The following is a network diagram of our deployment. We want to protect the
 assets at the top (in blue): the vCenter server and its associated ESXi servers.
 These machines are particularly sensitive as they control hundreds of VMs.
 
-The BOSH Director needs access to the vCenter, but its deployed VMs should not
-have access.
+The BOSH Director needs access to the vCenter, but its deployed VMs must *not*
+have access to the vCenter.
 
 We provision BOSH as a multi-homed VM attached to both the vCenter management
 network and the BOSH Routing Network. This allows the director to communicate
 with the deployed VMs, but prevents the VMs from communicating with the
 sensitive networks.
 
-{{< responsive-figure src="https://docs.google.com/drawings/d/1ayd9pCsrAIGqHMXl1LNRHgay_UIBTBQm9GtHC8DKvWY/pub?w=894&amp;h=907" class="full" >}}
+{{< responsive-figure src="https://docs.google.com/drawings/d/1OReIbjwBHGX19HHgSQThdZenTS03ITtp8gOxwetLNcI/pub?w=894&amp;h=907" class="full" >}}
 
 ## BOSH Deployment Manifest
 
@@ -77,16 +79,19 @@ jobs:
   - {name: vsphere_cpi, release: bosh-vsphere-cpi}
   - name: routes
     release: networking
-    properties:
-      networking.routes:
-      - net: 172.16.1.0
+    properties:                 # This customizes the BOSH Director's
+      networking.routes:        # routing table so it can reach
+      - net: 172.16.1.0         # the two networks to which it deploys
+        netmask: 255.255.255.0  # VMs:
+        interface: eth1         # - CF Public Network  (172.16.1.0/24)
+        gateway: 172.16.0.1     # - CF Private Network (172.16.2.0/24)
+      - net: 172.16.2.0
         netmask: 255.255.255.0
         interface: eth1
         gateway: 172.16.0.1
 
   vm_type: medium
   persistent_disk: 40_960
-
 
   networks:
   - {name: bosh-management-network, static_ips: [10.0.1.6], default: [dns,gateway]}
@@ -148,9 +153,9 @@ jobs:
 ```
 
 Note that `properties.blobstore.address` and `properties.agent.mbus` use the
-BOSH director's interface that is *closest to its deployed VMs*; if you use
-the other interface, the VMs will not be able to contact the director and
-the deployment will fail.
+BOSH director's interface that is *closest to its deployed VMs* (i.e.
+172.16.0.6); if you use the other interface (i.e. 10.0.1.6), the VMs will not
+be able to contact the director and the deployment will fail.
 
 Here is our cloud-config manifest:
 
@@ -223,19 +228,48 @@ instance_groups:
 
 ## Notes
 
-If one were to dispense with the BOSH Routing Network and deploy VMs on the same
-subnet to which the BOSH director is attached, then one would not need to
-include the
-[BOSH Networking Release](https://github.com/cloudfoundry/networking-release) in the
-BOSH manifest (the BOSH will not need to traverse a router to reach its deployed
+If one were to dispense with the BOSH Routing Network and deploy VMs on the
+same subnet to which the BOSH director is attached, then one would not need to
+include the [BOSH Networking
+Release](https://github.com/cloudfoundry/networking-release) in the BOSH
+manifest (the BOSH will not need to traverse a router to reach its deployed
 VMs, for the VMs will be deployed to the same subnet on which the director has
 an interface).
 
 More complex BOSH deployments, e.g. [Cloud Foundry Elastic
-Runtime](https://github.com/cloudfoundry/cf-release/),
-typically assume multiple subnets, requiring the use of the networking-release.
+Runtime](https://github.com/cloudfoundry/cf-release/), typically assume
+multiple subnets, requiring the use of the networking-release.
 
-We use BOSH v2 deployment manifest and cloud config to deploy our BOSH director;
-however, BOSH directors are most often deployed with *bosh-init*, which uses a
-slightly different manifest format. It should be fairly trivial exercise to
-convert our manifests to a *bosh-init*-flavored manifest.
+We use BOSH v2 deployment manifest and cloud config to deploy our BOSH
+director; however, BOSH directors are most often deployed with *bosh-init*,
+which uses a slightly different manifest format. It should be a fairly trivial
+exercise to convert our manifests to a *bosh-init*-flavored manifest.
+
+## Gotchas
+
+BOSH stemcells have been hardened, and this may cause unexpected connectivity
+issues. Specifically, asymmetric routing may cause pings (or other attempts to
+connect) to one of the Director's interfaces to fail (pings to the other
+interface should succeed).
+
+This problem is caused by [reverse packet
+filtering](https://access.redhat.com/solutions/53031).  To fix, one can enable
+the Director's kernel to accept asymmetrically routed packets (the following
+commands must be run as root):
+
+```bash
+echo 2 > /proc/sys/net/ipv4/conf/default/rp_filter
+echo 2 > /proc/sys/net/ipv4/conf/all/rp_filter
+echo 2 > /proc/sys/net/ipv4/conf/eth0/rp_filter
+echo 2 > /proc/sys/net/ipv4/conf/eth1/rp_filter
+```
+
+To make the changes permanent (to persist on reboot), the following should
+be added to `/etc/sysctl.conf`:
+
+```bash
+net.ipv4.conf.all.rp_filter=2
+net.ipv4.conf.default.rp_filter=2
+net.ipv4.conf.eth0.rp_filter=2
+net.ipv4.conf.eth1.rp_filter=2
+```

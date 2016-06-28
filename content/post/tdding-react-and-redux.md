@@ -140,7 +140,7 @@ describe('ConnectedApp', function() {
 		});
 		
 		it('passes down items', function() {
-			app = TestUtils.findRenderedComponentWithType(component, App);
+			app = TestUtils.findRenderedComponentWithType(connectedApp, App);
 			expect(app.props.items).toEqual(initialItems);
 		});
 	});
@@ -180,13 +180,13 @@ describe('ConnectedApp', function() {
 		var addItemValue;
 		
 		beforeEach(function() {
-			addItemValue = jasmine.createSpyObj('addItemValue');
+			addItemValue = jasmine.createSpyObj('addItemValue', ['type']);
 			spyOn(actions, 'addItem').and.returnValue(addItemValue);
 			spyOn(store, 'dispatch');
 		});
 		
 		it('passes down the action to add an item', function() {
-			app = TestUtils.findRenderedComponentWithType(component, App);
+			app = TestUtils.findRenderedComponentWithType(connectedApp, App);
 			app.props.dispatchAddItem();
 			expect(store.dispatch).toHaveBeenCalledWith(addItemValue);
 		});
@@ -272,10 +272,12 @@ While the Redux docs suggest utilizing a mockStore via `configureMockStore` for 
 var axios = require('axios');
 
 describe('.fetchData', function() {
-	var dispatch;
+	var dispatch,
+	    deferred;
 	
 	beforeEach(function() {
-		spyOn(axios, 'get');
+		deferred = Q.defer();
+		spyOn(axios, 'get').and.returnValue(deferred.promise);
 		dispatch = jasmine.createSpy();	
 	});
 	
@@ -286,40 +288,38 @@ describe('.fetchData', function() {
 });
 ```
 
-To test the expected behavior after the asynchronous function is complete in the above example, I like to use Q library because it simulates a Promise without requiring the test writer to worry about asynchronicity while writing tests:
+To test the expected behavior after the asynchronous function is complete in the above example, I like to use Q library's deferred object because it simulates a Promise while giving the test writer complete control over when and how the asynchronous function resolves. I then use lodash's `defer` method to run the expectation only after the function within the `then` block has finished running:
 
 ```javascript
 // actions_spec.js
 
 var axios = require('axios');
 var Q = require('q');
+var _ = require('lodash');
 
 describe('.fetchData', function() {
-	var dispatch;
+	var dispatch,
+	    deferred;
 	
 	beforeEach(function() {
-		spyOn(axios, 'get');
-		dispatch = jasmine.createSpy();
+		deferred = Q.defer();
+		spyOn(axios, 'get').and.returnValue(deferred.promise);
+		dispatch = jasmine.createSpy();	
 	});
 	
 	...
 	
 	describe('with a successful response', function() {
-		var deferred;
-		
-		beforeEach(function() {
-			deferred = Q.defer();
-			spyOn(axios, 'get').and.returnValue(deferred.promise);
-		});
-		
-		it('dispatches receiveData', function() {
+		it('dispatches receiveData', function(done) {
 			fetchData()(dispatch);
-			var response = jasmine.createSpyObj('response');
+			var response = jasmine.createSpyObj('response', ['data']);
 			deferred.resolve(response);
-			
-			expect(dispatch).toHaveBeenCalledWith({
-				type: 'RECEIVE_DATA',
-				data: response
+			_.defer(function() {
+				expect(dispatch).toHaveBeenCalledWith({
+					type: 'RECEIVE_DATA',
+					data: response
+				});
+				done();
 			});
 		});
 	});
