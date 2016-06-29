@@ -137,7 +137,6 @@ Volumes allow you to save and persist data across containers. A volume is basica
 > Guides to Volumes: [What are volumes?](http://container-solutions.com/understanding-volumes-docker/) | [Commands](https://docs.docker.com/v1.10/engine/userguide/containers/dockervolumes/)
 
 
-
 ### Conclusion
 Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. If inconsistent compilation environments is an issue for you, Docker is worth a try.
 
