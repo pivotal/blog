@@ -47,7 +47,7 @@ eval $(docker-machine env gpdb)
 ### Step 3: Build and run the Docker image
 We will use the dockerfile to build an image. Note that when we build, GPDB will compile and install. Beforehand, we need to update submodules. This step uses the GPDB Dockerhub repository, found [here](https://hub.docker.com/r/pivotaldata/gpdb-devel/). After entering the run command, we will immediately be inside of the container. 
 
-> In the current version, you will need to add "RUN yum -y install wget" to /docker/base/dockerfile. Also, you may need to be connected to ethernet.
+> In the current version, you may need to add "RUN yum -y install wget" to /docker/base/dockerfile. Also, you may need to be connected to ethernet.
 
 ```
 # Update submodules
@@ -62,16 +62,12 @@ docker run -it IMAGE_ID
 ```
 
 ### Step 4: Starting GPDB
-Now that we are inside of the container, we are able to work with the database itself. We do not need to compile GPDB because it was already done for us when we built the image, so all we have to do is make our database. There are a few different ways to do this, but easiest is creating a GPDB demo cluster. The steps before 'make cluster' are important, especially logging in as a user other than root, in this case as gpadmin.
+Now that we are inside of the container, we are able to work with the database itself. We do not need to compile GPDB because it was already done for us when we built the image, so all we have to do is make our database. There are a few different ways to do this, but easiest is creating a GPDB demo cluster. Since the update, the 'su gpadmin' command also runs the 'make cluster' command, in addition to a few others. After entering the above, a demo cluster will be running.
 
 ```
 # Prerequisites and make cluster
 su gpadmin 
-```
 
-Since the update, the 'su gpadmin' command also runs the 'make cluster' command, in addition to a few others. After entering the above, a demo cluster will be running.
-
-```
 # Install check
 make installcheck-good
 
@@ -105,7 +101,7 @@ docker commit
 docker rm CONTAINER_ID
 ```
 
-To reuse the same image, simply enter 'docker run -it IMAGE_ID'. This does not include changes from the remote repository. There are a few ways to do so, but the following is one example: 
+To reuse the same image, simply enter 'docker run -it IMAGE_ID'. This does not include changes from the remote repository. There are a few different ways to include those changes, but the following is one example: 
 
 ```
 cd $HOME/workspace/gpdb
@@ -118,7 +114,7 @@ docker run -it IMAGE_ID
 ```
 
 ### Step 6: Compiling and making changes
-The GPDB R&D team uses Docker to compile uniformly, but there are a couple of ways to do so: 
+The GPDB R&D team uses Docker to compile uniformly, however if you want to make a change here are a couple of ways to do so:
 1. Change the source code inside the container, then compile and install
 2. Make a change to the local repo, then build a new image and run it
 
