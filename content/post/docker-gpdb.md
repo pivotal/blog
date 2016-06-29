@@ -137,5 +137,5 @@ make install
 ```
 
 ### Conclusion
-Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. The long-winded installation process aside, if inconsistent compilation environments is an issue, Docker is worth a try.
+Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. If inconsistent compilation environments is an issue, Docker is worth a try.
 
