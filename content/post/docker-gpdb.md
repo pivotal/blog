@@ -106,7 +106,7 @@ To reuse the same image, simply enter 'docker run -it IMAGE_ID'. This does not i
 ```
 cd $HOME/workspace/gpdb
 git status
-git checkout [BRANCH_NAME]
+git checkout -b [BRANCH_NAME]
 git pull --rebase origin master
 eval $(docker-machine env gpdb)
 docker build .
@@ -125,14 +125,19 @@ git checkout -b [BRANCH_NAME]
 docker build .
 docker run -it [IMAGE_ID]
 
-# Committing changes
+# Committing changes to remote
 git add [FILE_NAME]
 git commit -m 'Message'
 git push origin [BRANCH_NAME]
-'''
+```
+
+### Step 7: Volumes
+Volumes allow you to save and persist data across containers. A volume is basically a directory outside of the default file system and exist on the host filesystem. They are a great way to maintain changes when working with multiple containers. A full explanation and guide can be found below:
+
+> Guides to Volumes: [What are volumes?](http://container-solutions.com/understanding-volumes-docker/) | [Commands](https://docs.docker.com/v1.10/engine/userguide/containers/dockervolumes/)
 
 
 
 ### Conclusion
-Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. If inconsistent compilation environments is an issue, Docker is worth a try.
+Within the GPDB R&D team, Docker is used to improve overall consistency through a uniform compilation environment. Each team member is able to develop in their own way and still end up in the same place, which is incredibly helpful in the iterative process. If inconsistent compilation environments is an issue for you, Docker is worth a try.
 
