@@ -5,7 +5,7 @@ categories:
 - GPDB
 - Docker
 date: 2016-06-22T13:24:13-07:00
-draft: true
+draft: false
 short: |
  A look into how the GPDB R&D team uses Docker to increase development consistency. 
 title: Running GPDB using Docker
