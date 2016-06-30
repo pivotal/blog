@@ -47,7 +47,7 @@ eval $(docker-machine env gpdb)
 ### Step 3: Build and run the Docker image
 We will use the dockerfile to build an image. Note that when we build, GPDB will compile and install. Beforehand, we need to update submodules. After entering the run command, we will immediately be inside of the container. 
 
-> In the current version, you may need to add "RUN yum -y install wget" to /docker/base/dockerfile. Also, you may need to be connected to ethernet.
+> If you run into an error, you may need to add "RUN yum -y install wget" to /docker/base/dockerfile. Also, you may need to be connected to ethernet.
 
 ```
 # Update submodules
@@ -62,7 +62,7 @@ docker run -it [IMAGE_ID]
 ```
 
 ### Step 4: Starting GPDB
-Now that we are inside of the container, we are able to work with the database itself. We do not need to compile GPDB because it was already done for us when we built the image, so all we have to do is make our database. There are a few different ways to do this, but easiest is creating a GPDB demo cluster. Since the update, the 'su gpadmin' command also runs the 'make cluster' command, in addition to a few others. After entering the above, a demo cluster will be running.
+Now that we are inside of the container, we are able to work with the database itself. We do not need to compile GPDB because it was already done for us when we built the image, so all we have to do is make our database. There are a few different ways to do this, but easiest is creating a GPDB demo cluster. Since the update, the 'su gpadmin' command also runs the 'make cluster' command, in addition to a few others. After entering the below, a demo cluster will run.
 
 ```
 # Prerequisites and make cluster
