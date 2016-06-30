@@ -57,8 +57,7 @@ git submodule update --init --recursive
 docker build -t pivotaldata/gpdb-devel -f ./docker/base/Dockerfile .
 
 # Run Docker image
-docker images
-docker run -it [IMAGE_ID]
+docker run -it pivotaldata/gpdb-devel
 ```
 
 ### Step 4: Starting GPDB
@@ -110,7 +109,7 @@ git checkout -b [BRANCH_NAME]
 git pull --rebase origin master
 eval $(docker-machine env gpdb)
 docker build .
-docker run -it [IMAGE_ID]
+docker run -it pivotaldata/gpdb-devel
 ```
 
 ### Step 6: Compiling and making changes
@@ -123,7 +122,7 @@ git checkout -b [BRANCH_NAME]
 
 # After a source code change
 docker build .
-docker run -it [IMAGE_ID]
+docker run -it pivotaldata/gpdb-devel
 
 # Committing changes to remote
 git add [FILE_NAME]
