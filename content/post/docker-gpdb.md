@@ -21,7 +21,7 @@ Two important tools are needed to run GPDB on Docker: Docker and VirtualBox. Vir
 
 > Downloads: [Docker](https://docs.docker.com/mac/) | [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
-We also need a Github repository: [GPDB Master](https://github.com/greenplum-db/gpdb). This repo contains the GPDB source files in addition to the dockerfile. The following commands clone and update GPDB master, but feel free to employ your own Git routine for these steps.
+We also need a Github repository: [GPDB Master](https://github.com/greenplum-db/gpdb). This repo contains the GPDB source files in addition to the dockerfile. There is also a GPDB Dockerhub repository, found [here](https://hub.docker.com/r/pivotaldata/gpdb-devel/). The following commands clone and update GPDB master, but feel free to employ your own Git routine for these steps.
 
 ```
 # Clone
@@ -45,7 +45,7 @@ eval $(docker-machine env gpdb)
 ```
 
 ### Step 3: Build and run the Docker image
-We will use the dockerfile to build an image. Note that when we build, GPDB will compile and install. Beforehand, we need to update submodules. This step uses the GPDB Dockerhub repository, found [here](https://hub.docker.com/r/pivotaldata/gpdb-devel/). After entering the run command, we will immediately be inside of the container. 
+We will use the dockerfile to build an image. Note that when we build, GPDB will compile and install. Beforehand, we need to update submodules. After entering the run command, we will immediately be inside of the container. 
 
 > In the current version, you may need to add "RUN yum -y install wget" to /docker/base/dockerfile. Also, you may need to be connected to ethernet.
 
