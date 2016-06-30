@@ -114,7 +114,7 @@ docker run -it [IMAGE_ID]
 ```
 
 ### Step 6: Compiling and making changes
-The GPDB R&D team uses Docker to compile uniformly. If you want to alter the source code, the best practice is to make the changes outside of Docker, then build a brand new image. When the new image is built, the altered GPDB will be compiled, installed and ready to run.
+The GPDB R&D team uses Docker to compile uniformly. If you want to alter the source code, the best practice is to make the changes outside of Docker, then build a brand new image. When the new image is built, the altered GPDB will be compiled, installed and ready to run. Below are example steps for this process:
 
 ```
 # Clone repo
@@ -132,7 +132,7 @@ git push origin [BRANCH_NAME]
 ```
 
 ### Step 7: Volumes
-Volumes allow you to save and persist data across containers. A volume is basically a directory outside of the default file system and exist on the host filesystem. They are a great way to maintain changes when working with multiple containers. A full explanation and guide can be found below:
+Volumes allow you to save and persist data across containers. A volume is basically a directory outside of the default file system and exists on the host filesystem. They are a great way to maintain changes when working with multiple containers. A full explanation and guide can be found below:
 
 > Guides to Volumes: [What are volumes?](http://container-solutions.com/understanding-volumes-docker/) | [Commands](https://docs.docker.com/v1.10/engine/userguide/containers/dockervolumes/)
 
