@@ -131,7 +131,7 @@ git push origin [BRANCH_NAME]
 ~~~
 
 ### Step 7: Volumes
-Volumes allow you to save and persist data across containers. A volume is basically a directory outside of the default file system and exists on the host filesystem. They are a great way to maintain changes when working with multiple containers. A full explanation and guide can be found below:
+Volumes allow you to save and persist data across containers. A volume is basically a directory outside of the default file system and exists on the host file system. They are a great way to maintain changes when working with multiple containers. A full explanation and guide can be found below:
 
 > Guides to Volumes: [What are volumes?](http://container-solutions.com/understanding-volumes-docker/) | [Commands](https://docs.docker.com/v1.10/engine/userguide/containers/dockervolumes/)
 
