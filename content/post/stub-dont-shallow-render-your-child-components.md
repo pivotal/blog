@@ -6,11 +6,13 @@ categories:
 - React
 - Javascript
 date: 2016-07-07T20:47:25-04:00
-draft: true
 short: |
   A better way to avoid brittle unit tests in React
 title: Why you should stub, not shallow render, child components when testing React
 ---
+
+*Note: The below examples assume you are using Webpack to manage app modules, and Jasmine for testing*
+
 ## The Gist
 Stubbing/mocking a React component is a better way than shallow rendering to avoid brittle unit tests while still preserving the ability to test the full component lifecycle.
 
