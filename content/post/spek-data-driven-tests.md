@@ -6,7 +6,7 @@ categories:
 - TDD
 - Spek
 date: 2016-07-03T11:00:54+01:00
-draft: true
+draft: false
 short: |
   Finding a usable approach to data-driven testing with Spek
 title: Data Driven Testing with Spek
