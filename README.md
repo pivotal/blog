@@ -68,7 +68,7 @@ Then you _may_ have forgotten to include a property in your `data/authors/foo.ym
 
 ## Publishing Your Copy
 
-Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
+Every commit to master is [auto-deployed](https://travis-ci.org/pivotal/blog) to both [production](http://engineering.pivotal.io/) and [staging](http://pivotal-cf-blog-staging.cfapps.io/) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
 
 ## Changing the style
 
