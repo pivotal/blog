@@ -13,15 +13,15 @@ short: |
 title: To Test or Not to Test
 ---
 
-Testing Boundaries
+In general, things not to test:
 
-Things not to test:
-Time itself
-Frameworks
-Things without behavior
+- Time itself
+- Frameworks
+- Things without behavior
 	- Models
 	- Configuration
 
+That doesn't mean there should be no tests in those areas of your application. You can still test behavior that is driven by time without altering the space-time continuum, or waiting for paint to dry.
 
 ## How to test Time
 
@@ -33,7 +33,7 @@ There are lots of tools for helping with this stuff.
 
 In java/Spring, one approach is to create a CurrentTimeProvider to replace any calls to `new Date()`. Then in my tests I can have a fake or mockable currentTimeProvider object.
 
-```
+~~~java
 @Component
 public class CurrentTimeProvider {
 	public Date getDate(){
@@ -47,22 +47,22 @@ public void someTest() {
 	...
 	when(currentTimeProvider.getDate()).thenReturn(mockedDate)
 }
-```
+~~~
 Then again, I might find myself using a library which uses time directly. In that case, it comes down to not testing the framework, and just testing that I am using the framework the way I expect.
 
 In Ruby, there is a gem called TimeCop that allows you to mock out time by faking all calls to get system provided time.
 
 Javascript: jasmine clock is pretty great. It’s similar to TimeCop. It lets you instantly travel forward in time, or travel to a specific date or time.
 
-```
+~~~javascript
 jasmine.clock().install();
 jasmine.clock().mockDate(new Date(2013, 9, 23));
 jasmine.clock().tick(3000);
-```
+~~~
 Or if you’re dealing with async calls to an API
 - use `jasmine.Ajax`.
 - create your own deferred objects, and resolve or reject promises that way
-```
+~~~javascript
 var fetchDeferred = $q.defer();
 spyOn(someService, 'fetch').and.returnValue(fetchDeferred);
 someService.fetch();
@@ -71,7 +71,7 @@ spyOn(errorService, 'showError');
 fetchDeferred.reject('Something went wrong');
 
 expect(errorService.showError).toHaveBeenCalledWith('Something went wrong');
-```
+~~~
 
 Regardless of what method you're using to test your asynchronous code, the goal is to have fast tests.
 For integration tests though, you will need to actually wait. The page takes time to load, to render, etc. That means you should be judicious about what to integration test for code that is time-dependant.
@@ -112,58 +112,59 @@ There isn't a good boundary because
 
 Ways to resolve this
 
-#### Refactor your use of the framework to create a test boundary
+### Refactor your use of the framework to create a test boundary
 - As in the example for mocking time, you could wrap any static method calls with an instance method
 
-```
-public class MyClass {
+~~~java
+public class Duck {
 
-	public static logger = Logger.getLogger(MyClass.class);
+    public static logger = Logger.getLogger(MyClass.class);
 
-	public void someMethod(){
-		...
-		loggerWrapper.error(logger, "something went wrong", exception);
-	}
+    public void quack(){
+        ...
+        loggerWrapper.error(logger, "Could not quack", exception);
+    }
 }
 
 @Test
-public void someMethod_logsAnError() {
-	verify(loggerWrapper).error(any(Logger.class), eq("something went wrong"), any(Exception.class));
+public void quack_logsAnError() {
+    duck.quack();
+    verify(loggerWrapper).error(any(Logger.class), eq("Could not quack"), any(Exception.class));
 }
-```
+~~~
 
 - or you could change point the logger's logs to a mock Appender object, depending on what logging framework you are using.
 
-#### Refactor code to create a test boundary
+### Refactor code to create a test boundary
 
 Consider the following method:
 
-```
+~~~java
 class CalculatorApplication {
-	public void add(Integer first, Integer second) {
-		System.out.println(first + second);
-	}
+    public void add(Integer first, Integer second) {
+        System.out.println(first + second);
+    }
 }
 
-```
+~~~
 
 In this scenario, I'm calculating something and logging it within the same method.  I can consider decoupling the part of the method which does the calculation into a different object. This will allow us to test the behavior separately, making a simpler test.
 
-```
+~~~java
 
 class Calculator {
-	public Integer add(Integer first, Integer second) {
-		return first + second;
-	}
+    public Integer add(Integer first, Integer second) {
+        return first + second;
+    }
 }
 
 class CalculatorApplication {
-	public void add(Integer first, Integer second) {
-		System.out.println(calculator.add(first, second));
-	}
+    public void add(Integer first, Integer second) {
+        System.out.println(calculator.add(first, second));
+    }
 }
 
-```
+~~~
 
 Be pragmatic!
 Deciding what to test and where to devise your test boundaries is not an exact science. I think of my tests both as a tool for developing robust code and as a medium for communicating to future developers. I use that as a guide to decide whether I want a particular test.
