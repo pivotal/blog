@@ -16,6 +16,8 @@ This post is going to show you how to set up a Rails 5 app that makes use of the
 
 As well as showing you the basics of Action Cable this guide will show you how to configure your app so that it runs on Cloud Foundry. In this particular guide I will be deploying to [PWS](https://run.pivotal.io/), which is Pivotal's consumer instance of Cloud Foundry, however most of the steps will be relevant to any Cloud Foundry instance.
 
+All code used here can be found [here](https://github.com/pivotal-sydney/action-cable-test).
+
 Here is a demo of [the running app](https://actioncable.cfapps.io) with 2 windows open side by side:
 
 {{< responsive-figure src="https://cdn.dylangriffith.net/f8aa4a18-55f5-48df-bcda-7425ab4004e2.gif" >}}
