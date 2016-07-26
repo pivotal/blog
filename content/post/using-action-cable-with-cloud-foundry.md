@@ -14,7 +14,7 @@ title: Using Action Cable With Cloud Foundry
 ## About This Guide
 This post is going to show you how to set up a Rails 5 app that makes use of the new [Action Cable](https://github.com/rails/rails/tree/master/actioncable) feature to perform live reloads of part of a web page. Action Cable is based on Websockets and is one of the new features just released with Rails 5. This new library gives you the ability to easily create real time web applications without pulling in any third party gems to handle the websockets. Additionally the integration with other rails components and conventions means you can write very few lines of code to accomplish a great deal (this is why we use rails in the first place).
 
-As well as showing you the basics of Action Cable this guide will show you how to configure your app so that it runs on Cloud Foundry. In this particular guide I will be deploying to [PWS](https://run.pivotal.io/), which is Pivotal's consumer instance of Cloud Foundry, however most of the steps will be relevant to any Cloud Foundry instance.
+As well as showing you the basics of Action Cable this guide will show you how to configure your app so that it runs on Cloud Foundry. In this particular guide we will be deploying to [PWS](https://run.pivotal.io/), which is Pivotal's consumer instance of Cloud Foundry, however most of the steps will be relevant to any Cloud Foundry instance.
 
 All code used here can be found [here](https://github.com/pivotal-sydney/action-cable-test).
 
@@ -251,7 +251,7 @@ config.action_cable.url = "wss://#{host}:4443/cable"
 config.action_cable.allowed_request_origins = ["http://#{host}", "https://#{host}"]
 ~~~
 
-The last bit of configuration is to update the javascript to use port 4443 rather than the default 443. In order to not hardcode anything in the JS I added a snippet to `app/views/layouts/application.html.erb` to pass the url to the frontend like so:
+The last bit of configuration is to update the javascript to use port 4443 rather than the default 443. In order to not hardcode anything in the JS we add a snippet to `app/views/layouts/application.html.erb` to pass the url to the frontend like so:
 
 ~~~diff
 <!DOCTYPE html>
@@ -261,7 +261,7 @@ The last bit of configuration is to update the javascript to use port 4443 rathe
      <title>ActionCableTest</title>
 ~~~
 
-Then I updated the `app/assets/javascripts/cable.js` to read this global variable before making the connection:
+Then we must update the `app/assets/javascripts/cable.js` to read this global variable before making the connection:
 
 ~~~diff
  (function() {
