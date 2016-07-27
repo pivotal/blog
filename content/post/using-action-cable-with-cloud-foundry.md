@@ -5,7 +5,7 @@ categories:
 - Ruby On Rails
 - Cloud Foundry
 date: 2016-07-24T13:27:26+10:00
-draft: true
+draft: false
 short: |
   A guide to configuring and deploying a Rails 5 Action Cable app to Cloud Foundry.
 title: Using Action Cable With Cloud Foundry
