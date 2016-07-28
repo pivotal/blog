@@ -12,26 +12,28 @@ short: |
 title: Improving Constraints In ORCA
 ---
 
-[ORCA](https://github.com/greenplum-db/gporca) is Pivotal's SQL Optimizer for [Greenplum Database](https://github.com/greenplum-db/gpdb) and [HAWQ](https://github.com/apache/incubator-hawq). It's a powerful tool for optimizing queries in a distributed environment. However it is not without its rough edges. In this post we will look at constraints which are ORCA's way of understanding logical restrictions on tables. We will explore a performance bug in how ORCA handled array constraints, and how we diagnosed and solved the problem. Our solution was twofold. First, we implemented a quick, sub-optimal solution. Then we developed a general feature which improved ORCA's constraint framework.
+[ORCA](https://github.com/greenplum-db/gporca) is Pivotal's SQL Optimizer for [Greenplum Database](https://github.com/greenplum-db/gpdb) and [HAWQ](https://github.com/apache/incubator-hawq). It's a tool for finding the fastest way to execute SQL queries in a distributed environment. Optimizers are needed because there will be many possible ways to execute a query on your database engine, and a niave query plan might take orders of magnitude more time than the lowest cost plan. The process of finding this lowest cost plan does take compute time, and potentially more than the execution time of the query. One of the goals in designing a query optimizer is to optimize the optimization process itself.
+
+In this post we will look at *constraints* which are ORCA's way of understanding logical restrictions on tables. We will explore a performance issue in how ORCA handled constraints involving array datatypes, and how we diagnosed and solved the problem.
+
+Our solution was rolled out in two stages. First, we implemented a quick, sub-optimal solution. This solution added a user-accessable control knob which allowed us to disable the problematic feature for cases which caused slowdown. We then we developed a general feature which improved ORCA's constraint framework. This effort resulted in a more effiecent way of representing arrays internally to the optimizer, which fixed the original issue without losing functionality.
 
 ## Intro to Optimization
 
-ORCA's job is to take a statement and produce an execution plan. Internally, ORCA will take this SQL statement and generate an Expression tree. ORCA is allowed to make transformations on the tree so long as they will produce the same output as the input query. As an optimizer, ORCA's job is to create the best plan, which usually means to create the fastest executing plan. To see some of the transformations ORCA will perform, let's take a simple join query to get an insight on how ORCA is trying to optimize a query.
+ORCA's job is to take a human readable SQL statement and produce an execution plan for the database engine. Internally, ORCA will take this SQL statement and generate an expression tree which is a convenient way for the program to represent the query. ORCA is allowed to transform the tree so long as it produces the same final output. Below is a print out of a SQL query and a simplified view of ORCA's generated plan tree.
 
 ```sql
-psql=# EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1,2,3) AND foo.id = bar.id;
-                                                    QUERY PLAN
-------------------------------------------------------------------------------------------
- Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..862.00 rows=1 width=8)
-   ->  Hash Join  (cost=0.00..862.00 rows=1 width=8)
-         Hash Cond: foo.id = bar.id
-         ->  Table Scan on foo  (cost=0.00..431.00 rows=1 width=4)
-               Filter: (id = ANY ('{1,2,3}'::integer[])) AND (id = 1 OR id = 2 OR id = 3)
-         ->  Hash  (cost=431.00..431.00 rows=1 width=4)
-               ->  Table Scan on bar  (cost=0.00..431.00 rows=1 width=4)
-                     Filter: id = 1 OR id = 2 OR id = 3
- Settings:  optimizer=on
- Optimizer status: PQO version 1.641
+EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1,2,3) AND foo.id = bar.id;
+```
+```
+Gather Motion
+    Hash Join
+        Hash Cond: foo.id = bar.id
+            Table Scan on foo
+                Filter: id = ANY {1,2,3} AND (id = 1 OR id = 2 OR id = 3)
+        Hash
+            Table Scan on bar
+                Filter: id = 1 OR id = 2 OR id = 3
 ```
 
 So there's at least one good optimization here, but unfortunately there's a couple of ugly things as well. Can you spot them? 
@@ -42,7 +44,7 @@ Going back to the condition on `bar`, there is something strange going on. Inste
 
 ## Issues with Arrays
 
-Going back to the join example we see that `(id = ANY ('{1,2,3}'::integer[])) AND (id = 1 OR id = 2 OR id = 3)` is redundant. It's logically correct and therefore returns correct results, but it is wordy, like some kind of cancerous outgrowth. We want succinct, clean expressions. This blemish is one of the rough edges of ORCA. What was actually happening there was the constraint propagated first from `foo` to `bar` and then back from `bar` to `foo`. Since ORCA didn't understand logical equivilence between arrays and OR statements, it appended it as a new constraint. Not wrong, just ugly.
+Going back to the join example we see that `id = ANY {1,2,3} AND (id = 1 OR id = 2 OR id = 3)` is redundant. It's logically correct and therefore returns correct results, but it is wordy, like some kind of cancerous outgrowth. We want succinct, clean expressions. This blemish is one of the rough edges of ORCA. What was actually happening there was the constraint propagated first from `foo` to `bar` and then back from `bar` to `foo`. Since ORCA didn't understand logical equivilence between arrays and OR statements, it appended it as a new constraint. Not wrong, just ugly.
 
 In fact, the real problem is not with the unsightliness of the expression, but in what happens when the `IN` array becomes large. When a query as simple as `SELECT * FROM foo, bar WHERE foo.id = bar.id AND foo.id IN (1,2, [...], 100 )` has 100 elements, the internal representation and manipulation of a 100 element OR/Equality expression became a major performance and memory bottleneck. Some customers commonly run queries with hundreds of elements in an IN list and were experiencing hangups. When we investigated this query, it took over a minute to optimize on one of our development machines, and larger IN lists would crash the optimizer. Intrigued, we performed a trace of large array case using Apple's Instrumentation Tools. Performance tools gave us a simple GUI overlay of the code and relative amount of time take for each preprocessing stage, and then a time breakdown of the longest running calls of each preprocessing stage.
 
@@ -67,7 +69,7 @@ Stages involving constraints seemed to take the longest. We then dived into the 
 314.0    gpopt::CRange::PrngExtend(..)
 ```
 
-This trace, and other investigations, revealed that the vast majority of the time was being spent managing, and walking over large amount of constraint objects which were generated by the expansion and then subsequent exploration of the Expression tree. For example, you can see in the trace that `PdrgpcnstrDeduplicate` is trying to deduplicate constraints. From looking at the code, we discovered that it does this without sorting, thus taking O(n<sup>2</sup>) time. This is just one of several slow areas that appears when there are many OR constraints. Therefore, a solution would either need to stop array expansion or implement a smarter way of representing arrays.
+This trace, and other investigations, revealed that the vast majority of the time was being spent managing, and walking over large amount of constraint objects which were generated by the expansion and then subsequent exploration of the Expression tree. For example, there is a method in the trace called `PdrgpcnstrDeduplicate` which is trying to deduplicate constraints. From looking at the code, we discovered that it does this without sorting, thus taking O(n<sup>2</sup>) time. This is just one of several slow areas that appears when there are many OR constraints. Therefore, a solution would either need to stop array expansion or implement a smarter way of representing arrays.
 
 ## Solution 1
 
@@ -79,41 +81,33 @@ So back to our fix. The easiest way to solve the problem was to not do array exp
 
 **Before**
 ```sql
-psql=# EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1, 2, 3, ..., 100) AND foo.id = bar.id;
-
-                                QUERY PLAN
--------------------------------------------------------------------------------
- Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..862.00 rows=1 width=8)
-   ->  Hash Join  (cost=0.00..862.00 rows=1 width=8)
-         Hash Cond: foo.id = bar.id
-         ->  Table Scan on foo  (cost=0.00..431.00 rows=1 width=4)
-               Filter: (id = ANY ('{1,2,3, ... ,100}'::integer[])) 
-               			AND (id = 1 OR id = 2 OR id = 3 OR ... OR id = 100)
-         ->  Hash  (cost=431.00..431.00 rows=1 width=4)
-               ->  Table Scan on bar  (cost=0.00..431.00 rows=1 width=4)
-                     Filter: id = 1 OR id = 2 OR id = 3 OR ... OR id = 100
- Settings:  optimizer=on;
- Optimizer status: PQO version 1.641
-(10 rows)
+EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1, 2, 3, ..., 100) AND foo.id = bar.id;
+```
+```
+Gather Motion
+    Hash Join
+        Hash Cond: foo.id = bar.id
+            Table Scan on foo
+                Filter: id = ANY {1,2,3, ... , 100} AND
+                          (id = 1 OR id = 2 OR id = 3 OR ... OR id = 100)
+        Hash
+            Table Scan on bar
+                Filter: id = 1 OR id = 2 OR id = 3 OR ... OR id = 100
 
 Time: 6068.283 ms
 ```
 **After**
 ```sql
-psql=# EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1, 2, 3, ..., 100) AND foo.id = bar.id;
-
-                                QUERY PLAN
--------------------------------------------------------------------------------
- Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..862.00 rows=1 width=8)
-   ->  Hash Join  (cost=0.00..862.00 rows=1 width=8)
-         Hash Cond: foo.id = bar.id
-         ->  Table Scan on foo  (cost=0.00..431.00 rows=1 width=4)
-               Filter: id = ANY ('{1,2,3, ... ,100}'::integer[])
-         ->  Hash  (cost=431.00..431.00 rows=1 width=4)
-               ->  Table Scan on bar  (cost=0.00..431.00 rows=1 width=4)
- Settings:  optimizer=on; optimizer_array_expansion_threshold=25
- Optimizer status: PQO version 1.641
-(9 rows)
+EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1, 2, 3, ..., 100) AND foo.id = bar.id;
+```
+```
+Gather Motion
+    Hash Join
+        Hash Cond: foo.id = bar.id
+            Table Scan on foo
+                Filter: id = ANY {1,2,3, ... , 100}
+        Hash
+            Table Scan on bar
 
 Time: 28.746 ms
 ```
@@ -130,21 +124,17 @@ Going back to our token query, you can see that it has cleaned up nicely and has
 **Plan after Array Fix**
 
 ```sql
-pivotal=# EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1, 2, 3, ..., 100) AND foo.id = bar.id;
-
-                                QUERY PLAN
--------------------------------------------------------------------------------
- Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..863.75 rows=92 width=8)
-   ->  Hash Join  (cost=0.00..863.74 rows=31 width=8)
-         Hash Cond: foo.id = bar.id
-         ->  Table Scan on foo  (cost=0.00..431.02 rows=34 width=4)
-               Filter: id = ANY ('{1,2,3, ... ,100}'::integer[])
-         ->  Hash  (cost=432.71..432.71 rows=31 width=4)
-               ->  Table Scan on bar  (cost=0.00..432.71 rows=31 width=4)
-                     Filter: id = ANY ('{1,2,3, ... ,100}'::integer[])
- Settings:  optimizer=on
- Optimizer status: PQO version 1.646
-(10 rows)
+EXPLAIN SELECT * FROM foo, bar WHERE foo.id IN (1, 2, 3, ..., 100) AND foo.id = bar.id;
+```
+```
+Gather Motion
+    Hash Join
+        Hash Cond: foo.id = bar.id
+            Table Scan on foo
+                Filter: id = ANY {1,2,3, ... , 100}
+        Hash
+            Table Scan on bar
+                Filter: id = ANY {1,2,3, ... , 100}
 
 Time: 270.038 ms
 ```
