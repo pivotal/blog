@@ -5,7 +5,7 @@ categories:
 - Rails
 - Turbolinks
 - iOS
-date: 2016-08-22T10:07:30+08:00
+date: 2016-07-29T16:52:27+08:00
 draft: false
 short: |
   Using Turbolinks 5 to hide your site's HTML navigation and present a native navigation view to mobile app users.
