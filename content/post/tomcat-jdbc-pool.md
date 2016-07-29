@@ -7,7 +7,6 @@ categories:
 - JDBC Pool
 - Migrated Content
 date: 2010-04-01T15:19:00+01:00
-draft: true
 short: |
   Configuration and use of Apache Tomcat’s high concurrency database connection pool
 title: Apache Tomcat jdbc-pool
