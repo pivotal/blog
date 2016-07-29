@@ -6,7 +6,7 @@ categories:
 - Turbolinks
 - iOS
 date: 2016-08-22T10:07:30+08:00
-draft: true
+draft: false
 short: |
   Using Turbolinks 5 to hide your site's HTML navigation and present a native navigation view to mobile app users.
 title: Building a Native Navigation Menu for iOS with Turbolinks 5
