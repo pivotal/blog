@@ -29,8 +29,9 @@ There are multiple ways of building a mobile application. Over time, more and mo
 - **Native development**: Every platform provides a SDK to develop on their native platform using their native language. This approach involves the fewest abstraction layers and gives the developer most control.
 
 As you can see:
-
-> Hybrid != Hybrid. For our project, we chose the Web Hybrid approach, namely Ionic 2.
+<div class="bg-neutral-9" style="border-left: 5px solid #A2B1B5; padding: 10px">
+  Hybrid != Hybrid. For our project, we chose the Web Hybrid approach, namely Ionic 2.
+</div>
 
 ## Is Ionic an option for you?
 
@@ -125,7 +126,9 @@ Facebook
   })
 ```
 
-> The integration with native phone features was super simple and saved us valuable time, allowing us to focus on delivering and ultimately validating features rather than technical nitty-gritty.
+<div class="bg-neutral-9" style="border-left: 5px solid #A2B1B5; padding: 10px">
+The integration with native phone features was super simple and saved us valuable time, allowing us to focus on delivering and ultimately validating features rather than technical nitty-gritty.
+</div>
 
 # Weaknesses
 
@@ -140,7 +143,9 @@ Here at [Pivotal](https://pivotal.io), we do TDD and we believe that testing is 
 
 All tests were affected by the fact that we used TypeScript and the code needed to be transpiled to JavaScript before being run. This took some extra time setting up a continuous delivery pipeline.
 
-> Generally, we would have liked more resources which cover testing and present best practices for testing components, pages and services. We lost valuable time figuring it out ourselves.
+<div class="bg-neutral-9" style="border-left: 5px solid #A2B1B5; padding: 10px">
+Generally, we would have liked more resources which cover testing and present best practices for testing components, pages and services. We lost valuable time figuring it out ourselves.
+</div>
 
 ## Heisenbugs
 
@@ -151,7 +156,9 @@ There were four rather epic bugs that we encountered over the course of the proj
 - **Cordova.js**: the Cordova plugins did not work until we found out that we must include cordova.js in index.html, despite cordova.js being an empty file in the browser. When running on the client, the file will be replaced with a real file.
 - **Memory leak**: when using the [Cordova Geolocation](https://github.com/apache/cordova-plugin-geolocation) the application would increase memory consumption to the maximum and then crash. This bug was fixed after the maintainer of the plugin provided a patch. Using the latest version will free you from this bug.
 
-> The good news is that we were able to resolve all of these bugs. The bad news is that most of these bugs could have been prevented by having a better understanding of what Ionic actually does during its build process. We found that it would have been useful if we had resources about the build steps going on behind the scenes. As soon as you have a problem that involves the Ionic CLI, things become hairy and hard to fix.
+<div class="bg-neutral-9" style="border-left: 5px solid #A2B1B5; padding: 10px">
+The good news is that we were able to resolve all of these bugs. The bad news is that most of these bugs could have been prevented by having a better understanding of what Ionic actually does during its build process. We found that it would have been useful if we had resources about the build steps going on behind the scenes. As soon as you have a problem that involves the Ionic CLI, things become hairy and hard to fix.
+</div>
 
 ## Forms and inputs
 
@@ -160,10 +167,14 @@ We found that forms and inputs were generally a source of pain, especially on iO
 - On iOS devices one cannot change the keyboard action button. The only options are "Return" for textareas and "Go" for inputs. We would have liked to have more options to make our user experience better. This is however a [well-known limitation](https://github.com/driftyco/ionic-plugin-keyboard/issues/54) of hybrid applications that we were well aware of before embarking on building the app.
 - On iOS devices, textareas have non-native behaviour, they scroll either too far or to the wrong position. Also, we witnessed other strange bugs where shadows would appear around inputs when scrolling slowly. Adding the [accessory bar](https://github.com/driftyco/ionic-plugin-keyboard) helped us to mitigate some of the shortcomings.
 
-> We observed that inputs work better on Android than on iOS. On iOS the inputs were good enough for a prototype but not adequate for a quality application. To make it work, our product designer had to come up with flows to hide the problems.
+<div class="bg-neutral-9" style="border-left: 5px solid #A2B1B5; padding: 10px">
+We observed that inputs work better on Android than on iOS. On iOS the inputs were good enough for a prototype but not adequate for a quality application. To make it work, our product designer had to come up with flows to hide the problems.
+</div>
 
 # Conclusion
 
-> Hybrid development remains a controversial topic and hybrid apps will never be a universal choice for building mobile applications. For successful hybrid project, it is important to know about their limitations and whether they clash with the project objectives. For the right product, they can be an effective tool to build a stunning mobile application in little time.
+<div class="bg-neutral-9" style="border-left: 5px solid #A2B1B5; padding: 10px; margin-bottom: 15px">
+Hybrid development remains a controversial topic and hybrid apps will never be a universal choice for building mobile applications. For successful hybrid project, it is important to know about their limitations and whether they clash with the project objectives. For the right product, they can be an effective tool to build a stunning mobile application in little time.
+</div>
 
 In 15 weeks we built a production-ready application with Ionic 2. The application looks stunning and has allowed us to start validating our value proposition. Our app is packed with native functionality and could be ported to Android with little extra effort in the near future. We have a maintainable Angular 2 codebase and can easily expose parts of it to the web. While there are some quirks that might give away (especially to developers) that there might be a hybrid application under the hood, the feel of the application is very close to a truly native application.
