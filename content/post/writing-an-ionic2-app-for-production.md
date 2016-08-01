@@ -12,11 +12,11 @@ title: Writing an Ionic 2 Application for Production
 short: On a recent Pivotal Labs engagement, we built a hybrid application using Ionic 2. This post provides some technical considerations for building your own.
 ---
 
-Inspiration for this blog post is a recent Pivotal Labs engagement here in London, helping [Impossible People](http://app.impossible.com/). Our application landed in the iOS App Store after just three months of development.
+Inspiration for this blog post is a recent Pivotal Labs engagement here in London, helping Impossible, a social giving startup, develop a [mobile app](http://app.impossible.com/). Our application landed in the iOS App Store after just three months of development.
 
 # Mobile development landscape
 
-There are multiple ways of building a mobile application. Over time, more and more tools have emerged abstracting native development, including a handful of so-called _hybrid approaches_. Each of them has its own advantages and disadvantages, but they share an overarching goal: to increase code reusability and to take advantage of web tooling.
+There are multiple ways of building a mobile application. Over time, more and more tools have emerged abstracting native development, including a handful of so-called _hybrid_ approaches. Each of them has its own advantages and disadvantages, but they share an overarching goal: to increase code reusability and to take advantage of web tooling.
 
 **Briefly, here are the main different flavours of mobile development:**
 
@@ -45,24 +45,24 @@ Whether a hybrid application is the best approach depends on your requirements. 
 Ionic is using [Angular](https://angular.io/) and [Cordova](https://cordova.apache.org/) under the hood. Besides having a very active community, we liked the concept of Ionic for the following reasons:
 
 - **It is web development**: We were essentially building a web application and can use the well established web ecosystem and tool set. The team was able to apply its web expertise to developing our hybrid mobile application. As we wrote the back-end in JavaScript too, this meant less context switching during development.
-- **Native look**: Ionic provides a rich set of different components which look fantastic and mimic native behavior well. This allowed us to churn through screens quickly, without compromising on great looks.
-- **Native functionality**: Cordova provides Ionic with native functionality that can be integrated with little hassle. We are an abstraction layer away from native code, which means we can solve our problems without digging into native code.
-- **Platform portability**: We first focused on building an iOS app. The plan is to branch out to Android and a more traditional web app in the near future. We will be able reusue the majority of our codebase.
+- **Native look**: Ionic provides a rich set of components which look fantastic and mimic native behavior well. This allowed us to churn through screens quickly, without compromising on great looks.
+- **Native functionality**: Cordova provides Ionic with native functionality that can be integrated with little hassle. When using Ionic, we are an abstraction layer away from native code, which means we can solve our problems without digging into native code.
+- **Platform portability**: We first focused on building an iOS app. hile we focused on building an iOS app first, the product team may want to branch out to Android soon. By using Ionic, we will be able reuse the majority of our codebase.
 
 ## Strengths
 
-During development we benefitted from Ionic and its ecosystem. More specifically, there were some feats which sped up the development of our application dramatically.
+During development we benefitted from Ionic and its ecosystem. More specifically, there were some properties which sped up the development of our application dramatically.
 
 ### Styles, Components and Icons
 
-We saved valuable time building user interface components. Having a collection of components supported our approach of iterating on user design - we would first use an out-of-the-box component, then customise it as needed at a later point. This goes really well with our iterative way of working. We were able to have a functional and decently looking feature, that we could then further refine in future stories.
-The [components](ionicframework.com/docs/v2/components) that Ionic 2 provides look native and imitate native behavior well. Also the [icons]([icons](http://ionicframework.com/docs/v2/ionicons) that come for free. The icons add a native flair and are generally well designed.
+We saved valuable time building user interface components. Having a collection of components supported our approach of iterating on user design - we would first use an out-of-the-box component, then customise it as needed at a later point. This goes really well with our iterative way of working. We were able to use components to build functional and decently looking features, that we could then further down the line.
+The [components](ionicframework.com/docs/v2/components) that Ionic 2 provides look native and imitate native behavior well, and the [icons]([icons](http://ionicframework.com/docs/v2/ionicons) (or ‘Ionicons’ as Ionic calls them!) come for free. The icons add a native flair and are generally well designed.
 
-It was easy to tweak the styles of the components to meet our branding. Sometimes it was enough to [overwrite SASS variables](http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/), sometimes we applied our own iOS-specific styles. iOS developers tell us that when deviating from the default iOS styles, styling becomes hard. Thanks to CSS and Ionic's modular styles, deviating from the default is not an issue.
+It was easy to tweak the styles of the components to meet our branding. Sometimes it was enough to [overwrite SASS variables](http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/), sometimes we applied our own iOS-specific styles. iOS developers tell us that when deviating from the default iOS styles, styling becomes difficult. Thanks to CSS and Ionic's modular styles, deviating from the default is not an issue.
 
 ### Support for Native Features
 
-Despite the fact that our application uses a plethora of native functionality, yet, by using a hybrid framework, during the three months of development we did not have to understand or modify any native code. Platform-specific tools like Xcode were only needed for deployment, everything else could be done in any editor or IDE. Below are some of the native functionality that went into the  app:
+Despite the fact that our application uses a plethora of native functionality, by using a hybrid framework, during the three months of development we did not have to understand or modify any native code. Platform-specific tools like Xcode were only needed for deployment, everything else could be done in any editor or IDE. Below are some of the native functionality that went into the  app:
 
 - Push Notifications: to get the push notifications working on the client, it was as simple as:
 
@@ -125,7 +125,7 @@ Facebook
   })
 ```
 
-> The integration with native phone features was super simple and saved us valuable time, allowing us to focus on delivering features rather than technical nitty-gritty.
+> The integration with native phone features was super simple and saved us valuable time, allowing us to focus on delivering and ultimately validating features rather than technical nitty-gritty.
 
 # Weaknesses
 
@@ -133,11 +133,12 @@ While we were all around pleased with Ionic, there are also some areas where we 
 
 ## Testing
 
-- Here at [Pivotal](https://pivotal.io), we do TDD and we believe that testing is the foundation of any successful software project. Unfortunately, testing the application was generally not as smooth as we would have liked it to be.
+Here at [Pivotal](https://pivotal.io), we do TDD and we believe that testing is the foundation of any successful software project. Unfortunately, testing the application was generally not as smooth as we would have liked it to be.
   - **Unit tests**: were easy to write as there are no or very few dependencies that need to be mocked.
   - **Integration tests**: were hard to write as there are a lot of dependencies and we found ourselves in mocking-hell, mocking all sorts of internal objects inside Angular 2 and Ionic 2.
   - **End-to-end**: We used [Protractor](http://www.protractortest.org/#/) and the constant flakyness of our end-to-end tests was frustrating. Unless its support for Angular 2 and Ionic has improved in the meantime, we would not use it again. Also, we found that the more native functionality we added, the harder it became to test. To test native functionality we suggest looking into tools like [Appium](http://appium.io/). Appium allows developers to write tests which run in an emulator or a device, but can still assert on content rendered in the webview.
-- All tests were affected by the fact that we used TypeScript and the code needed to be transpiled to JavaScript before being run. This took some extra time setting up a continous delivery pipeline.
+
+All tests were affected by the fact that we used TypeScript and the code needed to be transpiled to JavaScript before being run. This took some extra time setting up a continuous delivery pipeline.
 
 > Generally, we would have liked more resources which cover testing and present best practices for testing components, pages and services. We lost valuable time figuring it out ourselves.
 
@@ -165,4 +166,4 @@ We found that forms and inputs were generally a source of pain, especially on iO
 
 > Hybrid development remains a controversial topic and hybrid apps will never be a universal choice for building mobile applications. For successful hybrid project, it is important to know about their limitations and whether they clash with the project objectives. For the right product, they can be an effective tool to build a stunning mobile application in little time.
 
-In 15 weeks we built a production-ready application with Ionic 2. The application looks stunning and has allowed us to validate our value proposition. Our app is packed with native functionality and will be ported to Android with little extra effort in the near future. We have a maintainable Angular 2 codebase and can easily expose parts of it to the web. The feel of the application is close to a truly native application, still some quirks that might give away (certainly to developers) that there might be a hybrid application under the hood.
+In 15 weeks we built a production-ready application with Ionic 2. The application looks stunning and has allowed us to start validating our value proposition. Our app is packed with native functionality and could be ported to Android with little extra effort in the near future. We have a maintainable Angular 2 codebase and can easily expose parts of it to the web. While there are some quirks that might give away (especially to developers) that there might be a hybrid application under the hood, the feel of the application is very close to a truly native application.
