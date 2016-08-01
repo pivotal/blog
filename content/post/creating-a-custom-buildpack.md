@@ -16,7 +16,7 @@ title: Creating a Custom Buildpack
 
 ## Overview
 
-This article discusses how to create a custom buildpack using Rust as an example language. First, we show how to create simple buildpack which downloads Rust during staging. Then, we describe how to package Rust into the buildpack itself, so it is not downloaded during staging.
+This article discusses how to create a custom buildpack using [Rust](https://www.rust-lang.org/en-US/) as an example language. First, we show how to create a simple buildpack that downloads Rust during staging. Then, we describe how to package Rust into the buildpack itself, so it is not downloaded during staging.
 
 As a sample app, we use a simple `hello_world` Rust http server:
 
@@ -33,7 +33,7 @@ The source code for this app can be found [here](https://github.com/jchesterpivo
 
 ### Part 1: A Minimal Viable Buildpack
 
-At its core, a buildpack consists of three scripts in a `bin` directory:
+At its core, a buildpack consists of three executable scripts in a `bin` directory:
 
 ```
   bin
@@ -45,9 +45,9 @@ At its core, a buildpack consists of three scripts in a `bin` directory:
 These scripts are usually written in Ruby or BASH and are executed in the order `detect`, `compile`, `release`.
 
 #### detect
-The `detect` script is run to determine which buildpack to use for app staging and takes one argument: the application's top level directory (or build directory). If the script exits successfully (i.e. exit code of zero), the buildpack will be used. Otherwise, the `detect` script for the next available buildpack will run.
+The `detect` script is run to [determine which buildpack](https://docs.cloudfoundry.org/buildpacks/detection.html) to use for app staging and takes one argument: the application's top level directory (or build directory). If the script exits successfully (i.e. exit code of zero), the buildpack will be used. Otherwise, the `detect` script for the next available buildpack will run.
 
-To determine whether to return the success `detect` will usually look for evidence of the application's language. Since `cargo` is the canonical package manager for Rust, we can just look for the `Cargo.toml` file, resulting in the simple script:
+To determine whether to return the success `detect` will usually look for evidence of the application's language. Since [`cargo`](http://doc.crates.io/guide.html) is the canonical package manager for Rust, we can just look for the `Cargo.toml` file, resulting in the simple script:
 
 ~~~ruby
 #!/usr/bin/env ruby
@@ -102,7 +102,7 @@ cargo build --release 2>&1
 
 This will place the compiled Rust program `hello_world` into the `$build/target/release/` directory.
 
-Note that once staging is complete, everything under the `$build` directory will be zipped up into the droplet and hence present in the application container at runtime. Since this is a different container from staging, we will have to give it a script which provides any necessary environment variables. This is done by creating a script underneath `$build/profile.d` -- everything in this directory is run in the application container before starting.
+Note that once staging is complete, everything under the `$build` directory will be zipped up into the droplet and hence present in the application container at runtime. Since this is a different container from staging, we will have to give it a script which provides any necessary environment variables. This is done by creating a script underneath [`$build/profile.d`](https://docs.cloudfoundry.org/devguide/deploy-apps/deploy-app.html#profile) -- everything in this directory is run in the application container before starting.
 
 So we finish our `compile` script:
 ~~~bash
@@ -112,7 +112,7 @@ echo 'export PATH=$PATH:/app/target/release:/app/usr/local/bin' > $build_dir/.pr
 ~~~
 
 #### release
-The final script is the `release` script. It writes a YAML-formatted string containing the default command used to start the application to `stdout`. It takes one argument, the build directory.
+The final script is the `release` script. It writes a YAML-formatted string containing the [default command](https://docs.cloudfoundry.org/devguide/deploy-apps/app-startup.html) used to start the application to `stdout`. It takes one argument, the build directory.
 
 Since we've installed `cargo` into the build directory, it is available at runtime, and so `cargo run` can be used to start the application. It's easy to manipulate YAML in Ruby, resulting in the script:
 
@@ -156,7 +156,7 @@ To do so, we will use a Ruby gem, [buildpack-packager](https://github.com/cloudf
 
 #### Building the Rust toolchain
 
-In order to package `rustc`, `cargo` and the required libraries in our buildpack, we first must build them. We will do this using the same docker image, `cloudfoundry/cflinuxfs2` as is used for staging and runtime. Inside the container, running `curl -sSf https://static.rust-lang.org/rustup.sh | sh` will install the latest stable binaries for `rustc` and `cargo`.
+In order to package `rustc`, `cargo` and the required libraries in our buildpack, we first must build them. We will do this using the same docker image, [`cloudfoundry/cflinuxfs2`](https://hub.docker.com/r/cloudfoundry/cflinuxfs2/) as is used for staging and runtime. Inside the container, running `curl -sSf https://static.rust-lang.org/rustup.sh | sh` will install the latest stable binaries for `rustc` and `cargo`.
 
 The command `ldd $(which rustc)` shows us that a bunch of libraries that `rustc` depends on have been installed to `/usr/local/lib/`. For `rustc` to work, we must package these as well. This gives us the `tar` command:
 
@@ -166,7 +166,7 @@ tar -cvf rust-1.10.tgz $(which rustc) $(which cargo) /usr/local/lib/*.so /usr/lo
 
 This `.tgz` file is ready to be transferred to the local filesystem.
 
-#### Buildpack manifest.
+#### Buildpack Manifest
 
 Next, we use the `manifest.yml` file to describe the contents of the buildpack. This file is required to contain the contains the following objects:
 
@@ -200,7 +200,7 @@ url_to_dependency_map:
     version: $1
 ```
 
-`match` contains a regex which can be run against the `uri` specified under `dependencies`. Note that `version` can be a capture group of that regext
+`match` contains a regex which can be used to map any uri to dependencies with a given name and version specified under `dependencies`. Note that `version` can be a capture group of that `match` regex. In this case, this mapping specification would map a uri like `https://static.rust-lang.org/dist/rustc-1.10.0-src.tar.gz` to a dependency with the name `rust` and the version `1.10.0`.
 
 * `exclude_files`. A list of files to exclude. Example:
 
@@ -236,7 +236,7 @@ fi
 
 Note that in the uncached case, we can use our code from the previous example.
 
-Inside this `if` block, we first need to locate the cached `rust-1.10.0.tgz` file in the `dependencies` directory. To do so we will use the [compile-extentions](https://github.com/cloudfoundry/compile-extensions) library (adding it as a submodule to the buildpack directory). This library provides a script, `./bin/translate_dependency_url`, which takes a `uri` as specified in the `manifest.yml` dependencies object, and returns a uri giving the location of the file inside the staging contair.
+Inside this `if` block, we first need to locate the cached `rust-1.10.0.tgz` file in the `dependencies` directory. To do so we will use the [compile-extensions](https://github.com/cloudfoundry/compile-extensions) library (adding it as a submodule to the buildpack directory). This library provides a script, `./bin/translate_dependency_url`, which takes a `uri` as specified in the `manifest.yml` dependencies object, and returns a uri giving the location of the file inside the staging container.
 
 Using this script, we can download `rust-1.10.0.tgz` into a temp directory and extract it:
 
@@ -330,6 +330,6 @@ Downloading rust version 1.10.0 from: file:///Users/pivotal/workspace/rust-outpu
 Cached buildpack created and saved as /Users/pivotal/workspace/rust-buildpack/rust_buildpack-cached-v0.0.2.zip with a size of 106M
 ```
 
-This buildpack can be uploaded to Cloud Foundry as described in Part 1. Note that when this cached buildpack is used, it will still connect to the internet during the `cargo build --release` step. This is because `cargo` offers no way to vendor the Rust dependencies as documented [here](http://doc.crates.io/faq.html#how-can-cargo-work-offline). So creating a Rust buildpack which does not require internet access is not really possible at this point in the Rust tooling's lifecycle.
+This buildpack can be uploaded to Cloud Foundry as described in Part 1. Note that when this cached buildpack is used, it will still connect to the internet during the `cargo build --release` step. This is because `cargo` offers no way to vendor the Rust dependencies as documented [here](http://doc.crates.io/faq.html#how-can-cargo-work-offline). So creating a Rust buildpack that does not require internet access is not really possible at this point in the Rust tooling's lifecycle.
 
 The completed example Rust buildpack that we've worked through can be found at this [repo](https://github.com/jchesterpivotal/rust-buildpack/).
