@@ -5,8 +5,8 @@ categories:
 - Databases
 - Query Optimization
 - SQL
-date: 2016-07-25T12:00:00-08:00
-draft: true
+date: 2016-08-02T9:00:00-08:00
+draft: false
 short: |
   ORCA is Pivotal's Query Optimizer for big data. We look at how we improved ORCA's understanding of logical constraints.
 title: Improving Constraints In ORCA
