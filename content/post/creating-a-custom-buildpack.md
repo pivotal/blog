@@ -2,12 +2,14 @@
 authors:
 - ssmith
 - geramirez
+- jwen
+- jchester
 categories:
 - Cloud Foundry
 - Buildpacks
 - Rust
 - CF Runtime
-date: 2016-07-26T11:14:11-04:00
+date: 2016-08-02T11:44:11-04:00
 draft: true
 short: |
   This article will describe how to create a custom buildpack using Rust as an example language.
@@ -131,7 +133,7 @@ puts release_run_command.to_yaml
 
 To use our new buildpack, we need to zip it up and upload it to Cloud Foundry. This is done as follows:
 
-```
+```shell
 $ pwd
 /Users/pivotal/workspace/rust-buildpack
 
@@ -160,9 +162,9 @@ In order to package `rustc`, `cargo` and the required libraries in our buildpack
 
 The command `ldd $(which rustc)` shows us that a bunch of libraries that `rustc` depends on have been installed to `/usr/local/lib/`. For `rustc` to work, we must package these as well. This gives us the `tar` command:
 
-~~~bash
+```shell
 tar -cvf rust-1.10.tgz $(which rustc) $(which cargo) /usr/local/lib/*.so /usr/local/lib/rustlib/
-~~~
+```
 
 This `.tgz` file is ready to be transferred to the local filesystem.
 
