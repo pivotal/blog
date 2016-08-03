@@ -49,6 +49,6 @@ Exporting a release does take a bit of time, so depending on the compilation tim
 
 ## Resources
 
-[Creating BOSH compiled releases.](https://bosh.io/docs/compiled-releases.html)
-[Our script used for compiling a release.](https://github.com/cloudfoundry-incubator/cf-mysql-ci/blob/a12f8a25bd84413e4651350ea97491cf5fc84a1a/scripts/compile_release)
-[Concourse pipeline configuration that compiles releases.](https://github.com/cloudfoundry-incubator/cf-mysql-ci/blob/dbc2ba48390c0250c8ce201974230f1ba5aa82ae/ci/pipelines/cf-mysql-acceptance.yml#L154)
+- [Creating BOSH compiled releases.](https://bosh.io/docs/compiled-releases.html)
+- [Our script used for compiling a release.](https://github.com/cloudfoundry-incubator/cf-mysql-ci/blob/a12f8a25bd84413e4651350ea97491cf5fc84a1a/scripts/compile_release)
+- [Concourse pipeline configuration that compiles releases.](https://github.com/cloudfoundry-incubator/cf-mysql-ci/blob/dbc2ba48390c0250c8ce201974230f1ba5aa82ae/ci/pipelines/cf-mysql-acceptance.yml#L154)
