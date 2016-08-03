@@ -30,7 +30,7 @@ it only becomes valuable if you can use it later to avoid recompiling.
 
 We would save time if we could find a way to compile the release up front and only compile the packages that had changed.
 
-### Solution
+## Solution
 
 We created a shared BOSH director where compiled releases are created before deployments in our pipelines.
 Because the BOSH director is never cleaned up, it's able to reuse compiled packages that have not changed.
@@ -39,7 +39,7 @@ There is now a job at the beginning of our pipeline that compiles the release an
 before immediately passing it along and uploading it to another director. This step means that the second bosh director,
 the one that is always cleaned up, no longer needs to compile anything.
 
-### Caveats
+## Caveats
 
 When BOSH is exporting a compiled release, it creates a lock on the release name.
 This means that you can not have multiple jobs uploading and exporting releases for the same BOSH release simultaneously.
@@ -47,7 +47,7 @@ To solve this problem we created a [concourse pool resource](https://github.com/
 
 Exporting a release does take a bit of time, so depending on the compilation time of your BOSH release this may not be a win.
 
-### Resources
+## Resources
 
 [Creating BOSH compiled releases.](https://bosh.io/docs/compiled-releases.html)
 [Our script used for compiling a release.](https://github.com/cloudfoundry-incubator/cf-mysql-ci/blob/a12f8a25bd84413e4651350ea97491cf5fc84a1a/scripts/compile_release)
