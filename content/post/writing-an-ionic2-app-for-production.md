@@ -1,13 +1,11 @@
 ---
 authors:
 - bgrohbiel
-- hjohnson
 categories:
 - Mobile
 - Hybrid Apps
 - Ionic
-date: 2016-07-26T22:13:58+01:00
-draft: true
+date: 2016-08-04T21:55:58+01:00
 title: Writing an Ionic 2 Application for Production
 short: On a recent Pivotal Labs engagement, we built a hybrid application using Ionic 2. This post provides some technical considerations for building your own.
 ---
@@ -178,3 +176,5 @@ Hybrid development remains a controversial topic and hybrid apps will never be a
 </div>
 
 In 15 weeks we built a production-ready application with Ionic 2. The application looks stunning and has allowed us to start validating our value proposition. Our app is packed with native functionality and could be ported to Android with little extra effort in the near future. We have a maintainable Angular 2 codebase and can easily expose parts of it to the web. While there are some quirks that might give away (especially to developers) that there might be a hybrid application under the hood, the feel of the application is very close to a truly native application.
+
+*I would like to thank Hilary Johnson (Product Manager, Pivotal Labs) for inspiring me to write this blog post and her valuable feedback throughout the process. An additional thanks goes out to all the other brave Pivots, who helped me write this blog post.*
