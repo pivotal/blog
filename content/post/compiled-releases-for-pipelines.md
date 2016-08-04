@@ -8,8 +8,7 @@ categories:
 - BOSH
 - Concourse
 - Testing
-date: 2016-08-02T15:37:43-07:00
-draft: true
+date: 2016-08-04T13:37:43-07:00
 short: |
   Compile once, deploy many times.
 title: Faster Pipelines With Compiled BOSH Releases
