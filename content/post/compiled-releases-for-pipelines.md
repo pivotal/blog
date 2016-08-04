@@ -2,6 +2,8 @@
 authors:
 - mfine
 - jpalermo
+- chendrix
+- njbennett
 categories:
 - BOSH
 - Concourse
