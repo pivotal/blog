@@ -6,7 +6,6 @@ categories:
 - Performance
 - Migrated Content
 date: 2011-11-16T00:08:15+00:00
-draft: true
 short: |
   Setting Up Measurement of Garbage Collection in Apache Tomcat
 title: Apache Tomcat GC Measurement

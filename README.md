@@ -11,7 +11,7 @@ This blog is built and maintained entirely by *you*!  Feel free to propose or ju
 1. [Write your post](https://github.com/pivotal/blog#writing-a-post) as a draft.
 1. [Preview it](http://pivotal-cf-blog-staging.cfapps.io/) on staging.
 1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
-1. Ship it!
+1. [Ship it!](https://github.com/pivotal/blog#publishing-your-copy)
 
 Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).  
 
@@ -68,7 +68,7 @@ Then you _may_ have forgotten to include a property in your `data/authors/foo.ym
 
 ## Publishing Your Copy
 
-Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
+Every commit to master is [auto-deployed](https://travis-ci.org/pivotal/blog) to both [production](http://engineering.pivotal.io/) and [staging](http://pivotal-cf-blog-staging.cfapps.io/) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
 
 ## Changing the style
 
