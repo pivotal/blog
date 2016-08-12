@@ -120,7 +120,7 @@ DataFlow](https://cloud.spring.io/spring-cloud-dataflow/) as our stream
 processing engine and
 [GemFire](https://pivotal.io/big-data/pivotal-gemfire) as our
 in-memory data grid to cache the data from our analytic data warehouse
-(Greenplum). All the components of our scoring pipeline run within
+(Greenplum) and perform lightweight in-memory analytics. All the components of our scoring pipeline run within
 CloudFoundry. The analytics datawarehouse (Greenplum) can be within or
 outside of CloudFoundry, as the models can be trained and iterated upon
 offline.
