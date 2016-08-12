@@ -376,10 +376,10 @@ the development of analytics models. GemFire REST APIs make this
 possible. The following code creates a Jupyter magic command for loading
 a GPDB table to GemFire from within a Jupyter notebook.The “publish”
 command simply sends a REST API request to GemFire to load the
-“sentiment\_score” table to its corresponding GemFire region. ([Check
-out this GitHub
+“sentiment\_score” table to its corresponding GemFire region. Check
+out this [GitHub
 project](https://github.com/vatsan/gp_jupyter_notebook_templates.git)
-for the complete implementation.)
+for the complete implementation.
 
 <script src="https://gist.github.com/yuj18/df145c01b815d16c7413d342dc4dc6e0.js"></script>
 
