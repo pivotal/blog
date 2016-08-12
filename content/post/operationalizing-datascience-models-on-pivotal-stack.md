@@ -180,8 +180,11 @@ In this project, we wanted to create a SCDF pipeline for the following
 two analytic tasks:
 
 -   Sentiment Scoring of Tweets
-
 -   Recommender for Tweets
+
+To start-off, you'll first need to deploy the SCDF server into your PCF environment, bring up the SCDF shell, register your modules and create the appropriate streams. Sample instructions for these are below.
+
+<script src="https://gist.github.com/vatsan/7b7617bc22613ad508b3d280a2f1458b.js"></script>
 
 In the following sections, we will describe the custom SCDF components
 that we developed to create these two pipelines.
