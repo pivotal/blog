@@ -321,8 +321,7 @@ data over to the application side for processing.
 **GemFire-GPDB Connector**
 
 The GemFire-GPDB connector is a GemFire extension that supports parallel
-import and export of data between GemFire regions and GPDB tables; see[
-*this
+import and export of data between GemFire regions and GPDB tables; see[this
 presentation](http://www.slideshare.net/PivotalOpenSourceHub/geodesummit-large-scale-fraud-detection-using-gemfire-integrated-with-greenplum)
 for a quick introduction. Using the GemFire-GPDB connector we built a
 result publishing microservice that publishes analytics results produced
