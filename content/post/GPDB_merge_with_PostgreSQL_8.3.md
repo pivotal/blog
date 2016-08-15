@@ -6,7 +6,7 @@ categories:
 - Greenplum Database
 - Databases
 date: 2016-08-12T22:11:44+02:00
-draft: true
+draft: false
 short: |
   Greenplum merge with PostgreSQL 8.3
 title: GPDB merge with PostgreSQL 8.3
