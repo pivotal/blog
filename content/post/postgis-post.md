@@ -80,4 +80,4 @@ select sum(popn_total) as population from nyc_census_blocks where boroname = 'Ma
 select type, sum(st_length(geom)) as length from nyc_streets group by type order by length desc;
 ~~~
 
-For some more detailed examples and exercises, [Boundless](http://workshops.boundlessgeo.com/postgis-intro/spatial_relationships.html) offers great tutorials.
+For detailed examples and exercises, [Boundless](http://workshops.boundlessgeo.com/postgis-intro/spatial_relationships.html) offers great tutorials.
