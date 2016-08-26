@@ -1,6 +1,7 @@
 ---
 authors:
 - cunnie
+- sill
 categories:
 - BOSH
 - Concourse
@@ -23,7 +24,7 @@ balancer. This may reduce the complexity and cost
 <sup>[[ELB-pricing]](#ELB-pricing)</sup> of a Concourse deployment.
 
 *[For users who have deployed Concourse manually (i.e. without BOSH), this blog
-post may also be of value: the nginx configuration below may be used as an
+post may also be of value: the nginx configuration below can be used as an
 `nginx.conf` to provide an SSL front-end to the Concourse server]*
 
 ### 0. Pre-requisites
@@ -41,7 +42,7 @@ CLI]](#golangcli)</sup> ):
 bosh upload-release https://github.com/cloudfoundry-community/nginx-release/releases/download/v4/nginx-4.tgz
 ```
 
-### 3. Add nginx to your BOSH manifest
+### 2. Add nginx to your BOSH manifest
 
 Add the release:
 
@@ -134,7 +135,7 @@ appropriate SSL certificate(s) and key.
       -----END CERTIFICATE-----
 ```
 
-### 2. BOSH Deploy
+### 3. BOSH Deploy
 
 We deploy (note that we are using an experimental BOSH CLI whose syntax
 differs slightly from the canonical Ruby CLI's):
@@ -148,7 +149,7 @@ We browse to our newly-deployed Concourse server to verify an SSL connection:
 
 {{< responsive-figure src="https://cloud.githubusercontent.com/assets/1020675/18006701/ac76b628-6b55-11e6-9ac2-afc69dc96b51.png" >}}
 
-### 3. Manifests
+### 4. Manifests
 
 * Concourse server + nginx front-end [BOSH
 manifest](https://github.com/cunnie/deployments/blob/84900b6067b8d935e86991f428c4f246914082b7/concourse.yml)
@@ -168,7 +169,7 @@ instance_groups:
   jobs:
     atc:
       properties:
-        tls_cert:
+        tls_cert: |
           -----BEGIN CERTIFICATE-----
           MIIFXDCCBESgAwIBAgIQOvRHkhKyb/k9O4xvIi9zZTANBgkqhkiG9w0BAQsFADCB
           ...
@@ -200,7 +201,7 @@ is a sample BOSH manifest which uses Concourse's built-in TLS.
 <a name="ELB-pricing"><sup>[ELB-pricing]</sup></a> ELB pricing, as of this
 writing, is
 [$0.025/hour](https://aws.amazon.com/elasticloadbalancing/pricing/), $0.60/day,
-**$219.15** / year (assuming 365.2425 days / year).
+**$219.15** / year (assuming 365.24 days / year).
 
 Load balancers (specifically ELBs) offer the ability to direct traffic to a pool
 of backend servers and to automatically remove a server from the pool if it
