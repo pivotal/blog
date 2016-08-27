@@ -5,7 +5,7 @@ authors:
 categories:
 - BOSH
 - Concourse
-date: 2016-08-26T06:57:07-07:00
+date: 2016-08-26T06:58:07-07:00
 draft: false
 short: |
   nginx is a less-expensive alternative to a load balancer for a BOSH-deployed Concourse server's SSL termination.
@@ -56,8 +56,8 @@ Add the nginx job properties.
 
 The following example shows the manifest properties for
 [https://ci.nono.io](https://ci.nono.io). Be sure to replace all occurrences of
-"ci.nono.io" with the URI of your Concourse server. Also, substitute the
-appropriate SSL certificate(s) and key.
+"ci.nono.io" with the fully qualified domain name (FQDN) of your Concourse
+server. Also, substitute the appropriate SSL certificate(s) and key.
 
 ```yaml
 - name: nginx
@@ -230,6 +230,12 @@ the secrets to be passed via the command line, e.g. `-l ~/secrets.yml` or
 
 The Golang CLI is in alpha and should not be used on production systems.
 
+<a name="google_cloud"><sup>[Google Cloud]</sup></a>
+We are deploying to [Google Cloud Platform](https://cloud.google.com/)'s [Google
+Compute Engine](https://cloud.google.com/compute/) (GCE), and thus the
+`cloud_properties` sections of the BOSH Director's manifest may appear
+unfamiliar to those who deploy on AWS or vSphere.
+
 <a name="privileged"><sup>[privileged]</sup></a> Concourse will not bind to a
 [privileged
 port](http://unix.stackexchange.com/questions/16564/why-are-the-first-1024-ports-restricted-to-the-root-user-only).
@@ -237,14 +243,8 @@ port](http://unix.stackexchange.com/questions/16564/why-are-the-first-1024-ports
 You may attempt to force `atc` to bind to port 443 by setting its
 [tls_bind_port](https://github.com/concourse/concourse/blob/b0d0c99edb7a1f379c350426d0e71ab16b74da56/jobs/atc/spec#L42-L45)
 job property, but it will not work,  `atc` will not start, and you will see the
-following message `/var/vcap/sys/log/atc/atc.stderr.log`:
+following message in `/var/vcap/sys/log/atc/atc.stderr.log`:
 
 ```
 web-tls  exited with error: listen tcp 0.0.0.0:443: bind: permission denied
 ```
-
-<a name="google_cloud"><sup>[Google Cloud]</sup></a>
-We are deploying to [Google Cloud Platform](https://cloud.google.com/)'s [Google
-Compute Engine](https://cloud.google.com/compute/) (GCE), and thus the
-`cloud_properties` sections of the BOSH Director's manifest may appear
-unfamiliar to those who deploy on AWS or vSphere.
