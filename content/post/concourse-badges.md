@@ -4,7 +4,7 @@ authors:
 categories:
 - Concourse
 date: 2016-08-28T14:29:49-07:00
-draft: false
+draft: true
 short: |
   Use Concourse's badges to display the health of your project
 title: Concourse has Badges
