@@ -12,7 +12,7 @@ categories:
 date: 2016-09-06T11:57:56+08:00
 draft: true
 short: |
-  Learn how to set up an Elixir cluster and how to deploy a Phoenix application on Amazon EC2. The techniques outlined in this article can equally apply to other providers such as Digital Ocean Linode. 
+  Learn how to set up an Elixir cluster and how to deploy a Phoenix application on Amazon EC2. The techniques outlined in this article can equally apply to other providers such as Digital Ocean and Linode. 
   
 title: How to set up an Elixir Cluster on Amazon EC2
 ---
