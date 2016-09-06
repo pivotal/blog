@@ -268,9 +268,9 @@ APP="your_app"
 
 # 2. Declare the names of your servers and assign the public DNS
 
-SG="ec2-1.2.3.4.ap-southeast-1.compute.amazonaws.com"
+SG="ec2-1.2.3.4.compute.amazonaws.com"
 US="ec2-3.4.5.6.compute.amazonaws.com"
-UK="ec2-5.7.8.9.ap-southeast-2.compute.amazonaws.com"
+UK="ec2-5.7.8.9.compute.amazonaws.com"
 
 # 3. Specify a user 
 
@@ -368,7 +368,7 @@ You will need to create 3 files and have them sit in the `/home/ubuntu` (or `/ho
 #### SG
 
 ```shell
--name sg@ec2-1.2.3.4.ap-southeast-1.compute.amazonaws.com
+-name sg@ec2-1.2.3.4.compute.amazonaws.com
 -setcookie s3kr3t
 -kernel inet_dist_listen_min 9100 inet_dist_listen_max 9155
 -config /home/ubuntu/your_app.config
@@ -377,7 +377,7 @@ You will need to create 3 files and have them sit in the `/home/ubuntu` (or `/ho
 #### US
 
 ```shell
--name us@ec2-1.2.3.4.ap-southeast-1.compute.amazonaws.com
+-name us@ec2-1.2.3.4.compute.amazonaws.com
 -setcookie s3kr3t
 -kernel inet_dist_listen_min 9100 inet_dist_listen_max 9155
 -config /home/ubuntu/your_app.config
@@ -386,7 +386,7 @@ You will need to create 3 files and have them sit in the `/home/ubuntu` (or `/ho
 #### UK
 
 ```shell
--name uk@ec2-1.2.3.4.ap-southeast-1.compute.amazonaws.com
+-name uk@ec2-1.2.3.4.compute.amazonaws.com
 -setcookie s3kr3t
 -kernel inet_dist_listen_min 9100 inet_dist_listen_max 9155
 -config /home/ubuntu/your_app.config
@@ -412,8 +412,8 @@ We'll cover the `your_app.config` file next. As with `vm.args`, we need to creat
 ```erlang
 [{kernel,
   [
-    {sync_nodes_optional, ['us@ec2-3.4.5.6.ap-southeast-1.compute.amazonaws.com', 
-                           'uk@ec2-5.7.8.9.ap-southeast-1.compute.amazonaws.com']},
+    {sync_nodes_optional, ['us@ec2-3.4.5.6.compute.amazonaws.com', 
+                           'uk@ec2-5.7.8.9.compute.amazonaws.com']},
     {sync_nodes_timeout, 30000}
   ]}
 ].
@@ -424,8 +424,8 @@ We'll cover the `your_app.config` file next. As with `vm.args`, we need to creat
 ```erlang
 [{kernel,
   [
-    {sync_nodes_optional, ['sg@ec2-1.2.3.4.ap-southeast-1.compute.amazonaws.com', 
-                           'uk@ec2-5.7.8.9.ap-southeast-1.compute.amazonaws.com']},
+    {sync_nodes_optional, ['sg@ec2-1.2.3.4.compute.amazonaws.com', 
+                           'uk@ec2-5.7.8.9.compute.amazonaws.com']},
     {sync_nodes_timeout, 30000}
   ]}
 ].
@@ -436,8 +436,8 @@ We'll cover the `your_app.config` file next. As with `vm.args`, we need to creat
 ```erlang
 [{kernel,
   [
-    {sync_nodes_optional, ['sg@ec2-1.2.3.4.ap-southeast-1.compute.amazonaws.com', 
-                           'us@ec2-3.4.5.6.ap-southeast-1.compute.amazonaws.com']},
+    {sync_nodes_optional, ['sg@ec2-1.2.3.4.compute.amazonaws.com', 
+                           'us@ec2-3.4.5.6.compute.amazonaws.com']},
     {sync_nodes_timeout, 30000}
   ]}
 ].
@@ -537,7 +537,7 @@ EDELIVER YOUR_APP WITH UPDATE COMMAND
 -----> Building the release for the update
 -----> Authorizing hosts
 -----> Ensuring hosts are ready to accept git pushes
------> Pushing new commits with git to: ubuntu@ec2-1-2-3-4.ap-southeast-1.compute.amazonaws.com
+-----> Pushing new commits with git to: ubuntu@ec2-1-2-3-4.compute.amazonaws.com
 -----> Resetting remote hosts to 3721f31b6acd3459d4f9c3ee6dc38b2bdad1f839
 -----> Cleaning generated files from last build
 -----> Fetching / Updating dependencies
