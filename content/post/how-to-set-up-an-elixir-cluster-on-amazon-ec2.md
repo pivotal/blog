@@ -17,11 +17,11 @@ short: |
 title: How to set up an Elixir Cluster on Amazon EC2
 ---
 
-Ask any Elixir aficionado "Why Elixir" and one of the answers that often come up is "distribution". A possible definition of distribution is having multiple computers working together to perform some computation. In Elixir terms, it means having multiple _nodes_ connected in a _cluster_. Nodes in a cluster are basically Erlang runtime that can communicate with each other.
+Ask any Elixir aficionado "Why Elixir" and one of the answers that often comes up is "distribution". A possible definition of distribution is having multiple computers working together to perform some computation. In Elixir terms, it means having multiple _nodes_ connected in a _cluster_. Nodes in a cluster are basically an Erlang runtime that can communicate with each other.
 
-Setting up an Elixir cluster on your own machine or local area network (LAN) is usually pretty straightforward. I will show you how to set up a cluster on your own machine soon. What is slightly more challenging (read: fun!) is having the nodes talk to each other over the internet. In this case, you can have nodes that are geographically separated nodes communicate with each other.
+Setting up an Elixir cluster on your own machine or local area network (LAN) is usually pretty straightforward. I will show you how to set up a cluster on your own machine soon. What is slightly more challenging (read: fun!) is having the nodes talk to each other over the internet. In this case, you can have nodes that are geographically separated communicating with each other.
 
-I couldn't find a lot of resources on how to do just that. I wanted to find out also what the deployment story was like in Elixir/Phoenix. I also didn't want to resort to something like Docker, because I wanted to see how far I could push Elixir and its tooling.
+I couldn't find a lot of resources on how to set up a geo-distributed cluster, or how to deploy Elixir/Phoenix apps. I didn't want to resort to something like Docker because I wanted to see how far I could push Elixir and its tooling.
 
 ## Outline
 
@@ -52,7 +52,7 @@ On each of the instance, you need the following:
 
 ## Introduction to Distribution in Elixir
 
-Some background to distributed Elixir is in order. When you run `iex`, or _interactive Elixir_, you are running a REPL (read eval print loop) in a single Erlang runtime. So opening more `iex` sessions mean that you are running each session in a separate runtime. By default, each of the runtimes cannot see nor talk to each other. You can run start each runtime in distributed-mode and the connect to other nodes. When a node joins another node, a cluster is formed. When a node succesfully connects to another node, that node becomes a member of the cluster. In other words, when Node E succesfully connects to Node A, it is automatically connected to Nodes A thru D: 
+Some background to distributed Elixir is in order. When you run `iex`, or _interactive Elixir_, you are running a REPL (read eval print loop) in a single Erlang runtime. So opening more `iex` sessions mean that you are running each session in a separate runtime. By default, each of the runtimes cannot see nor talk to each other, but you can start each runtime in distributed-mode and connect to the other nodes. When a node joins another node, a cluster is formed. When a node succesfully connects to another node, that node becomes a member of the cluster. In other words, when Node E succesfully connects to Node A, it is automatically connected to Nodes A thru D: 
 
 <img src="http://i.imgur.com/kyD5kBZ.png" width="100%" />
 
@@ -66,7 +66,7 @@ interactive elixir (1.3.2) - press ctrl+c to exit (type h() enter for help)
 iex(barry@frankel)1>
 ```
 
-`iex` is the interactive Elixir shell. The `--sname` flag stands for _short name_. It's short because we are omitting the hostname for now. This is followed by the name given to the node. Let's spin up the next node:
+`iex` is the interactive Elixir shell. The `--sname` flag stands for _short name_. It's short because we are omitting the hostname for now. This is followed by the name given to the node. `frankel`, shown in the prompt, is my host name. Let's spin up the next node:
 
 ```
 % iex --sname maurice
@@ -172,7 +172,9 @@ Here's an example output:
  []} 
 ```
 
-## Let's do this!
+Sweet! Now you know how to manually set up a cluster on a single host.
+
+## Setting up a distributed cluster
 
 This is what we want to achieve:
 
@@ -460,7 +462,7 @@ You can add production specific credentials to this file, which you shouldn't co
 
 ### Configuring Amazon EC2
 
-The only thing that you need to configure for Amazon EC2 are the ports. In particular, which ports to open.
+The only thing that you need to configure for Amazon EC2 are the ports (in the Security Group used by your instanes). In particular, which ports to open.
 
 Ports for:
 
