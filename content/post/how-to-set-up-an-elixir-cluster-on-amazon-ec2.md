@@ -462,7 +462,7 @@ You can add production specific credentials to this file, which you shouldn't co
 
 ### Configuring Amazon EC2
 
-The only thing that you need to configure for Amazon EC2 are the ports (in the Security Group used by your instanes). In particular, which ports to open.
+The only thing that you need to configure for Amazon EC2 are the ports (in the Security Group used by your instances). In particular, which ports to open.
 
 Ports for:
 
