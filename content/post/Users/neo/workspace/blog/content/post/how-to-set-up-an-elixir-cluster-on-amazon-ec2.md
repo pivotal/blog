@@ -443,7 +443,7 @@ We'll cover the `your_app.config` file next. As with `vm.args`, we need to creat
 ].
 ```
 
-> ### `your_app.config` looks wierd!
+> ### `your_app.config` looks weird!
 >
 >
 > You might think that `your_app.config` looks like a strange version of JSON. However, the contents `your_app.config` are in fact valid _Erlang_ code. Congratulations! You are an Erlang programmer!
@@ -476,7 +476,7 @@ You might recall that port `8080` was configured previous in `config/prod.exs`, 
 
 Now we configure HA Proxy. Assuming you have it installed, open/create the following file as the root user:
 
-```
+```shell
 % sudo vim /etc/haproxy/haproxy.cfg
 ```
 
