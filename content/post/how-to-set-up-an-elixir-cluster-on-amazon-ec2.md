@@ -268,7 +268,7 @@ Few things to note here:
 2. Configure the `host` to whatever domain name you are using.
 3. Make sure this line is _uncommented_. (This line is commented by default, and is _extremely_ easy to miss.)
 
-> ### What does `config :phoenix, :serve_endpoints, true` do>
+> ### What does `config :phoenix, :serve_endpoints, true` do?
 >
 > This option is needed when you are doing an OTP releases (which you are). Turning this option on tells Phoenix to start the server for all endpoints. Otherwise, your web application will basically be inaccessible to the outside world.
 
