@@ -10,7 +10,7 @@ categories:
 - Deployment
 - Erlang
 date: 2016-09-06T11:57:56+08:00
-draft: true
+draft: false
 short: |
   Learn how to set up an Elixir cluster and how to deploy a Phoenix application on Amazon EC2. The techniques outlined in this article can equally apply to other providers such as Digital Ocean and Linode. 
   
@@ -47,6 +47,8 @@ On each of the instances, you will need the following:
 * HA-Proxy 1.4.X should be installed on the server that the domain name is pointing to. 
 * Git
 * Elixir
+
+This article assumes little Elixir and/or Phoenix knowledge. In fact, you can read this article and discover how much effort you would need to set up a distributed cluster in Elixir.
 
 ## Introduction to Distribution in Elixir
 
@@ -174,6 +176,14 @@ Here's an example output:
 Sweet! Now you know how to manually set up a cluster on a single host.
 
 ## Setting Up a Distributed Cluster
+
+Here's brief overview on what we will accomplish:
+
+1. We are going to configure a vanilla Phoenix application to be deploy-ready.
+2. Install and configure the tools needed to perform the deployment.
+3. Configure the individual nodes so that they can be part of the cluster.
+4. Configure HA Proxy to load-balance between the ndoes.
+5. Deploy!
 
 This is what we want to achieve:
 
@@ -583,6 +593,6 @@ Getting the nodes to communicate with each other in Elixir is not that hard at a
 
 ## Acknowledgments
 
-Thanks to Pivotal for letting me work on this. Mike Mazure and Gabe Hollombe for proof-reading this and giving lots of constructive feedback. And thank you for taking the time to read this!
+Thanks to Pivotal for letting me work on this. Mike Mazur, Gabe Hollombe, and Alan Yeo for proof-reading this and giving lots of constructive feedback. And thank you for taking the time to read this!
 
 
