@@ -69,7 +69,7 @@ merging query operators, converting pull-based execution pattern to push-based m
 for frequently exercised code paths only [4]. Figure below depicts the CodeGen approach followed in numerous commercial databases. 
  
 
-{{< figure src="/images/codegen_commercial.png" class="center">}}
+{{< figure src="/images/codegen/commercial.png" class="center">}}
 
 
 To incremental deliver value to our customers, we decided to follow the hotspot based methodology in implementing CodeGen and revisit the holistic approach in the near future.
@@ -79,7 +79,7 @@ To incremental deliver value to our customers, we decided to follow the hotspot 
 
 When we ran TPC-H queries, the top 10 functions with respect to time spent is shown below. Note that the remaining functions are bundled in a category called “Others”.
 
-{{< responsive-figure src="/images/profiling.png" >}}
+{{< responsive-figure src="/images/codegen/profiling.png" >}}
 
 Based on the results, the following hotspots are prime candidates for code generation: 
 
@@ -119,7 +119,7 @@ For each operator (e.g., Scan, Agg, etc.) that we have identified as a candidate
 - Replace the call to the original function by a call to a function
 - Destroy the module      
 
-{{< responsive-figure src="/images/codegen_in_gpdb.png" >}}
+{{< responsive-figure src="/images/codegen/codegen_in_gpdb.png" >}}
 
 Each operator may have one or more code generators, where each code generator has a list of pointers to information related to code generated functions. 
 During the initialization of a node, we are able to create a codegened function, since we have all required information.
@@ -293,8 +293,7 @@ ORDER BY
    l_linestatus;
 ```
 
-
-{{< responsive-figure src="/images/codegen_results.png" >}}
+{{< responsive-figure src="/images/codegen/results.png" >}}
 
 
 Code generation of Deform Tuple (A) gives us only a small boost in performance. This is due the fact that GPDB already has an optimized version of slot_deform_tuple 
