@@ -13,7 +13,7 @@ categories:
 - QUERY EXECUTION
 - CODE GENERATION
 date: 2016-09-02T10:43:19-04:00
-draft: true
+draft: false
 short: |
   A code generation based solution inside the GPDB execution engine.
 title: Improving Query Execution Speed via Code Generation
