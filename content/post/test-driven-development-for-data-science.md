@@ -13,32 +13,30 @@ short: |
 title: Test-Driven Development for Data Science
 ---
 
-_Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Senior Data Scientist) and [Megha Agarwal](https://uk.linkedin.com/in/agarwal22megha) (Data Scientist)._
+_Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Senior Data Scientist) and [Megha Agarwal](https://uk.linkedin.com/in/agarwal22megha) (Data Scientist II)._
 
 ## Motivation:
 
-Test-Driven Development (TDD) has plethora of advantages. You might be wondering how is TDD relevant for data science? While building smart apps, as Data Scientists we are really contributing in shaping the brain of the application which will drive actions in real-time. We have to ensure that the core driving component is always behaving as expected, and this is where TDD comes to our rescue.
+Test-Driven Development (TDD) has [plethora](http://pivotal-guides.cfapps.io/craftsmanship/tdd/) of advantages. You might be wondering how is TDD relevant for data science? While building smart apps, as Data Scientists, we are really contributing in shaping the brain of the application which will drive actions in real-time. We have to ensure that the core driving component is always behaving as expected, and this is where TDD comes to our rescue.
 
 ## Data Science and TDD:
 
-TDD for data science can be a bit more tricky than software engineering. Data science has a fair share of exploration involved where we are trying to find which features and algorithms will contribute best to solving the problem in hand. Do we strictly test drive all our features right from the exploratory way, when we know a lot of them might not make into production? In the initial days of exploring how TDD fits the DS space, we tried a bunch of stuff. We highlight why we started test driving our DS use case and what worked the best for us.
+TDD for data science can be a bit more tricky than software engineering. Data science has a fair share of exploration involved where we are trying to find which features and algorithms will contribute best to solve the problem in hand. Do we strictly test drive all our features right from the exploratory phase, when we know a lot of them might not make into production? In the initial days of exploring how TDD fits the DS space, we tried a bunch of stuff. We highlight why we started test driving our DS use case and what worked the best for us.
 
-Now imagine you are a logistics company and this shiny little route-predicting app has figured out the best routes for your drivers for the following day. Next day is your moment of truth! The magic better work, else you can only imagine the chaos and loss it can create. Now what if we say we can ensure that the app will always generate the most optimised route? We suddenly have more confidence in our application. There is no secret ingredient here! We can wrap up our predictions in a test case which allows us to trust the model only when it’s error rate is below a certain threshold.
+Now imagine you are a logistics company and this shiny little 'smart' app has figured out the best routes for your drivers for the following day. Next day is your moment of truth! The magic better work, else you can only imagine the chaos and loss it can create. Now what if we say we can ensure that the app will always generate the most optimised route? We suddenly have more confidence in our application. There is no secret ingredient here! We can wrap up our predictions in a test case which allows us to trust the model only when it’s error rate is below a certain threshold.
 
-Now I know you would ask, why would we put a model in production which doesn’t have the desired error rate at first place? But we are dealing with real life data here, things can go haywire pretty fast and we might end up with a broken or no model depending on how robust our code base is. TDD can not only help us ensure that nothing went wrong while developing our model but also prompts us to think what we want our model to achieve and forces us to think about edge cases where things can potentially go wrong.  TDD allow us to be more confident.
+Now I know you would ask, why would we put a model in production which doesn’t have the desired error rate at first place? But we are dealing with real life data here, things can go haywire pretty fast and we might end up with a broken or (if you are even more lucky) no model depending on how robust our code base is. TDD can not only help us ensure that nothing went wrong while developing our model but also prompts us to think what we want our model to achieve and forces us to think about edge cases where things can potentially go wrong. TDD allow us to be more confident.
 
-As discussed in one of our previous [blog posts](http://engineering.pivotal.io/post/api-first-for-data-science/), we have two phases in our data science engagements: exploratory and production phase.
+So TDD saves the day, let’s start TDD everything? Not quite when it comes to data science. As discussed in one of our previous [blog posts](http://engineering.pivotal.io/post/api-first-for-data-science/), we have two phases in our data science engagements: exploratory and production. Test driving all the features and algorithms stringently during exploratory phase is bit of an overkill. We felt we were investing a lot of time in throw away work. That made the exploration phase quite intensive and slowed us considerably. Eventually we found a fine balance between the TDD and DS.
 
-So TDD saves the day, let’s start TDD everything? Not quite when it comes to data science. Test driving all the features and algorithms stringently during exploratory phase is bit of an overkill. We felt we were investing a lot of time in throw away work. That made the exploration phase quite intensive and slowed us considerably. Eventually we found a fine balance between the TDD and DS.
-
-After the exploratory phase, once we have figured out which model and features suits the use case the best, we actually start test driving feature generation, model development and integration phase. Our model evaluation from the exploratory phase helps us set expectations around the model’s performance. We leverage this information in our TDD to make sure the model is behaving as expected in production.
+After the exploratory phase, once we have figured out which model and features suits the use case the best, we actually start test driving feature generation, model development and integration bits. Our model evaluation from the exploratory phase helps us set expectations around the model’s performance. We leverage this information in our TDD to make sure the model is behaving as expected in production.
 
 Here are few things to keep in mind while test driving data science use cases:
 
 1. Start TDD once you have a fair idea of what model and features will go in production.
 2. Don’t test drive everything! Figure out the core functionalities of your code. For e.g. while feature generation, if a feature is generated using simple count functionality of SQL, trust that SQL’s in-build count functionality is already well tested. Writing another test around that won’t add much value.
-3. We follow pair-programming at Pivotal. So test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses.
-4. Have separate unit tests and integrations test.
+3. We follow pair-programming at Pivotal. So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses.
+4. Have separate unit and integrations test suite.
 5. Mock behaviours where appropriate.
 6. As a general rule of thumb, ensure your entire test suite runs within 10 min.
 
