@@ -6,6 +6,8 @@ categories:
 - Data Science
 - Machine Learning
 - TDD
+- Agile
+- Pair Programming
 date: 2016-09-09T09:03:56+02:00
 draft: true
 short: |
@@ -17,17 +19,11 @@ _Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Senior 
 
 This is a follow up post on [API First for Data Science](http://engineering.pivotal.io/post/api-first-for-data-science/) and [Pairing for Data Scientists](http://engineering.pivotal.io/post/pairing-on-data-science/) with a specific focus on Test-Driven Development.
 
-## Key Takeaways
-
-* Test-driven development is not appropriate for data science at all phases, especially at the beginning where we need to experiment a lot
-* We test analytical pipelines rather than features
-* TDD helps to refactor our code easily and implement new changes
-
-## Motivation:
+## Motivation
 
 Test-Driven Development (TDD) has [plethora](http://pivotal-guides.cfapps.io/craftsmanship/tdd/) of advantages. You might be wondering how is TDD relevant for data science? While building smart apps, as Data Scientists, we are really contributing in shaping the brain of the application which will drive actions in real-time. We have to ensure that the core driving component is always behaving as expected, and this is where TDD comes to our rescue.
 
-## Data Science and TDD:
+## Data Science and TDD
 
 TDD for data science can be a bit more tricky than software engineering. Data science has a fair share of exploration involved where we are trying to find which features and algorithms will contribute best to solve the problem in hand. Do we strictly test drive all our features right from the exploratory phase, when we know a lot of them might not make into production? In the initial days of exploring how TDD fits the DS space, we tried a bunch of stuff. We highlight why we started test driving our DS use case and what worked the best for us.
 
@@ -60,16 +56,13 @@ Let’s demonstrate TDD for data science with an example. Assume we are given tw
 | D   | 2 | 4 |
 | E   | 3 | 5 |
 
-This problem is typically an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where no labelled data is given and the goal is to find hidden structure in the data. A real-life example can be found in many marketing divisions where their goal is to create meaningful clusters in order to target their customers efficiently with personalized campaigns.
+This problem is typically an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where no labelled data is given and the goal is to find hidden structure in the data. Real-life examples can be found in many marketing divisions where their goal is to create meaningful clusters in order to target their customers efficiently with personalized campaigns.
 
-Moreover, in reality, our data is much larger. For example we’ve dealt with datasets where we had more than one hundred features or where the number of observations could go into the millions.
-
-
-Therefore in order to solve such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is especially good for solving big data problems and runs on Java, Scala, R or Python. In our case, we favor Python as this is the first language choice for the majority of data scientist. Therefore we will use PySpark, Spark’s Python API.
+Moreover, in reality, our data is much larger. For example we’ve dealt with datasets where we had more than one hundred features or where the number of observations could go into the millions. Therefore in order to solve such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is especially good for solving big data problems and runs on Java, Scala, R or Python. In our case, we favor Python as this is the first language choice for the majority of data scientist. Therefore we will use PySpark, Spark’s Python API.
 
 **Exploration Phase**
 
-In the exploration phase we don’t test drive our code but the main objective is to find the right algorithm to solve our problem. We will use a Jupyter notebook to do it (see figure 1, the notebook can be found [here](link to repo)). Looking at the data, for example [k-means](https://en.wikipedia.org/wiki/K-means_clustering) could be an appropriate solution which is a commonly used clustering algorithms. Its core idea is to classify a given data set through a number of predefined clusters (assume k clusters) through a number of simple rules (usually minimizing the total-intra cluster variance).
+In the exploration phase we don’t test drive our code but the main objective is to find the right algorithm to solve our problem. We will use a Jupyter notebook to do it (see figure 1, the notebook can be found [here](https://github.com/datitran/spark-tdd-example/blob/master/Clustering%20Example%20with%20PySpark.ipynb)). Looking at the data, for example [k-means](https://en.wikipedia.org/wiki/K-means_clustering) could be an appropriate solution which is a commonly used clustering algorithms. Its core idea is to classify a given data set through a number of predefined clusters (assume k clusters) through a number of simple rules (usually minimizing the total-intra cluster variance).
 
 {{< responsive-figure src="/images/jupyter-notebook-clustering-pyspark.png" class="center" >}}
 <p align="center">
@@ -80,9 +73,8 @@ From figure 2, we can see that k-means did a great job in separating our dataset
 
 However k-means might not be the best choice in all scenario. In that case we will have to experiment with different clustering algorithms. Few popular clustering algorithm can be found [here](http://scikit-learn.org/stable/modules/clustering.html#clustering). In this case, k-means seems to be a good choice.
 
+{{< responsive-figure src="/images/output-kmeans.png" class="center" >}}
 <p align="center">
-  <img src="/images/output-kmeans.png">
-  <br>
   Figure 2: Our data along with the assigned labels from k-means and cluster centers
 </p>
 
@@ -110,7 +102,7 @@ export SPARK_HOME="/usr/local/Cellar/apache-spark/2.0.0/libexec/"
 > * `cp log4j.properties.template log4j.properties`
 > * Set info to error: `log4j.rootCategory=ERROR, console`
 
-The main reason is that everything that happens inside Spark gets logged to the shell console e.g. every time you run actions like count, take or collect, you will see the full directed acyclic graph dissolve and this can be a lot if there are many transformations at each stage.
+> The main reason is that everything that happens inside Spark gets logged to the shell console e.g. every time you run actions like count, take or collect, you will see the full directed acyclic graph dissolve and this can be a lot if there are many transformations at each stage.
 
 Now let’s start with creating our needed files, in our case we need `clustering.py` and `test_clustering.py`. After creating it let’s first start with the test script. We need to import various modules.
 
@@ -207,11 +199,7 @@ def convert_df(spark, data):
     return df
 ~~~
 
-This implementation looks good and we can run our first test. It should pass!
-
-The next test might be then to check if the rescaling of the variables is correct. Scaling is very important as it speeds up k-means to find the cluster centers and also is used to encounter the curse of dimensionality.
-
-For this test, we basically take results from our exploration phase. As said testing a data science model is not like testing a software features. There is a stochastic component and in order to remove the randomness we use the exploration phase to do it.
+This implementation looks good and we can run our first test. It should pass! The next test might be then to check if the rescaling of the variables is correct. Scaling is very important as it speeds up k-means to find the cluster centers and also is used to encounter the curse of dimensionality. For this test, we basically take results from our exploration phase. As said testing a data science model is not like testing a software features. There is a stochastic component and in order to remove the randomness we use the exploration phase to do it.
 
 ~~~python
 def test_rescale_df_first_entry(self):
