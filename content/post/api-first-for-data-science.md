@@ -1,7 +1,7 @@
 ---
 authors:
-- Add another author here
 - dat
+- alicia
 categories:
 - Data Science
 - Machine Learning
@@ -15,7 +15,7 @@ short: |
 title: API First for Data Science
 ---
 
-_Joint work by Dat Tran (Data Scientist) and Alicia Bozyk (Senior Software Engineer)._
+_Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Data Scientist) and [Alicia Bozyk](https://www.linkedin.com/in/aliciabozyk) (Senior Software Engineer)._
 
 ## Key Takeaways
 * Think about wrapping up your data science model as an API as early as possible
