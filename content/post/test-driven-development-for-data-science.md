@@ -3,21 +3,21 @@ authors:
 - dat
 - magarwal
 categories:
+- TDD
 - Data Science
 - Machine Learning
-- TDD
 - Agile
 - Pair Programming
 date: 2016-09-09T09:03:56+02:00
 draft: true
 short: |
-  Demystifying Test-Driven Development for Data Science.
+  Unravelling Test-Driven Development for Data Science.
 title: Test-Driven Development for Data Science
 ---
 
 _Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Senior Data Scientist) and [Megha Agarwal](https://uk.linkedin.com/in/agarwal22megha) (Data Scientist II)._
 
-This is a follow up post on [API First for Data Science](http://engineering.pivotal.io/post/api-first-for-data-science/) and [Pairing for Data Scientists](http://engineering.pivotal.io/post/pairing-on-data-science/) with a specific focus on Test-Driven Development.
+This is a follow up post on [API First for Data Science](http://engineering.pivotal.io/post/api-first-for-data-science/) and [Pairing for Data Scientists](http://engineering.pivotal.io/post/pairing-on-data-science/) with focus on Test-Driven Development.
 
 ## Motivation
 
@@ -39,14 +39,14 @@ Here are few things to keep in mind while test driving data science use cases:
 
 1. Start TDD once you have a fair idea of what model and features will go in production.
 2. Don’t test drive everything! Figure out the core functionalities of your code. For e.g. while feature generation, if a feature is generated using simple count functionality of SQL, trust that SQL’s in-build count functionality is already well tested. Writing another test around that won’t add much value.
-3. We [pair-programming](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses.
+3. We [pair programme](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses.
 4. Have separate unit and integrations test suite.
 5. Mock behaviours where appropriate.
 6. As a general rule of thumb, ensure your entire test suite runs within 10 min.
 
 ## Example
 
-Let’s demonstrate TDD for data science with an example. Assume we are given two features x and y for five observations and the problem at hand is to cluster those data points into meaningful clusters.
+Let’s demonstrate TDD for data science with an example. Assume we are given two features x and y for five observations and the problem at hand is to assign these data points to meaningful clusters.
 
 | Obs | X | Y |
 |:-----|:---|:---|
@@ -56,22 +56,18 @@ Let’s demonstrate TDD for data science with an example. Assume we are given tw
 | D   | 2 | 4 |
 | E   | 3 | 5 |
 
-This problem is typically an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where no labelled data is given and the goal is to find hidden structure in the data. Real-life examples can be found in many marketing divisions where their goal is to create meaningful clusters in order to target their customers efficiently with personalized campaigns.
-
-Moreover, in reality, our data is much larger. For example we’ve dealt with datasets where we had more than one hundred features or where the number of observations could go into the millions. Therefore in order to solve such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is especially good for solving big data problems and runs on Java, Scala, R or Python. In our case, we favor Python as this is the first language choice for the majority of data scientist. Therefore we will use PySpark, Spark’s Python API.
+This is an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where the goal is to find hidden structure in the data. Real life examples can be found in many marketing divisions where customer segmentation is crucial to develop personalized campaigns. In reality, our data is much larger. For example we’ve dealt with datasets where we had more than a hundred features or millions od observations. In order to address such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is good for solving big data problems and supports Python, R, Scala and Java. For this example we will use PySpark, Spark’s Python API.
 
 **Exploration Phase**
 
-In the exploration phase we don’t test drive our code but the main objective is to find the right algorithm to solve our problem. We will use a Jupyter notebook to do it (see figure 1, the notebook can be found [here](https://github.com/datitran/spark-tdd-example/blob/master/Clustering%20Example%20with%20PySpark.ipynb)). Looking at the data, for example [k-means](https://en.wikipedia.org/wiki/K-means_clustering) could be an appropriate solution which is a commonly used clustering algorithms. Its core idea is to classify a given data set through a number of predefined clusters (assume k clusters) through a number of simple rules (usually minimizing the total-intra cluster variance).
+In the exploration phase we don’t test drive our code. We aim to find the right algorithm to solve our problem. We will use Jupyter notebook to play around with the data (see figure 1, the notebook can be found [here](https://github.com/datitran/spark-tdd-example/blob/master/Clustering%20Example%20with%20PySpark.ipynb)).[K-means](https://en.wikipedia.org/wiki/K-means_clustering) could be an appropriate solution for the given dataset. The core idea of k-means is to classify a given data set through a number of predefined clusters (assume k clusters) through a number of simple rules (usually minimizing the total-intra cluster variance).
 
 {{< responsive-figure src="/images/jupyter-notebook-clustering-pyspark.png" class="center" >}}
 <p align="center">
   Figure 1: Jupyter notebook
 </p>
 
-From figure 2, we can see that k-means did a great job in separating our dataset. With respective to this, it was fairly easy due to the amount of data/variables and the way how it was generated. In real-life choosing the “optimal” number of k becomes less obvious if there are more observations and/or features.
-
-However k-means might not be the best choice in all scenario. In that case we will have to experiment with different clustering algorithms. Few popular clustering algorithm can be found [here](http://scikit-learn.org/stable/modules/clustering.html#clustering). In this case, k-means seems to be a good choice.
+Figure 2 depicts that k-means did a great job in separating our dataset. Clustering was fairly easy in this case due to the few data points and variables. In real life choosing the optimal k becomes less obvious because of more observations and/or features. Also k-means might not always be the best choice. We have to figure out which [clustering algotithm](http://scikit-learn.org/stable/modules/clustering.html#clustering) is best for a given data set. In this case, k-means seems to be a good choice.
 
 {{< responsive-figure src="/images/output-kmeans.png" class="center" >}}
 <p align="center">
@@ -80,21 +76,21 @@ However k-means might not be the best choice in all scenario. In that case we wi
 
 **Production Phase**
 
-In the production phase, we want to operationalize our model.  For new data points, we want to re-calculate our cluster centers on a regular basis and then store the updated model to assign labels to fresh incoming data. In this phase, we use test-driven development to ensure that our codebase is clean, robust and trustworthy.
+In the production phase, we want to operationalize our model. We want to re-calculate our cluster centers on a regular basis to incorporate information from new data points and then store the updated model to assign labels to fresh incoming data. In this phase, we use test-driven development to ensure that our codebase is clean, robust and trustworthy.
 
-To test our code, we use a single node Spark application. On UNIX, we can easily install Apache Spark using [brew](http://brew.sh/), our primary package manager for OS X:
+To test our code, we use a single node Spark application. On OS X, we can easily install Apache Spark using [brew](http://brew.sh/):
 
 ~~~ssh
 brew install apache-spark
 ~~~
 
-Then we need to add this to the bash profile:
+We then add the SPARK_HOME to the bash profile:
 
 ~~~ssh
 export SPARK_HOME="/usr/local/Cellar/apache-spark/2.0.0/libexec/"
 ~~~
 
-> _Tip: It also make sense to change the logger setting from INFO to ERROR_
+> _Tip: You might want to change Spark logger setting from INFO to ERROR_
 
 > Change logging settings:
 
@@ -102,9 +98,9 @@ export SPARK_HOME="/usr/local/Cellar/apache-spark/2.0.0/libexec/"
 > * `cp log4j.properties.template log4j.properties`
 > * Set info to error: `log4j.rootCategory=ERROR, console`
 
-> The main reason is that everything that happens inside Spark gets logged to the shell console e.g. every time you run actions like count, take or collect, you will see the full directed acyclic graph dissolve and this can be a lot if there are many transformations at each stage.
+> The main reason is that everything that happens inside Spark gets logged to the shell console e.g. every time you run actions like count, take or collect, you will see the full directed acyclic graph and this can be a lot if there are many transformations at each stage.
 
-Now let’s start with creating our needed files, in our case we need `clustering.py` and `test_clustering.py`. After creating it let’s first start with the test script. We need to import various modules.
+We create the test script `test_clustering.py` and implement clustering in `clustering.py` script. Now let’s start test driving our code:
 
 ~~~python
 import os
@@ -129,9 +125,9 @@ except ImportError as e:
     sys.exit(1)
 ~~~
 
-As you can see, we added the `SPARK_HOME` to our `PYTHONPATH`, so that it recognizes PySpark. Moreover, we imported SparkSession which is now the new entry point into Spark since version 2.0.0.
+As you can see, we added the `SPARK_HOME` to our `PYTHONPATH`, so that it recognizes PySpark. Moreover, we import SparkSession which is now the new entry point into Spark since version 2.0.0.
 
-Afterwards, we can import the modules from our `clustering.py` script. Then we define in the `setUp` a single node Spark application and then stop it in the `tearDown`. This means that every time we run a new test, a new Spark application is created and then will close after the test is done.
+Then within the test `setUp`, we define a single node Spark application and then stop it in the `tearDown`. This means that every time we run a test, a new Spark application is created and then will close after the test is done.
 
 ~~~python
 # Import script modules here
@@ -156,7 +152,7 @@ class ClusteringTest(unittest.TestCase):
         self.spark.stop()
 ~~~
 
-The next step is to mock the data. In our case since the data is small we can use it straight ahead. In practice if the data can have millions observations or variables, we only need to take a subset of the real data. The amount of data that you mock depends on the complexity of the data. If the data is fairly homogenous then imitating a small amount is enough. If the data is heterogenous more mock data is needed to cover all possible cases that might break the pipeline of our model training.
+The next step is to mock the data. In our case since the data is small we can use it straight ahead. In practice the data can have millions observations or variables, we only need to take a subset of the real data. The amount and kind of data that you mock depends on the complexity of the data. If the data is fairly homogenous then imitating a small amount is enough. If the data is heterogenous more mock data to cover various possible cases, that might break the pipeline of our model training, will be needed.
 
 ~~~python
 def mock_data(self):
@@ -169,7 +165,7 @@ def mock_data(self):
     return mock_data_df
 ~~~
 
-Our best practice is then to check if the count of the mock data is equal to the number we created. The reason is that testing PySpark application is not easy. The error you get from failing test is usually rubbish, a mixture of Java and Python tracebacks. Therefore checking the count of number ensures that the data is created. We would also suggest to print results out as much as possible if the tests fail.
+We then write a simple test case to check if the count of the mock data is equal to the number of elements created. This will ensure that spark application is running fine and the data is created appropriately. Testing a PySpark application is not easy. The error returned from a failing test is a mixture of Java and Python tracebacks. Hence debugging can get intense. Printing the results or using a debugger like `ipdb` can come in handy.
 
 ~~~python
 def test_count(self):
@@ -177,9 +173,9 @@ def test_count(self):
     self.assertEqual(len(self.mock_df.collect()), 5)
 ~~~
 
-In the next step, we can start with writing our first test. Looking at the dataset, we created a DataFrame with a tuple of three values. Looking at the [documentation]((http://spark.apache.org/docs/latest/api/python/_modules/pyspark/ml/clustering.html#KMeans)) of k-means in MLlib/ML, we can see that we need a DenseVector as input. So one of the first implementation that you need is to convert the data type so that it can be used in MLlib and the test could be to check if the data type is as expected.
+Now we can start with writing our first actual test. We created a DataFrame with a tuple of three values. [K-means]((http://spark.apache.org/docs/latest/api/python/_modules/pyspark/ml/clustering.html#KMeans)) in MLlib/ML, requires a DenseVector as input. So we need to convert the data type first so that it can be used in MLlib. An appropriate test can be to ensure that the data type is what we expect.
 
-The test looks like this:
+Here is the test:
 
 ~~~python
 def test_convert_df(self):
@@ -189,7 +185,7 @@ def test_convert_df(self):
                                        ('features', 'vector')])
 ~~~
 
-Now we can implement our first function:
+Now we can implement our first function, `convert_df` which would make this test pass:
 
 ~~~python
 def convert_df(spark, data):
@@ -199,7 +195,7 @@ def convert_df(spark, data):
     return df
 ~~~
 
-This implementation looks good and we can run our first test. It should pass! The next test might be then to check if the rescaling of the variables is correct. Scaling is very important as it speeds up k-means to find the cluster centers and also is used to encounter the curse of dimensionality. For this test, we basically take results from our exploration phase. As said testing a data science model is not like testing a software features. There is a stochastic component and in order to remove the randomness we use the exploration phase to do it.
+This implementation looks good and we can run our first test. It should pass! The next step can be to check if we rescale the variables correctly. 
 
 ~~~python
 def test_rescale_df_first_entry(self):
@@ -217,7 +213,7 @@ def test_rescale_df_second_entry(self):
                            .take(1)[0].toArray()[1], 0.48224282217041214)
 ~~~
 
-Afterwards, we implement our code:
+Afterwards, we implement the method, `rescale_df`:
 
 ~~~python
 def rescale_df(data):
@@ -228,7 +224,7 @@ def rescale_df(data):
     return scaled_df
 ~~~
 
-The final test could be then to check the results of the algorithm itself. With regards to our example, this is quite easy as our data was artificially made up. In real projects, the expected results are always not easy to get especially for supervised learning problem where the output is probabilities. Therefore one solution is to use the outputted class instead of probabilities or we could print out the probabilities and use this as our expected results. Always remember the main goal is to test the analytical pipeline from data cleaning, feature extraction, model building, model evaluation to model storing!
+The final test could be to check the results of the algorithm itself. In our case this is quite easy as our data was artificially made up. In real projects, it might not be easy to formulate the expected results especially.
 
 ~~~python
 def test_assign_cluster(self):
@@ -240,7 +236,7 @@ def test_assign_cluster(self):
                      [0, 0, 0, 1, 1])
 ~~~
 
-Finally, we can define our last function:
+Finally, we can implement `assign_cluster`:
 
 ~~~python
 def assign_cluster(data):
@@ -251,7 +247,9 @@ def assign_cluster(data):
     return label_df
 ~~~
 
-As you can see from the above implementation, we still could do some refactoring like taking the arguments out of the function and set global variables. Now you might wonder that we we haven’t talked about reading from database and storing the model. As already mentioned we don’t test this. This is basically real testing with hitting a real database or storing it somewhere so that you can use it on new data.
+The tests can be refactored in the above implementation. You might be wondering that we haven’t discussed testing reading from database and storing the model. We have written unit tests here to test the functionality of clustering. Based on the data store in use you can write integration tests to see if we read and write to the database appropriately. 
+
+Always remember to test each phase of the data science pipeline right from data cleaning, feature extraction, model building, model evaluation to model storing, each individually and as a whole.
 
 
 
