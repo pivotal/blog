@@ -8,6 +8,7 @@ authors:
 - caragea
 - vraghavan
 - addison
+- xzhang
 categories:
 - GREENPLUM DATABASE
 - QUERY EXECUTION
@@ -24,13 +25,12 @@ title: Improving Query Execution Speed via Code Generation
 
 To handle the full range of SQL queries and data type, [GPDB](http://greenplum.org/)’s execution engine is designed with high levels of complexity such as function 
 pointers and control flow statements. Making these decisions for each tuple adds up to significant overhead, and prevents efficient usage of modern CPUs, with deep 
-pipelines. For instance, profiling [TPCH](http://www.tpc.org/tpch/) Query 1 on two segments with warm cache resulted in 77s for 7GB input table at 45MB/s per segment. 
-This clearly shows that GPDB is not IO Bound, but rather CPU Bound. 
+pipelines. 
 
 
 ## Code Generation 
 
-To address this problem of ineffective CPU utilisation and poor execution time, several state-of-the-art commercial and academic query execution engines have explored 
+To address this problem of ineffective CPU utilization and poor execution time, several state-of-the-art commercial and academic query execution engines have explored 
 a Code Generation (CodeGen) based solution. This approach exploits the metadata about the underlying schema and plan characteristics already available at 
 query execution time, to produce native code. To elaborate consider the following use case in Postgres-based engine like GPDB. In the code snippet from `ExecEvalScalarVar`, 
 we retrieve the 5th attribute of a tuple.
@@ -67,7 +67,7 @@ Code_Generation_Time + Compilation_Time + Codegened_Code_Execution_Time < Origin
 
 ## CodeGen Approach in Literature: Holistic vs. Hotspots
 
-In literature, there are two major approaches in doing code generation namely (1) holistic macro approach, and (2) hotspot based micro specialisation. 
+In literature, there are two major approaches in doing code generation namely (1) holistic macro approach, and (2) hotspot based micro specialization. 
 In the holistic approach the execution looks at optimization opportunities across the whole query plan [1][2]. This may include but not restricted to
 merging query operators, converting pull-based execution pattern to push-based model, etc. Alternatively, the hotspot based micro specialisation strategy generates code 
 for frequently exercised code paths only [4]. Figure below depicts the CodeGen approach followed in numerous commercial databases. 
@@ -76,23 +76,23 @@ for frequently exercised code paths only [4]. Figure below depicts the CodeGen a
 {{< figure src="/images/codegen/commercial.png" class="center">}}
 
 
-To incremental deliver value to our customers, we decided to follow the hotspot based methodology in implementing CodeGen and revisit the holistic approach in the near future.
+To incrementally deliver value to our customers, we decided to follow the hotspot based methodology in implementing CodeGen and revisit the holistic approach in the near future.
 
 
 ## GPDB Hotspots
 
-When we ran TPC-H queries, the top 10 functions with respect to time spent is shown below. Note that the remaining functions are bundled in a category called “Others”.
+When we ran [TPCH](http://www.tpc.org/tpch/) queries, the top 10 functions with respect to time spent is shown below. Note that the remaining functions are bundled in a category called “Others”.
 
 {{< responsive-figure src="/images/codegen/profiling.png" >}}
 
 Based on the results, the following hotspots are prime candidates for code generation: 
 
-- Deforming a tuple (see _slot_getsomeattrs function)
-- Expression evaluation (see ExecProject, agg_hash_initial_pass, ExecEvalScalarVar)
+- Deforming a tuple (see `_slot_getsomeattrs` function)
+- Expression evaluation (see `ExecProject`, `agg_hash_initial_pass`, `ExecEvalScalarVar`)
 - Aggregate functions
 
 
-## Which programming language to use to generate code: C/C++ vs. LLVM?
+## Which programming language to use to generate code: C/C++ vs. Java vs. LLVM?
 
 There are several ways to generate code at runtime, (1) C/C++, (2) Java, (3) Directly in Machine Code and (4) LLVM, to name a few. Given that GPDB code base is in C and C++,
 adding Java does not make much sense. Assembly code is also not a good candidate since it is both hard to write as well as maintain. Generating C/C++ code is more developer 
@@ -108,9 +108,9 @@ llvm::Value* res = ir_builder()->CreateCall(llvm_slot_getattr_func, {llvm_econte
 ir_builder()->CreateRet(res);
 ```
 
-Commercial databases follow both approaches. For instance, [Redshift](https://aws.amazon.com/redshift/) compiles C++ code [6], while 
+Commercial databases leverage both approaches. For instance, [Redshift](https://aws.amazon.com/redshift/) compiles C++ code [6], while 
 [Impala](https://www.cloudera.com/products/apache-hadoop/impala.html) 
-utilizes LLVM [8]. [MemSQL](http://www.memsql.com/) emits a HLL when preparing the query, and then compiles the HLL to emit LLVM IR [7].  
+utilizes LLVM [8]. [MemSQL](http://www.memsql.com/) emits a high-level language, called [MPL](http://docs.memsql.com/docs/code-generation), when preparing the query, and then compiles the HLL to emit LLVM IR [7].  
 
 
 ## LLVM Based CodeGen in GPDB
@@ -120,7 +120,7 @@ For each operator (e.g., Scan, Agg, etc.) that we have identified as a candidate
 - Create a CodeGen module
 - Generate IR code for the target function
 - Compile the IR code into a binary format ready for execution
-- Replace the call to the original function by a call to a function
+- Replace the call to the original function by a call to the compiled function
 - Destroy the module      
 
 {{< responsive-figure src="/images/codegen/codegen_in_gpdb.png" >}}
@@ -140,15 +140,15 @@ by the GPDB specific node called `GATHER MOTION`.
 (3 rows)
 ```
 
-In above example, during the initialisation of the Scan, one of the candidate functions for code generation `slot_deform_tuple`. From the execution plan generated by the optimizer,
+In above example, during the initialisation of the Scan, one of the candidate functions for code generation is `slot_deform_tuple`. From the execution plan generated by the optimizer,
 the GPDB execution engine can determine the third attribute ( c ) is the only column needed and it is at an offset 8 bytes when we read the tuple (ignoring the header metadata for the tuple). 
-For completeness the Table below depicts the places that each operation will be executed.
+For completeness the table below depicts the places that each operation will be executed.
 
 
-| Exec. Phase      | Execution Step  | Action related to code generation  |
+| Execution Phase      | Execution Step  | Action related to CodeGen  |
 | --------------  | --------- | --------- |
-| Database Start        | Start PostMaster   |   Initialise code generator  |
-| QE | Fork QE process | |
+| Database Start        | Start PostMaster   |   Initialize CodeGen  |
+| Query Execution | Fork QE process | |
 | ExecInit | InitMotion | |
 | | InitScan| i) Create module, ii) Generate IR code for `slot_deform_tuple`, iii) Compile code, iv) Add the function pointer of code generated `slot_deform_tuple` to a struct (e.g., `TupleTableSlot`) for later use|
 | ExecutePlan | ExecMotion| |
@@ -170,16 +170,18 @@ Then, for each such tuple in the table, based on the query and table’s schema,
 
 Given that `foo` has no variable length attributes, as we described above, at runtime we know the attribute type, column width and its nullability property. Consequently, 
 even before reading the values from the buffer, the exact offset of each attribute is known. Thus we can generate a function that takes advantage of the table schema 
-and avoids unnecessary computation and checks during the execution. Inside GPDB, the overall logic for the simple projection of attributes is contained in the 
+and avoids unnecessary computation and checks during the execution. 
+
+Inside GPDB, the overall logic for the simple projection of attributes is contained in the 
 the function `ExecVariableList`. The default implementation of this function with out CodeGen proceeds in the following code path : `ExecVariableList > slot_getattr > _slot_getsomeattrs > slot_deform_tuple`.
 Here, `slot_deform_tuple` does the actual deformation from the buffer to a `TupleTableSlot`. The code generated version of `ExecVariableList` squashes the above code path, 
 and gives a performance boost by using constant attribute lengths, dropping unnecessary null checks, unrolling loops and reducing external function calls. 
 If such optimization are not possible during code generation, we immediately bail out from the code generation pipeline and use the default GPDB implementation of
 `ExecVariableList`.
 
-### Codegen in Expression Evaluation
+### CodeGen in Expression Evaluation
 
-In our initial hotspot analysis, we found that Expression Evaluation has potential for improvement with code generation. To motivate this intuition let us expand on the 
+In our initial hotspot analysis, we found that Expression Evaluation has potential for improvement with CodeGen. To motivate this intuition, let us expand on the 
 initial query by adding a predicate in the WHERE clause: `SELECT c FROM foo WHERE b < c`. For each tuple of table `foo`, Scan operator now has to evaluate the 
 the condition `b < c` whose expression tree is depicted below. 
 
@@ -206,15 +208,20 @@ In the Scan operator, to evaluate the predicate on each input tuple we call the 
 As an input parameter to the function `ExecEvalOper`, we pass the metadata needed to execute the function such as the operation being performed, columns as well as constants being 
 accessed, etc. `ExecMakeFunctionResult` retrieves the values of the arguments via `ExecEvalFuncArgs`. To handle the general case where in each argument can itself be an 
 arbitrary expression `ExecEvalFuncArgs` invokes `ExecEvalVar` to retrieve the columns from the tuple - in our example this is used to get the value of column b an c.
-After the column values are retrieved we use the built-in postgres operation int4lt to evaluate the less than comparison and return the boolean result.
+After the column values are retrieved we use the built-in postgres operation `int4lt` to evaluate the less than comparison and return the boolean result.
 As seen above even for a simple predicate such as `b < c` the call stack is deep, and the results of each call need to be stored in an intermediate state that is then passed around.
 
 The code generated version of this expression tree avoids these function calls thereby reduce overhead of state maintenance and opens up opportunities for the compiler
 to further optimize the evaluation of this expression at execution time. 
 
-### Codegen in Aggregate Functions
+The generated code of the above expression tree is the following:
+```
 
-Similarly to expression evaluation, in our profiling results we found a fertile ground for code generation at the evaluation of aggregate functions. 
+```
+
+### CodeGen in Aggregate Functions
+
+Similarly to expression evaluation, in our profiling results we found a fertile ground for CodeGen at the evaluation of aggregate functions. 
 To elaborate, consider query `SELECT sum(c) FROM foo`. Below you can see the call stack during the evaluation of `sum(c)` aggregate function:
 ```c
 > advance_aggregates
