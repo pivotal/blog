@@ -23,9 +23,12 @@ natively accept Secure Sockets Layer (SSL) connections without using a load
 balancer. This may reduce the complexity and cost
 <sup>[[ELB-pricing]](#ELB-pricing)</sup> of a Concourse deployment.
 
-*[For users who have deployed Concourse manually (i.e. without BOSH), this blog
-post may also be of value: the nginx configuration below can be used as an
-`nginx.conf` to provide an SSL front-end to the Concourse server]*
+<div class="alert alert-danger" role="alert"> 2016-09-12: This blog post is
+obsolete. Newer (v2.0.0+) versions of Concourse allow binding to the privileged
+ports 80 and 443, eliminating the need for an nginx proxy. Here is an example
+of a BOSH-deployed Concourse server that binds natively to ports 80 & 443: <a
+href="https://github.com/cunnie/deployments/blob/62d0ed813879440f656b6e0bd6f984d708c4bff2/concourse-ntp-pdns-gce.yml#L48-L51">BOSH
+manifest</a>.  </div>
 
 ### 0. Pre-requisites
 
@@ -187,11 +190,6 @@ instance_groups:
 This simple solution has a downside: the Concourse URI's requires a port number
 at the end (e.g. the URI would be https://ci.nono.io:4443 instead of
 https://ci.nono.io). <sup>[[privileged]](#privileged)</sup>
-
-Another disadvantage to using the Concourse server's native TLS is that the
-server can't automatically redirect a client to use TLS. For example, if one
-connects to http://ci.nono.io:8080, it will not redirect them to
-https://ci.nono.io:4443 to ensure an encrypted session.
 
 [Here](https://github.com/cunnie/deployments/blob/1e9a96203acfd806822834f4d6932225771c834b/concourse.yml)
 is a sample BOSH manifest which uses Concourse's built-in TLS.
