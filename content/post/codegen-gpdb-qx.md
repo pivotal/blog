@@ -214,10 +214,6 @@ As seen above even for a simple predicate such as `b < c` the call stack is deep
 The code generated version of this expression tree avoids these function calls thereby reduce overhead of state maintenance and opens up opportunities for the compiler
 to further optimize the evaluation of this expression at execution time. 
 
-The generated code of the above expression tree is the following:
-```
-
-```
 
 ### CodeGen in Aggregate Functions
 
