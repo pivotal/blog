@@ -1,6 +1,6 @@
 # The Pivotal Engineering Journal
 
-Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!  
+Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
 This blog is built and maintained entirely by *you*!  Feel free to propose or just implement any improvement you believe in.  ANARCHY!!!!
 
@@ -13,7 +13,7 @@ This blog is built and maintained entirely by *you*!  Feel free to propose or ju
 1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
 1. [Ship it!](https://github.com/pivotal/blog#publishing-your-copy)
 
-Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).  
+Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).
 
 If you don't have push access, then send an ask ticket to have yourself added to the `all-pivots` github team in this org.
 
@@ -22,13 +22,23 @@ If you don't have push access, then send an ask ticket to have yourself added to
 1. Add yourself as an author (first time only, obvs.):
 
     ~~~
-    $ cp ./data/authors/tammer.yml ./data/authors/bob.yml
-    $ vi ./data/authors/bob.yml
+    $ cp data/authors/tammer.yml data/authors/bob.yml
+    $ vi data/authors/bob.yml
     ~~~
 
-1. Create a new draft post with `./bin/new_post name-of-post`.  This will create a new file at location `./content/post/name-of-post.md`. It's just markdown, and the template provides instructions on any advanced bits.  Be sure to change the metadata in the file's YAML front-matter -- one thing to change immediately is the `authors:` value should include the name of your author file (`bob` in the example above) in the list.
+1. Create a new draft post:
 
-1. *Meta:* If you want to change the default new post template, it's in `./archetypes/post.md`.
+    ~~~
+    bin/new_post name-of-post
+    ~~~
+
+ This creates a new file at location `content/post/name-of-post.md`. It's
+ markdown, and the template provides instructions on any advanced bits.  Be sure
+ to change the metadata in the file's YAML front-matter &mdash; one thing to
+ change immediately is the `authors:` value; it should include the name of your
+ author file (`bob` in the example above) in the list.
+
+1. *Meta:* If you want to change the default new post template, it's in `archetypes/post.md`.
 
 ## Writing a _Good_ Post
 
@@ -52,7 +62,7 @@ $ hugo version
 Hugo Static Site Generator v0.14 BuildDate: 2015-06-16T21:41:12+01:00
 ~~~
 
-After cloning this repository, navigate into the new directory, run `./bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
+After cloning this repository, navigate into the new directory, run `bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
 
 Hugo has [LiveReload](http://livereload.com/) built in, so if you have that configured in your browser, your window will update as soon as you make a change.  Hugo is *fast*, so you might not realize the reload has already happened.
 
@@ -72,7 +82,7 @@ Every commit to master is [auto-deployed](https://travis-ci.org/pivotal/blog) to
 
 ## Changing the style
 
-All of the HTML and CSS live in `./themes/pivotal-ui`, which is a port of the [Pivotal UI](https://github.com/pivotal-cf/pivotal-ui) project.  I basically copied the compiled css and image files over.  If you want to change the look of this site, then you should edit the templates in there.
+All of the HTML and CSS live in `themes/pivotal-ui`, which is a port of the [Pivotal UI](https://github.com/pivotal-cf/pivotal-ui) project.  I basically copied the compiled css and image files over.  If you want to change the look of this site, then you should edit the templates in there.
 
 The key files you'll want to look at are:
 
@@ -95,9 +105,9 @@ If the language auto-detection fails you can add a [language identifier](https:/
 
 ## Under the Hood...
 
-You'll notice that we're not building directly into `./public`, but rather into all of `public/local`, `public/prod ` and `public/staging` -- each representing a different environment.  This magic is done by the [bin/build](https://github.com/pivotal/blog/blob/master/bin/build) script.  `cf push` will [push all of the apps](https://github.com/pivotal/blog/blob/master/manifest.yml) one at a time.
+You'll notice that we're not building directly into `public`, but rather into all of `public/local`, `public/prod ` and `public/staging` &mdash; each representing a different environment.  This magic is done by the [bin/build](https://github.com/pivotal/blog/blob/master/bin/build) script.  `cf push` will [push all of the apps](https://github.com/pivotal/blog/blob/master/manifest.yml) one at a time.
 
-We also use: 
+We also use:
 
 * [Feedburner](https://feedburner.google.com/fb/a/dashboard?id=lkvb0prnrmdpd4tdcvgd6uorpo) to track RSS subscriptions
 * A [twitter account](https://twitter.com/pivotaleng) ([automatically publishes each post](https://feedburner.google.com/fb/a/socialize?id=lkvb0prnrmdpd4tdcvgd6uorpo) via feedburner).
