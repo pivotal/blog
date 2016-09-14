@@ -44,7 +44,9 @@ Here are few things to keep in mind while test driving data science use cases:
 3. We [pair programme](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses.
 4. Have separate unit and integrations test suite.
 5. Mock behaviours where appropriate.
-6. As a general rule of thumb, ensure your entire test suite runs within 10 min.
+6. Use an appropriate CI tool for automated testing, for example like [Concourse CI](https://concourse.ci/).
+7. As a general rule of thumb, ensure your entire test suite runs within 10 min.
+8. The work product in a DS project is mainly data, not code.
 
 ## Example
 
@@ -112,7 +114,7 @@ import unittest
 try:
     # Append PySpark to PYTHONPATH / Spark 2.0.0
     sys.path.append(os.path.join(os.environ["SPARK_HOME"], "python"))
-    sys.path.append(os.path.join(os.environ[""SPARK_HOME""], "python", "lib",
+    sys.path.append(os.path.join(os.environ["SPARK_HOME"], "python", "lib",
                                  "py4j-0.10.1-src.zip"))
 except KeyError as e:
     print("SPARK_HOME is not set", e)
@@ -249,9 +251,16 @@ def assign_cluster(data):
     return label_df
 ~~~
 
-The tests can be refactored in the above implementation. You might be wondering that we haven’t discussed testing reading from database and storing the model. We have written unit tests here to test the functionality of clustering. Based on the data store in use you can write integration tests to see if we read and write to the database appropriately.
+The implementation above can still be refactored e.g. we could use global variables instead of local ones but we will leave the actual implementation to you. You might be wondering that we haven’t discussed testing reading from database and storing the model. We have written unit tests here to test the functionality of clustering. Based on the data store in use you can write integration tests to see if we read and write to the database appropriately.
 
-Always remember to test each phase of the data science pipeline right from data cleaning, feature extraction, model building, model evaluation to model storing, each individually and as a whole.
+## Conclusion
 
+We hope that now you have a better understanding of how to use TDD in the context of a data science project. Always remember to test each phase of the data science pipeline right from data cleaning, feature extraction, model building, model evaluation to model storing, each individually and as a whole.
 
+If you want to know more:
 
+* [Data Science and Test Driven Development](https://www.linkedin.com/pulse/data-science-test-driven-development-sam-savage)
+* [Test Driven Development in Big Data Pipelines](http://www.illation.com/resources/big-data-australia/2014/10/11/test-driven-development-in-big-data-pipelines)
+* [Four Ways Data Science Goes Wrong and How Test-Driven Data Analysis Can Help](http://www.predictiveanalyticsworld.com/patimes/four-ways-data-science-goes-wrong-and-how-test-driven-data-analysis-can-help/6947/)
+* [Thoughtful Machine Learning](https://www.safaribooksonline.com/library/view/thoughtful-machine-learning/9781449374075/)
+* [Pivotal Labs Guideline on TDD](http://pivotal-guides.cfapps.io/craftsmanship/tdd/)
