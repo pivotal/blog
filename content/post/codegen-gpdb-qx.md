@@ -23,7 +23,7 @@ title: Improving Query Execution Speed via Code Generation
 ## Overhead of a Generalized Query Execution Engine
 
 
-To handle the full range of SQL queries and data type, [GPDB](http://greenplum.org/)’s execution engine is designed with high levels of complexity such as function 
+To handle the full range of SQL queries and data types, [GPDB](http://greenplum.org/)’s execution engine is designed with high levels of complexity such as function 
 pointers and control flow statements. Making these decisions for each tuple adds up to significant overhead, and prevents efficient usage of modern CPUs, with deep 
 pipelines. 
 
@@ -32,7 +32,7 @@ pipelines.
 
 To address this problem of ineffective CPU utilization and poor execution time, several state-of-the-art commercial and academic query execution engines have explored 
 a Code Generation (CodeGen) based solution. This approach exploits the metadata about the underlying schema and plan characteristics already available at 
-query execution time, to produce native code. To elaborate consider the following use case in Postgres-based engine like GPDB. In the code snippet from `ExecEvalScalarVar`, 
+query execution time to compile efficient code that is customized to a particular query. To elaborate consider the following use case in Postgres-based engine like GPDB. In the code snippet from `ExecEvalScalarVar`, 
 we retrieve the 5th attribute of a tuple.
 ```c
 switch (variable->varno)
@@ -51,15 +51,15 @@ attnum = variable->varattno;
 return slot_getattr(slot, attnum);
 ```
 
-At runtime, from the query plan we know for function `ExecEvalScalarVar` the `variable->varno` is neither `INNER` nor `OUTER`, thus we can generate code that passes the 
-value of `econtext->ecxt_scantuple` (default case) as an argument to `slot_getattr` function directly. Similarly, based on the plan we can initialize the `attnum` 
+At runtime, we know that `variable->varno` is neither `INNER` nor `OUTER`, so we can skip the switch (and the branch instructions that are generated from it) and 
+directly pass `econtext->ecxt_scantuple` to `slot_getattr()`. Similarly, based on the plan we can initialize the `attnum` 
 value to a constant. A handwritten, and more efficient, code for the above snippet would look like the following: 
 
 ```c
-return slot_getattr(slot_getattr(econtext->ecxt_scantuple, 5);
+return slot_getattr(econtext->ecxt_scantuple, 5);
 ```
 
-This code consists of much less instructions and branches, thus its execution time is significantly less than the execution time of original code. 
+This code is much simpler, it has fewer instructions (reducing both CPU cycles and instruction cache space used) and no branches that can be mispredicted.
 In a successful application of code generation, the time needed to generate, compile, and execute this code is significantly less than the execution of the original code. 
 ```
 Code_Generation_Time + Compilation_Time + Codegened_Code_Execution_Time < Original_Code_Execution_Time
@@ -68,7 +68,7 @@ Code_Generation_Time + Compilation_Time + Codegened_Code_Execution_Time < Origin
 ## CodeGen Approach in Literature: Holistic vs. Hotspots
 
 In literature, there are two major approaches in doing code generation namely (1) holistic macro approach, and (2) hotspot based micro specialization. 
-In the holistic approach the execution looks at optimization opportunities across the whole query plan [1][2]. This may include but not restricted to
+In the holistic approach the execution looks at optimization opportunities across the whole query plan [1][2]. This may include but is not restricted to
 merging query operators, converting pull-based execution pattern to push-based model, etc. Alternatively, the hotspot based micro specialisation strategy generates code 
 for frequently exercised code paths only [4]. Figure below depicts the CodeGen approach followed in numerous commercial databases. 
  
@@ -76,12 +76,14 @@ for frequently exercised code paths only [4]. Figure below depicts the CodeGen a
 {{< figure src="/images/codegen/commercial.png" class="center">}}
 
 
-To incrementally deliver value to our customers, we decided to follow the hotspot based methodology in implementing CodeGen and revisit the holistic approach in the near future.
+To incrementally deliver value to our customers, we decided to follow the hotspot based methodology in implementing CodeGen and revisit the holistic approach in the 
+near future. Hotspots approach delivers performance wins without compromising functionality, since the execution engine continues to support 100% of the features 
+customer's expect from GPDB and some queries just run faster.
 
 
 ## GPDB Hotspots
 
-When we ran [TPCH](http://www.tpc.org/tpch/) queries, the top 10 functions with respect to time spent is shown below. Note that the remaining functions are bundled in a category called “Others”.
+When we ran [TPCH](http://www.tpc.org/tpch/) queries, the top 10 functions with respect to time spent are shown below. Note that the remaining functions are bundled in a category called “Others”.
 
 {{< responsive-figure src="/images/codegen/profiling.png" >}}
 
@@ -94,14 +96,14 @@ Based on the results, the following hotspots are prime candidates for code gener
 
 ## Which programming language to use to generate code: C/C++ vs. Java vs. LLVM?
 
-There are several ways to generate code at runtime, (1) C/C++, (2) Java, (3) Directly in Machine Code and (4) LLVM, to name a few. Given that GPDB code base is in C and C++,
-adding Java does not make much sense. Assembly code is also not a good candidate since it is both hard to write as well as maintain. Generating C/C++ code is more developer 
+There are several ways to generate code at runtime, (1) C/C++, (2) a managed VM language like Java or C#, (3) Directly in Machine Code and (4) LLVM, to name a few. 
+Given that GPDB code base is in C and C++, adding Java or C# does not make much sense. Assembly code is also not a good candidate since it is both hard to write as well as maintain. Generating C/C++ code is more developer 
 friendly, but optimizing and compiling C/C++ is shown to be slow [2]. 
 
 In contrast, [LLVM](http://llvm.org/) is ideal for generating code as it provides a collection of modular as well as reusable compiler and toolchain technologies. 
 LLVM provides a C++ API for writing code into an intermediate representation (IR), which at runtime can be optimized and turned into native code efficiently.
 LLVM IR is a low-level programming language similar to assembly language, which is type-safe, target machine-independent, and supports RISC-like instructions and unlimited 
-registers. GPDB inherits all of the LLVM code optimizations. Below you can see the equivalent LLVM IR code for our example.
+registers. GPDB inherits all of the LLVM code optimizations. Below you can see the equivalent C++ code, using LLVM C++ API, that is building up LLVM IR code for our example.
                                                                             
  ```                                                                         
 llvm::Value* res = ir_builder()->CreateCall(llvm_slot_getattr_func, {llvm_econtext_ecxt_scantuple, 5});
@@ -115,9 +117,9 @@ utilizes LLVM [8]. [MemSQL](http://www.memsql.com/) emits a high-level language,
 
 ## LLVM Based CodeGen in GPDB
 
-For each operator (e.g., Scan, Agg, etc.) that we have identified as a candidate hotspot that can benefit from code generation we must do the following: 
+For each operator (e.g., Scan, Agg, etc.) that we have identified as a candidate for hotspot code generation, we do the following:
 
-- Create a CodeGen module
+- Create an LLVM module 
 - Generate IR code for the target function
 - Compile the IR code into a binary format ready for execution
 - Replace the call to the original function by a call to the compiled function
