@@ -8,8 +8,8 @@ categories:
 - Machine Learning
 - Agile
 - Pair Programming
-date: 2016-09-09T09:03:56+02:00
-draft: true
+date: 2016-09-15T20:10:40+02:00
+draft: false
 short: |
   Unravelling Test-Driven Development for Data Science.
 title: Test-Driven Development for Data Science
@@ -27,30 +27,30 @@ Test-Driven Development (TDD) has [plethora](http://pivotal-guides.cfapps.io/cra
 
 TDD for data science (DS) can be a bit tricky than software engineering. Data science has a fair share of exploration involved, where we are trying to find features and algorithms that will contribute best to solve the problem in hand. Do we strictly test drive all our features right from the exploratory phase, when we know a lot of them might not make into production? In the initial days of exploring how TDD fits the DS space, we tried a bunch of stuff. We highlight why we started test driving our DS use case and what worked the best for us.
 
-Now imagine you are a logistics company and this shiny little 'smart' app has figured out the best routes your drivers need to pursue the following day via some sorcery. Next day is your moment of truth! The magic better work, else you can only imagine the chaos and loss it will result in. Now what if we say we can ensure that the app will always generate the most optimised route? We suddenly have more confidence in our application. There is no secret ingredient here! We can wrap up our predictions in a test case which allows us to trust the model only when it’s error rate is below a certain threshold.
+Now imagine you are a logistics company and this shiny little 'smart' app has figured out the best routes your drivers need to pursue the following day via some sorcery. Next day is your moment of truth! The magic better work, else you can only imagine the chaos and loss it will result in. Now what if we say we can ensure that the app will always generate the most optimised route? We suddenly have more confidence in our application. There is no secret ingredient here! We can wrap up our predictions in a test case which allows us to trust the model only when its error rate is below a certain threshold.
 
 You might ask, why would we put a model in production which doesn’t have the desired error rate at the first place? But we are dealing with real life data and predictions here, things can go haywire pretty fast. We might end up with a broken or (if you are even more lucky) no model depending on how robust the code base is. TDD can not only help us ensure that nothing went wrong while developing our model but also prompts us to think what we want to achieve and forces us to think about edge cases where things can potentially go wrong. TDD allow us to be more confident.
 
-**Long live TDD**
+**TDD is dead, long live TDD**
 
-So TDD saves the day, let’s start TDD everything? Not quite when it comes to data science. As discussed in one of our previous [blog posts](http://engineering.pivotal.io/post/api-first-for-data-science/), we have two phases in our data science engagements: exploratory and production. Test driving all the features and algorithms stringently during exploratory phase is an overkill. We felt we were investing a lot of time in throw away work. TDD made the exploration phase quite intensive and slowed us considerably. Eventually we found a fine balance between TDD and DS.
+So TDD saves the day, let’s start test driving everything? Not quite when it comes to data science. As discussed in one of our previous [blog posts](http://engineering.pivotal.io/post/api-first-for-data-science/), we have two phases in our data science engagements: _exploratory_ and _production_. Test driving all the features and algorithms stringently during the exploratory phase is an overkill. We felt we were investing a lot of time in throw-away work. TDD made the exploration phase quite intensive and slowed us considerably. Eventually we found a fine balance between TDD and DS.
 
 After the exploratory phase, once we have figured out which model and features suits the use case the best, we actually start test driving feature generation, model development and integration bits. Our model evaluation from the exploratory phase helps us set expectations around the model’s performance. We leverage this information in our TDD to make sure the model is behaving as expected in production.
 
 Here are few things to keep in mind while test driving data science use cases:
 
 1. Start TDD once you have a fair idea of what model and features will go in production.
-2. Don’t test drive everything! Figure out the core functionalities of your code. For e.g. while feature generation, if a feature is generated using simple count functionality of SQL, trust that SQL’s in-build count functionality is already well tested. Writing another test around that won’t add much value.
-3. At Pivotal we [pair programme](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses. This makes TDD interesting. :)
+2. Don’t test drive everything! Figure out the core functionalities of your code. For example while feature generation, if a feature is generated using simple count functionality of SQL, trust that SQL’s in-build count functionality is already well tested. Writing another test around that won’t add much value.
+3. At Pivotal we [pair programme](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses. This makes TDD interesting! :)
 4. Have separate unit and integrations test suite.
 5. Mock behaviours where appropriate.
-6. Use an appropriate CI tool for automated testing, for example like [Concourse CI](https://concourse.ci/).
+6. Use an appropriate CI tool for automated testing, for example [Concourse CI](https://concourse.ci/) is a good choice.
 7. As a general rule of thumb, ensure your entire test suite runs within 10 min.
 8. Test those bits of pipeline where data is involved. The work product of a data science use case is data.
 
 ## Example
 
-Let’s demonstrate TDD for data science with a simple example. Assume we are given two features x and y for five observations and the we want to assign these data points to meaningful clusters.
+Let’s demonstrate TDD for data science with a simple example. Assume we are given two features x and y for five observations and we want to assign these data points to meaningful clusters.
 
 | Obs | X | Y |
 |:-----|:---|:---|
@@ -60,18 +60,18 @@ Let’s demonstrate TDD for data science with a simple example. Assume we are gi
 | D   | 2 | 4 |
 | E   | 3 | 5 |
 
-This is an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where we try and find structure in the data. We can find potential applications of clustering vividly. For example it's applied in many marketing divisions where customer segmentation is crucial to develop personalized campaigns. In real life, our data might be much larger. We’ve dealt with terabytes of data having several hundred features or millions of observations. In order to address such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is handy for big data processing and supports Python, R, Scala and Java. For this example we will use PySpark, Spark’s Python API.
+This is an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where we try to find structure in the data. We can find potential applications of clustering vividly. For example it is applied in many marketing divisions where customer segmentation is crucial to develop personalized campaigns. In real life, our data might be much larger. We’ve dealt with terabytes of data having several hundred features or millions of observations. In order to address such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is handy for big data processing and supports Python, R, Scala and Java. For this example we will use [PySpark](http://spark.apache.org/docs/latest/api/python/index.html), Spark’s Python API.
 
 **Exploration Phase**
 
-In the exploration phase we don’t test drive our code. We aim to find the right algorithm to solve our problem. We will use Jupyter notebook to play around with the data (see figure 1, the notebook can be found [here](https://github.com/datitran/spark-tdd-example/blob/master/Clustering%20Example%20with%20PySpark.ipynb)). For the given dataset, [K-means](https://en.wikipedia.org/wiki/K-means_clustering) can be an appropriate solution.
+In the exploration phase we don’t test drive our code. We aim to find the right algorithm to solve our problem. We will use Jupyter notebook to play around with the data (see figure 1, the notebook can be found [here](https://github.com/datitran/spark-tdd-example/blob/master/Clustering%20Example%20with%20PySpark.ipynb)). For the given dataset, [k-means](https://en.wikipedia.org/wiki/K-means_clustering) can be an appropriate solution.
 
 {{< responsive-figure src="/images/jupyter-notebook-clustering-pyspark.png" class="center" >}}
 <p align="center">
   Figure 1: Jupyter notebook of our clustering example with PySpark
 </p>
 
-Figure 2 depicts that k-means did a decent job in clustering the dataset. In this case, clustering was fairly easy because of the few artificially generated data points and variables. In real life choosing the optimal k becomes less obvious because of more observations and/or features. Also we have to figure out which [clustering algotithm](http://scikit-learn.org/stable/modules/clustering.html#clustering) is best for a given data set. In this case, k-means seems to be a good choice.
+Figure 2 depicts that k-means did a decent job in clustering the dataset. In this case, clustering was fairly easy because of the few artificially generated data points and variables. In real life choosing the optimal _k_ becomes less obvious because of more observations and/or features. Also we have to figure out which [clustering algotithm](http://scikit-learn.org/stable/modules/clustering.html#clustering) is best for a given data set. In this case, k-means seems to be a good choice.
 
 {{< responsive-figure src="/images/output-kmeans.png" class="center" >}}
 <p align="center">
@@ -129,7 +129,7 @@ except ImportError as e:
     sys.exit(1)
 ~~~
 
-We added the `SPARK_HOME` to our `PYTHONPATH`, so that it recognizes PySpark. We import SparkSession which is now the new entry point into Spark since version 2.0.0.
+We added the `SPARK_HOME` to our `PYTHONPATH`, so that it recognizes PySpark. We import SparkSession which is now the new entry point into Spark since version `2.0.0`.
 
 Then we define a single node Spark application in the test `setUp` and stop it in the `tearDown`. This means that every time we run a test, a new Spark application is created and stopped after the test is completed.
 
@@ -156,7 +156,7 @@ class ClusteringTest(unittest.TestCase):
         self.spark.stop()
 ~~~
 
-Next step is to mock the data. In our case since the data is small so we can use it straight ahead. In practice the data can have millions observations or variables and we need to take a subset of the real data. The amount and kind of data that you mock depends on the complexity of the data. If the data is fairly homogenous then imitating a small amount is enough. If the data is heterogenous more mock data to cover various possible cases, that might break the model training pipeline, will be needed.
+Next step is to mock the data. In our case since the data is small, we can use it straight ahead. In practice we could have millions of observations or variables and we need to take a subset of the real data. The amount and kind of data that you mock depends on the complexity of the data. If the data is fairly homogenous then imitating a small amount is enough. If the data is heterogenous more mock data to cover various possible cases, that might break the model training pipeline, will be needed.
 
 ~~~python
 def mock_data(self):
@@ -189,7 +189,7 @@ def test_convert_df(self):
                                        ("features", "vector")])
 ~~~
 
-We can run test-suite with `nosetests` or `pytest`. The test should fail. Now we can go ahead and implement the `convert_df` function, which would make this test pass:
+We can run test-suite with `nosetests` or `pytest`. The test should fail! Now we can go ahead and implement the `convert_df` function, which would make this test pass:
 
 ~~~python
 def convert_df(spark, data):
@@ -228,11 +228,11 @@ def rescale_df(data):
     return scaled_df
 ~~~
 
-The final test could be to check the results of the algorithm. In this case, it is quite easy as our data was artificially made up. In real projects, it might not be easy to formulate the expected results especially.
+The final test could be to check the results of the algorithm. In this case, it is quite easy as our data was artificially made up. In real projects, it might not be simple to formulate the expected results.
 
 ~~~python
 def test_assign_cluster(self):
-    """Check if rows are labeled are as expected."""
+    """Check if rows are labeled as expected."""
     input_df = clustering.convert_df(self.spark, self.mock_df)
     scaled_df = clustering.rescale_df(input_df)
     label_df = clustering.assign_cluster(scaled_df)
@@ -251,13 +251,14 @@ def assign_cluster(data):
     return label_df
 ~~~
 
-The implementation above can be refactored further, we will leave the actual implementation to you. You might be wondering that we haven’t discussed testing reading from database and storing the model. We have written unit tests to test the functionality of clustering. Based on the data store in use you can write integration tests to see if we read and write to the database appropriately.
+The implementation above can be further refactored. We will leave the actual implementation to you, though. You might be wondering that we haven’t discussed testing reading from database and storing the model. We have written unit tests to test the functionality of clustering. Based on the data store in use you can write integration tests to see if we read and write to the database appropriately.
 
 ## Conclusion
 
-We hope that you have a better understanding of how to use TDD in a data science project. Always remember to test each phase of the data science pipeline right from data cleaning, feature extraction, model building, model evaluation to model storing, each individually and as a whole.
+We hope that you now have a better understanding of how to use TDD in a data science project. Always remember to test each phase of the data science pipeline right from data cleaning, feature extraction, model building, model evaluation to model storing, each individually and as a whole.
 
 If you want to know more:
+
 * [Data Science and Test Driven Development](https://www.linkedin.com/pulse/data-science-test-driven-development-sam-savage)
 * [Test Driven Development in Big Data Pipelines](http://www.illation.com/resources/big-data-australia/2014/10/11/test-driven-development-in-big-data-pipelines)
 * [Four Ways Data Science Goes Wrong and How Test-Driven Data Analysis Can Help](http://www.predictiveanalyticsworld.com/patimes/four-ways-data-science-goes-wrong-and-how-test-driven-data-analysis-can-help/6947/)
