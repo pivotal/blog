@@ -17,7 +17,7 @@ title: Test-Driven Development for Data Science
 
 _Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Senior Data Scientist) and [Megha Agarwal](https://uk.linkedin.com/in/agarwal22megha) (Data Scientist II)._
 
-This is a follow up post on [API First for Data Science](http://engineering.pivotal.io/post/api-first-for-data-science/) and [Pairing for Data Scientists](http://engineering.pivotal.io/post/pairing-on-data-science/) with focus on Test-Driven Development.
+This is a follow up post on [API First for Data Science](http://engineering.pivotal.io/post/api-first-for-data-science/) and [Pairing for Data Scientists](http://engineering.pivotal.io/post/pairing-on-data-science/) focusing on Test-Driven Development.
 
 ## Motivation
 
@@ -27,13 +27,13 @@ Test-Driven Development (TDD) has [plethora](http://pivotal-guides.cfapps.io/cra
 
 TDD for data science (DS) can be a bit tricky than software engineering. Data science has a fair share of exploration involved, where we are trying to find features and algorithms that will contribute best to solve the problem in hand. Do we strictly test drive all our features right from the exploratory phase, when we know a lot of them might not make into production? In the initial days of exploring how TDD fits the DS space, we tried a bunch of stuff. We highlight why we started test driving our DS use case and what worked the best for us.
 
-Now imagine you are a logistics company and this shiny little 'smart' app has figured out the best routes for your drivers for the following day via some sorcery. Next day is your moment of truth! The magic better work, else you can only imagine the chaos and loss it can create. Now what if we say we can ensure that the app will always generate the most optimised route? We suddenly have more confidence in our application. There is no secret ingredient here! We can wrap up our predictions in a test case which allows us to trust the model only when it’s error rate is below a certain threshold.
+Now imagine you are a logistics company and this shiny little 'smart' app has figured out the best routes your drivers need to pursue the following day via some sorcery. Next day is your moment of truth! The magic better work, else you can only imagine the chaos and loss it will result in. Now what if we say we can ensure that the app will always generate the most optimised route? We suddenly have more confidence in our application. There is no secret ingredient here! We can wrap up our predictions in a test case which allows us to trust the model only when it’s error rate is below a certain threshold.
 
-You might ask, why would we put a model in production which doesn’t have the desired error rate at the first place? But we are dealing with making real life data and predictions here, things can go haywire pretty fast. We might end up with a broken or (if you are even more lucky) no model depending on how robust the code base is. TDD can not only help us ensure that nothing went wrong while developing our model but also prompts us to think what we want to achieve and forces us to think about edge cases where things can potentially go wrong. TDD allow us to be more confident.
+You might ask, why would we put a model in production which doesn’t have the desired error rate at the first place? But we are dealing with real life data and predictions here, things can go haywire pretty fast. We might end up with a broken or (if you are even more lucky) no model depending on how robust the code base is. TDD can not only help us ensure that nothing went wrong while developing our model but also prompts us to think what we want to achieve and forces us to think about edge cases where things can potentially go wrong. TDD allow us to be more confident.
 
 **Long live TDD**
 
-So TDD saves the day, let’s start TDD everything? Not quite when it comes to data science. As discussed in one of our previous [blog posts](http://engineering.pivotal.io/post/api-first-for-data-science/), we have two phases in our data science engagements: exploratory and production. Test driving all the features and algorithms stringently during exploratory phase is an overkill. We felt we were investing a lot of time doing throw away work. TDD made the exploration phase quite intensive and slowed us considerably. Eventually we found a fine balance between TDD and DS.
+So TDD saves the day, let’s start TDD everything? Not quite when it comes to data science. As discussed in one of our previous [blog posts](http://engineering.pivotal.io/post/api-first-for-data-science/), we have two phases in our data science engagements: exploratory and production. Test driving all the features and algorithms stringently during exploratory phase is an overkill. We felt we were investing a lot of time in throw away work. TDD made the exploration phase quite intensive and slowed us considerably. Eventually we found a fine balance between TDD and DS.
 
 After the exploratory phase, once we have figured out which model and features suits the use case the best, we actually start test driving feature generation, model development and integration bits. Our model evaluation from the exploratory phase helps us set expectations around the model’s performance. We leverage this information in our TDD to make sure the model is behaving as expected in production.
 
@@ -41,11 +41,12 @@ Here are few things to keep in mind while test driving data science use cases:
 
 1. Start TDD once you have a fair idea of what model and features will go in production.
 2. Don’t test drive everything! Figure out the core functionalities of your code. For e.g. while feature generation, if a feature is generated using simple count functionality of SQL, trust that SQL’s in-build count functionality is already well tested. Writing another test around that won’t add much value.
-3. We [pair programme](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses. This makes TDD interesting. :)
+3. At Pivotal we [pair programme](http://engineering.pivotal.io/post/pairing-on-data-science/). So we test drive things in a ping pong manner, i.e. one person comes up with a test case, the companion makes it pass and then the role reverses. This makes TDD interesting. :)
 4. Have separate unit and integrations test suite.
 5. Mock behaviours where appropriate.
 6. Use an appropriate CI tool for automated testing, for example like [Concourse CI](https://concourse.ci/).
 7. As a general rule of thumb, ensure your entire test suite runs within 10 min.
+8. Test those bits of pipeline where data is involved. The work product of a data science use case is data.
 
 ## Example
 
@@ -59,7 +60,7 @@ Let’s demonstrate TDD for data science with a simple example. Assume we are gi
 | D   | 2 | 4 |
 | E   | 3 | 5 |
 
-This is an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where the goal is to find structure in the data. We can find potential applications of clustering vividly. For example it's applied in many marketing divisions where customer segmentation is crucial to develop personalized campaigns. In real life, our data might be much larger. We’ve dealt with terabytes of data having several hundred features or millions of observations. In order to address such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is handy for big data processing and supports Python, R, Scala and Java. For this example we will use PySpark, Spark’s Python API.
+This is an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_learning) where we try and find structure in the data. We can find potential applications of clustering vividly. For example it's applied in many marketing divisions where customer segmentation is crucial to develop personalized campaigns. In real life, our data might be much larger. We’ve dealt with terabytes of data having several hundred features or millions of observations. In order to address such a problem, we leverage [MLlib](http://spark.apache.org/docs/latest/ml-guide.html), Spark’s machine learning (ML) library. [Spark](http://spark.apache.org/) is handy for big data processing and supports Python, R, Scala and Java. For this example we will use PySpark, Spark’s Python API.
 
 **Exploration Phase**
 
@@ -155,7 +156,7 @@ class ClusteringTest(unittest.TestCase):
         self.spark.stop()
 ~~~
 
-The next step is to mock the data. In our case since the data is small so we can use it straight ahead. In practice the data can have millions observations or variables and we need to take a subset of the real data. The amount and kind of data that you mock depends on the complexity of the data. If the data is fairly homogenous then imitating a small amount is enough. If the data is heterogenous more mock data to cover various possible cases, that might break the model training pipeline, will be needed.
+Next step is to mock the data. In our case since the data is small so we can use it straight ahead. In practice the data can have millions observations or variables and we need to take a subset of the real data. The amount and kind of data that you mock depends on the complexity of the data. If the data is fairly homogenous then imitating a small amount is enough. If the data is heterogenous more mock data to cover various possible cases, that might break the model training pipeline, will be needed.
 
 ~~~python
 def mock_data(self):
@@ -188,7 +189,7 @@ def test_convert_df(self):
                                        ("features", "vector")])
 ~~~
 
-We can run test-suite with `nosetests` or `pytest`. The test should fail! Now we can go ahead and implement the `convert_df` function, which would make this test pass:
+We can run test-suite with `nosetests` or `pytest`. The test should fail. Now we can go ahead and implement the `convert_df` function, which would make this test pass:
 
 ~~~python
 def convert_df(spark, data):
