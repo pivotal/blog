@@ -177,7 +177,7 @@ def test_count(self):
     self.assertEqual(len(self.mock_df.collect()), 5)
 ~~~
 
-Next we start writing our first actual test. We created a DataFrame with a tuple of three values. [K-means]((http://spark.apache.org/docs/latest/api/python/_modules/pyspark/ml/clustering.html#KMeans)) in MLlib/ML, requires a DenseVector as input. So we need to convert the data type so that it can be used in MLlib. An appropriate test can be to ensure that the data type is same as expected.
+Next we start writing our first actual test. We created a [DataFrame](http://spark.apache.org/docs/latest/sql-programming-guide.html) with tuples containing three elements. However, the implementation of [k-means](http://spark.apache.org/docs/latest/api/python/_modules/pyspark/ml/clustering.html#KMeans) in MLlib/ML requires a specific [data type](http://spark.apache.org/docs/latest/mllib-data-types.html) (DenseVector or SparseVector) as input. Therefore in order to use it in MLlib, we need to convert the data type first. An appropriate test can be to ensure that the data type is expected to be a DenseVector.
 
 Here is the test:
 
