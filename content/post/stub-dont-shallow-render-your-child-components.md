@@ -165,17 +165,26 @@ For example, we can create a test helper method that takes in a component class 
 
 ```
 //test_helpers.js
+var _ = require('lodash');
+
+var lifecycleMethods = [
+    'render',
+    'componentWillMount',
+    'componentDidMount',
+    'componentWillReceiveProps',
+    'shouldComponentUpdate',
+    'componentWillUpdate',
+    'componentDidUpdate',
+    'componentWillUnmount'
+];
 
 var stubComponent = function(componentClass) {
   beforeEach(function() {
-    spyOn(componentClass.prototype, 'render').and.returnValue(null);
-    spyOn(componentClass.prototype, 'componentWillMount').and.returnValue(null);
-    spyOn(componentClass.prototype, 'componentDidMount').and.returnValue(null);
-    spyOn(componentClass.prototype, 'componentWillReceiveProps').and.returnValue(null);
-    spyOn(componentClass.prototype, 'shouldComponentUpdate').and.returnValue(null);
-    spyOn(componentClass.prototype, 'componentWillUpdate').and.returnValue(null);
-    spyOn(componentClass.prototype, 'componentDidUpdate').and.returnValue(null);
-    spyOn(componentClass.prototype, 'componentWillUnmount').and.returnValue(null);
+    _.each(lifecycleMethods, function(method) {
+      if(typeof componentClass.prototype[method] !== 'undefined') {
+        spyOn(componentClass.prototype, method).and.returnValue(null);
+      }
+    });
   });
 };
 
