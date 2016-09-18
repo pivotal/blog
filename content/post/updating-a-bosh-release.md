@@ -3,8 +3,8 @@ authors:
 - cunnie
 categories:
 - BOSH
-date: 2016-09-14T17:19:30-07:00
-draft: true
+date: 2016-09-18T10:15:30-07:00
+draft: false
 short: |
   Authors of a BOSH Release may want to release a new version when the
   upstream application is updated. This blog post describes the process
@@ -21,12 +21,13 @@ fail](https://github.com/cloudfoundry-community/pdns-release/commit/9e71c74bbf23
 (a final release which couldn't be deployed because the blobs were broken).
 
 In this blog post we describe the procedure we ultimately followed to
-successfully create an updated BOSH final release of the PowerDNS nameserver,
-highlighting some of the tricky and non-obvious steps.
+successfully create an updated BOSH final release of version 4.0.1 of the
+PowerDNS authoritative nameserver, highlighting some of the tricky and
+non-obvious steps.
 
 ## Updating a BOSH Release
 
-### 0. Ensure We're Using the Latest Release Version
+### 0. Ensure Our Git Repo is Up-to-date
 
 We clone our release's git repo:
 
@@ -72,7 +73,6 @@ git diff
 ### 3. Blobs: Out with the Old, In with the new
 
 We add our new blob.
-
 
 ```bash
 bosh add-blob ~/Downloads/pdns-4.0.1.tar.bz2 pdns/pdns-4.0.1.tar.bz2
@@ -124,7 +124,7 @@ We take advantage of our existing BOSH Lite manifest for our PowerDNS release,
 making sure to recreate the deployment if it already exists:
 
 ```bash
-bosh -d pdns deploy manifests/bosh-lite.yml --recreate
+bosh -n -d pdns deploy manifests/bosh-lite.yml --recreate
 ```
 
 ### 5. Test the Development Release
@@ -142,11 +142,26 @@ dig +short SOA example.com @10.244.8.64
   ns1.example.com. ahu.example.com. 2008080300 1800 3600 604800 3600
 ```
 
+<div class="alert alert-success" role="alert"> The SOA record returned by our
+server is different than the "official" SOA record (`sns.dns.icann.org.
+noc.dns.icann.org. 2015082658 7200 3600 1209600 3600`). If we see the official
+SOA record, then either our PowerDNS server is misconfigured or we're querying a
+server other than our PowerDNS server. </div>
+
+
 ### 6. Upload the Blobs
 
-Copy the `private.yml` into place.
+Copy the `private.yml` into place:
+
+```bash
+cp ~/some-dir/private.yml config/
+```
 
 We upload the blob:
+
+```bash
+bosh upload-blobs
+```
 
 ### 7. Create the Final Release
 
@@ -158,6 +173,10 @@ bosh create-release --final --tarball --version 4.0.1 --force
 ```
 
 We copy the tarball to a safe place (we will delete it in a subsequent step).
+
+```bash
+cp releases/pdns/pdns-4.0.1.tgz ~/Downloads/
+```
 
 ### 8. Commit but do NOT Push
 
@@ -174,31 +193,53 @@ git tag v4.0.1
 ### 9. Clean the Release Directory
 
 We `git clean` our release the directory — this will force the blobs to be
-downloaded, and uncover any errors in the blob parentheses
+downloaded, and uncover any errors in the blob configuration
+(`config/blobs.yml`).
 
 ```bash
 git clean -xfd
 ```
 
-### 10. Deploy and Test the Final Release
+### 10. Clean out the BOSH Lite Director
+
+We want to force our BOSH director to recompile the packages (and not
+be contaminated by caches). The most surefire way? We destroy and recreate
+our director, and clean out the compiled package cache, too:
+
+```bash
+pushd ~/workspace/bosh-lite
+vagrant destroy -f
+rm tmp/compiled_package_cache/*
+vagrant up
+popd
+```
+
+We re-upload our stemcell:
+
+```bash
+bosh upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
+```
+
+### 11. Deploy and Test the Final Release
 
 ```bash
 bosh upload-release
-bosh -d pdns deploy manifests/bosh-lite.yml --recreate
+bosh -n -d pdns deploy manifests/bosh-lite.yml
 dig +short SOA example.com @10.244.8.64
   ns1.example.com. ahu.example.com. 2008080300 1800 3600 604800 3600
 ```
 
-### 11. Push the Final Release's Commits
+### 12. Push the Final Release's Commits
 
 ```bash
 git push
 git push --tags
 ```
 
-### 12. (Optional) Publish the Release on GitHub and Update README.md
+### 13. (Optional) Publish the Release on GitHub and Update README.md
 
-Upload the tarball to create a new GitHub Release
+Upload the tarball to GitHub to create a new GitHub Release. Update README.md
+if it refers to uploading the release's tarball.
 
 ## Footnotes
 
