@@ -175,7 +175,7 @@ even before reading the values from the buffer, the exact offset of each attribu
 and avoids unnecessary computation and checks during the execution. 
 
 Inside GPDB, the overall logic for the simple projection of attributes is contained in the 
-the function `ExecVariableList`. The default implementation of this function with out CodeGen proceeds in the following code path : `ExecVariableList > slot_getattr > _slot_getsomeattrs > slot_deform_tuple`.
+the function `ExecVariableList`. The default implementation of this function without CodeGen proceeds in the following code path : `ExecVariableList > slot_getattr > _slot_getsomeattrs > slot_deform_tuple`.
 Here, `slot_deform_tuple` does the actual deformation from the buffer to a `TupleTableSlot`. The code generated version of `ExecVariableList` squashes the above code path, 
 and gives a performance boost by using constant attribute lengths, dropping unnecessary null checks, unrolling loops and reducing external function calls. 
 If such optimization are not possible during code generation, we immediately bail out from the code generation pipeline and use the default GPDB implementation of
