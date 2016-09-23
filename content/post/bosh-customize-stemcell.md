@@ -3,8 +3,8 @@ authors:
 - cunnie
 categories:
 - BOSH
-date: 2016-09-21T05:35:01-07:00
-draft: true
+date: 2016-09-23T05:35:01-07:00
+draft: false
 short: |
   BOSH Stemcells are Linux-based bootable disk images upon which BOSH applications
   may be deployed. This blog post describes a process to customize a
@@ -37,23 +37,34 @@ stemcell transfer and eliminates running-out-of-space issues), and using it to
 build our stemcell in no way impedes its ability to perform as a BOSH Director).
 
 ```bash
-  # we use the BOSH Lite directory as a staging point
+ # we use the BOSH Lite directory as a staging point
 cd ~/workspace/bosh-lite
  # download the stemcell:
-curl -L https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-trusty-go_agent?v=3263.2 -o tmp/custom_stemcell_3263.2.tgz
+curl -L https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-trusty-go_agent?v=3263.3 -o tmp/custom_stemcell_3263.3.tgz
 ```
 
 <div class="alert alert-warning" role="alert">
 
-<b>Don't download "Light" stemcells</b>. Certain IaaSes (e.g. Amazon Web
+<b>Don't download the "Light" stemcell</b>. Certain IaaSes (e.g. Amazon Web
 Services (AWS)) have "Light" stemcells as well as "Regular" stemcells, but
 "Light" stemcells aren't true stemcells (i.e. they don't contain a bootable disk
 image); instead they are pointers to the actual stemcell (in Amazon's case, a
 list of Amazon Machine Images (AMIs) by region). Always be sure to download the
-regular stemcell. Light stemcells are small, typically ~8kB; Regular stemcells
+regular stemcell. Light stemcells are small, typically ~20kB; Regular stemcells
 are large, typically ~600MB. On <a class="alert-link"
 href="http://bosh.io/">bosh.io</a>, a light stemcell will be denoted with the
-word "Light" (e.g. "AWS Xen-HVM Light")
+word "Light" (e.g. "AWS Xen-HVM Light").
+
+</div>
+
+<div class="alert alert-warning" role="alert">
+
+<b>Download the "Raw" stemcell</b>. OpenStack has two types of stemcells: "Raw"
+and "Regular". Always download the "Raw" stemcell; its disk image can be mounted
+via a loop device and modified. The regular stemcell's disk image is QEMU Copy
+On Write (QCOW) formatted and cannot be mounted (thus cannot be customized). On
+<a class="alert-link" href="http://bosh.io/">bosh.io</a>, a raw stemcell will be
+denoted with the word "raw" (e.g. "OpenStack KVM (raw)").
 
 </div>
 
@@ -70,7 +81,7 @@ cd /vagrant/tmp
 mkdir stemcell image
 cd stemcell
  # unpack the stemcell:
-tar xvf ../custom_stemcell_3263.2.tgz
+tar xvf ../custom_stemcell_3263.3.tgz
 cd ../image
  # unpack the bootable Linux disk image
 tar xvf ../stemcell/image
@@ -82,6 +93,8 @@ sudo partprobe /dev/loop0
 sudo mount /dev/loop0p1 /mnt/stemcell
  # we like to use chroot to avoid accidentally polluting the BOSH Lite filesystem
 sudo chroot /mnt/stemcell /bin/bash
+ # update the stemcell to 3263.3.1
+echo -n 3263.3.1 > /var/vcap/bosh/etc/stemcell_version
  # we create user 'cunnie' in the 'admin' group (sudo), passwd `c1oudc0w`
 useradd -m -G admin -p $(openssl passwd -1 -salt xyz c1oudc0w) cunnie
  # change to the new user's homedir
@@ -108,44 +121,82 @@ cd ../stemcell
 vi stemcell.MF
 ```
 
+<div class="alert alert-success" role="alert">
+
+Configure a DNS server if the customization requires connecting to the internet
+(e.g. `apt install telnetd`): `echo 'nameserver 8.8.8.8' > /etc/resolv.conf`.
+
+</div>
+
+<p />
+
 We find it good practice to modify the stemcell number when customizing a
 stemcell — it prevents many kinds of errors, and well worth the additional time
 spent  re-compiling BOSH releases. In this example, we bump the stemcell number
-to `3263.2.1`:
+to `3263.3.1`:
 
 ```diff
--version: '3263.2'
-+version: '3263.2.1'
+-version: '3263.3'
++version: '3263.3.1'
 bosh_protocol: 1
 sha1: 6dec63560e5ee516e8495eeb39553e81049e19b8
 operating_system: ubuntu-trusty
 cloud_properties:
   name: bosh-google-kvm-ubuntu-trusty-go_agent
--  version: '3263.2'
-+  version: '3263.2.1'
+-  version: '3263.3'
++  version: '3263.3.1'
 ```
 
 We create our new, custom stemcell; we put the new version number in the name:
 
 ```bash
  # create the stemcell
-tar czvf ../custom_stemcell_3263.2.1.tgz *
+tar czvf ../custom_stemcell_3263.3.1.tgz *
  # exit the Vagrant ssh session
 exit
 ```
 
-## 2. Use the New Stemcell
+## 2. Upload the New Stemcell
 
-We upload our new stemcell to our director, which takes ~6 minutes.
+We upload our new stemcell to our director, which takes ~6 minutes with our
+internet connection.
 
 ```bash
  # we upload the stemcell to our BOSH Director
-bosh upload-stemcell ~/workspace/bosh-lite/tmp/custom_stemcell_3263.2.1.tgz
+bosh upload-stemcell ~/workspace/bosh-lite/tmp/custom_stemcell_3263.3.1.tgz
 ```
 
+## 3. Deploy
 
+We use the new BOSH Golang CLI to deploy: <sup>[[Golang CLI](#golangcli)]</sup>
 
+```bash
+bosh deploy -d concourse concourse-ntp-pdns-gce.yml \
+  -l <(lpass show --note deployments) \
+  -l <(curl -L https://raw.githubusercontent.com/cunnie/sslip.io/master/conf/sslip.io%2Bnono.io.yml) \
+  --no-redact
+```
 
+## 4. Test
+
+We test our custom stemcell by ssh'ing into our newly-deployed VM
+(ns-gce.nono.io) using the special user account we created, "cunnie", with our
+private key:
+
+```bash
+ssh -i ~/.ssh/google cunnie@ns-gce.nono.io
+```
+
+<div class="alert alert-warning" role="alert">
+
+<b>Don't assume too much when customizing</b>. Stemcells are different beasts
+than most UNIX distributions: for example, `/tmp/` is not world-writeable,
+d&aelig;mons such as `rsyslog` and `sshd` are restarted several times by several
+different mechanisms (e.g. upstart, `kill`), directories are obscured by
+subsequent bind-mounts (don't add any files to `/var/log` and expect to find
+them). Tread carefully, the ice is thin.
+
+</div>
 
 ---
 
@@ -155,3 +206,25 @@ bosh upload-stemcell ~/workspace/bosh-lite/tmp/custom_stemcell_3263.2.1.tgz
 someone has mounted a Linux filesystem to a macOS machine using a loopback
 device. If the procedure is not too burdensome, we may include it in our blog
 post.
+
+<a name="golangcli"><sup>[Golang CLI]</sup></a> We are using an experimental
+Golang-based BOSH command line interface
+([CLI](https://github.com/cloudfoundry/bosh-cli)), and the arguments are
+slightly different than those of canonical Ruby-based [BOSH
+CLI](https://github.com/cloudfoundry/bosh/tree/master/bosh_cli); however, the
+arguments are similar enough to be readily adapted to the Ruby CLI (e.g. the
+Golang CLI's `bosh upload-stemcell` equivalent to the Ruby CLI's `bosh upload
+stemcell` (no dash)).
+
+The new CLI also allows variable interpolation, with the value of the variables
+to interpolate passed in via YAML file on the command line. This feature allows
+the redaction of sensitive values (e.g. SSL keys) from the manifest. The format
+is similar to Concourse's interpolation, except that interpolated values are
+bracketed by double parentheses "((key))", whereas Concourse uses double curly
+braces "{{key}}".
+
+Similar to Concourse, the experimental BOSH CLI allows the YAML file containing
+the secrets to be passed via the command line, e.g. `-l ~/secrets.yml` or
+`-l <(lpass show --note secrets)`
+
+The Golang CLI is in alpha and should not be used on production systems.
