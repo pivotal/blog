@@ -1,6 +1,7 @@
 ---
 authors:
 - cunnie
+- lfranklin
 categories:
 - BOSH
 date: 2016-09-23T05:35:01-07:00
@@ -15,6 +16,14 @@ title: How to Customize a BOSH Stemcell
 In this blog post, we describe the procedure we followed in order to create a
 custom Google Compute Engine (GCE) stemcell with a user `cunnie` whose
 `~/.ssh/authorized_keys` is pre-populated with a specific public key.
+
+<div class="alert alert-error" role="alert">
+
+Customizing stemcells is highly discouraged — it voids your warranty, and opens
+a host of problems which will only cause pain. This post is intended as an
+educational demonstration of the stemcell building process. You have been warned.
+
+</div>
 
 <div class="alert alert-info" role="alert">
 
@@ -59,12 +68,14 @@ word "Light" (e.g. "AWS Xen-HVM Light").
 
 <div class="alert alert-warning" role="alert">
 
-<b>Download the "Raw" stemcell</b>. OpenStack has two types of stemcells: "Raw"
-and "Regular". Always download the "Raw" stemcell; its disk image can be mounted
-via a loop device and modified. The regular stemcell's disk image is QEMU Copy
-On Write (QCOW) formatted and cannot be mounted (thus cannot be customized). On
-<a class="alert-link" href="http://bosh.io/">bosh.io</a>, a raw stemcell will be
-denoted with the word "raw" (e.g. "OpenStack KVM (raw)").
+<b>Download the "Raw" stemcell</b>. These instructions assume a "raw" stemcell
+and  may not work with non-raw images (e.g. vSphere's .ovf format). OpenStack
+for example has two types of stemcells: "Raw" and "Regular". "Raw" stemcell's
+disk image can be mounted via a loop device and modified. The regular stemcell's
+disk image is QEMU Copy On Write (QCOW) formatted and cannot be mounted (thus
+cannot be customized). On <a class="alert-link"
+href="http://bosh.io/">bosh.io</a>, a raw stemcell will be denoted with the word
+"raw" (e.g. "OpenStack KVM (raw)").
 
 </div>
 
@@ -115,10 +126,6 @@ sudo umount /mnt/stemcell
 sudo losetup -d /dev/loop0
  # tar up our modified Linux bootable disk image
 tar czvf ../stemcell/image *
- # change back to our stemcell directory
-cd ../stemcell
- # update the manifest to use a new stemcell number
-vi stemcell.MF
 ```
 
 <div class="alert alert-success" role="alert">
@@ -134,6 +141,13 @@ We find it good practice to modify the stemcell number when customizing a
 stemcell — it prevents many kinds of errors, and well worth the additional time
 spent  re-compiling BOSH releases. In this example, we bump the stemcell number
 to `3263.3.1`:
+
+```bash
+ # change back to our stemcell directory
+cd ../stemcell
+ # update the manifest to use a new stemcell number
+vi stemcell.MF
+```
 
 ```diff
 -version: '3263.3'
