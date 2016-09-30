@@ -18,6 +18,8 @@ We recently started evaluating [Spring Cloud Dataflow](https://cloud.spring.io/s
 
 In this post we will show you how to create a simple Dataflow Stream Sink and deploy it to [Pivotal Cloud Foundry](https://run.pivotal.io/). Sinks are the component that terminate Streams, so this seemed like the absolute smallest piece we could work on to get started.
 
+Our sample Sink app is in a [public repo](https://github.com/iad-dev/hello-charmander-dataflow-sink) if you want to check it out.
+
 For context, Streams are made up of Sources, Sinks, and (optionally) Processors. Sources are apps that output messages, Sinks are apps that input messages, and Processors go in the middle with both input and output. (Technically, [Processors are both Sources and Sinks](https://github.com/spring-cloud/spring-cloud-stream/blob/master/spring-cloud-stream/src/main/java/org/springframework/cloud/stream/messaging/Processor.java))
 
 `[Stream] -> [Processor] -> [Sink]`
