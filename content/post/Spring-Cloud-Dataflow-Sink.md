@@ -16,17 +16,17 @@ title: Everything and the Spring Cloud Dataflow Sink
 
 We recently started evaluating [Spring Cloud Dataflow](https://cloud.spring.io/spring-cloud-dataflow/) for a project and were initially overwhelmed with the capabilities this system provides. Dataflow is a very powerful tool, and we found it a bit tricky to know where to get started. Through our own experimentation and discussion with the Dataflow team, we came up with a minimal setup that we think is very useful for getting started with Dataflow, specifically around [Streams](http://cloud.spring.io/spring-cloud-stream/).
 
-In this post we will show you how to create a simple Dataflow Stream Sink and deploy it to [Pivotal Cloud Foundry](https://run.pivotal.io/). Sinks are the component that terminate Streams, so this seemed like the absolute smallest piece we could work on to get started.
+In this post we will show you how to create a simple Dataflow Stream Sink and deploy it to [Pivotal Cloud Foundry](https://run.pivotal.io/). Sinks are the components that terminate Streams, so this seemed like the absolute smallest piece we could work on to get started.
 
-Our sample Sink app is in a [public repo](https://github.com/iad-dev/hello-charmander-dataflow-sink) if you want to check it out.
+Our [sample Sink app is in a public repo](https://github.com/iad-dev/hello-charmander-dataflow-sink) if you want to check it out.
 
-For context, Streams are made up of Sources, Sinks, and (optionally) Processors. Sources are apps that output messages, Sinks are apps that input messages, and Processors go in the middle with both input and output. (Technically, [Processors are both Sources and Sinks](https://github.com/spring-cloud/spring-cloud-stream/blob/master/spring-cloud-stream/src/main/java/org/springframework/cloud/stream/messaging/Processor.java))
+For context, Streams are made up of Sources, Sinks, and (optionally) Processors. Sources are apps that output messages, Sinks are apps that input messages, and Processors go in the middle with both an input and output. (Technically, [Processors are both Sources and Sinks](https://github.com/spring-cloud/spring-cloud-stream/blob/master/spring-cloud-stream/src/main/java/org/springframework/cloud/stream/messaging/Processor.java))
 
 `[Stream] -> [Processor] -> [Sink]`
 
 ## Generate a Sink Project
 
-The Spring Cloud Stream Initializr can be found at http://start-scs.cfapps.io/. Here, generate a project with the `Log Sink` dependency. We chose to use Gradle, so if you're using Maven you can translate as needed.
+Go to the Spring Cloud Stream Initializr at http://start-scs.cfapps.io/. Here, generate a project with the `Log Sink` dependency. We chose to use Gradle, so if you're using Maven you can translate as needed.
 
 Make sure to fill out the Project Metadata as desired. Ours looked like this:
 
@@ -36,7 +36,7 @@ Make sure to fill out the Project Metadata as desired. Ours looked like this:
 
 ## Update Dependencies
 
-The Initializr will create a [build.gradle](https://github.com/iad-dev/hello-charmander-dataflow-sink/blob/master/build.gradle) file that uses the most recent version of Spring Boot, currently 1.4.1. As of September 2016, this version is not compatible with the latest release of Spring Cloud Stream Sinks, so we used Spring Boot 1.4.0 instead.
+The Initializr will create a [build.gradle](https://github.com/iad-dev/hello-charmander-dataflow-sink/blob/master/build.gradle) file that uses the most recent version of Spring Boot, currently 1.4.1. As of September 2016, this version is not compatible with the latest release, 1.0.0, of Spring Cloud Stream Sinks, so we used Spring Boot 1.4.0 instead.
 
 ```
 // build.gradle
@@ -128,45 +128,51 @@ cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_PASSWOR
 cf set-env charmander-dataflow-server MAVEN_REMOTE_REPOSITORIES_REPO1_URL https://repo.spring.io/libs-release
 ```
 
-The Cloud Foundry username and password will be used to deploy and manage the Stream apps (such as our Sink), so make sure those credentials can manage apps within your PCF Space.
+The Cloud Foundry username and password will be used to deploy and manage the Stream apps (such as our Sink), so make sure those credentials can manage apps within your Cloud Foundry Space.
 
 Finally, restage the server to apply your changes and start the Dataflow Server:
 
 `cf restage charmander-dataflow-server`
 
-Once the server starts, you can see the Dataflow Server web admin UI. Ours is at http://charmander-dataflow-server.cfapps.io/dashboard
+Once the server starts, you can see the Dataflow Server web UI. You can find yours at `https://<your-dataflow-server>.cfapps.io/dashboard`
 
 More thorough docs for setting up Dataflow on Cloud Foundry can be found here: http://docs.spring.io/spring-cloud-dataflow-server-cloudfoundry/docs/current-SNAPSHOT/reference/htmlsingle/#_deploying_on_cloud_foundry
 
 ## Deploy the Sink App
 
+### Install Dataflow Shell
+
+In order to deploy your app, you'll want to use the [Dataflow Shell app](https://github.com/spring-cloud/spring-cloud-dataflow/tree/master/spring-cloud-dataflow-shell). You can also use the web UI if you prefer.
+
+Download the Dataflow Shell app:
+
+`wget http://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-shell/1.0.0.RELEASE/spring-cloud-dataflow-shell-1.0.0.RELEASE.jar`
+
+Run the jar to get a shell prompt:
+
+`java -jar spring-cloud-dataflow-shell-1.0.0.RELEASE.jar`
+
 ### Host the Sink Jar
 
-In order for the Dataflow Server to be able to deploy your Sink app, you need to host it somewhere accessible to the Dataflow Server. We chose to host our Sink jar on AWS S3, but you could use any public url or maven repo to do so. First, you will need to build the jar using gradle.
+First, build the Sink jar:
 
 `./gradlew clean assemble`
 
 This will package our app into a jar file in `build/libs`.
 
-### Install Dataflow Shell
-
-Next, we installed our Sink app with the [Dataflow Shell app](https://github.com/spring-cloud/spring-cloud-dataflow/tree/master/spring-cloud-dataflow-shell). You can also use the web UI if you prefer.
-
-Download the Dataflow Shell app:
-`wget http://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-shell/1.0.0.RELEASE/spring-cloud-dataflow-shell-1.0.0.RELEASE.jar`
-
-Run the jar to get a shell prompt:
-`java -jar ~/Downloads/spring-cloud-dataflow-shell-1.0.0.RELEASE.jar`
+To deploy your Sink app, you'll need to host the jar file somewhere accessible to the Dataflow Server. We chose to host our Sink jar on AWS S3, but you could use any public url or maven repo.
 
 ### Register the Sink App
 
 From the Dataflow Shell, connect to your Dataflow server:
+
 `dataflow:>dataflow config server http://charmander-dataflow-server.cfapps.io`
 
 Then, register your Sink app:
+
 `dataflow:>app register --name char-log --type sink --uri https://link-to-your-jar.jar`
 
-At this point, we have registered our app within the Dataflow Server. You can verify this on the [Apps](http://charmander-dataflow-server.cfapps.io/dashboard/index.html#/apps/apps) tab of the Dataflow Server dashboard, or with the Shell:
+At this point, we have registered our app within the Dataflow Server. You can verify this on the `Apps` tab of the Dataflow Server dashboard, or with the Shell:
 
 ```
 dataflow:>app list
@@ -179,7 +185,7 @@ dataflow:>app list
 
 ## Create the Stream
 
-In order for messages to flow into your Sink, you'll need a Stream Source. We'll use the ready-made timer Source from the Maven Repository.
+In order for messages to flow into your Sink, you'll need a Stream Source. We'll use the ready-made timer Source from maven.
 
 `dataflow:>app register --name time --type source --uri maven://org.springframework.cloud.stream.app:time-source-rabbit:1.0.0.RELEASE`
 
@@ -200,13 +206,17 @@ There are two ways to create a Stream. First, you can use the Dataflow Shell:
 
 `dataflow:>stream create --name 'char-stream' --definition 'time --time-unit=SECONDS --fixed-delay=5 | char-log'`
 
-This follows the format `stream create --name '{NAME_OF_STREAM}' --definition '{SOURCE_APP_NAME} {OPTIONAL_SOURCE_PROPERTIES} | {SINK_APP_NAME} {OPTIONAL_SINK_PROPERTIES}'`
+This follows the format 
 
-You can also create a Stream in the Dashboard UI by clicking on the `Streams` tab and then on `Create Stream`. The available Sinks, Sources, and Transforms will be on the left of the workspace. You can drag them and then connect Sources to Sinks for the configuration you want. The resulting code will be shown above the flow chart. You can then type in any variable changes into that and then use the `Create Stream` button to create it. 
+`stream create --name '{NAME_OF_STREAM}' --definition '{SOURCE_APP_NAME} {OPTIONAL_SOURCE_PROPERTIES} | {SINK_APP_NAME} {OPTIONAL_SINK_PROPERTIES}'`
+
+Alternatively, you can create a Stream in the Dashboard UI by clicking on the `Streams` tab and then on `Create Stream`. The available Sinks, Sources, and Processors will be on the left of the workspace. You can drag them and then connect Sources to Sinks for the configuration you want. If you click on the `time` module, you will see a gear icon appear in the bottom left corner. Clicking that will let you specify properties for `time`, such as `fixed-delay` and `time-units`.
+
+The resulting code will be shown above the flow chart. You can then click on the `Create Stream` button to create it. 
 
 ![Creating a Stream in the UI](/static/images/spring-cloud-dataflow-sink/create-stream.png)
 
-Your stream `char-stream` and its definition will now be listed. Go ahead and click `Deploy` and then `Deploy` on the next page (we have no 'Deployment Properties' to add).
+Your stream `char-stream` and its definition will now be listed in the `Definitions` tab. Go ahead and click `Deploy` and then `Deploy` on the next page (we have no `Deployment Properties` to add).
 
 To see the new Sink and Source apps, go to your Cloud Foundry space and notice that there are two new apps starting up, with some randomly generated words in the app names. It may take a minute or so for those spring apps to boot up.
 
