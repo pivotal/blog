@@ -8,16 +8,27 @@ categories:
 date: 2016-09-28T15:39:29-07:00
 draft: true
 short: |
-  Short description for index pages, and under title when viewing a post. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+  Get started with Spring Cloud Dataflow Streams by creating a custom Sink app and deploying to Pivotal Cloud Foundry.
 title: Everything and the Spring Cloud Dataflow Sink
 ---
 
-# Intro
+# Welcome to Dataflow Streams
+
+We recently started evaluating [Spring Cloud Dataflow](https://cloud.spring.io/spring-cloud-dataflow/) for a project and were initially overwhelmed with the capabilities this system provides. Dataflow is a very powerful tool, and we found it a bit tricky to know where to get started. Through our own experimentation and discussion with the Dataflow team, we came up with a minimal setup that we think is very useful for getting started with Dataflow, specifically around [Streams](http://cloud.spring.io/spring-cloud-stream/).
+
+In this post we will show you how to create a simple Dataflow Stream Sink and deploy it to [Pivotal Cloud Foundry](https://run.pivotal.io/). Sinks are the component that terminate Streams, so this seemed like the absolute smallest piece we could work on to get started.
+
+For context, Streams are made up of Sources, Sinks, and (optionally) Processors. Sources are apps that output messages, Sinks are apps that input messages, and Processors go in the middle with both input and output. (Technically, [Processors are both Sources and Sinks](https://github.com/spring-cloud/spring-cloud-stream/blob/master/spring-cloud-stream/src/main/java/org/springframework/cloud/stream/messaging/Processor.java))
+
+`[Stream] -> [Processor] -> [Sink]`
 
 ## Generate a Sink Project
-The Spring Cloud Stream initializr can be found at [http://start-scs.cfapps.io/]. Here, generate a Gradle project with the Log Sink dependency. Fill out the Project Metadata as desired. Ours looked like:
 
-![Project Metadata](/images/spring-cloud-dataflow-sink/project-metadata.png)
+The Spring Cloud Stream Initializr can be found at http://start-scs.cfapps.io/. Here, generate a project with the `Log Sink` dependency. We chose to use Gradle, so if you're using Maven you can translate as needed.
+
+Make sure to fill out the Project Metadata as desired. Ours looked like this:
+
+![Project Metadata](/static/images/spring-cloud-dataflow-sink/project-metadata.png)
 
 ## Update Dependencies
 
