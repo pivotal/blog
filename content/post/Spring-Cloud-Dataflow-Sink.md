@@ -30,9 +30,9 @@ Go to the Spring Cloud Stream Initializr at http://start-scs.cfapps.io/. Here, g
 
 Make sure to fill out the Project Metadata as desired. Ours looked like this:
 
-![Project Metadata](/static/images/spring-cloud-dataflow-sink/project-metadata.png)
+![Project Metadata](/images/spring-cloud-dataflow-sink/project-metadata.png)
 
-![Jackie Chan Meme](/static/images/spring-cloud-dataflow-sink/charmander-sink.jpg)
+![Jackie Chan Meme](/images/spring-cloud-dataflow-sink/charmander-sink.jpg)
 
 ## Update Dependencies
 
@@ -214,17 +214,17 @@ Alternatively, you can create a Stream in the Dashboard UI by clicking on the `S
 
 The resulting code will be shown above the flow chart. You can then click on the `Create Stream` button to create it.
 
-![Creating a Stream in the UI](/static/images/spring-cloud-dataflow-sink/create-stream.png)
+![Creating a Stream in the UI](/images/spring-cloud-dataflow-sink/create-stream.png)
 
 Your stream `char-stream` and its definition will now be listed in the `Definitions` tab. Go ahead and click `Deploy` and then `Deploy` on the next page (we have no `Deployment Properties` to add).
 
 To see the new Sink and Source apps, go to your Cloud Foundry space and notice that there are two new apps starting up, with some randomly generated words in the app names. It may take a minute or so for those spring apps to boot up.
 
-![Sink and Source Apps in CF](/static/images/spring-cloud-dataflow-sink/sink_and_source.png)
+![Sink and Source Apps in CF](/images/spring-cloud-dataflow-sink/sink_and_source.png)
 
 To see the logging that is now done by your stream, click on the app for your Sink, the one ending in `char-log`, and tail its logs. It will look something like this:
 
-![Sink Logs](/static/images/spring-cloud-dataflow-sink/sink_logs.png)
+![Sink Logs](/images/spring-cloud-dataflow-sink/sink_logs.png)
 
 You can see that every 5 seconds, we are letting our Charmander know what time it is (they are forgetful creatures).
 
