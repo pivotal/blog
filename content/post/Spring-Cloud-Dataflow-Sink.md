@@ -30,6 +30,8 @@ Make sure to fill out the Project Metadata as desired. Ours looked like this:
 
 ![Project Metadata](/static/images/spring-cloud-dataflow-sink/project-metadata.png)
 
+![Jackie Chan Meme](/static/images/spring-cloud-dataflow-sink/charmander-sink.jpg)
+
 ## Update Dependencies
 
 The Initializr will create a [build.gradle](https://github.com/iad-dev/hello-charmander-dataflow-sink/blob/master/build.gradle) file that uses the most recent version of Spring Boot, currently 1.4.1. As of September 2016, this version is not compatible with the latest release of Spring Cloud Stream Sinks, so we used Spring Boot 1.4.0 instead.
