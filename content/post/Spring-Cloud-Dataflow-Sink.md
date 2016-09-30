@@ -216,9 +216,14 @@ You can see that every 5 seconds, we are letting our Charmander know what time i
 
 Congratulations, your Spring Cloud Dataflow Stream is working!
 
+## What We Did
+
 In review:
+
 1. Create the custom Sink, starting with the Spring Cloud Stream Initializr
-2. Deploy the Dataflow Server to Cloud Foundry and set up the Dataflow Shell
-3. Register the custom Sink and any other Sources or Sinks with the server
-4. Create the Stream
-5. Deploy the Stream
+1. Deploy the Dataflow Server to Cloud Foundry and set up the Dataflow Shell
+1. Register the custom Sink and any other Sources or Sinks with the server
+1. Create the Stream
+1. Deploy the Stream
+
+Hopefully this will help you get started and dip your toes in the Spring Cloud Dataflow ecosystem!
