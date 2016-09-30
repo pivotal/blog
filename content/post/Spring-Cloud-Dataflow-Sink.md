@@ -19,6 +19,32 @@ The Spring Cloud Stream initializr can be found at [http://start-scs.cfapps.io/]
 
 ![Project Metadata](/images/spring-cloud-dataflow-sink/project-metadata.png)
 
+## Update Dependencies
+
+The Initializr will create a [build.gradle](https://github.com/iad-dev/hello-charmander-dataflow-sink/blob/master/build.gradle) file that uses the most recent version of Spring Boot, currently 1.4.1. As of September 2016, this version is not compatible with the latest release of Spring Cloud Stream Sinks, so we used Spring Boot 1.4.0 instead.
+
+```
+// build.gradle
+
+buildscript {
+	ext {
+		springBootVersion = '1.4.0.RELEASE'
+	}
+	...
+}
+```
+
+Additionally, for deploying to Cloud Foundry, you'll need a message queue binder. We used RabbitMQ since that service is easily available on [Pivotal Web Services](https://run.pivotal.io/) where we will be hosting our apps.
+
+```
+// build.gradle
+
+dependencies {
+    compile('org.springframework.cloud:spring-cloud-stream-binder-rabbit')
+    ....
+}
+```
+
 ## Create the Custom Sink Logger
 
 Next, write the code for the logger.
@@ -46,27 +72,6 @@ public class SinkConfiguration {
 ```
 
 ############################################# COME BACK AND EXPLAIN ABOVE ANNOTATIONS
-
-## Update build.gradle file
-The Initializr will create a build.gradle file that uses the most recent version of Spring, currently 1.4.1. As of September 2016, this version is not compatible with the latest release of Spring Cloud Stream Sinks, so we used Spring 1.4.0.
-
-```
-buildscript {
-	ext {
-		springBootVersion = '1.4.0.RELEASE'
-	}
-	...
-}
-```
-
-Additionally, for deploying to Cloud Foundry, you'll need a message queue binder. We used RabbitMQ.
-
-```
-dependencies {
-	compile('org.springframework.cloud:spring-cloud-stream-binder-rabbit')
-  ...
-}
-```
 
 ## Deploy Dataflow Server
 
