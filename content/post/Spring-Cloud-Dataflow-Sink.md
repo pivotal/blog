@@ -75,29 +75,31 @@ This class binds to the Sink input message broker channel and will receive any m
 
 ############################################# COME BACK AND EXPLAIN ABOVE ANNOTATIONS
 
-## Deploy Dataflow Server
+## Deploy the Dataflow Server
 
-Download and push the Cloud Foundry Dataflow Server jar found under Spring Cloud Data Flow Server Implementations on [https://cloud.spring.io/spring-cloud-dataflow/] to Cloud Foundry.
+Download and push the Cloud Foundry Dataflow Server jar found under `Spring Cloud Data Flow Server Implementations` on https://cloud.spring.io/spring-cloud-dataflow/ to Cloud Foundry. We named our server `charmander-dataflow-server` to avoid naming conflicts on PWS, but you can call yours whatever you like.
+
+Create the Dataflow Server app:
 
 `cf push charmander-dataflow-server -p ~/Downloads/spring-cloud-dataflow-server-cloudfoundry-1.0.0.RELEASE.jar --no-start`
 
-Create the services your server will need:
+Create the services your Dataflow Server will need:
 
-`cf create-service rediscloud 30mb redis`
+```
+cf create-service rediscloud 30mb redis
+cf create-service cloudamqp lemur rabbit
+cf create-service p-mysql 100mb my_mysql
+```
 
-`cf create-service cloudamqp lemur rabbit`
+Bind the services to the Dataflow Server:
 
-`cf create-service p-mysql 100mb my_mysql`
+```
+cf bind-service charmander-dataflow-server redis
+cf bind-service charmander-dataflow-server rabbit
+cf bind-service charmander-dataflow-server my_mysql
+```
 
-Bind the services:
-
-`cf bind-service charmander-dataflow-server redis`
-
-`cf bind-service charmander-dataflow-server rabbit`
-
-`cf bind-service charmander-dataflow-server my_mysql`
-
-Set the environment variables:
+Set the Dataflow Server environment variables:
 
 ```
 cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_URL https://api.run.pivotal.io
@@ -111,8 +113,13 @@ cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_PASSWOR
 cf set-env charmander-dataflow-server MAVEN_REMOTE_REPOSITORIES_REPO1_URL https://repo.spring.io/libs-release
 ```
 
-Restage the server:
+The Cloud Foundry username and password will be used to deploy and manage the Stream apps (such as our Sink), so make sure those credentials can manage apps within your PCF Space.
+
+Finally, restage the server to apply your changes and start the Dataflow Server:
+
 `cf restage charmander-dataflow-server`
+
+Once the server starts, you can see the Dataflow Server web admin UI. Ours is at http://charmander-dataflow-server.cfapps.io/dashboard
 
 More thorough docs for setting up Dataflow on Cloud Foundry can be found here: http://docs.spring.io/spring-cloud-dataflow-server-cloudfoundry/docs/current-SNAPSHOT/reference/htmlsingle/#_deploying_on_cloud_foundry
 
