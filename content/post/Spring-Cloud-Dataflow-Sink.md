@@ -8,27 +8,16 @@ categories:
 date: 2016-09-28T15:39:29-07:00
 draft: true
 short: |
-  Get started with Spring Cloud Dataflow Streams by creating a custom Sink app and deploying to Pivotal Cloud Foundry.
+  Short description for index pages, and under title when viewing a post. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
 title: Everything and the Spring Cloud Dataflow Sink
 ---
 
-# Welcome to Dataflow Streams
-
-We recently started evaluating [Spring Cloud Dataflow](https://cloud.spring.io/spring-cloud-dataflow/) for a project and were initially overwhelmed with the capabilities this system provides. Dataflow is a very powerful tool, and we found it a bit tricky to know where to get started. Through our own experimentation and discussion with the Dataflow team, we came up with a minimal setup that we think is very useful for getting started with Dataflow, specifically around [Streams](http://cloud.spring.io/spring-cloud-stream/).
-
-In this post we will show you how to create a simple Dataflow Stream Sink and deploy it to [Pivotal Cloud Foundry](https://run.pivotal.io/). Sinks are the component that terminate Streams, so this seemed like the absolute smallest piece we could work on to get started.
-
-For context, Streams are made up of Sources, Sinks, and (optionally) Processors. Sources are apps that output messages, Sinks are apps that input messages, and Processors go in the middle with both input and output. (Technically, [Processors are both Sources and Sinks](https://github.com/spring-cloud/spring-cloud-stream/blob/master/spring-cloud-stream/src/main/java/org/springframework/cloud/stream/messaging/Processor.java))
-
-`[Stream] -> [Processor] -> [Sink]`
+# Intro
 
 ## Generate a Sink Project
+The Spring Cloud Stream initializr can be found at [http://start-scs.cfapps.io/]. Here, generate a Gradle project with the Log Sink dependency. Fill out the Project Metadata as desired. Ours looked like:
 
-The Spring Cloud Stream Initializr can be found at http://start-scs.cfapps.io/. Here, generate a project with the `Log Sink` dependency. We chose to use Gradle, so if you're using Maven you can translate as needed.
-
-Make sure to fill out the Project Metadata as desired. Ours looked like this:
-
-![Project Metadata](/static/images/spring-cloud-dataflow-sink/project-metadata.png)
+![Project Metadata](/images/spring-cloud-dataflow-sink/project-metadata.png)
 
 ## Create the Custom Sink Logger
 
@@ -112,7 +101,7 @@ cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_STREAM_
 cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_USERNAME {email}
 cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_PASSWORD {password}
 
-cf set-env dataflow-server MAVEN_REMOTE_REPOSITORIES_REPO1_URL https://repo.spring.io/libs-release
+cf set-env charmander-dataflow-server MAVEN_REMOTE_REPOSITORIES_REPO1_URL https://repo.spring.io/libs-release
 ```
 
 Restage the server:
@@ -146,18 +135,39 @@ From the Dataflow shell, connect to your Dataflow server:
 `dataflow:>dataflow config server http://charmander-dataflow-server.cfapps.io`
 
 Then, register your sink app:
-`dataflow:>app register --name hello-charmander-log --type sink --uri https://link-to-your-jar.jar`
+`dataflow:>app register --name char-log --type sink --uri https://link-to-your-jar.jar`
 
 ## Create the Stream
-The Dataflow server has a dashboard at http://charmander-dataflow-server.cfapps.io/dashboard. Your sink `hello-charmander-log` will be listed there.
+The Dataflow server has a dashboard at http://charmander-dataflow-server.cfapps.io/dashboard. Your sink `char-log` will be listed there.
 
 In order for data to flow to your sink, you'll need a source. We'll use the ready-made timer source on the Maven Repositories.
 
 `dataflow:>app register --name time --type source --uri maven://org.springframework.cloud.stream.app:time-source-rabbit:1.0.2.RELEASE`
 
-Go back to dashboard and see them.
+On the dashboard page, you should now see two apps: time of type source and hello-char-log of type sink.
 
-Click on "Streams" tab on dashboard.
-Click on "Create Stream"
+If you click on the magnifying glass for the time source, you can see a list of properties that can be set when you make a stream. We will use `time-unit` and `fixed-delay` for our stream.
 
-View logs in CF
+There are two ways to create a stream. First, you can use the Dataflow shell:
+
+`dataflow:>stream create --name 'char-stream' --definition 'time --time-unit=SECONDS --fixed-delay=5 | char-log'`
+
+This follows the format `stream create --name '{NAME_OF_STREAM}' --definition '{SOURCE_APP_NAME} {OPTIONAL_SOURCE_PROPERTIES} | {SINK_APP_NAME} {OPTIONAL_SINK_PROPERTIES}'`
+
+You can also create a stream in the Dashboard UI by clicking on the "Streams" tab and then on "Create Stream". The available sinks, sources, and transforms will be on the left of the workspace. You can drag them and then connect sources to sinks for the configuration you want. The resulting code will be shown above the flow chart. You can then type in any variable changes into that and then use the "Create Stream" button to create it. 
+
+![Creating a Stream in the UI](/images/spring-cloud-dataflow-sink/create-stream.png)
+
+Your stream `char-stream` and its definition will now be listed. Go ahead and click "Deploy" and then "Deploy" on the next page (we have no 'Deployment Properties' to add).
+
+To see the new Sink and Source apps, go to your Cloud Foundry space and notice that there are two new apps starting up, with some randomly generated words in there for you. It may take a minute or so for those spring apps to boot up.
+
+![Sink and Source Apps in CF](/images/spring-cloud-dataflow-sink/sink_and_source.png)
+
+To see the logging that is now done by your stream, click on the app for your sink, the one ending in 'char-log', and tail its logs. It will look something like this:
+
+![Sink Logs](/images/spring-cloud-dataflow-sink/sink_logs.png)
+
+You can see that every 5 seconds, we are letting our Charmander know what time it is (they are forgetful creatures).
+
+Congratulations! Your Spring Cloud Dataflow Stream is working!
