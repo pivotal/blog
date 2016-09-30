@@ -177,7 +177,7 @@ dataflow:>app list
 
 In order for messages to flow into your Sink, you'll need a Stream Source. We'll use the ready-made timer Source from the Maven Repository.
 
-`dataflow:>app register --name time --type source --uri maven://org.springframework.cloud.stream.app:time-source-rabbit:1.0.2.RELEASE`
+`dataflow:>app register --name time --type source --uri maven://org.springframework.cloud.stream.app:time-source-rabbit:1.0.0.RELEASE`
 
 You can verify this app was installed from the web UI `Apps` tab or the Shell:
 
