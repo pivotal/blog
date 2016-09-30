@@ -100,7 +100,7 @@ Create the Data Flow Server app:
 
 Create the services your Data Flow Server will need:
 
-```
+```text
 cf create-service rediscloud 30mb redis
 cf create-service cloudamqp lemur rabbit
 cf create-service p-mysql 100mb my_mysql
@@ -108,7 +108,7 @@ cf create-service p-mysql 100mb my_mysql
 
 Bind the services to the Data Flow Server:
 
-```
+```text
 cf bind-service charmander-dataflow-server redis
 cf bind-service charmander-dataflow-server rabbit
 cf bind-service charmander-dataflow-server my_mysql
@@ -116,7 +116,7 @@ cf bind-service charmander-dataflow-server my_mysql
 
 Set the Data Flow Server environment variables:
 
-```
+```text
 cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_URL https://api.run.pivotal.io
 cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_ORG {org}
 cf set-env charmander-dataflow-server SPRING_CLOUD_DEPLOYER_CLOUDFOUNDRY_SPACE {space}
@@ -174,7 +174,7 @@ Then, register your Sink app:
 
 At this point, we have registered our app within the Data Flow Server. You can verify this on the `Apps` tab of the Data Flow Server dashboard, or with the Shell:
 
-```
+```text
 dataflow:>app list
 ╔════════╤═══════════╤════════╤═══════╗
 ║ source │ processor │  sink  │ task  ║
@@ -191,7 +191,7 @@ In order for messages to flow into your Sink, you'll need a Stream Source. We'll
 
 You can verify this app was installed from the web UI `Apps` tab or the Shell:
 
-```
+```text
 dataflow:>app list
 ╔════════╤═══════════╤════════╤═══════╗
 ║ source │ processor │  sink  │ task  ║
