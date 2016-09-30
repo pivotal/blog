@@ -26,7 +26,7 @@ For context, Streams are made up of Sources, Sinks, and (optionally) Processors.
 
 ## Generate a Sink Project
 
-Go to the Spring Cloud Stream Initializr at http://start-scs.cfapps.io/. Here, generate a project with the `Log Sink` dependency. We chose to use Gradle, so if you're using Maven you can translate as needed.
+Go to the [Spring Cloud Stream Initializr](http://start-scs.cfapps.io/) and generate a project with the `Log Sink` dependency. We chose to use Gradle, so if you're using Maven you can translate as needed.
 
 Make sure to fill out the Project Metadata as desired. Ours looked like this:
 
