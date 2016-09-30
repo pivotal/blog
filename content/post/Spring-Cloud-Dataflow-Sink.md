@@ -167,9 +167,9 @@ The Dataflow server has a dashboard at http://charmander-dataflow-server.cfapps.
 
 In order for data to flow to your sink, you'll need a source. We'll use the ready-made timer source on the Maven Repositories.
 
-`dataflow:>app register --name time --type source --uri maven://org.springframework.cloud.stream.app:time-source-rabbit:1.0.2.RELEASE`
+`dataflow:>app register --name time --type source --uri maven://org.springframework.cloud.stream.app:time-source-rabbit:1.0.0.RELEASE`
 
-On the dashboard page, you should now see two apps: time of type source and hello-char-log of type sink.
+On the dashboard page, you should now see two apps: `time` of type source and `hello-char-log` of type sink.
 
 If you click on the magnifying glass for the time source, you can see a list of properties that can be set when you make a stream. We will use `time-unit` and `fixed-delay` for our stream.
 
