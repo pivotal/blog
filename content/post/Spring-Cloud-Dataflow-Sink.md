@@ -45,11 +45,11 @@ dependencies {
 }
 ```
 
-## Create the Custom Sink Logger
+## Create a Custom Sink
 
-Next, write the code for the logger.
+Next, write the code for our Sink app. We decided to simply log the messages received by the Sink to keep things simple, but Sinks can be much more substantial if needed.
 
-In our directory io.pivotal.configuration, we created a SinkConfiguration file that looked like this:
+We created a `io.pivotal.configuration` package and created a [SinkConfiguration](https://github.com/iad-dev/hello-charmander-dataflow-sink/blob/master/src/main/java/io/pivotal/configuration/SinkConfiguration.java) class that looks like this:
 
 ```
 package io.pivotal.configuration;
@@ -70,6 +70,8 @@ public class SinkConfiguration {
     }
 }
 ```
+
+This class binds to the Sink input message broker channel and will receive any messages posted there in the `loggerSink` method.
 
 ############################################# COME BACK AND EXPLAIN ABOVE ANNOTATIONS
 
