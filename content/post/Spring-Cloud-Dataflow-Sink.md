@@ -241,3 +241,20 @@ In review:
 1. Deploy the Stream
 
 Hopefully this will help you get started and dip your toes in the Spring Cloud Dataflow ecosystem!
+
+## More documentation
+
+If you are interested in learning more, this documentation was helpful to us as we were getting to know Data Flow.
+
+### Data Flow
+[Spring Cloud Data Flow](https://cloud.spring.io/spring-cloud-dataflow/)
+
+[Spring Cloud Data Flow Reference Guide](http://docs.spring.io/spring-cloud-dataflow/docs/current/reference/htmlsingle/)
+
+### Data Flow for Cloud Foundry
+[Spring Cloud Data Flow for Cloud Foundry](http://cloud.spring.io/spring-cloud-dataflow-server-cloudfoundry/)
+
+[Spring Cloud Data Flow Server for Cloud Foundry Reference Guide](http://docs.spring.io/spring-cloud-dataflow-server-cloudfoundry/docs/current-SNAPSHOT/reference/htmlsingle/)
+
+### Stream
+[Spring Cloud Stream Reference Guide](http://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/)
