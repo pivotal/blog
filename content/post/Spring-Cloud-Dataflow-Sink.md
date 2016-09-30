@@ -88,8 +88,6 @@ public class SinkConfiguration {
 
 This class binds to the Sink input message broker channel and will receive any messages posted there in the `loggerSink` method.
 
-############################################# COME BACK AND EXPLAIN ABOVE ANNOTATIONS
-
 ## Deploy the Data Flow Server
 
 Download and push the Cloud Foundry Data Flow Server jar found under `Spring Cloud Data Flow Server Implementations` on https://cloud.spring.io/spring-cloud-dataflow/ to Cloud Foundry. We named our server `charmander-dataflow-server` to avoid naming conflicts on PWS, but you can call yours whatever you like.
