@@ -170,4 +170,11 @@ To see the logging that is now done by your stream, click on the app for your si
 
 You can see that every 5 seconds, we are letting our Charmander know what time it is (they are forgetful creatures).
 
-Congratulations! Your Spring Cloud Dataflow Stream is working!
+Congratulations, your Spring Cloud Dataflow Stream is working!
+
+In review:
+1. Create the custom sink, starting with the Spring Cloud Stream Initializr
+2. Deploy the Dataflow Server to Cloud Foundry and set up the Dataflow Shell
+3. Register the custom sink and any other sources or sinks with the server
+4. Create the stream
+5. Deploy the stream
