@@ -6,7 +6,7 @@ categories:
 - Spring Cloud Data Flow
 - Spring Cloud Data Flow Streams
 
-date: 2016-09-28T15:39:29-07:00
+date: 2016-10-03T10:00:00-07:00
 short: |
   Get started with Spring Cloud Data Flow Streams by creating a custom Sink app and deploying to Pivotal Cloud Foundry.
 title: Everything and the Spring Cloud Data Flow Sink
