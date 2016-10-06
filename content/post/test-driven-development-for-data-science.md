@@ -66,14 +66,14 @@ This is an [unsupervised problem](https://en.wikipedia.org/wiki/Unsupervised_lea
 
 In the exploration phase we don’t test drive our code. We aim to find the right algorithm to solve our problem. We will use Jupyter notebook to play around with the data (see figure 1, the notebook can be found [here](https://github.com/datitran/spark-tdd-example/blob/master/Clustering%20Example%20with%20PySpark.ipynb)). For the given dataset, [k-means](https://en.wikipedia.org/wiki/K-means_clustering) can be an appropriate solution.
 
-{{< responsive-figure src="/images/test-driven-development-for-data-science/jupyter-notebook-clustering-pyspark.png" class="center">}}
+{{< responsive-figure src="/images/test-driven-development-for-data-science/jupyter-notebook-clustering-pyspark.png" class="center" >}}
 <p align="center">
   Figure 1: Jupyter notebook of our clustering example with PySpark
 </p>
 
 Figure 2 depicts that k-means did a decent job in clustering the dataset. In this case, clustering was fairly easy because of the few artificially generated data points and variables. In real life choosing the optimal _k_ becomes less obvious because of more observations and/or features. Also we have to figure out which [clustering algotithm](http://scikit-learn.org/stable/modules/clustering.html#clustering) is best for a given data set. In this case, k-means seems to be a good choice.
 
-{{< responsive-figure src="/images/test-driven-development-for-data-science/output-kmeans.png" class="center">}}
+{{< responsive-figure src="/images/test-driven-development-for-data-science/output-kmeans.png" class="center" >}}
 <p align="center">
   Figure 2: The data set along with the assigned labels from k-means and cluster centers
 </p>
