@@ -19,7 +19,7 @@ date: 2016-09-28T14:01:14-07:00
 draft: true
 short: |
   [GPORCA](https://github.com/greenplum-db/gporca) is Pivotal’s Query Optimizer for [Greenplum Database](https://github.com/greenplum-db/gpdb) and [Apache HAWQ](https://github.com/apache/incubator-hawq) (incubating). In this post, we describe how users can profile query compilation with GPORCA. This will aid user in understanding where the time and memory is being spent by and how to influence its decision making.
-title: Profiling Query Compilation with GPORCA
+title: Profiling Query Compilation Time with GPORCA
 ---
 
 Pivotal’s Query Optimizer (PQO) is designed to find the fastest way to execute SQL queries in a distributed environments such as Pivotal’s [Greenplum Database](https://github.com/greenplum-db/gpdb). The open source version of PQO is termed as [GPORCA](https://github.com/greenplum-db/gporca). When processing large amounts of data, a 
@@ -59,7 +59,7 @@ order by (l_returnflag, l_linestatus);
 
 ## GPORCA Workflow
 
-{{< responsive-figure src="/images/orca-gucs/arch.png" >}}
+{{< responsive-figure src="/images/orca-profiling/arch.png" >}}
 
 GPORCA and its host system (GPDB or HAWQ) use a data exchange language (DXL) to exchange information such as the query, metadata information, database settings, etc.
 
@@ -92,7 +92,7 @@ To express this intent of logging GPORCA metrics, GPDB users must enable **both*
 
 For TPC-H query Q1 enabling these GUCs produces the following GPORCA metrics to be displayed.
 
-{{< responsive-figure src="/images/orca-gucs/modified-output.png" >}}
+{{< responsive-figure src="/images/orca-profiling/modified-output.png" >}}
 
 GPORCA metrics that are measured are:
 
