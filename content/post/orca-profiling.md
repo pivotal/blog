@@ -22,7 +22,7 @@ short: |
 title: Profiling Query Compilation Time with GPORCA
 ---
 
-Pivotal’s Query Optimizer (PQO) is designed to find the fastest way to execute SQL queries in a distributed environments such as Pivotal’s [Greenplum Database](https://github.com/greenplum-db/gpdb). The open source version of PQO is termed as [GPORCA](https://github.com/greenplum-db/gporca). When processing large amounts of data, a 
+Pivotal’s Query Optimizer (PQO) is designed to find the fastest way to execute SQL queries in a distributed environments such as Pivotal’s [Greenplum Database](https://github.com/greenplum-db/gpdb). The open source version of PQO is termed as [GPORCA](https://github.com/greenplum-db/gporca). When processing large amounts of data in a distributed environment, a 
 naive query plan might take orders of magnitude more time than the optimal plan. In some cases the query plan will not complete even after several hours as shown in our experimental study <sup><a href="1" class="alert-link">[1]</a></sup>. To generate the optimal plan, GPORCA considers thousands of alternative query execution plans and makes a cost based decision. 
 
 In this post, we will describe parameter settings that a GPDB users can use to 
@@ -39,6 +39,7 @@ Pivotal’s Greenplum Database (GPDB) is based on Postgres. We therefore use the
 In this blog, I will be using the Query Q1 from the TPC-H Benchmark as the illustrating example.
 
 ```
+-- tpch q1
 SELECT 
 l_returnflag,
 l_linestatus,
@@ -60,13 +61,13 @@ ORDER BY (l_returnflag, l_linestatus);
 
 {{< responsive-figure src="/images/orca-profiling/arch.png" >}}
 
-GPORCA and its host system (GPDB or HAWQ) use a data exchange language (DXL) to exchange information such as the query, metadata information, database settings, etc.
+GPORCA and its host system (GPDB or HAWQ) use a data exchange language (DXL) to exchange information such as the query, metadata information, and database settings.
 
-* **Algebrizer (Query To DXL Translator)**, takes as input a parsed GPDB or HAWQ query object and returns its DXL representation. The serialized DXL is then shipped to GPORCA for optimization. DXL has some basic assumptions such as (a) having clauses are converted into select predicates, (2) group by logical operator has a project list that contains only grouping columns and aggregates and not expression, etc. The algebrization mutates the input query into a normalized query form to ensure the DXL conforms to these assumptions.
+* **Algebrizer (Query To DXL Translator)**, takes as input a parsed GPDB or HAWQ query object and returns its DXL representation. The serialized DXL is then shipped to GPORCA for optimization. DXL has some basic assumptions such as (a) having clauses are converted into select predicates, (2) group by logical operator has a project list that contains only grouping columns and aggregates and not expression. The algebrization mutates the input query into a normalized query form to ensure the DXL conforms to these assumptions.
 
 * **DXL To Logical Expression Translator** takes as input the DXL query object and converts it into an internal logical tree representation on which optimization is done.
 
-* **Expression Pre-Processing** takes as input an logical expression tree and produces an equivalent logical expression tree after applying some heuristics such as pushing select to the scan, removing unnecessary computed columns, contradiction detections, etc..
+* **Expression Pre-Processing** takes as input an logical expression tree and produces an equivalent logical expression tree after applying some heuristics such as pushing select to the scan, removing unnecessary computed columns, and contradiction detections.
 
 * **GPORCA Optimization Phases**  Orca uses a search mechanism to navigate through the space of possible plan alternatives and identify the plan with the least estimated cost. The search mechanism is enabled by a specialized  {\em Job Scheduler} that creates dependent or parallel work units to perform query optimization in three main steps. First, the `exploration` phase increases the search space by generating equivalent logical expressions for each subexpression. Second, in the `implementation` phase, GPORCA considers alternative physical implementation of the different operators. For instance, implementing join via a nested loop loop join or a hash join, or implementing a aggregate operation via a streaming or a hash based implementation. Lastly, in the `optimization` phase we enforce the required physical properties (such as distribution, and sort order) and cost the different plan alternatives to pick the best execution plan. 
 
@@ -97,7 +98,7 @@ For TPC-H query Q1, enabling the above mentioned GUCs produces the following GPO
 GPORCA metrics that are measured are:
 
 * Break down of where GPORCA spends its time
-* Time needed for GPORCA to get the relevant information about the database objects (such as, schema, statistics, indexes available, constraints, etc.) from the host system.
+* Time needed for GPORCA to get the relevant information about the database objects (such as, schema, statistics, indexes available, and constraints.) from the host system.
 * List of transformation rules employed for plan generation
 
 
