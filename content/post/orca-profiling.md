@@ -16,14 +16,14 @@ categories:
 - Query Optimization
 - SQL
 date: 2016-10-12
-draft: true
+draft: false
 short: |
   [GPORCA](https://github.com/greenplum-db/gporca) is Pivotal’s Query Optimizer for [Greenplum Database](https://github.com/greenplum-db/gpdb) and [Apache HAWQ](https://github.com/apache/incubator-hawq) (incubating). In this post, we describe how users can profile query compilation with GPORCA. This will aid users in understanding which of GPORCA's steps is the most resource, and what transformations are being triggered. Based on this information users can provide query hints to reduce or increase the search space consumer where the time and memory is being spent by and how to influence its decision making.
 title: Profiling Query Compilation Time with GPORCA
 ---
 
 Pivotal’s Query Optimizer (PQO) is designed to find the fastest way to execute SQL queries in a distributed environments such as Pivotal’s [Greenplum Database](https://github.com/greenplum-db/gpdb). The open source version of PQO is termed as [GPORCA](https://github.com/greenplum-db/gporca). When processing large amounts of data in a distributed environment, a 
-naive query plan might take orders of magnitude more time than the optimal plan. In some cases the query plan will not complete even after several hours as shown in our experimental study <sup><a href="1" class="alert-link">[1]</a></sup>. To generate the optimal plan, GPORCA considers thousands of alternative query execution plans and makes a cost based decision. 
+naive query plan might take orders of magnitude more time than the optimal plan. In some cases the query plan will not complete even after several hours as shown in our experimental study <sup><a href="#1" class="alert-link">[1]</a></sup>. To generate the optimal plan, GPORCA considers thousands of alternative query execution plans and makes a cost based decision. 
 
 In this post, we will describe parameter settings that a GPDB users can use to 
 
@@ -79,7 +79,7 @@ GPORCA and its host system (GPDB or HAWQ) use a data exchange language (DXL) to 
 
 * **Metadata Translator** converts all database objects needed during query optimization such as table schema, indexes, constraints and column statistics.
 
-A detailed look at the steps involved in optimizing a query with GPROCA can be found in our white paper <sup><a href="2" class="alert-link">[2]</a></sup> and in our GPDB documentation <sup><a href="3" class="alert-link">[3]</a></sup>.
+A detailed look at the steps involved in optimizing a query with GPROCA can be found in our white paper <sup><a href="#2" class="alert-link">[2]</a></sup> and in our GPDB documentation <sup><a href="#3" class="alert-link">[3]</a></sup>.
 
 ## How does one know where GPORCA is spending its time?
 
