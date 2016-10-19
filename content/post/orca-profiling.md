@@ -18,7 +18,7 @@ categories:
 date: 2016-10-12
 draft: false
 short: |
-  [GPORCA](https://github.com/greenplum-db/gporca) is Pivotal’s Query Optimizer for [Greenplum Database](https://github.com/greenplum-db/gpdb) and [Apache HAWQ](https://github.com/apache/incubator-hawq) (incubating). In this post, we describe how users can profile query compilation with GPORCA. This will aid users in understanding which of GPORCA's steps is the most resource, and what transformations are being triggered. Based on this information users can provide query hints to reduce or increase the search space consumer where the time and memory is being spent by and how to influence its decision making.
+  [GPORCA](https://github.com/greenplum-db/gporca) is Pivotal’s Query Optimizer for [Greenplum Database](https://github.com/greenplum-db/gpdb) and [Apache HAWQ](https://github.com/apache/incubator-hawq) (incubating). In this post, we describe how users can profile query compilation with GPORCA. This will aid users in understanding which of GPORCA's steps is the most resource intensive, and what transformations are being triggered. Based on this information users can provide query hints to reduce or increase the search space consumer where the time and memory is being spent by and how to influence its decision making.
 title: Profiling Query Compilation Time with GPORCA
 ---
 
