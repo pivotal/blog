@@ -10,9 +10,9 @@ categories:
 - GCP
 date: 2016-10-20T16:37:02+01:00
 draft: true
+title: "Saving Time & Money: Using GCP for Cloud Foundry Development"
 short: |
-  Migrating development environments from AWS to GCP
-title: Dev/CI BOSH on GCP
+  Moving BOSH, Cloud Foundry, and Concourse from AWS to GCP
 ---
 
 Today many teams at Pivotal use either vSphere or AWS to host development and CI environments while working on Cloud Foundry related projects. This means we have multiple BOSH directors, Cloud Foundries, and Concourse deployments to manage.
