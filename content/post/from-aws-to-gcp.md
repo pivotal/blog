@@ -215,7 +215,7 @@ compilation:
 Interesting points:
 
 1. We control whether instances in a network have outbound internet access by whether or not it has a public ip, rather than using NAT.
-1. In `vm_types`, the [`preemptible`](https://cloud.google.com/compute/docs/instances/preemptible) setting will flag an instance to be shutdown at any time for an 80% cost saving. This, in conjunction with the bosh resurrector is handy for saving money in development environments, but perhaps not in production.
+1. In `vm_types`, the [`preemptible`](https://cloud.google.com/compute/docs/instances/preemptible) setting will flag an instance to be shutdown at any time for an 80% cost saving. This, in conjunction with the bosh resurrector is handy for saving money in development environments, but perhaps not in production. Ensure your BOSH director is configured to avoid [meltdown](https://bosh.io/docs/resurrector.html#enable) when using preemptible VMs.
 1. `tags` are used to assign firewall rules to instances, in a composable fashion.
 
 # Deploying Cloud Foundry
