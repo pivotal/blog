@@ -302,7 +302,7 @@ We deploy BOSH lite using our GCP director, and use it for most dev and CI deplo
 
 We provision a static IP for the lite director using terraform, and point a wildcard DNS entry at it. This allows the director to be used as an entry point for Cloud Foundry. The port forwarding release, colocated on the lite director VM, exposes the CF haproxy job container on host ports, as in the [Starke and Wayne manifest](http://www.starkandwayne.com/blog/deploy-many-bosh-lites-using-normal-bosh-to-any-infrastructure/).
 
-# Differences between GCP and AWS
+# Key differences between GCP and AWS
 
 Overall we found the move to GCP very pleasant. Some differences are summarized here:
 
