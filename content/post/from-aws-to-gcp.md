@@ -154,7 +154,7 @@ Some of these differences are consequences of not using a bastion instance.
 
 ## Cloud Config
 
-A generalized version of our cloud config:
+A generalized version of our [cloud config](http://bosh.io/docs/cloud-config.html):
 
 ```yaml
 azs:
