@@ -15,7 +15,18 @@ short: |
 title: Dev/CI BOSH on GCP
 ---
 
-We (the PCF Services Enablement team in London) recently moved our development and CI infrastructure from AWS to GCP. This post is intended to help others thinking of making a similar move.
+Today many teams at Pivotal use either vSphere or AWS to host development and CI environments while working on Cloud Foundry related projects. This means we have multiple BOSH directors, Cloud Foundries, and Concourse deployments to manage.
+
+We, the PCF Services Enablement team in London, recently moved our development and CI infrastructure from Amazon Web Services to Google Cloud Platform (GCP). Why did we do this?
+
+- Opportunity for cost savings: [Preemptible](https://cloud.google.com/compute/docs/instances/preemptible) VMs allow for [substantial cost savings](https://media.tenor.co/images/6e53dd259c94213d290655f37470e627/raw) in development / CI environments.
+- Using [BOSH](http://bosh.io/) to deploy Cloud Foundry, Concourse and BOSH-lite lowers the barrier means the cost of change is low.
+- The GCP tooling ecosystem offers sensible abstractions over a great set of core APIs.
+- From working with the Google team we have seen how responsive they are to feedback, and how quickly they iterate on the platform.
+
+This post is intended to help others thinking of making a similar move.
+
+---
 
 # Before deploying BOSH
 
@@ -296,6 +307,5 @@ We provision a static IP for the lite director using terraform, and point a wild
 Overall we found the move to GCP very pleasant. Some differences are summarized here:
 
 1. VM names are based on UUIDs. To find the VM for a bosh job using the web console, you must grep for the IP or click into each one to view its metadata.
-1. The option to use [preemptible](https://cloud.google.com/compute/docs/instances/preemptible) VMs allows for [substantial cost savings](https://media.tenor.co/images/6e53dd259c94213d290655f37470e627/raw) in development / CI environments.
 1. VM startup time is a little faster than AWS, but shutdown time is a lot longer (about 2 minutes). This could be because the CPI issues a soft shutdown signal, but we haven't investigated this.
 1. The load balancing setup is more complex than AWS ELBs.
