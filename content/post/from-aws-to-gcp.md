@@ -20,7 +20,7 @@ Today many teams at Pivotal use either vSphere or AWS to host development and CI
 We, the PCF Services Enablement team in London, recently moved our development and CI infrastructure from Amazon Web Services to Google Cloud Platform (GCP). Why did we do this?
 
 - Opportunity for cost savings: [Preemptible](https://cloud.google.com/compute/docs/instances/preemptible) VMs allow for [substantial cost savings](https://media.tenor.co/images/6e53dd259c94213d290655f37470e627/raw) in development / CI environments.
-- Using [BOSH](http://bosh.io/) to deploy Cloud Foundry, Concourse and BOSH-lite lowers the barrier means the cost of change is low.
+- Using [BOSH](http://bosh.io/) to deploy Cloud Foundry, Concourse, and BOSH-lite lowers the barrier to switching IaaS providers.
 - The GCP tooling ecosystem offers sensible abstractions over a great set of core APIs.
 - From working with the Google team we have seen how responsive they are to feedback, and how quickly they iterate on the platform.
 
