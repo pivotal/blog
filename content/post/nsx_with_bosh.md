@@ -163,8 +163,7 @@ jobs:
           address:  nsx.example.com
           user:     administrator@vsphere.local
           password: Secret4U!
-          # self-signed certificate extracted from NSX server by
-          # `true | openssl s_client -connect YOUR_NSX_MANAGER:443 2>/dev/null | openssl x509`
+          # CA Certificate for your NSX Manager
           ca_cert: |
             -----BEGIN CERTIFICATE-----
             ...
