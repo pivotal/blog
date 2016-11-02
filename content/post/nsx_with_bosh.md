@@ -162,7 +162,7 @@ jobs:
         nsx:
           address:  nsx.example.com
           user:     administrator@vsphere.local
-          password: Secret4U!
+          password: ((nsx_password))
           # CA Certificate for your NSX Manager
           ca_cert: |
             -----BEGIN CERTIFICATE-----
