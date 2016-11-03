@@ -212,11 +212,11 @@ vm_extensions:
   cloud_properties:
     nsx:
       security_groups:
-      - deny-ssh              # TODO: create in advance & assign firewall rules
+      - deny-ssh                      # TODO: create in advance & assign firewall rules
       lbs:
       - edge_name: load-balancer
-        pool_name: http-pool  # does not need to be created in advance
-        security_group: http-backend
+        pool_name: http-pool
+        security_group: http-backend  # does not need to be created in advance
         port: 80
 ```
 
@@ -253,7 +253,7 @@ bosh update-cloud-config cloud-config-vsphere.yml
 ```
 
 Here is the complete [Cloud
-Config](https://github.com/cunnie/deployments/blob/a21607715c8456e2c93f2d99f58690e8e5c9896f/cloud-config-vsphere.yml).
+Config](https://github.com/cunnie/deployments/blob/c1f529c154960eed0382ebca79dc2b765826886b/cloud-config-vsphere.yml).
 
 ## 4.0 Deploy VMs with NSX Configured
 
@@ -335,3 +335,22 @@ ssh: connect to host 10.85.57.23 port 22: Connection refused
 ## Addendum: BOSH Documentation
 
 * [BOSH vSphere CPI] (http://bosh.io/docs/vsphere-cpi.html)
+
+## Addendum: PowerNSX Windows CLI
+
+Windows users may prefer to configure the NSX Manager via the
+[PowerNSX CLI](https://github.com/vmware/powernsx), a "a PowerShell module that abstracts the VMware NSX API to a set of easily used PowerShell functions".
+We have not tested this ourselves (we have but few Windows machines at Pivotal).
+
+## History/Corrections
+
+2016-11-2: NSX Manager's password is interpolated in the BOSH Director's
+manifest; previously it was in plaintext.
+
+2016-11-2: A comment showed a command to extract the NSX Manager's
+self-signed certificate. The command lent itself to a man-in-the-middle
+attack, so the comment has been removed.
+
+2016-11-3: An addendum refers to the PowerNSX CLI. Thanks [Anthony Burke](https://twitter.com/pandom_).
+
+2016-11-3: A misplaced comment in the Cloud Config indicated that the pool did not need to be created in advance; that was incorrect. The pool must be created in advance, but the Security Group does not. The comment now correctly indicates that the Security Group does not need to be created in advance.
