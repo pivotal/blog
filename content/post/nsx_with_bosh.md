@@ -19,19 +19,33 @@ title: Leveraging NSX's Features with BOSH's vSphere CPI
 
 [VMWare NSX](http://www.vmware.com/products/nsx.html) is a network
 virtualization platform (frequently paired with the vSphere IaaS (Infrastructure
-as a Service)). It includes features such as Load Balancers (LBs) and Security Groups
-(firewall/network filtering rules), features often found in public-facing IaaSes
-(e.g. AWS (Amazon Web Services), GCE (Google Compute Engine), and Microsoft
-Azure) but not native to vSphere.
+as a Service)). It includes features such as Load Balancers (LBs) and firewall
+rules, features often found in public-facing IaaSes (e.g. AWS (Amazon Web
+Services), GCE (Google Compute Engine), and Microsoft Azure) but not native to
+vSphere.
 
-[BOSH](https://bosh.io/), a VM orchestrator, includes hooks to with
-NSX's LB and Security Group features. These hooks enable BOSH created VMs to be dynamically attached to existing NSX Load Balancer Pools and NSX Security Groups. NSX Security Groups are rich grouping objects which can be used for association to Security Policies/Firewall Rules. These policies are enforced right at the VM virtual vNIC interface.
+[BOSH](https://bosh.io/), a VM orchestrator, includes hooks to interoperate with
+NSX's LB and Distributed Firewall features. These hooks enable BOSH to attach
+created VMs to existing NSX Load Balancer Pools and NSX Distributed Firewall
+rulesets. BOSH uses NSX's Security Groups <sup><a href="#nsx_security_groups"
+class="alert-link">[NSX Security Groups]</a></sup> as the underlying mechanism.
 
-This blog posts describes how to use BOSH to deploy a set of VMs to function as
-the backend of an NSX LB. Additionally, we describe how BOSH interoperates with
-NSX's Security Groups. We expect this blog post to be of interest to BOSH users
-who deploy to vSphere environments paired with NSX with LB or security
-requirements (e.g. a public-facing vSphere environment).
+<div class="alert alert-success" role="alert">
+
+<b>NSX's Security Groups are <i>not</i> AWS's Security Groups.</b> NSX's
+Security Groups are rich grouping objects (in BOSH's case, a collection of VMs)
+which can be associated with Load Balancer pools and firewall rulesets (Google
+Compute Engine's analog would be "Tags"). AWS's Security Groups, on the other
+hand, are firewall rules (e.g. "block inbound TCP port 25").
+
+</div>
+<p />
+
+This blog posts describes how to use BOSH to deploy a set of VMs as the backend
+of an NSX LB and to apply NSX firewall rules to those VMs.  We expect this blog
+post to be of interest to BOSH users who deploy to vSphere environments paired
+with NSX with LB or security requirements (e.g. a public-facing vSphere
+environment).
 
 ## 0.0 Plan
 
@@ -354,6 +368,28 @@ manifest; previously it was in plaintext.
 self-signed certificate. The command lent itself to a man-in-the-middle
 attack, so the comment has been removed.
 
-2016-11-3: An addendum refers to the PowerNSX CLI. Thanks [Anthony Burke](https://twitter.com/pandom_).
+2016-11-3: An addendum refers to the PowerNSX CLI. Thanks [Anthony
+Burke](https://twitter.com/pandom_).
 
-2016-11-3: A misplaced comment in the Cloud Config indicated that the pool did not need to be created in advance; that was incorrect. The pool must be created in advance, but the Security Group does not. The comment now correctly indicates that the Security Group does not need to be created in advance.
+2016-11-3: A misplaced comment in the Cloud Config indicated that the pool did
+not need to be created in advance; that was incorrect. The pool must be created
+in advance, but the Security Group does not. The comment now correctly indicates
+that the Security Group does not need to be created in advance.
+
+2016-11-4: The definition of an NSX Security Group was clarified. Also, a
+reference to NSX Transformers was removed. Links to the NSX documentation were
+added. Thanks [Pooja Patel](https://twitter.com/poozza).
+
+---
+
+## Footnotes
+
+<a name="nsx_security_groups"><sup>[NSX Security Groups]</sup></a> NSX's
+Security Groups are rich grouping objects. A Security Group typically consists
+of a name (e.g. "deny-ssh") and a collection of zero or more objects. In BOSH's
+case, these objects are VMs (e.g. LB backend VMs). During deployment, BOSH
+attaches VMs to Security Groups as defined in the Cloud Config's
+`vm_extensions.cloud_properties.nsx` section. If the Security Group is
+defined in a firewall rule, that firewall rule is applied to those VMs.
+If that Security Group is a member of a Load Balancer pool, then that VM
+becomes (by association) a member of the Load Balancer pool.
