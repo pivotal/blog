@@ -24,9 +24,8 @@ as a Service)). It includes features such as Load Balancers (LBs) and Security G
 (e.g. AWS (Amazon Web Services), GCE (Google Compute Engine), and Microsoft
 Azure) but not native to vSphere.
 
-[BOSH](https://bosh.io/), a VM orchestrator, includes hooks to interoperate with
-NSX's LB and Security Group features. These hooks enable BOSH to attach
-VMs to LB and to apply Security Groups to VMs.
+[BOSH](https://bosh.io/), a VM orchestrator, includes hooks to with
+NSX's LB and Security Group features. These hooks enable BOSH created VMs to be dynamically attached to existing NSX Load Balancer Pools and NSX Security Groups. NSX Security Groups are rich grouping objects which can be used for association to Security Policies/Firewall Rules. These policies are enforced right at the VM virtual vNIC interface.
 
 This blog posts describes how to use BOSH to deploy a set of VMs to function as
 the backend of an NSX LB. Additionally, we describe how BOSH interoperates with
@@ -329,12 +328,16 @@ ssh: connect to host 10.85.57.23 port 22: Connection refused
 ## Addendum: Technical Requirements
 
 * [BOSH vSphere CPI](http://bosh.io/releases/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?all=1) v30+ (v31 tested)
-* VMWare NSX-V 6.1+ (6.2.2 Build 3604087 tested) or NSX Transformers 1.0
+* VMWare NSX-V 6.1+ (6.2.2 Build 3604087 tested)
 * vSphere 6.0+ (6.0.0.20000 tested)
 
 ## Addendum: BOSH Documentation
 
 * [BOSH vSphere CPI] (http://bosh.io/docs/vsphere-cpi.html)
+
+## Addendum: NSX Documentation
+* [NSX for vSphere Official Documentation] (https://www.vmware.com/support/pubs/nsx_pubs.html)
+* RAML Spec Describing NSX for vSphere API (https://github.com/vmware/nsxraml)
 
 ## Addendum: PowerNSX Windows CLI
 
