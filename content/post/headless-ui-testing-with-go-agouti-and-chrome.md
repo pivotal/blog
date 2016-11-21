@@ -25,10 +25,10 @@ write a small Agouti acceptance test and run it in a containerized environment; 
 In this blog post we'll be using the following:
 
 - [Go](https://golang.org/) - testing language
-- [Ginkgo](https://github.com/onsi/ginkgo) and [gomega](https://github.com/onsi/gomega) - test framework and matchers
+- [Ginkgo](https://github.com/onsi/ginkgo) and [Gomega](https://github.com/onsi/gomega) - test framework and matchers
 - [Agouti](https://github.com/sclevine/agouti) - our webdriver client and UI testing library
 - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) - webdriver
-- [xvfb](https://www.x.org/archive/X11R7.6/doc/man/man1/Xvfb.1.xhtml) - a virtual framebuffer X server to allow chrome
+- [Xvfb](https://www.x.org/archive/X11R7.6/doc/man/man1/Xvfb.1.xhtml) - a virtual framebuffer X server to allow chrome
 to run headlessly
 - [concourse.ci](https://concourse.ci/) - CI server, whose tasks run on [Ubuntu](https://www.ubuntu.com/)
 [Docker](https://www.docker.com/) containers
@@ -116,8 +116,11 @@ func startWebdriver() {
 			agouti.Desired(agouti.Capabilities{
 				"chromeOptions": map[string][]string{
 					"args": []string{
-						"disable-gpu", // There is no GPU on our Ubuntu box!
-						"no-sandbox", // Sandbox requires namespace permissions that we don't have on a container
+						// There is no GPU on our Ubuntu box!
+						"disable-gpu",
+						
+						// Sandbox requires namespace permissions that we don't have on a container
+						"no-sandbox",
 					},
 				},
 			}),
@@ -158,12 +161,12 @@ var _ = Describe("Website", func() {
 })
 ```
 
-We'll need to make [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) available on our `$PATH`
+We'll need to make [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) available on our `$PATH`
 before we can run this on our local machine. Once that's done, run `ginkgo` to see this work.
 
 ## Setting up your CI environment
 
-ConcourseCI uses Docker containers to run tasks, so let's create a container that can run our test. Create the following
+Concourse uses Docker containers to run tasks, so let's create a container that can run our test. Create the following
 `Dockerfile`:
 
 ```
@@ -223,12 +226,12 @@ Let's now enter the container and run test scripts as if we were the concourse t
     go get github.com/sclevine/agouti
     service dbus restart
     cd $GOPATH/src/website
-    xvfb-run TEST_ENV=CI ginkgo -v
+    xvfb-run ginkgo -v
     ```
 
 ## Conclusion
 
-We've now create an acceptance test that tests a very small server, and had it run locally in a docker container. This
+We've now created an acceptance test to test a very small server, and had it run locally in a docker container. This
 blog post ends here, but in a real world environment you might use the `Dockerfile` we've created as the task image for
 a [concourse.ci](concourse.ci) pipeline task, and use the commands that we ran manually as the pipeline task script.
 
@@ -238,35 +241,35 @@ Chances are, something will go wrong along the way. Here's what we've used to de
 
 ### Flow
 
-> test -> agouti -> chromedriver -> google-chrome -> X server (via xvfb-run)
+> test -> Agouti -> ChromeDriver -> google-chrome -> X server (via xvfb-run)
 
-test->agouti: Tests use agouti
+> test->Agouti: Tests use Agouti
 
-agouti->chromedriver: Agouti talks to chromedriver over http
+> Agouti->ChromeDriver: Agouti talks to ChromeDriver over HTTP
 
-chromedriver->google-chrome: Chromedriver spins up google-chrome instances for each 'session' (in agouti this is NewPage)
+> ChromeDriver->google-chrome: ChromeDriver spins up google-chrome instances for each 'session' (in Agouti this is NewPage)
 
-google-chrome->X server: The X server acts as the 'gui' for google-chrome. It can be started with `Xvfb` or by wrapping
+> google-chrome->X server: The X server acts as the 'gui' for google-chrome. It can be started with `Xvfb` or by wrapping
 the `chromedriver` call with `xvfb-run`
 
-### Debugging chromedriver
+### Debugging ChromeDriver
 
-Chromedriver can manually be run with the `chromedriver` command. Helpful tips:
+ChromeDriver can manually be run with the `chromedriver` command. Helpful tips:
 
 - `chromedriver --verbose` reveals a lot of info, including the command it runs `google-chrome` with!
-- Agouti can spin up chromedriver itself with `agouti.ChromeDriver().Start()`
-- Agouti can spin up chromedriver with `--verbose` by crafting your own `NewWebDriver` command (`.ChromeDriver()` is
+- Agouti can spin up ChromeDriver itself with `agouti.ChromeDriver().Start()`
+- Agouti can spin up ChromeDriver with `--verbose` by crafting your own `NewWebDriver` command (`.ChromeDriver()` is
 a very light wrapper)
-- You can spin up your own chromedriver (`chromedriver --verbose`, for instance), and point agouti at it with
-`agouti.NewPage("http://127.0.0.1:9515", ...)` - 9515 is the default port). The command `NewPage` is basically a
+- You can spin up your own ChromeDriver (ex. `chromedriver --verbose`), and point Agouti at it with
+`agouti.NewPage("http://127.0.0.1:9515", ...)` (9515 is the default port). The command `NewPage` is basically a
 `curl -XPOST http://127.0.0.1:9515/session -d '{"desiredCapabilities": {}}'`
 
 ### Debugging google-chrome
 
-Google-chrome can manually be run with the `google-chrome` command. Some miscellaneous helpful things:
+Google-chrome can manually be run with the `google-chrome` command. Helpful tips:
 
 - `curl -XPOST http://127.0.0.1:9515/session -d '{"desiredCapabilities": {}}'` to create your own session - this is
-analagous to agouti's `NewPage`, and will typically cause a `chromedriver --verbose` to give you a bunch of useful info
+analagous to Agouti's `NewPage`. When run after a `chromedriver --verbose`, it will give you a bunch of useful info.
 - Each `curl -XPOST http://127.0.0.1:9515/session -d '{"desiredCapabilities": {}}'` starts a `google-chrome` process. Each
 of these processes is a page!
 - Change how the `google-chrome` process is spun up by adding [capabilities](https://sites.google.com/a/chromium.org/chromedriver/capabilities).
