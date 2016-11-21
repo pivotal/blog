@@ -180,10 +180,6 @@ RUN apt-get -y install wget --fix-missing
 RUN apt-get -y install xvfb --fix-missing # chrome will use this to run headlessly
 RUN apt-get -y install unzip --fix-missing
 
-# install git
-RUN apt-get -y install git --fix-missing
-RUN apt-get -y install git-core --fix-missing
-
 # install go
 RUN wget -O - 'https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz' | tar xz -C /usr/local/
 ENV PATH="$PATH:/usr/local/go/bin"
