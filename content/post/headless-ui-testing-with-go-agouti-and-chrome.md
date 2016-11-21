@@ -17,6 +17,11 @@ title: Headless UI Testing with Go, Agouti, and Chrome
 ---
 
 ## Foreword
+
+Acceptance tests are a fantastic way to ensure - from a user perspective - that your application works correctly. A
+popular UI acceptance test library is [Agouti](https://github.com/sclevine/agouti). This post will detail how to
+write a small Agouti acceptance test and run it in a containerized environment; one which mimics a CI environment.
+
 In this blog post we'll be using the following:
 
 - [Go](https://golang.org/) - testing language
