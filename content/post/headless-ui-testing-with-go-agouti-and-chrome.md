@@ -226,6 +226,12 @@ Let's now enter the container and run test scripts as if we were the concourse t
     xvfb-run TEST_ENV=CI ginkgo -v
     ```
 
+## Conclusion
+
+We've now create an acceptance test that tests a very small server, and had it run locally in a docker container. This
+blog post ends here, but in a real world environment you might use the `Dockerfile` we've created as the task image for
+a [concourse.ci](concourse.ci) pipeline task, and use the commands that we ran manually as the pipeline task script.
+
 ## Debugging
 
 Chances are, something will go wrong along the way. Here's what we've used to debug this stack:
