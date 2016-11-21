@@ -22,7 +22,7 @@ Our [sample Sink app is in a public repo](https://github.com/iad-dev/hello-charm
 
 For context, Streams are made up of Sources, Sinks, and (optionally) Processors. Sources are apps that output messages, Sinks are apps that input messages, and Processors go in the middle with both an input and output. (Technically, [Processors are both Sources and Sinks](https://github.com/spring-cloud/spring-cloud-stream/blob/master/spring-cloud-stream/src/main/java/org/springframework/cloud/stream/messaging/Processor.java))
 
-`[Stream] -> [Processor] -> [Sink]`
+`[Source] -> [Processor] -> [Sink]`
 
 ## Generate a Sink Project
 
