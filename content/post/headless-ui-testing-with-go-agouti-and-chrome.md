@@ -226,7 +226,7 @@ Let's now enter the container and run test scripts as if we were the concourse t
     go get github.com/sclevine/agouti
     service dbus restart
     cd $GOPATH/src/website
-    xvfb-run ginkgo -v
+    xvfb-run TEST_ENV=CI ginkgo -v
     ```
 
 ## Conclusion
