@@ -9,7 +9,7 @@ categories:
 - UI Testing
 - UI
 date: 2016-11-17T13:04:17-07:00
-draft: true
+draft: false
 short: |
   Acceptance tests for your UI are an excellent way to cover user functionality. Let's see how to write a simple
   acceptance test in Go with Agouti and have it run headlessly in a CI environment with Chrome.
