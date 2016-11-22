@@ -86,7 +86,6 @@ import (
 
 var (
 	agoutiDriver   *agouti.WebDriver
-	page           *agouti.Page
 	websiteSession *gexec.Session
 )
 
@@ -99,17 +98,16 @@ var _ = BeforeSuite(func() {
 	agoutiDriver = agouti.ChromeDriver()
 	Expect(agoutiDriver.Start()).To(Succeed())
 
-	startWebdriver()
 	startWebsite()
 })
 
 var _ = AfterSuite(func() {
-	Expect(page.Destroy()).To(Succeed())
 	Expect(agoutiDriver.Stop()).To(Succeed())
 	websiteSession.Kill()
 })
 
-func startWebdriver() {
+func getPage() *agouti.Page {
+	var page *agouti.Page
 	var err error
 	if os.Getenv("TEST_ENV") == "CI" {
 		page, err = agouti.NewPage(agoutiDriver.URL(),
@@ -118,7 +116,7 @@ func startWebdriver() {
 					"args": []string{
 						// There is no GPU on our Ubuntu box!
 						"disable-gpu",
-						
+
 						// Sandbox requires namespace permissions that we don't have on a container
 						"no-sandbox",
 					},
@@ -126,9 +124,12 @@ func startWebdriver() {
 			}),
 		)
 	} else {
+		// Local machines can start chrome normally
 		page, err = agoutiDriver.NewPage(agouti.Browser("chrome"))
 	}
 	Expect(err).NotTo(HaveOccurred())
+
+	return page
 }
 
 func startWebsite() {
@@ -154,6 +155,9 @@ import (
 
 var _ = Describe("Website", func() {
 	It("Displays hello world", func() {
+		page := getPage()
+		defer page.Destroy()
+
 		Expect(page.Navigate("http://127.0.0.1:8080/")).To(Succeed())
 		Eventually(page).Should(HaveURL("http://127.0.0.1:8080/"))
 		Eventually(page.Find("body")).Should(HaveText("Hello World"))
