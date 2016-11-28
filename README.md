@@ -52,6 +52,10 @@ If you don't have push access, then send an ask ticket to have yourself added to
 
 **Make it pretty.** Pivotal-ui comes with a bunch of nice helpers.  Make use of them.  Check out the example styles in the default post template.
 
+## Post formatting gotchas
+
+Currently, if you have links or line breaks in your `short:` description it will not format correctly.
+
 ## Running Locally
 
 This site uses [Hugo](http://gohugo.io) v0.14, which is easy to install:
