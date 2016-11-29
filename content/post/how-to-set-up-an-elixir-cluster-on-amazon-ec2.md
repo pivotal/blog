@@ -394,7 +394,7 @@ You will need to create 3 files and have them sit in the `/home/ubuntu` (or `/ho
 #### US
 
 ```shell
--name us@ec2-1.2.3.4.compute.amazonaws.com
+-name us@ec2-3.4.5.6.compute.amazonaws.com
 -setcookie s3kr3t
 -kernel inet_dist_listen_min 9100 inet_dist_listen_max 9155
 -config /home/ubuntu/your_app.config
@@ -403,7 +403,7 @@ You will need to create 3 files and have them sit in the `/home/ubuntu` (or `/ho
 #### UK
 
 ```shell
--name uk@ec2-1.2.3.4.compute.amazonaws.com
+-name uk@ec2-5.6.7.8.compute.amazonaws.com
 -setcookie s3kr3t
 -kernel inet_dist_listen_min 9100 inet_dist_listen_max 9155
 -config /home/ubuntu/your_app.config
