@@ -7,13 +7,13 @@ categories:
 date: 2016-11-23T23:01:29-08:00
 draft: true
 short: |
-  Hands on with Linux network namespaces
+  Hands on with Linux namespaces and threads
 title: "Don't mix goroutines and namespaces: Part 1"
 ---
 
 Here's an obscure fact!
 
->```text
+```text
 A concurrent Go program cannot safely switch namespaces.
 ```
 
@@ -23,13 +23,27 @@ Have you heard of these fancy "container" things, but are curious how they actua
 
 In this 3-part series, we'll cover it all:
 
-- Part 1 (that's today!): learn about **namespaces**
+- Part 1 (that's today!): learn about **namespaces** and how they interact with *threads*
 - Part 2: learn about **goroutines**
 - Part 3: we **mix them together** and observe the result (spoiler alert: bad things happen)
 
+---
+
+The rough outline for Part 1 is:
+
+- [Background: What's a namespace?](#background-what-s-a-namespace)
+- [Working with namespaces](#working-with-namespaces)
+- [Running a server in a namespace](#running-a-server-in-a-namespace)
+- [Switching namespaces in code](#switching-namespaces-in-code)
+- [One process in many namespaces!](#one-process-in-many-namespaces)
+- [Inheritance](#inheritance)
+- [Conclusion](#wrapping-up-for-now)
+
 Sound good?  OK.  Here we go.
 
-## What's a namespace?
+---
+
+## Background: What's a namespace?
 Modern cloud application platforms like Cloud Foundry are built on a technology called *containers*.  Although containers have been recently popularized by products like Docker, most of the underlying technology has been around for years and incorporated into many systems.  The basic concept is simple: an operating system *process* that is "inside" the container is isolated from everything else outside.  It can't see any other processes on the host computer, it gets its own filesystem, and has its own address on the network.
 
 On Linux, each of these forms of isolation (process table, filesystem mounts, network and others) is provided by a different kind of *namespace*.  If a process is in a *PID namespace*, it can only see other processes inside that namespace.  Likewise, a filesystem mounted on the host won't be visible to processes inside of a *mount namespace*.  And if I simultaneously launch 100 different web server processes, each inside a different *network namespace*, every one could bind to the same port number at the same time, because each has its own network stack.
@@ -38,11 +52,38 @@ In short, a container is just a bundle of namespaces of different kinds (pid, mo
 
 But this is a post about namespaces.  So let's dive into namespaces.  Specifically *network namespaces*...
 
+---
+
+<details>
+<summary>
+We'll work through several examples that will require `root` access on a Linux environment.  If you're on Mac or Windows, or are a Linux user that would rather keep your network tinkering inside a sandbox, then click here for instructions on how to set up a local Linux virtual machine.
+</summary>
+
+---
+
+It only takes 3 steps to get a Linux virtual machine up and running:
+
+0. Install [Vagrant](https://www.vagrantup.com/)
+0. Install [VirtualBox](https://www.virtualbox.org/)
+1. In an empty directory, run
+
+     ```bash
+     vagrant init ubuntu/xenial64
+     vagrant up
+     vagrant ssh
+     ```
+</details>
+
+---
 
 ## Working with namespaces
-Here's a quick demo.  We'll manipulate the some `iptables` firewall rules inside a network namespace without it affecting the firewall rules on the host.
+
+Here's a quick demo.  We'll manipulate some `iptables` firewall rules inside a network namespace without it affecting the firewall rules on the host.
 
 ```bash
+# become root
+sudo su
+
 # show the iptables rules on the host computer
 iptables -S
 ## -P INPUT ACCEPT
@@ -94,7 +135,7 @@ ls -1 /var/run/netns
 The names are helpful, but the [inode](https://en.wikipedia.org/wiki/Inode) number of the file uniquely identifies the namespace:
 ```bash
 ls -i -1 /var/run/netns
-## 4026532129 apricot
+## 4026532297 apricot
 ## 4026532181 banana
 ## 4026532233 cherry
 ```
@@ -102,7 +143,7 @@ ls -i -1 /var/run/netns
 For example, when we launch a new process in a namespace, the namespace file's inode and the process's netns inode match:
 ```bash
 ls -i /var/run/netns/apricot
-## 4026532129 /var/run/netns/apricot
+## 4026532297 /var/run/netns/apricot
 
 ip netns exec apricot sleep 1000 &
 ## [1] 7464
@@ -110,7 +151,7 @@ ip netns exec apricot sleep 1000 &
 SLEEP_PID=$!
 
 readlink /proc/$SLEEP_PID/ns/net
-## net:[4026532129]
+## net:[4026532297]
 ```
 
 ---
@@ -238,8 +279,27 @@ int main(int argc, char **argv)
 ```
 (full [source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/netns-exec.c))
 
+---
+
+<details>
+<summary>
+Working in the Vagrant environment?  Click here.
+</summary>
+
+Run these commands to get a C compiler:
+
+```bash
+apt-get -y update
+apt-get -y install gcc
+```
+
+</details>
+
+---
+
 Build it:
 ```bash
+mkdir -p bin
 gcc netns-exec.c -o bin/netns-exec
 ```
 
@@ -304,7 +364,7 @@ void listenAndServe(char* message) { ... }
 It loops forever, waiting for connections.  When a client connects, the server sends the `message` to the client and then disconnects.
 <details>
 <summary>
-(click here to see the `listenAndServe()` implementation, or view the [full source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/tcp-hello.c).)
+(click here to see the `listenAndServe()` implementation, or view the [full source](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/tcp-hello.c).)
 </summary>
 ```c
 #define _GNU_SOURCE
@@ -477,6 +537,144 @@ We can enter the namespace of each thread individually, and reach the TCP server
 
 ---
 
+## Inheritance
+To introduce our final topic for today, we'll start with this question:
+
+> Suppose a program is launched in the host namespace.  The main thread switches
+> to the `banana` namespace and then calls `pthread_create` to start a second thread.
+> In what namespace does the second thread begin its life?
+
+To answer this, we're going to write our final C program for today.  Unsurprisingly, it begins with some boilerplate.
+<details>
+<summary>
+Click to see all the gory details.
+</summary>
+```c
+/* inherit.c */
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+
+void switchToNamespace(char* namespacePath) {
+  int namespaceFd = open(namespacePath, O_RDONLY);
+  if (namespaceFd < 0) {
+    perror("error: open namespace");
+    exit(1);
+  }
+
+  if (setns(namespaceFd, 0) < 0) {
+    perror("error: setns");
+    exit(1);
+  }
+}
+```
+</details>
+
+The more interesting part begins with a `report` function to print the current thread ID and network namespace inode number:
+```c
+int getThreadID() {
+  return syscall(SYS_gettid);
+}
+
+long int getInodeOfCurrentNetNS() {
+  char myNSPath[100];
+  sprintf(myNSPath, "/proc/self/task/%d/ns/net", getThreadID());
+
+  int currentNS = open(myNSPath, O_RDONLY);
+  if (currentNS < 0) {
+      perror("error: open namespace");
+      exit(1);
+  }
+
+  struct stat nsStat;
+  if (fstat (currentNS, &nsStat) < 0) {
+      perror("error: stat namespace");
+      exit(1);
+  }
+  close(currentNS);
+
+  return nsStat.st_ino;
+}
+
+void report(char* msg) {
+  fprintf(stdout, "%20s: on thread %d in netns %lx\n", msg, getThreadID(), getInodeOfCurrentNetNS());
+}
+```
+
+Next, we'll define a thread worker which calls `report` to print its current namespace and then quits.
+For clarity, we'll make a helper function that both spins up the new thread *and* waits for it to complete.
+```c
+void* threadWorker(void* _) {
+  report("in new thread");
+  return NULL;
+}
+
+void launchThreadAndWait() {
+  pthread_t thread;
+  pthread_create(&thread, NULL,
+        (void *(*) (void *)) threadWorker,
+        (void *) NULL
+    );
+
+  void* res;
+  // wait for the thread to complete
+  if (pthread_join(thread, &res) != 0) {
+    perror("error: join");
+    exit(1);
+  }
+}
+```
+
+Finally, we write our `main`:
+```c
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    fprintf(stderr, "usage: %s nspath1\n", argv[0]);
+    exit(1);
+  }
+
+  report("main started");
+
+  switchToNamespace(argv[1]);
+  printf("switched to %s\n", argv[1]);
+  report("main, after switch");
+
+  printf("creating new thread...\n");
+  launchThreadAndWait();
+}
+```
+
+Like before, we need to compile with pthreads support:
+```bash
+gcc inherit.c -pthread -o bin/inherit
+```
+
+Now we can answer our question:
+```bash
+bin/inherit /var/run/netns/banana
+##         main started: on thread 25196 in netns 4026531957
+## switched to /var/run/netns/banana
+##   main, after switch: on thread 25196 in netns 4026532181
+## creating new thread...
+##        in new thread: on thread 25197 in netns 4026532181
+```
+
+We see the main thread switches to namespace `banana` (a.k.a. inode number `4026532181`) and starts a new thread, which starts life in the same network namespace.
+
+So the answer to our question was that the new thread starts in the `banana` namespace.  More generally we can state:
+
+>A child thread inherits the namespaces of its parent.
+
+This may seem obvious, as if it were [the only way things could possibly work](https://en.wikipedia.org/wiki/Canonical_map).  But it is worth stating explicitly.  When we dig into the root cause of our bug in Part 3, this fact will be very important.  Stay tuned!
+
+---
+
 Before we finish, let's do some housekeeping:
 ```bash
 kill $(jobs -p)
@@ -496,8 +694,9 @@ Part 1 complete!  You've:
 - observed parts of the network stack, and how it is isolated inside a network namespace
 - written a program that changes what namespace it is in
 - written a multi-threaded, multi-namespace TCP server!
+- proven that child threads are born into the same namespace as their parent
 
-If you want to explore more, check out the [documentation for the `ip` utility](http://baturin.org/docs/iproute2/) (a.k.a. "iproute2"):
+If you want to explore more, check out the [manual pages for `namespaces`](http://man7.org/linux/man-pages/man7/namespaces.7.html) and the [documentation for the `ip` utility](http://baturin.org/docs/iproute2/) (a.k.a. "iproute2").  A couple things to try with the latter:
 
 - Kick the tires on `ip netns pids` and `ip netns identify`.  Do they work when the threads are in different namespaces?
 - Create a "virtual ethernet" pair using `ip link add`, then try to "connect one namespace to another" using `ip link set dev`.  Can you make a network connection (via `nc`) from one namespace to another?
