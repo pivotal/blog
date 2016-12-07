@@ -5,7 +5,7 @@ categories:
 - containers
 - linux
 date: 2016-12-06T18:01:29-08:00
-draft: true
+draft: false
 short: |
   Hands on with Linux namespaces and threads
 title: "Don't mix goroutines and namespaces: Part 1"
@@ -19,7 +19,9 @@ A concurrent Go program cannot safely switch namespaces.
 
 What does that even mean???
 
-Have you heard of these fancy "container" things, but are curious how they actually work?  Perhaps you're a Go programmer who wants to better understand the concurrency features in your language runtime?  Or maybe you just want to hear a story about a super gnarly bug, one where your server randomly decides it can't reach the network, for no apparent reason?
+Have you heard of these fancy "container" things, but are curious how they actually work?  Perhaps you're a Go programmer who wants to better understand the concurrency features in your language runtime?
+
+Or maybe you just want to hear a story about a [super gnarly bug](https://github.com/containernetworking/cni/issues/262) that keeps popping up in the open source container ecosystem — most recently on the [CNI project](https://github.com/containernetworking/cni) — where a server spontaneously loses network connectivity, for no apparent reason?
 
 In this 3-part series, we'll cover it all:
 
@@ -43,9 +45,9 @@ Sound good?  OK.  Here we go.
 ---
 
 ## Background: What's a namespace?
-Modern cloud application platforms like Cloud Foundry are built on a technology called *containers*.  Although containers have been recently popularized by products like Docker, most of the underlying technology has been around for years and incorporated into many systems.  The basic concept is simple: an operating system *process* that is "inside" the container is isolated from everything else outside.  It can't see any other processes on the host computer, it gets its own filesystem, and has its own address on the network.
+Modern cloud application platforms like Cloud Foundry are built on a technology called *containers*.  Although containers have been recently popularized by products like Docker, most of the underlying technology has [been around for years](https://en.wikipedia.org/wiki/Operating-system-level_virtualization) and incorporated into many systems.  The basic concept is simple: an operating system *process* that is "inside" the container is isolated from everything else outside.  It can't see any other processes on the host computer, it gets its own filesystem, and has its own address on the network.
 
-On Linux, each of these forms of isolation (process table, filesystem mounts, network and others) is provided by a different kind of *namespace*.  If a process is in a *PID namespace*, it can only see other processes inside that namespace.  Likewise, a filesystem mounted on the host won't be visible to processes inside of a *mount namespace*.  And if I simultaneously launch 100 different web server processes, each inside a different *network namespace*, every one could bind to the same port number at the same time, because each has its own network stack.
+On Linux, each of these forms of isolation (process table, filesystem mounts, network and others) is provided by a different kind of [*namespace*](http://man7.org/linux/man-pages/man7/namespaces.7.html).  If a process is in a [*PID namespace*](http://man7.org/linux/man-pages/man7/pid_namespaces.7.html), it can only see other processes inside that namespace.  Likewise, a filesystem mounted on the host won't be visible to processes inside of a [*mount namespace*](http://man7.org/linux/man-pages/man7/mount_namespaces.7.html).  And if I simultaneously launch 100 different web server processes, each inside a different *network namespace*, every one could bind to the same port number at the same time, because each has its own network stack.
 
 In short, a container is just a bundle of namespaces of different kinds (pid, mount, network and others), along with a few extra kernel features to enforce quotas and lock down security.  Every container runner, including Docker, rkt, and Garden (part of Cloud Foundry) does this similarly.  In fact, you can build your own container in [less than 100 lines of Go](https://www.infoq.com/articles/build-a-container-golang).
 
@@ -64,7 +66,7 @@ It only takes 3 steps to get a Linux virtual machine up and running:
 
 0. Install [Vagrant](https://www.vagrantup.com/)
 0. Install [VirtualBox](https://www.virtualbox.org/)
-1. In an empty directory, run
+1. In an empty directory, open a terminal and run
 
      ```bash
      vagrant init ubuntu/xenial64
@@ -77,7 +79,7 @@ It only takes 3 steps to get a Linux virtual machine up and running:
 
 ## Working with namespaces
 
-Here's a quick demo.  We'll manipulate some `iptables` firewall rules inside a network namespace without it affecting the firewall rules on the host.
+Here's a quick demo.  We'll manipulate some [`iptables` firewall](https://en.wikipedia.org/wiki/Iptables) rules inside a network namespace without it affecting the firewall rules on the host.
 
 ```bash
 # become root
@@ -123,7 +125,7 @@ iptables -S
 ## -P OUTPUT ACCEPT
 ```
 
-The `ip netns` utility maintains network namespaces as files in the `/var/run/netns` directory:
+The [`ip netns` utility](http://man7.org/linux/man-pages/man8/ip-netns.8.html) maintains network namespaces as files in the `/var/run/netns` directory:
 ```bash
 ls -1 /var/run/netns
 ## apricot
@@ -158,7 +160,7 @@ readlink /proc/$SLEEP_PID/ns/net
 ## Running a server in a namespace
 Namespaces are used to build containers, and containers often run servers.  One of the advantages of namespaces is that the process inside can bind to whatever port it likes, without interference from other processes.
 
-Let's try that out.  First, we'll launch a simple TCP server from the host:
+Let's try that out.  First, we'll launch a simple [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) server from the host:
 ```bash
 while (sleep 1); do
   echo "hello from host";
@@ -235,6 +237,7 @@ for ns in $(ip netns list); do
 done
 ```
 
+---
 
 ## Switching namespaces in code
 A process does not need to stay in the same namespace it started in.  To illustrate this, we'll implement the `ip netns exec` utility ourselves!
@@ -709,7 +712,7 @@ Part 1 complete!  You've:
 - written a multi-threaded, multi-namespace TCP server!
 - proven that child threads are born into the same namespace as their parent
 
-If you want to explore more, check out the [manual pages for `namespaces`](http://man7.org/linux/man-pages/man7/namespaces.7.html) and the [documentation for the `ip` utility](http://baturin.org/docs/iproute2/) (a.k.a. "iproute2").  A couple things to try with the latter:
+If you want to explore more, check out the [manual pages for `namespaces`](http://man7.org/linux/man-pages/man7/namespaces.7.html) and the [documentation for the `ip` utility](http://man7.org/linux/man-pages/man8/ip-netns.8.html) (and [here](http://baturin.org/docs/iproute2/)).  A couple things to try with the latter:
 
 - Kick the tires on `ip netns pids` and `ip netns identify`.  Do they work when the threads are in different namespaces?
 - Create a "virtual ethernet" pair using `ip link add`, then try to "connect one namespace to another" using `ip link set dev`.  Can you make a network connection (via `nc`) from one namespace to another?
