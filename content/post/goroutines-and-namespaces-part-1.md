@@ -45,7 +45,7 @@ Sound good?  OK.  Here we go.
 ---
 
 ## Background: What's a namespace?
-Modern cloud application platforms like Cloud Foundry are built on a technology called *containers*.  Although containers have been recently popularized by products like Docker, most of the underlying technology has [been around for years](https://en.wikipedia.org/wiki/Operating-system-level_virtualization) and incorporated into many systems.  The basic concept is simple: an operating system *process* that is "inside" the container is isolated from everything else outside.  It can't see any other processes on the host computer, it gets its own filesystem, and has its own address on the network.
+Modern cloud application platforms like Cloud Foundry are built on a technology called *containers*.  Although containers have been recently popularized by products like Docker, most of the underlying technology has [been around for years](https://en.wikipedia.org/wiki/Operating-system-level_virtualization) and incorporated into many systems.  The basic concept is simple: an operating system [*process*](https://en.wikipedia.org/wiki/Process_(computing)) that is "inside" the container is isolated from everything else outside.  It can't see any other processes on the host computer, it gets its own filesystem, and has its own address on the network.
 
 On Linux, each of these forms of isolation (process table, filesystem mounts, network and others) is provided by a different kind of [*namespace*](http://man7.org/linux/man-pages/man7/namespaces.7.html).  If a process is in a [*PID namespace*](http://man7.org/linux/man-pages/man7/pid_namespaces.7.html), it can only see other processes inside that namespace.  Likewise, a filesystem mounted on the host won't be visible to processes inside of a [*mount namespace*](http://man7.org/linux/man-pages/man7/mount_namespaces.7.html).  And if I simultaneously launch 100 different web server processes, each inside a different *network namespace*, every one could bind to the same port number at the same time, because each has its own network stack.
 
@@ -55,25 +55,17 @@ But this is a post about namespaces.  So let's dive into namespaces.  Specifical
 
 ---
 
-<details>
-<summary>
-We'll work through several examples that will require `root` access on a Linux environment.  If you're on Mac or Windows, or are a Linux user that would rather keep your network tinkering inside a sandbox, then click here for instructions on how to set up a local Linux virtual machine.
-</summary>
-
----
-
-It only takes 3 steps to get a Linux virtual machine up and running:
+We'll work through several examples that will require `root` access on a Linux environment.  If you're on Mac or Windows, or are a Linux user that would rather keep your network tinkering inside a sandbox, then you can set up a Linux virtual machine:
 
 0. Install [Vagrant](https://www.vagrantup.com/)
 0. Install [VirtualBox](https://www.virtualbox.org/)
-1. In an empty directory, open a terminal and run
+0. In an empty directory, open a terminal and run
 
-     ```bash
-     vagrant init ubuntu/xenial64
-     vagrant up
-     vagrant ssh
-     ```
-</details>
+   ```bash
+   vagrant init ubuntu/xenial64
+   vagrant up
+   vagrant ssh
+   ```
 
 ---
 
@@ -230,7 +222,7 @@ Let's clean up a bit before moving on
 kill $(jobs -p)
 ```
 
-While we're at it, lets bring up the loopback device in all 3 namespaces:
+While we're at it, let's bring up the loopback device in all 3 namespaces:
 ```bash
 for ns in $(ip netns list); do
   ip netns exec $ns ip link set lo up
@@ -288,19 +280,12 @@ int main(int argc, char **argv)
 
 ---
 
-<details>
-<summary>
-Working in the Vagrant environment?  Click here.
-</summary>
-
-Run these commands to get a C compiler:
+If you're working in the Vagrant environment, run these commands to get a C compiler:
 
 ```bash
 apt-get -y update
 apt-get -y install gcc
 ```
-
-</details>
 
 ---
 
@@ -378,69 +363,7 @@ We'll start with a basic single-threaded TCP server, `listenAndServe()`:
 void listenAndServe(char* message) { ... }
 ```
 It loops forever, waiting for connections.  When a client connects, the server sends the `message` to the client and then disconnects.
-<details>
-<summary>
-(click here to see the `listenAndServe()` implementation, or view the [full source](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/tcp-hello.c).)
-</summary>
-```c
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <pthread.h>
-
-const int listenPort = 5000;
-
-void listenAndServe(char* message) {
-  int listener = socket(AF_INET, SOCK_STREAM, 0);
-  if (listener < 0) {
-    perror("error: listenAndServe: opening socket");
-    return;
-  }
-
-  int optval = 1; // allow port to be immediately re-used after process is killed
-  setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
-
-  struct sockaddr_in serverAddr;
-  bzero((char *) &serverAddr, sizeof(serverAddr));
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  serverAddr.sin_port = htons((unsigned short)listenPort);
-
-  if (bind(listener, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-    perror("error: listenAndServe: binding");
-    return;
-  }
-
-  const int queueLength = 5;
-  if (listen(listener, queueLength) < 0) {
-    perror("error: listenAndServe: listen");
-    return;
-  }
-
-  while (1) {
-    struct sockaddr_in clientAddr;
-    int clientlen = sizeof(clientAddr);
-    int connection = accept(listener, (struct sockaddr *) &clientAddr, &clientlen);
-    if (connection < 0) {
-      perror("error: accept");
-      return;
-    }
-
-    if (write(connection, message, strlen(message)) < 0) {
-      perror("error: writing to socket");
-      return;
-    }
-
-    close(connection);
-  }
-}
-```
-</details>
+([full source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/tcp-hello.c))
 
 
 Next, we'll define the `threadWorker()` function that will be the entry point for each new thread.  It has two responsibilities: change the thread's network namespace, then launch the TCP server:
@@ -560,39 +483,9 @@ To introduce our final topic for today, we'll start with this question:
 > to the `banana` namespace and then calls `pthread_create` to start a second thread.
 > In what namespace does the second thread begin its life?
 
-To answer this, we're going to write our final C program for today ([full source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/inherit.c)).  Unsurprisingly, it begins with some boilerplate.
-<details>
-<summary>
-Click here to see some boilerplate!
-</summary>
-```c
-/* inherit.c */
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
+To answer this, we're going to write our final C program for today.
 
-void switchToNamespace(char* namespacePath) {
-  int namespaceFd = open(namespacePath, O_RDONLY);
-  if (namespaceFd < 0) {
-    perror("error: open namespace");
-    exit(1);
-  }
-
-  if (setns(namespaceFd, 0) < 0) {
-    perror("error: setns");
-    exit(1);
-  }
-}
-```
-</details>
-
-The more interesting part begins with a `report` function to print the current thread ID and network namespace inode number:
+We'll skip the boilerplate ([full source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/inherit.c)) and jump into the `report` function to print the current thread ID and network namespace inode number:
 ```c
 int getThreadID() {
   return syscall(SYS_gettid);
@@ -666,7 +559,7 @@ int main(int argc, char **argv) {
 }
 ```
 
-Like before, we need to compile with pthreads support:
+As before, we need to compile with pthreads support:
 ```bash
 gcc inherit.c -pthread -o bin/inherit
 ```
