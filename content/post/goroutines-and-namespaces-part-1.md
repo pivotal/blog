@@ -4,7 +4,7 @@ authors:
 categories:
 - containers
 - linux
-date: 2016-11-23T23:01:29-08:00
+date: 2016-12-06T18:01:29-08:00
 draft: true
 short: |
   Hands on with Linux namespaces and threads
@@ -31,13 +31,12 @@ In this 3-part series, we'll cover it all:
 
 The rough outline for Part 1 is:
 
-- [Background: What's a namespace?](#background-what-s-a-namespace)
-- [Working with namespaces](#working-with-namespaces)
-- [Running a server in a namespace](#running-a-server-in-a-namespace)
-- [Switching namespaces in code](#switching-namespaces-in-code)
-- [One process in many namespaces!](#one-process-in-many-namespaces)
-- [Inheritance](#inheritance)
-- [Conclusion](#wrapping-up-for-now)
+- [Background: What's a namespace?]({{< relref "#background-what-s-a-namespace" >}})
+- [Working with namespaces]({{< relref "#working-with-namespaces" >}})
+- [Running a server in a namespace]({{< relref "#running-a-server-in-a-namespace" >}})
+- [Switching namespaces in code]({{< relref "#switching-namespaces-in-code" >}})
+- [One process in many namespaces!]({{< relref "#one-process-in-many-namespaces" >}})
+- [Inheritance]({{< relref "#inheritance" >}})
 
 Sound good?  OK.  Here we go.
 
@@ -238,8 +237,12 @@ done
 
 
 ## Switching namespaces in code
-A process does not need to stay in the same namespace it started in.  To illustrate this, we'll implement the `ip netns exec` utility ourselves!  It's only a few lines of C:
+A process does not need to stay in the same namespace it started in.  To illustrate this, we'll implement the `ip netns exec` utility ourselves!
 
+> Although the later posts in this series will focus on the Go programming language, today we'll only code in C.  That's because its easier to use Linux kernel primitives, like namespaces and threads, in C than in Go.
+
+
+Here's the complete source code for (a somewhat simplified version of) `ip netns exec`:
 ```c
 // netns-exec.c
 
@@ -277,7 +280,8 @@ int main(int argc, char **argv)
   }
 }
 ```
-(full [source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/netns-exec.c))
+
+> To see complete source code and build scripts for this and all other code samples in this post, [click here](https://github.com/rosenhouse/ns-mess/tree/master/c-demos).
 
 ---
 
@@ -324,11 +328,16 @@ We can refer to the namespace by a path other than the one at `/var/run/netns`. 
 ip netns add dragonfruit
 ip netns exec dragonfruit ip link set lo up
 
-ip netns exec dragonfruit /bin/bash -c 'while (sleep 1); do echo "hi from dragonfruit"; done | nc -lk 5000' &
+ip netns exec dragonfruit /bin/bash -c 'while (sleep 2); do echo "hi from dragonfruit"; done | nc -lk 5000' &
 
 SERVER_PID=$!
 
 bin/netns-exec /proc/$SERVER_PID/ns/net nc localhost 5000
+## hi from dragonfruit
+## hi from dragonfruit
+## hi from dragonfruit
+## hi from dragonfruit
+## ...
 ```
 
 In fact, we can delete the namespace reference on disk:
@@ -339,6 +348,10 @@ ip netns delete dragonfruit
 But because there is still a process inside, the namespace remains alive and well.  We can re-connect to it, again by its PID:
 ```bash
 bin/netns-exec /proc/$SERVER_PID/ns/net nc localhost 5000
+## hi from dragonfruit
+## hi from dragonfruit
+## hi from dragonfruit
+## hi from dragonfruit
 ```
 
 It's only when we finally stop all the processes inside that the kernel deletes the namespace:
@@ -544,10 +557,10 @@ To introduce our final topic for today, we'll start with this question:
 > to the `banana` namespace and then calls `pthread_create` to start a second thread.
 > In what namespace does the second thread begin its life?
 
-To answer this, we're going to write our final C program for today.  Unsurprisingly, it begins with some boilerplate.
+To answer this, we're going to write our final C program for today ([full source here](https://github.com/rosenhouse/ns-mess/blob/master/c-demos/inherit.c)).  Unsurprisingly, it begins with some boilerplate.
 <details>
 <summary>
-Click to see all the gory details.
+Click here to see some boilerplate!
 </summary>
 ```c
 /* inherit.c */
@@ -667,11 +680,11 @@ bin/inherit /var/run/netns/banana
 
 We see the main thread switches to namespace `banana` (a.k.a. inode number `4026532181`) and starts a new thread, which starts life in the same network namespace.
 
-So the answer to our question was that the new thread starts in the `banana` namespace.  More generally we can state:
+More generally:
 
 >A child thread inherits the namespaces of its parent.
 
-This may seem obvious, as if it were [the only way things could possibly work](https://en.wikipedia.org/wiki/Canonical_map).  But it is worth stating explicitly.  When we dig into the root cause of our bug in Part 3, this fact will be very important.  Stay tuned!
+This may seem obvious and [the only way things could possibly work](https://en.wikipedia.org/wiki/Canonical_map).  But it is worth stating explicitly.  When we dig into the root cause of our bug in Part 3, this fact will be very important.  Stay tuned!
 
 ---
 
