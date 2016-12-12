@@ -10,7 +10,7 @@ categories:
 - Linux
 - Garden
 date: 2016-12-12T16:00:00Z
-draft: true
+draft: false
 title: "Cloud Foundry GrootFS: A daemonless container image manager"
 short: |
   GrootFS is the new container image plugin for Garden, Cloud Foundry's
@@ -64,7 +64,7 @@ a playground
 [vagrant](https://github.com/cloudfoundry/grootfs/blob/master/README.md) box,
 which we recommend using (`vagrant up`) to start playing with GrootFS quickly.
 
-Out [project's
+Our [project's
 readme](https://github.com/cloudfoundry/grootfs/blob/master/README.md) contains
 instructions on how to install and use GrootFS in your environment.
 
