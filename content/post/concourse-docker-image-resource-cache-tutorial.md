@@ -8,7 +8,7 @@ categories:
 - Ruby
 - Containerization
 date: 2016-12-15T13:50:20-08:00
-draft: true
+draft: false
 short: |
   Sometimes we want to create custom docker images with external dependencies cached. Learn how to have Concourse automate this and use the built container to run tests.
 title: Using docker-image-resource to build a custom container for testing your Ruby apps in Concourse
