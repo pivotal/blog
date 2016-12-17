@@ -169,13 +169,7 @@ We assign the version number '4.0.1' to our BOSH release (in order to
 track our upstream's version).
 
 ```bash
-bosh create-release --final --tarball --version 4.0.1 --force
-```
-
-We copy the tarball to a safe place (we will delete it in a subsequent step).
-
-```bash
-cp releases/pdns/pdns-4.0.1.tgz ~/Downloads/
+bosh create-release --final --tarball ~/Downloads/pdns-4.0.1.tgz --version 4.0.1 --force
 ```
 
 ### 8. Commit but do NOT Push
@@ -264,3 +258,10 @@ the secrets to be passed via the command line, e.g. `-l ~/secrets.yml` or
 `-l <(lpass show --note secrets)`
 
 The Golang CLI is in alpha and should not be used on production systems.
+
+#### Correction: December 17, 2016
+
+The blog post has been updated to reflect the `bosh create-release` command's
+option `--tarball` now requires an argument (the pathname of the release file to
+create). Previous versions of the BOSH CLI did not expect an argument passed to
+the `--tarball` option.
