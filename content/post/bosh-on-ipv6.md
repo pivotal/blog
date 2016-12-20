@@ -5,7 +5,7 @@ categories:
   - BOSH
   - IPv6
 date: 2016-12-20T20:49:50.000Z
-draft: true
+draft: false
 short: |
   Amazon Web Services (AWS) has recently announced Internet Protocol version 6
   (IPv6) Support for their Elastic Compute Cloud (EC2) Instances in Virtual
