@@ -24,7 +24,7 @@ On October 28th, 2016, five out of seven nameservers for the `.io` top-level dom
 Five of the seven nameservers for the `.io` TLD stopped responding. This made many `.io` domains inaccessible for a few hours.<sup><a href="#io-failure-ycombinator" class="alert-link">[1]</a></sup>
 
 
-## What Affects Did This Downtime Have?
+## What Effects Did This Downtime Have?
 
 [Pivotal Web Services (PWS)](http://run.pivotal.io) relies on the `.io` Top-Level Domain for a few things and the PWS CloudOps team noticed a few ways that users of PWS could have been affected.
 
