@@ -4,8 +4,8 @@ authors:
 categories:
 - BOSH
 - CF Runtime
-date: 2016-11-30T14:53:27-08:00
-draft: true
+date: 2016-12-20T14:53:27-08:00
+draft: false
 short: |
   On September 29th, 2016, Pivotal Web Services (PWS) enabled a feature available in BOSH to auto-assign public IPs to Diego cells.
 title: Public IPs for diego cells
@@ -18,11 +18,11 @@ On September 29th, 2016, Pivotal Web Services (PWS) enabled a feature available 
 ## Why we did what we did
 Any app in PWS that relied on external resources like a database, blobstore, or API communicated to that external resource via an active/passive HA pair of Network Address Translation (NAT) boxes. While this worked for PWS in smaller scales, PWS has continued to grow over the years.
 
-The first issue was that we found the network burden of supporting a growing number of apps was becoming too great for the number of NAT boxes we were running. The way this manifested was steadily increasing network latency for our running apps. Our NAT boxes were already at the highest tier of AWS instance that had a 1Gbps uplink. This required addressing. Increasing the size of the NAT boxes to an instance size with a 10 Gbps uplink would have addressed this issue, but were problematic because of the following issues.
+The first issue was that we found the network burden of supporting a growing number of apps was becoming too great for the number of NAT boxes we were running. The way this manifested was steadily increasing network latency for our running apps. Our NAT boxes were already at the highest tier of AWS instance that had a 1Gbps uplink. This required addressing. Increasing the size of the NAT boxes to an instance size with a 10 Gbps uplink would have addressed this issue, but would have been problematic because of the second and third issues.
 
-The second issue is that the failover procedure disrupts established connections. The failover is implemented by changing the [AWS route table](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Route_Tables.html) to the new instance. The disruption happens because NAT boxes do not share NAT session table data, so the new NAT box will drop or refuse packets inbound to established clients. So every time a NAT box needs to be retired or upgraded, a significant fraction of apps in PWS suffered from broken network sessions.
+The second issue is that the failover procedure disrupts established connections. The failover is implemented by changing the [AWS route table](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Route_Tables.html) to point to the new instance. The disruption happens because NAT boxes do not share NAT session table data, so the new NAT box will drop or refuse packets inbound to established clients. So every time a NAT box needed to be retired or upgraded, a fraction of apps in PWS suffered from broken outbound network sessions.
 
-Thirdly, we assigned a NAT box pair per availability zone. This means that for a growing number of Diego cells, we had a relatively fixed number of NAT boxes. That meant that as the number of consumers grew, the demand on the service grew alongside the potential impact from a failure.
+Thirdly, we assigned a NAT box pair per availability zone. This meant that for a growing number of Diego cells, we had a relatively fixed number of NAT boxes. That meant that as the number of consumers grew, the demand on the service grew, alongside the potential impact from a failure.
 
 The NAT boxes were a bottleneck and a collective point of failure. Simply upgrading the NAT boxes indefinitely would have produced larger failure pools, and would only have served to punt the can down the road.
 
@@ -39,13 +39,13 @@ Even if traffic were to collectively grow beyond the capacity for the network ha
 
 
 ## How you can implement
-Set `resource_pools.<my diego cell subnet>.cloud_properties.auto_assign_public_ip` = true
+Set `resource_pools.<my diego cell subnet>.cloud_properties.auto_assign_public_ip` = true for diego cells in your CF deployment manifest.
 
 
 ## A note on security
-We recommend configuring ACLs to allow traffic from 0.0.0.0/0 to your external databases and API endpoints.
+I recommend configuring ACLs to allow traffic from 0.0.0.0/0 to your externally accessible assets, and using robust authentication and encryption measures instead.
 
-One reason is simplicity and the guarantee that it provides. There is value to being able to say that “the source IP of the app is definitively not the problem. There are no ACLs in place to limit it, were it coming from AWS, or GCP, or from the corporate network.” Given a complex and growing infrastructure, ACLs introduce a variable to validate when troubleshooting why a connection is failing. Furthermore, ACLs are often constructed starting with least privilege, and growth later often requires revisiting these ACLs. “We just scaled out to another AZ and half the app instances don’t work now.”
+One reason is simplicity and the guarantee that it provides. There is value to being able to say that “the source IP of the app is definitively not the problem. There are no ACLs in place to limit it, were it coming from AWS, or GCP, or from the corporate network.” Given a complex and growing infrastructure, ACLs introduce a variable to validate when troubleshooting why a connection is failing. Furthermore, ACLs are often constructed starting with least privilege, and growth later often requires revisiting these ACLs. Allowing access from anywhere prevents the potential problem statement of “we just scaled out to another AZ and half the app instances don’t work now.”
 
 A second reason is that it is an ineffective security measure. The ACL reduces the field of potential attackers, but the vulnerability to various means of exploitation is not reduced once the hurdle of source IP is bypassed. Where the boundaries of source IP aligns with that of a publicly available PaaS or IaaS, this anti-pattern compounds the complexity of troubleshooting. All a savvy attacker would need to do is launch an attack from that PaaS or IaaS while the ACL assumes that the traffic is legitimate. This lends the malicious traffic undue credence. This credence can confuse responders. “The phone call is coming from inside the house.”
 
@@ -61,7 +61,7 @@ If certificate-only authentication is not possible (as is the case for AWS RDS),
 
 ### If you still must use source-IP based ACLs, the rest of this post applies.
 AWS publishes IP ranges [here](https://ip-ranges.amazonaws.com/ip-ranges.json).
-PWS currently is currently hosted on us-east-1. We do not guarantee that this will remain true indefinitely, but it is true for now. We also do not promise to provide notification if we expand PWS to multiple regions, but we probably will. =]
+PWS currently is currently hosted on us-east-1. We do not guarantee that this will remain true indefinitely, but it is true for now. We also do not promise to provide notification if we expand PWS to multiple regions, but we probably will.
 
 The effective list of possible IPs is as follows:
 
@@ -71,4 +71,4 @@ curl https://ip-ranges.amazonaws.com/ip-ranges.json | \
     | jq .
 ```
 
-One can subscribe to ip address range notifications following the documentation found [here](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html#subscribe-notifications).
+One can subscribe to IP address range notifications following the documentation found [here](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html#subscribe-notifications).
