@@ -7,8 +7,8 @@ categories:
 - DNS
 - Cloud Foundry
 - Pivotal Web Services
-date: 2016-12-20T11:42:41-08:00
-draft: true
+date: 2016-12-20T16:01:00-08:00
+draft: false
 short: |
   An article about the `.io` TLD failure, how it affected Cloud Foundry, as well as how we could potentially mitigate TLD failures in the future.
 title: Understanding and Mitigating the .io Top-Level-Domain failure in Cloud Foundry and Pivotal Web Services
@@ -16,23 +16,23 @@ title: Understanding and Mitigating the .io Top-Level-Domain failure in Cloud Fo
 
 # Introduction
 
-On October 28th, 2016, five out of seven nameservers for the `.io` top-level domain (TLD) stopped working.<sup><a href="#io-failure-ycombinator" class="alert-link">[1]</a></sup> In this article, we’ll talk briefly about the `.io` TLD failure, then talk about how it affected Cloud Foundry as well as how we could potentially mitigate these failures in the future.
+On October 28th, 2016, five out of seven nameservers for the `.io` top-level domain (TLD) stopped working.<sup><a href="#io-failure-ycombinator" class="alert-link">[1]</a></sup> In this article, we’ll talk briefly about the `.io` TLD failure, then talk about how it affected Cloud Foundry (CF) as well as how we could potentially mitigate these failures in the future.
 
 
 # What Happened?
 
-Five of the seven nameservers for the `.io` TLD stopped responding. This made many `.io` domains inaccessible for a few hours.
+Five of the seven nameservers for the `.io` TLD stopped responding. This made many `.io` domains inaccessible for a few hours.<sup><a href="#io-failure-ycombinator" class="alert-link">[1]</a></sup>
 
 
-### What Affects Did This Downtime Have?
+## What Affects Did This Downtime Have?
 
-Pivotal Web Services (PWS) relies on the `.io` Top-Level Domain for a few things and the PWS CloudOps team noticed a few ways that users of PWS could have been affected.
+[Pivotal Web Services (PWS)](http://run.pivotal.io) relies on the `.io` Top-Level Domain for a few things and the PWS CloudOps team noticed a few ways that users of PWS could have been affected.
 
 
 ### How Did This Affect Internal Cloud Foundry Components?
 
-1. Traffic internal to Cloud Foundry relies on NATS<sup><a href="#nats" class="alert-link">[2]</a></sup> to register routes to Cloud Foundry’s router. All registered routes that leveraged the system domain (`run.pivotal.io`) were potentially affected.
-1. The Cloud Foundry CLI goes through the cloud controller, which registers its route at `api.run.pivotal.io`. This meant that the CF CLI was partially unusable while the `.io` TLD was having issues.
+1. Traffic internal to Cloud Foundry relies on NATS<sup><a href="#nats" class="alert-link">[2]</a></sup> to register routes to Cloud Foundry’s router. All registered routes that leveraged the system domain (`run.pivotal.io`) were possibly affected.
+1. The Cloud Foundry CLI goes through the cloud controller, which registers its route at `api.run.pivotal.io`. This meant that the CF CLI was potentially unusable while the `.io` TLD was having issues.
 
 
 ### How Did This Issue Manifest Itself to Application Developers?
@@ -41,16 +41,11 @@ Pivotal Web Services (PWS) relies on the `.io` Top-Level Domain for a few things
 1. If an application was bound to an internal service that uses an `.io` domain in its connection string &mdash; p-mysql, for example &mdash; app owners would see connection errors.
 
 
-# TLD Failure Mitigation Strategies
-
-### Mitigation Strategy
+# Failure Mitigation Strategies
 
 Register applications to multiple domains with different TLDs. For example, register your application with both `example.io` and `example.com`. For TLS to work with this strategy, you will need to buy a certificate for each domain.
 
-Application name: myapp
-Apps Domain: example.io
-
-Default: When you run `cf push` you get `myapp` running on myapp.example.io
+By default, when you run `cf push` you get `myapp` running at `myapp.example.io`.
 
 To mitigate against TLD failures:
 
@@ -62,10 +57,12 @@ To mitigate against TLD failures:
 cf create-route my-space example.com --hostname myapp
 cf push
 cf map-route my-app example.com --hostname myapp
+
+# Here myapp would be running at myapp.example.io and myapp.example.com
 ~~~
 
 
-At the platform level, configure the platform to use multiple TLDs with an [extra shared domain](https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains) and follow the steps above.
+At the Cloud Foundry level, configure the platform to use multiple TLDs with an [extra shared domain](https://docs.cloudfoundry.org/devguide/deploy-apps/routes-domains.html#shared-domains) and follow the steps above.
 
 
 ### How can we respond to partial TLD nameserver failures in a Cloud Foundry installation?
@@ -75,11 +72,11 @@ Assuming your CF installation uses wildcard DNS entries for your system and appl
 
 #### Google Cloud Platform and Microsoft Azure
 
-Increase the TTL value for your DNS entries that have an A record with the public IP address for the CF domain. Increasing the TTL increases the time until cache invalidation on your [DNS caching servers] (https://www.digitalocean.com/community/tutorials/a-comparison-of-dns-server-types-how-to-choose-the-right-dns-configuration#caching-dns-server). A time of four to six hours should work. The risk of this approach is that if you decide to change your load balancer, a new IP address will be assigned to your load balancer and it will approximately take the same four to six hours to propagate worldwide. In the case of a production system, this even rarely happens.
+Increase the Time To Live (TTL) value for your DNS entries that have an A record with the public IP address for the CF domain. Increasing the TTL increases the time until cache invalidation on your [DNS caching servers] (https://www.digitalocean.com/community/tutorials/a-comparison-of-dns-server-types-how-to-choose-the-right-dns-configuration#caching-dns-server). A time of four to six hours should work. The risk of this approach is that if you decide to change your load balancer, a new IP address will be assigned and it will approximately take the same four to six hours to propagate worldwide. In the case of a production system, this even rarely happens.
 
 #### Amazon Web Services
 
-Since Amazon ELBs don’t provide an IP address for your DNS entry, you need to [create an ALIAS record] (http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html) for the DNS entry of your system and app domains. AWS doesn’t guarantee that the IP address of a load balancer will remain the same over that load balancer’s lifetime.<sup><a href="#aws-load-balancer" class="alert-link">[3]</a></sup>
+Since Amazon Elastic Load Balancers (ELBs) don’t provide an IP address for your DNS entry, you need to [create an ALIAS record] (http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html) for the DNS entry of your system and app domains. AWS doesn’t guarantee that the IP address of a load balancer will remain the same over that load balancer’s lifetime.<sup><a href="#aws-load-balancer" class="alert-link">[3]</a></sup>
 
  A load balancer internally points to one or more A records with a TTL of 60 seconds. You cannot mitigate against the partial TLD NS downtime in a safe manner.
 
@@ -90,7 +87,7 @@ Since Amazon ELBs don’t provide an IP address for your DNS entry, you need to 
 
 # Conclusion
 
-DNS is a highly-available and a highly-cached system. In most cases of DNS server failure, not every request is affected. In addition, the failure rate of web servers is much higher than DNS servers. For more information about the Domain Name System, refer to [RFC 1034](https://www.ietf.org/rfc/rfc1034.txt) and [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
+DNS is a highly-available and a highly-cached system and top-level domain failures are rare. Additionally, most cases of DNS server failure do not affect every request. For more information about the Domain Name System, refer to [RFC 1034](https://www.ietf.org/rfc/rfc1034.txt) and [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
 
 -------
 
