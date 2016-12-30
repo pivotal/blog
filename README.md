@@ -58,12 +58,12 @@ Currently, if you have links or line breaks in your `short:` description it will
 
 ## Running Locally
 
-This site uses [Hugo](http://gohugo.io) v0.14, which is easy to install:
+This site uses [Hugo](http://gohugo.io) v0.18, which is easy to install:
 
 ~~~
 $ brew install hugo
 $ hugo version
-Hugo Static Site Generator v0.14 BuildDate: 2015-06-16T21:41:12+01:00
+Hugo Static Site Generator v0.18.1 BuildDate: 2016-12-29T09:12:41-08:00
 ~~~
 
 After cloning this repository, navigate into the new directory, run `bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
