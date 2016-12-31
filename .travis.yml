@@ -3,8 +3,8 @@ go: '1.7'
 install:
   - wget https://github.com/spf13/hugo/releases/download/v0.18.1/hugo_0.18.1_Linux-64bit.tar.gz
   - tar xzf hugo_0.18.1_Linux-64bit.tar.gz
-  - mv hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64 hugo_bin/hugo
-  - export PATH=$PATH:$PWD/hugo_bin
+  - mv hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64 hugo_0.18.1_linux_amd64/hugo
+  - export PATH=$PATH:$PWD/hugo_0.18.1_linux_amd64
 script: ./bin/build
 deploy:
   - provider: cloudfoundry
