@@ -5,7 +5,6 @@ categories:
 - Declarative Programming
 - datalog
 date: 2017-01-13T09:25:41-07:00
-draft: true
 short: |
   Using a popular academic program, FizzBuzz, and an extreme declarative programming approach using Datalog, we examine the thought process and benefits for enforcing separation of concerns with declarative programming.
 title: Enforcing Separation of Concerns with Declarative Programming
