@@ -62,7 +62,7 @@ isfizzbuzz(N) :- divisible(N, 3), divisible(N, 5).
 
 In defining these rules, we've introduced references to some other terms which are still undefined. In addition to the rules `divisible` and `notdivisible`, we used the strings `3` and `5`, which are domain terms with no intrinsic meaning. Some environments provide arithmetic logic as a convenience for common tasks, but for the purposes of this exercise, the definition of the numeral `3` is *business logic* that we must implement.
 
-Following our pattern of working with more specific and less primitive ideas first, we'll leave `3` and `5` aside for now, and define our `divisibility` rules. For this, we'll define it in terms of another business concept: the `modulus` operation. A number `N` is divisible by a number `D` if `N` modulo `D` is equal to zero, and not divisible if the modulus is not zero.
+Following our pattern of working with more specific and less primitive ideas first, we'll leave `3` and `5` aside for now, and define our divisibility rules. For this, we'll define it in terms of another business concept: the `modulus` operation. A number `N` is divisible by a number `D` if `N` modulo `D` is equal to zero, and not divisible if the modulus is not zero.
 
 ```datalog
 divisible(N, D) :- modulus(N, D, 0).
@@ -173,11 +173,9 @@ display(N, fizzbuzz) :- isfizzbuzz(N).
 isbare(N) :- notdivisible(N, 3), notdivisible(N, 5).
 isfizz(N) :- divisible(N, 3), notdivisible(N, 5).
 isbuzz(N) :- notdivisible(N, 3), divisible(N, 5).
-
 isfizzbuzz(N) :- divisible(N, 3), divisible(N, 5).
 
 divisible(N, D) :- modulus(N, D, 0).
-
 notdivisible(N, D) :- modulus(N, D, X), nonzero(X).
 
 modulus(N, D, 0) :- N = D.
