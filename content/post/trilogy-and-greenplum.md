@@ -62,24 +62,8 @@ Greenplum (and vice versa of course).
 
 In particular for the Trilogy testing framework, the easiest way to write tests
 is to run an anonymous code block and raise an exception if the test fails.
-In the Markdown structure that Trilogy uses this would look like:
-
-    # TEST CASE
-    A simple test of multiplication
-    ## TEST
-    This is the test
-    ```
-    DO $$
-    BEGIN
-        SELECT CASE WHEN 2*3=6 THEN NULL
-        ELSE RAISE EXCEPTION 'Failed to multiply!';
-    END
-    $$;
-    ```
-
-Unfortunately the `DO` statement was added to PostgreSQL in version 9.0 and
-is not available in Greenplum. In this post I am going to describe how you can
-still use Trilogy with Greenplum without needing `DO`.
+In this post I am going to describe how you can
+still use Trilogy with Greenplum without needing these anonymous code blocks.
 
 
 ## Installing Greenplum
