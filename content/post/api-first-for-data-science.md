@@ -1,7 +1,7 @@
 ---
 authors:
-- Add another author here
 - dat
+- alicia
 categories:
 - Data Science
 - Machine Learning
@@ -15,7 +15,7 @@ short: |
 title: API First for Data Science
 ---
 
-_Joint work by Dat Tran (Data Scientist) and Alicia Bozyk (Senior Software Engineer)._
+_Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Data Scientist) and [Alicia Bozyk](https://www.linkedin.com/in/aliciabozyk) (Senior Software Engineer)._
 
 ## Key Takeaways
 * Think about wrapping up your data science model as an API as early as possible
@@ -41,7 +41,7 @@ Creating a smart app involves many steps, from data science to making the app it
 
 In our case, let’s assume we have the data at hand and our problem is to recognize handwritten numbers from zero to nine using the famous [Mixed National Institute of Standards and Technology database](https://en.wikipedia.org/wiki/MNIST_database) (MNIST) data. The MNIST dataset consists of 60,000 training and 10,000 testing images with a size of 28x28.
 
-{{< responsive-figure src="/images/mnist-examples.png" class="center" >}}
+{{< responsive-figure src="/images/api-first-for-data-science/mnist-examples.png" class="center" >}}
 
 The primary goal is to convert handwritten text into a format which the computer can understand. For instance we can use a sketchpad to draw our numbers and then the output should be the expected digit. This is a typical handwriting recognition problem and can be extremely useful for many other use cases where we not only want to recognize numbers but also texts.
 
@@ -116,7 +116,7 @@ Next, we can start to put our code into production. At this stage, we start to d
 
 For deployment and testing of our apps, we use [Pivotal Cloud Foundry (PCF) Dev]( https://github.com/pivotal-cf/pcfdev), which is a smaller distribution of PCF. Cloud Foundry (CF) enables us to reliably expose models as scalable predictive APIs. We use [Concourse CI]( https://concourse.ci/) for auto deployment to CF.
 
-{{< responsive-figure src="/images/ds-concourse-ci.png" class="center" >}}
+{{< responsive-figure src="/images/api-first-for-data-science/ds-concourse-ci.png" class="center" >}}
 
 Concourse checks if a new commit has been made on our git repo and then runs the tests. If the tests pass, our apps will automatically be pushed to CF. In our instance, we have two spaces, one for testing and one for production. The production is only triggered if there is a new tagged version of the code. This makes sense as you might do some user tests for your app with a smaller amount of users instead of all users in production e.g. A/B testing etc.
 
@@ -124,7 +124,7 @@ Concourse checks if a new commit has been made on our git repo and then runs the
 
 Finally, here is the app in action:
 
-{{< responsive-figure src="/images/handwritten-digit-recognition.gif" class="center" >}}
+{{< responsive-figure src="/images/api-first-for-data-science/handwritten-digit-recognition.gif" class="center" >}}
 
 A live demo is hosted on Pivotal's own Cloud Foundry instance, [PWS](https://run.pivotal.io/). Here is the [link](http://sketch-app.cfapps.io/) for the skech app! The model is still not perfect yet so there are some incorrect recognitions. Try it out by yourself! We can improve our model though by using a different algorithm like convolutional neural network or increasing the size of the hidden layers. Actually LeCun et al. list the test error rate for many different models on their [website]( http://yann.lecun.com/exdb/mnist/).
 
