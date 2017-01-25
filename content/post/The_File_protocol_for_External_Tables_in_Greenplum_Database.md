@@ -4,8 +4,8 @@ authors:
 categories:
 - Greenplum Database
 - Databases
-date: 2017-01-24T01:18:23+01:00
-draft: true
+date: 2017-01-25T01:18:23+01:00
+draft: false
 short: |
   The internals of the File protocol used for External Tables in Greenplum Database
 title: The File protocol for External Tables in Greenplum Database
