@@ -41,12 +41,14 @@ data transfer charges. <sup><a href="#cost_doubling">[Traffic increase]</a></sup
   * [1.2 Connection Speed Setting](#speed)
   * [1.3 Geographical Placement](#geography)
   * [1.4 Rate Limiting](#rate_limiting)
+  * [1.5 Join the Pool](#join)
 * [2. Side Topics](#side_topics)
   * [2.0 The Cavalry is Coming: Google's Public NTP Servers](#google_ntp)
   * [2.1 The Snapchat Excessive NTP Query Event Cost $13 - $18 (Per Server)](#how_much)
   * [2.2 Are Virtual Machines Adequate NTP Servers? Yes.](#adequate)
   * [2.3 Sometimes It's the Network, not the VM](#network)
 * [Footnotes](#footnotes)
+* [Corrections & Updates](#corrections)
 
 ## <a name="previous_posts">0. Previous Posts</a>
 
@@ -66,6 +68,28 @@ on the NTP servers, and Windows and macOS the least.
 
 ## <a name="reducing_costs">1. Reducing the Cost of Running an NTP Server</a>
 
+We maintain several servers in the pool.ntp.org project. These servers are
+personal, not corporate, so we're quite sensitive to cost: we don't want to
+spend a bundle if we don't have to. Also, these servers have roles other than
+NTP servers (in fact, their primary purpose is to provide Domain Name System
+(DNS) service and one is also a [Concourse](https://concourse.ci/) continuous
+integration (CI) server).
+
+Which begs the question: given the expense, why do it? We have several motives:
+
+* We have benefitted greatly from the open source community, and providing this
+service is a modest way of giving back.
+
+* Our day job is a developer on
+[BOSH](https://en.wikipedia.org/wiki/BOSH_(bosh_outer_shell), a tool which, at
+its simplest, creates VMs in the cloud based on specifications passed to it in a
+file. We use BOSH to deploy our NTP servers, and on at least two occasions we
+have uncovered obscure bugs as a result.
+
+* On the rare occasions when our systems fail, often our first warning is an email
+from the pool with the subject, "NTP Pool: Problems with your NTP service". In
+other words, being in the pool is a great monitoring system, or, at the very
+least, better than nothing.
 
 ### <a name="statistics">1.0 Statistics (traffic)</a>
 
@@ -78,9 +102,11 @@ than data transfer pricing, the choice of underlying IaaS is unimportant
 (assuming proper functioning of VM/disk/network). In other words, although the
 Google Compute Engine (GCE) server carries more traffic than the Amazon Web
 Services (AWS) server, the roles could have easily been reversed. The mechanism
-underlying pool.ntp.org project, [round-robin
-DNS](https://en.wikipedia.org/wiki/Round-robin_DNS), is an effective but blunt
-(not-terribly-precise) load balancing mechanism.
+underlying pool.ntp.org project (a multi-stage mechanism which "targets the
+users to servers in/near their country and does a weighted
+[round-robin](https://en.wikipedia.org/wiki/Round-robin_DNS),  servers"), is not
+a perfectly precise balancing mechanism (e.g. some clients will "stick" to a
+server long after the pool.ntp.org record has updated).
 
 | Metric            | Amazon Web Services | Google Compute Engine |
 |-------------------|--------------------:|----------------------:|
@@ -169,6 +195,15 @@ it's free).
 
 {{< responsive-figure src="https://cloud.githubusercontent.com/assets/1020675/22177615/4e8c1940-dfd6-11e6-9a2f-a33e0bc07c8d.png" caption="The pool.ntp.org project's menu option on the server management page allows you to throttle the traffic on your server. The lower your connection speed, the less traffic your server will receive, and the lower the bandwidth costs." >}}
 
+The aggregate "netspeed" for the US zone is [86798173
+kbps](https://community.ntppool.org/t/feedback-why-is-my-ntp-server-costing-me-500-per-year/146/5?u=cunnie). This implies the following:
+
+* Our GCE server (and also our AWS server) accounts for 1.15% of the US NTP pool traffic
+* The entire US NTP pool is queried 270,376&times; every second
+* The entire US NTP pool responds (assuming rate-limiting) 252,495&times; every second
+* The entire US NTP pool transfers 45.9TiB in NTP responses monthly
+* At GCE's pricing of $0.12/GiB, the entire US NTP pool would cost $5,640 in monthly data transfer costs (the amount would be lower if volume pricing were taken into account)
+
 ### <a name="geography">1.3 Geographical Placement</a>
 
 The placement of the NTP server has dramatic effect on the bandwidth and cost.
@@ -233,6 +268,16 @@ outbound traffic. There is a small chance that it was another factor, e.g. ntpd
 was overwhelmed and dropped packets, AWS (or GCE) stepped in and limited
 outbound NTP traffic. We haven't run the numbers.
 
+## <a name="join">1.5 Join the Pool</a>
+
+We encourage those with NTP servers with static IPs to join the pool; the
+experience has been personally rewarding and professionally enriching (how many
+can claim to operate a service with thousands of requests per second?).
+
+We also lay out a cautionary tale: when joining, keep an eye to costs,
+especially bandwidth. Opting for a lower connection speed initially (e.g.
+10Mbps), and ratcheting it up over time may be a prudent course of action.
+
 ## <a name="side_topics">2. Side Topics</a>
 
 ### <a name="google_ntp">2.0 The Cavalry is Coming: Google's Public NTP Servers</a>
@@ -242,30 +287,43 @@ servers](https://cloudplatform.googleblog.com/2016/11/making-every-leap-second-c
 Over time, we suspect that this will reduce the load on the pool.ntp.org
 project's servers.
 
-There is an added benefit to pool.ntp.org: Google's four stratum 2 servers are
-excellent upstream time providers for members of the pool. We remember the
-difficulty we faced when initially setting up our NTP servers: it was
-time-consuming finding stratum 2 servers that allowed queries from our servers
-(thank you Virginia Tech).
+<div class="alert alert-warning" role="alert">
 
-For readers interested in joining the pool, here are Google's NTP servers
-(admittedly their naming scheme is not terribly imaginative):
+Servers in the NTP Pool should <strong>not</strong> use Google's NTP servers as
+upstream time providers, nor should they use any upstream provider which
+"smears" the leap second.
 
-* time1.google.com
-* time2.google.com
-* time3.google.com
-* time4.google.com
+</div>
 
-Google is not without controversy though — they made the bold decision to [smear
-the leap second](https://developers.google.com/time/smear), a move which may
-count as heresy among time purists, ("a second is a second, and not 1.000014
-seconds during the ten hours leading up to and following the leap second!").
+&nbsp;
+
+There is a schism in the community regarding [leap
+seconds](https://en.wikipedia.org/wiki/Leap_second):
+
+* The NTP pool supports the leap second, which is the UTC standard. The advantage
+of the leap second is that every second is always the same length, i.e.
+"9,192,631,770 periods of the radiation emitted by a caesium-133 atom in the
+transition between the two hyperfine levels of its ground state".
+
+* Google, on the other hand, [smears the leap
+second](https://developers.google.com/time/smear), which lengthens the second by
+13.9µs during the ten hours leading up to and following the leap seconds. Their
+reasoning is, "No commonly used operating system is able to handle a minute with
+61 seconds".
+
+For readers interested in using Google's NTP service, the server is
+*time.google.com*.
 
 ### <a name="how_much">2.1 The Snapchat Excessive NTP Query Event Cost $13 - $18 (Per Server)</a>
 
 In December Snapchat released a [version of its iOS app that placed undue
 stress](http://www.theregister.co.uk/2016/12/21/snapchat_coding_error_nearly_destroys_all_of_time_for_the_internet/)
 on the pool.ntp.org servers.
+
+This event caused [great
+consternation](https://community.ntppool.org/t/recent-ntp-pool-traffic-increase/18)
+among the NTP server operators, and words such as "decimated", "server loss",
+and "sad" were used.
 
 The effect on two of our servers can be readily seen by our bandwidth graph.
 First, our AWS server:
@@ -848,3 +906,42 @@ configuration files:
 * Comcast server, US (time-home.nono.io) [(chrony.conf)](https://github.com/cunnie/fedora.nono.io-etc/blob/14ce418bdd1e9d57fe145d0f7d44ce39f479019a/chrony.conf):
   * [IPv4](http://www.pool.ntp.org/scores/73.15.134.22)
   * [IPv6](http://www.pool.ntp.org/scores/2601:646:100:e8e8::101)
+
+## <a name="corrections">Corrections & Updates</a>
+
+*2017-02-01*
+
+The post mis-characterized the mechanism behind the NTP pool as "round-robin
+DNS"; the mechanism is more sophisticated: It targets the users to servers
+in/near their country and does a weighted round-robin just on those servers.
+
+[Ask Bjørn Hansen](https://www.askask.com/) said:
+
+> The system is a little more sophisticated than just round-robin DNS. It
+targets the users to servers in/near their country and does a weighted
+round-robin just on those servers.
+
+We have added sections describing our motives for operating NTP servers and
+encouraging others to join the pool. Thanks Leo Bodnar.
+
+We wrongly encouraged NTP pool servers to use Google's NTP servers as upstream
+providers. We now warn _against_ using Google's NTP servers, and provide reasons
+why (leap seconds). Thanks [Joseph
+B](https://community.ntppool.org/t/feedback-why-is-my-ntp-server-costing-me-500-per-year/146/9),
+Ask.
+
+We added statistics regarding the aggregate netspeed for the US zone.
+
+[NTP Pool
+operators](https://community.ntppool.org/t/feedback-why-is-my-ntp-server-costing-me-500-per-year/146)
+suggested the following IaaSes:
+
+* Amazon Lightsail
+* Linode (we've had positive experience with Linode)
+* Vultr
+* BuyVM
+* Ramnode
+* LunaNode
+* Atlantic
+* ARP Networks (we've had positive experience with ARP Networks)
+* Scaleway
