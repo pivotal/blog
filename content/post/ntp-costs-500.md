@@ -77,7 +77,7 @@ integration (CI) server).
 
 Which begs the question: given the expense, why do it? We have several motives:
 
-* We have benefitted greatly from the open source community, and providing this
+* We have benefited greatly from the open source community, and providing this
 service is a modest way of giving back.
 
 * Our day job is a developer on
