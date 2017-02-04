@@ -104,9 +104,9 @@ Google Compute Engine (GCE) server carries more traffic than the Amazon Web
 Services (AWS) server, the roles could have easily been reversed. The mechanism
 underlying pool.ntp.org project (a multi-stage mechanism which "targets the
 users to servers in/near their country and does a weighted
-[round-robin](https://en.wikipedia.org/wiki/Round-robin_DNS),  servers"), is not
-a perfectly precise balancing mechanism (e.g. some clients will "stick" to a
-server long after the pool.ntp.org record has updated).
+[round-robin](https://en.wikipedia.org/wiki/Round-robin_DNS) just on those
+servers"), is not a perfectly precise balancing mechanism (e.g. some clients
+will "stick" to a server long after the pool.ntp.org record has updated).
 
 | Metric            | Amazon Web Services | Google Compute Engine |
 |-------------------|--------------------:|----------------------:|
@@ -202,7 +202,7 @@ kbps](https://community.ntppool.org/t/feedback-why-is-my-ntp-server-costing-me-5
 * The entire US NTP pool is queried 270,376&times; every second
 * The entire US NTP pool responds (assuming rate-limiting) 252,495&times; every second
 * The entire US NTP pool transfers 45.9TiB in NTP responses monthly
-* At GCE's pricing of $0.12/GiB, the entire US NTP pool would cost $5,640 in monthly data transfer costs (the amount would be lower if volume pricing were taken into account)
+* Using GCE, the entire US NTP pool would cost $4,078 in monthly data transfer costs (GCE's pricing tiers for $/GiB-month are $0.12 for TiB 0-1, $0.11 for TiB 1-10, $0.08 for TiB 10+)
 
 ### <a name="geography">1.3 Geographical Placement</a>
 
@@ -276,7 +276,7 @@ can claim to operate a service with thousands of requests per second?).
 
 We also lay out a cautionary tale: when joining, keep an eye to costs,
 especially bandwidth. Opting for a lower connection speed initially (e.g.
-10Mbps), and ratcheting it up over time may be a prudent course of action.
+10Mbps), and ratcheting it up over time is a prudent course of action.
 
 ## <a name="side_topics">2. Side Topics</a>
 
@@ -360,8 +360,8 @@ packets. Times are in EST.
 
 Note the following:
 
-- Unlike AWS, there were no unexplained "dips" in traffic.
-- Google smoothed the graph — it's not as "jaggedy" as AWS's.
+- Unlike AWS, there were no unexplained dips in traffic.
+- Google smoothed the graph — it's not as jagged as AWS's.
 - Similar to AWS, the traffic is steady leading up to the event.
 - The traffic during the event can clearly be seen to follow a daily rhythm.
 - The peak-to-baseline ratio matches that of the AWS graph (baseline of 3.1 kpackets/sec, peak of 25kpackets/sec, shows an 8.3&times; increase; AWS's was 9&times;).
@@ -371,7 +371,7 @@ For our last chart, we took our AWS statistics and did the following:
 
 - We stretched the timescale: we went as far back as 2016-11-01 and as far forward
 as mid-January, 2017.
-- We examined traffic daily, not hourly, to reduce the "spikiness".
+- We examined traffic daily, not hourly, to reduce the spikiness.
 - It was easy to mark the beginning of the event (2016-12-13): it came in with a bang.
 - It was difficult to mark the ending of the event: it went out with a whimper. There
 was no sudden cliff as traffic fell, rather, it was a slow dwindling of traffic. We chose,
@@ -388,9 +388,7 @@ server: the amount of traffic would be similar, but Google's bandwidth is 33%
 more expensive ($0.12 vs. AWS's $0.09), giving us an estimate of **$17.90**.
 
 There were no additional costs for our German server (we did not exceed the
-bundled bandwidth), and we are loath to calculate the costs for our Singapore
-server, but we suspect it's much less, given that it carries a fraction of the
-US servers' traffic.
+bundled bandwidth).
 
 ### <a name="adequate">2.2 Are Virtual Machines Adequate NTP Servers? Yes.</a>
 
@@ -908,6 +906,20 @@ configuration files:
   * [IPv6](http://www.pool.ntp.org/scores/2601:646:100:e8e8::101)
 
 ## <a name="corrections">Corrections & Updates</a>
+
+*2017-02-04*
+
+A quote on the mechanism that pool.ntp.org uses to select servers was missing
+the phrase, "just on those". The quote has been corrected.
+
+The calculation for cost of aggregate data transfer for the entire US
+pool.ntp.org did not take into account tiered pricing. Pricing was adjusted:
+original cost was $5,640, adjusted cost is $4,078.
+
+Phrasing was changed to improved readability.
+
+We removed a comment that pointed out we had not gathered statistics for our
+Azure NTP server; it seemed pointless.
 
 *2017-02-01*
 
