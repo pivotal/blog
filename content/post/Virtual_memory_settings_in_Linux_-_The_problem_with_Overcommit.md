@@ -13,7 +13,7 @@ short: |
 title: Virtual memory settings in Linux - The Problem with Overcommit
 ---
 
-[Greenplum Database](https://greenplum.org/) users sometimes add more RAM to their segment servers, but forget to adapt the Memory Overcommit settings to make use of all the new memory. After such an upgrade, at first glance, not much happens - except that the system is not using all the memory. But unless you take a close look at the memory usage on the segment hosts, you will not see that some memory goes unused.
+[Greenplum Database](http://greenplum.org/) users sometimes add more RAM to their segment servers, but forget to adapt the Memory Overcommit settings to make use of all the new memory. After such an upgrade, at first glance, not much happens - except that the system is not using all the memory. But unless you take a close look at the memory usage on the segment hosts, you will not see that some memory goes unused.
 
 To understand what's going on, let's first dive into the Linux Memory Management and what Overcommit actually means. Here is the background story:
 
@@ -211,7 +211,7 @@ Overcommit Ratio = 100 * ((RAM - Swap Space) / RAM)
 
 ## EMC DCA
 
-[EMC](https://www.emc.com/) offers a [Data Computing Appliance](https://pivotal.io/big-data/emc-dca) (DCA), which is a preconfigured [Greenplum Database](https://greenplum.org/) system running on commodity hardware. The v2 of the DCA, by default, has 64 GB RAM and 32 GB Swap on every server:
+[EMC](https://www.emc.com/) offers a [Data Computing Appliance](https://pivotal.io/big-data/emc-dca) (DCA), which is a preconfigured [Greenplum Database](http://greenplum.org/) system running on commodity hardware. The v2 of the DCA, by default, has 64 GB RAM and 32 GB Swap on every server:
 
 ~~~
 [gpadmin@seg1 ~]$ cat /proc/meminfo
