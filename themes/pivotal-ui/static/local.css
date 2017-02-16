@@ -70,6 +70,8 @@ figure.left img, figure.right img { max-width: 50%; clear: both; }
 figure.left.small img, figure.right.small img { max-width: 33%; }
 figure.left.big img,   figure.right.big img   { max-width: 66%; }
 
+figure.center { text-align: center }
+
 blockquote:before {
   content: none;
 }
