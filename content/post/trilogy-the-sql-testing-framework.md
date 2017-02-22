@@ -13,7 +13,7 @@ short: |
 title: Trilogy - the database testing framework
 ---
 
-# {{< responsive-figure alt="Trilogy" src="/images/trilogy-the-sql-testing-framework/trilogy-green@2x.png" >}}
+# {{< responsive-figure alt="Trilogy" src="/images/trilogy-the-sql-testing-framework/trilogy-green@2x.png" class="right" >}}
 
 A bird's eye view of the new SQL testing framework.  
 
@@ -39,9 +39,9 @@ Rather, the items outlined above were providing guidance for decisions being mad
 
 ### CI/CD integration
 
-The ability to run within a CI/CD workflow was one of the biggest, if not the main framework's purpose. And since 
-[concourse](https://concourse.ci) is the most popular tool within Pivotal, the framework was initially designed so that
-it could be used with it. The framework itself has a concourse 
+The ability to run within a CI/CD workflow was one of the biggest, if not the framework's main purpose. And since 
+[Concourse](https://concourse.ci) is the most popular tool within Pivotal, the framework was initially designed so that
+it could be used with it. The framework itself has a Concourse 
 [test pipeline](https://github.com/PivotalSharedIreland/trilogy/tree/master/ci) that can be used as an example.
 The current setup uses Oracle, but adding Postgres to the mix is fairly straightforward and is also planned in the 
 nearest future.
@@ -58,24 +58,24 @@ running the tests externally, and does not require any database modifications. M
 are stored externally as plain text files that can be easily added to any VCS, such as git. They can be 
 executed anytime against any available database.
 
-The format of the test case definition is based on markdown for a few reasons. First of all, the developer using the 
+The format of the test case definition is based on Markdown for a few reasons. First of all, the developer using the 
 framework wouldn't have to deal with a whole new programming language in order to use it. Secondly, the testcase 
 definition could be used to produce human-readable reports with every test marked with red or green depending on the
-outcome. And, finally, if the text editor has a markdown preview capability, it's easy to spot any mistakes visually, 
+outcome. And, finally, if the text editor has a Markdown preview capability, it's easy to spot any mistakes visually, 
 e.g. when a value has been placed in the wrong column of the test table.
 
 
 ## Database independence
 
 Having a tool for Oracle is a good start, but it does not make sense to lock in to a particular
-database vendor. Therefore we have decided to leverage the JDBC wealth of database drivers
+database vendor. Therefore we have decided to leverage the wealth of JDBC database drivers
 and abstractions. 
 
 This has brought around a number of problems. For example, the procedural tests do not work
-for Postgres, as there isn't such a thing as a stored procedure, all of the Postgres routines
+for Postgres, as there is no such thing as a stored procedure, all of the Postgres routines
 are functions, even though some of them are functions with a `void` return type. The fact that
-ODBC needs to know the return type in advance, forced us to postpone the procedural tests
-for postgres to a later time, and to come up with generic tests instead (see below).
+JDBC needs to know the return type in advance, forced us to postpone the procedural tests
+for Postgres to a later time, and to come up with generic tests instead (see below).
 
 ## Current progress
 
