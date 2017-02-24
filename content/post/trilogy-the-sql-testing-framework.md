@@ -6,8 +6,8 @@ categories:
 - TDD
 - Testing frameworks
 - Databases
-date: 2017-02-13T11:00:54+01:00
-draft: true
+date: 2017-02-24T11:00:54+01:00
+draft: false
 short: |
   A quick overview of a new database-agnostic SQL testing framework 
 title: Trilogy - the database testing framework
