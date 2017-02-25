@@ -19,7 +19,7 @@ As well as showing you the basics of Action Cable this guide will show you how t
 All code used here can be found [here](https://github.com/pivotal-sydney/action-cable-test).
 
 Here is a demo of the running app syncing messages across tabs using websockets:
-{{< responsive-figure src="https://cdn.dylangriffith.net/f8aa4a18-55f5-48df-bcda-7425ab4004e2.gif" >}}
+{{< responsive-figure src="https://camo.githubusercontent.com/2aaf8beb1524062bbc58d4324b7aac141d960433/687474703a2f2f672e7265636f726469742e636f2f6b6e6e74444f335074642e676966" >}}
 
 ## Setting Up The Application
 
