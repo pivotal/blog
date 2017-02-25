@@ -18,8 +18,7 @@ As well as showing you the basics of Action Cable this guide will show you how t
 
 All code used here can be found [here](https://github.com/pivotal-sydney/action-cable-test).
 
-Here is a demo of [the running app](https://actioncable.cfapps.io) with 2 windows open side by side:
-
+Here is a demo of the running app syncing messages across tabs using websockets:
 {{< responsive-figure src="https://cdn.dylangriffith.net/f8aa4a18-55f5-48df-bcda-7425ab4004e2.gif" >}}
 
 ## Setting Up The Application
@@ -246,9 +245,15 @@ production:
 Since PWS uses port 4443 (rather than 443) for websocket connections we need to make a small change to our `config/environments/production.rb`. To configure this port we add the following lines in the configure block:
 
 ~~~ruby
-host = JSON.parse(ENV['VCAP_APPLICATION']).fetch('uris')[0]
-config.action_cable.url = "wss://#{host}:4443/cable"
-config.action_cable.allowed_request_origins = ["http://#{host}", "https://#{host}"]
+application_uris = JSON.parse(ENV['VCAP_APPLICATION'])['application_uris']
+
+# Be sure this host is able to route your requests on port 4443. This can be an
+# issue if you have a proxy in front of your application that will not proxy port
+# 4443 (eg. CloudFlare).
+first_host = application_uris[0]
+config.action_cable.url = "wss://#{first_host}:4443/cable"
+
+config.action_cable.allowed_request_origins = application_uris.flat_map { |host| ["http://#{host}", "https://#{host}"] }
 ~~~
 
 The last bit of configuration is to update the javascript to use port 4443 rather than the default 443. In order to not hardcode anything in the JS we add a snippet to `app/views/layouts/application.html.erb` to pass the url to the frontend like so:
