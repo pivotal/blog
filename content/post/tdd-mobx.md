@@ -1,3 +1,17 @@
+---
+authors:
+- syeung
+categories:
+- TDD
+- React
+- MobX
+- Javascript
+date: 2017-02-27T16:39:01-04:00
+short: |
+  A look into testing MobX with React components, plus why MobX is a viable alternative to Redux.
+title: TDD with React and MobX
+---
+
 #TDD with React and MobX
 
 
@@ -25,8 +39,8 @@ The primary appeal of MobX is that it is intuitive.  The analogy they use on its
 
 Its value proposition is quite the opposite of Redux: 
 
-	* where Redux is extremely explicit about how data travels through components and its state store, MobX is abstracts away many of those details
-	* where Redux is based on immutability of data, MobX leverages mutable data to enhance performance and to make the code arguably simpler to read.
+ * where Redux is extremely explicit about how data travels through components and its state store, MobX is abstracts away many of those details
+ * where Redux is based on immutability of data, MobX leverages mutable data to enhance performance and to make the code arguably simpler to read.
 
 This is a simplistic view of the frameworks, and there are certainly pros and cons to both...but that's a topic for another day.
 
@@ -41,9 +55,9 @@ There aren't many parts to MobX, which is why testing has largely been a breeze.
 
 Under the hood, the `@observer` decorator provided by the `mobx-react` plugin wraps around a React component class and overrites the render function into a `reactiveRender` function that will get called anytime an observed property from the store is updated. At this point in time, since we are just focusing on the component, we can create a mock MobX store with the relevant `@observable` properties and methods.
 
-```
+```js
 import React from 'react';
-import { observable } from 'mobx';
+import { observable, useStrict } from 'mobx';
 import { renderIntoDocument, Simulate } from 'react-addons-test-utils';
 import { findDOMNode } from 'react-dom';
 import _ from 'lodash';
@@ -53,43 +67,215 @@ describe('App', () => {
   let store;
 
   beforeEach(() => {
+    //turn off strict mode when testing with mock store
+    useStrict(false);
+
     store = observable({
       todos: [],
       addTodo: jasmine.createSpy(),
-      removeTodo: jasmine.createSpy()
+      removeTodo: jasmine.createSpy(),
+      fetchTodos: jasmine.createSpy()
     });
   });
 
 ...
 ```
+
+Note that we have turned off MobX's strict mode with `useStrict(false)`.
+
+With MobX, strict mode disallows the direct mutation of the store's properties, and requires that you use designated actions to make updates (more on this later).  I decided to turn it off in my component tests because when creating a mock store because I want the freedom to be able to modify the properties without having to create an action for it. 
 
 ##### Testing that the component is observing the store
 
 Testing that the component is tracking updates in the store involves testing that the component is re-rendered upon a change to an observed property. In our case, we want to see that a todo list starts out empty, but updates with todo items when an item is added to the store.
 
-```
+```js
 ...
 
-  it('is an observer of todos', () => {
-    const component = renderIntoDocument(<App store={store}/>);
-    const domElement = findDOMNode(component);
+it('is an observer of todos', () => {
+  const component = renderIntoDocument(<App store={store}/>);
+  const domElement = findDOMNode(component);
 
-    const items = () => {
-      return domElement.querySelectorAll('[data-test="item"]');
-    };
+  const items = () => {
+    return domElement.querySelectorAll('[data-test="item"]');
+  };
 
-    expect(items().length).toEqual(0);
+  // Assert that there are no items to start with
+  expect(items().length).toEqual(0);
 
-    component.props.store.todos = [{id: 1, content: 'item'}];
+  // Upon updating an observed property
+  component.props.store.todos = [{id: 1, content: 'item'}];
 
-    const itemText = _.map(items(), (item) => {
-      return item.textContent;
-    });
-    expect(itemText).toEqual(['item']);
+  const itemText = _.map(items(), (item) => {
+    return item.textContent;
   });
 
+  // Assert that there are now items on the page
+  expect(itemText).toEqual(['item']);
+});
+
 ...
 ```
 
+In testing this, it was discovered that the flow from updating the property to re-rendering the component all happens synchronously, which is certainly a bonus for testing.
+
+Correspondingly, we test that the store can be prepopulated with items, which will be reflected when the component renders for the first time
+
+```js
+...
+
+it('displays the list of todos from the store prop', () => {
+  store.todos = [{id: 1, content: 'first item'}, {id: 2, content: 'second item'}];
+  const component = renderIntoDocument(<App store={store}/>);
+  const domElement = findDOMNode(component);
+
+  const items = domElement.querySelectorAll('[data-test="item"]');
+  const itemText = _.map(items, (item) => {
+    return item.textContent;
+  });
+  expect(itemText).toEqual(['first item', 'second item']);
+});
+
+...
+```
+
+##### Testing actions passed from the store to the component
+
+We haven't yet implemented the real MobX store, but we can still test that the component's event handler's are trigger actions provided by the store:
+
+```js
+  describe('on mount', () => {
+    it('calls fetchTodos from its store prop', () => {
+      const component = renderIntoDocument(<App store={store}/>);
+      expect(store.fetchTodos).toHaveBeenCalled();
+    });
+  });
+
+  describe('when add item is pressed', () => {
+    it('calls addTodo on its store prop, passing in the input value', () => {
+      const component = renderIntoDocument(<App store={store}/>);
+      const domElement = findDOMNode(component);
+      const inputField = domElement.querySelector('[data-test="item-field"]');
+
+      inputField.value = 'Get rice';
+      Simulate.change(inputField);
+      Simulate.submit(domElement.querySelector('[data-test="item-form"]'));
+
+      expect(store.addTodo).toHaveBeenCalledWith('Get rice');
+    });
+  });
+
+  describe('when delete button is clicked for an item', () => {
+    it('calls removeTodo on its store prop, passing in the item id', () => {
+      store.todos = [{id: '1', content: 'first item'}, {id: '2', content: 'second item'}];
+      const component = renderIntoDocument(<App store={store}/>);
+      const domElement = findDOMNode(component);
+
+      const itemToBeRemoved = domElement.querySelector('[data-item-id="1"]');
+      const deleteButton = itemToBeRemoved.querySelector('[data-test="delete-button"]');
+
+      Simulate.click(deleteButton);
+
+      expect(store.removeTodo).toHaveBeenCalledWith('1');
+    });
+  });
+
+```
+
+Note that the actions need to be a part of the mock store.
+
+```js
+...
+
+beforeEach(() => {
+  //turn off strict mode when testing with mock store
+  useStrict(false);
+
+  store = observable({
+    todos: [],
+    addTodo: jasmine.createSpy(),
+    removeTodo: jasmine.createSpy(),
+    fetchTodos: jasmine.createSpy()
+  });
+});
+
+...
+```
+
+Here's the implementation of the component to pass the above tests:
+
+```js
+import React from 'react';
+import _ from 'lodash';
+import {observer} from 'mobx-react';
+
+@observer
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.addTodo = this.addTodo.bind(this);
+    this.removeTodo = this.removeTodo.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.store.fetchTodos();
+  }
+
+  addTodo(e) {
+    e.preventDefault();
+    const item = e.target.elements[0].value;
+    this.props.store.addTodo(item);
+  }
+
+  removeTodo(e) {
+    const id = e.target.parentNode.getAttribute('data-item-id');
+    this.props.store.removeTodo(id);
+  }
+
+  todos() {
+    const todos = _.get(this.props, 'store.todos', []);
+    return _.map(todos, (toDo) => {
+      return (
+        <li key={toDo.id} data-item-id={toDo.id}>
+          <span data-test="item">
+            {toDo.content}
+          </span>
+          <button data-test="delete-button" onClick={this.removeTodo}>
+            Delete
+          </button>
+        </li>
+      );
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <div>Todo List</div>
+        <ul>
+          {this.todos()}
+        </ul>
+        <form data-test="item-form" onSubmit={this.addTodo}>
+          <input data-test="item-field" type="text" placeholder="Item here..."/>
+          <input data-test="add-item" type="submit" value="Add Item"/>
+        </form>
+      </div>
+    );
+  }
+}
+
+export default App;
+
+```
+
+#### Testing the MobX store
+
+Now that we have a passing tests for the component, we can move on to implementing a real MobX store.
+
+#####
 
 
+```js
+
+```
