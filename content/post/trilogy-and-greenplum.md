@@ -7,7 +7,7 @@ categories:
 - SQL
 - Databases
 - Greenplum Database
-date: 2017-02-27T16:26:0Z
+date: 2017-02-27T16:26:00Z
 draft: false
 short: |
     How to use a new SQL testing framework called
