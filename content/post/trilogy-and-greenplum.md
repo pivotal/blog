@@ -7,8 +7,8 @@ categories:
 - SQL
 - Databases
 - Greenplum Database
-date: 2017-01-17T14:37:38Z
-draft: true
+date: 2017-02-27T16:26:0Z
+draft: false
 short: |
     How to use a new SQL testing framework called
     Trilogy with Greenplum Database to help you
