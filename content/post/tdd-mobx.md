@@ -8,7 +8,6 @@ categories:
 - Redux
 - Javascript
 date: 2017-02-28T16:39:01-04:00
-draft: true
 short: |
   A look into testing MobX + React, plus why MobX is a viable alternative to Redux.
 title: TDD with React and MobX
