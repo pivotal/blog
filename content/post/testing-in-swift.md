@@ -13,12 +13,14 @@ short: |
 title: Testing in Swift with dependencies out of control
 ---
 ## Background
-{{< responsive-figure src="/images/testing-in-swift/icon.png" class="right" >}}
 Pivots often have work photos mixed in with their personal photos on their phone
 and never get deleted. So we built an iOS app in Swift 3 to help Pivots to deal
 with client photos from their phone. By the nature of the app, we need to talk
-to native [iOS Photos library](https://developer.apple.com/reference/photos), integrate with Google Drive, and some other share option views. Testing our code without worrying
-about external libraries becomes crucial to us.
+to native [iOS Photos library](https://developer.apple.com/reference/photos),
+integrate with Google Drive, and some other share option views. Testing our code
+without worrying about external libraries becomes crucial to us.
+
+{{< responsive-figure src="/images/testing-in-swift/icon.png" class="right" >}}
 
 We had quite a journey figuring out our testing strategies against those depending
 libraries both in unit tests and in UI tests. And now when we look back, we would
@@ -139,7 +141,26 @@ class FakeGoogleService: GoogleServiceProtocol {
 ```
 
 ### **Signature wrapping with extension**
-#### *Case 1 - UIViewController*
+#### *Case 1 - Check if a overlay view is presented*
+We have a overlay view to present on top of our photosViewController when we are waiting for GoogleService to finish uploading.
+
+Originally it's done by calling present method on the testing target itself:
+
+```Swift
+//PhotosViewController.Swift
+self.present(activityOverlayViewController as UIViewController, animated: false) {
+    googleService.uploadPhotos(forImages: images) {
+        activityOverlayViewController.dismiss(animated: false, completion: maybeDoSomethingElse)
+    }
+}
+```
+
+We struggled for a long time to test it properly but we failed for the following reasons:
+
+1. Dismissing the overlay doesn't work well for standalone view controller tests.
+2. It's tedious and hard to mimic the async callback chain.
+
+After a Ping Pong break, we came up with the idea to let the overlay view present itself:
 
 ```Swift
 protocol UIViewControllerProtocol {
@@ -156,8 +177,10 @@ extension UIViewController: UIViewControllerProtocol {
 }
 ```
 
+By extending UIViewController to conform UIViewControllerProtocol with the new signature, we avoid spinning up a real view on top of our testing view, and are able to write more readable tests.
+
 ```Swift
-class FakeActivityOverlayViewController: ActivityOverlayViewControllerProtocol {
+class FakeActivityOverlayViewController: UIViewControllerProtocol {
 
     var isPresented = false
 
@@ -174,6 +197,16 @@ class FakeActivityOverlayViewController: ActivityOverlayViewControllerProtocol {
 
 ```
 #### *Case 2 - when existing signature is hard to fake out*
+Sometimes it's hard to fake out the response due to strong constraints of the original method signature. For example:
+
+```Swift
+func execute(query: GTLRQueryProtocol, completionHandler handler: ((GTLRServiceTicket, Any, Error) -> Void)) -> GTLRServiceTicket
+```
+
+The function above requires a GTLRServiceTicket instance as return type, while this class doesn't have a default simple initializer. After digging into the GTLRDriveService source code for a while, we realized that we have known too much about the depending library.
+
+To encounter that, we loosen the constraint of the signature in protocol, and extended the real service to implement the new signature and call the real function internally.
+
 ```Swift
 protocol GTLRDriveServiceProtocol {
     func execute(query: GTLRQueryProtocol, completionHandler handler: ((GTLRServiceTicket?, Any?, Error?) -> Void)?) -> GTLRServiceTicket?
@@ -190,52 +223,14 @@ extension GTLRDriveService: GTLRDriveServiceProtocol {
 
 ---
 ## UI Tests
-### Setup device
-{{< responsive-figure src="/images/testing-in-swift/cat.jpg" class="right" >}}
+To test our app can really load images from iPhone's camera roll and respond to user interaction correctly, we need to setup the device to have some and the same images with desired metadata to test against every time.
+
+### Responding to system dialogs
+
+The test setup doesn't sound hard right? But iOS will prompt user to allow access to photos and confirm the deletion of the photos. Here is the cheatsheet to solve that problem:
+
 ```Swift
-class SimulatorSetupViewController: UIViewController {
-
-    override func viewDidAppear(_ animated: Bool) {
-
-        super.viewDidAppear(animated)
-
-        PHPhotoLibrary.requestAuthorization { (authorizationStatus) in
-            self.cleanUpCameraRoll {
-                self.addPhotosToCameraRoll()
-            }
-        }
-    }
-
-```
-asdfjsdhfkjhsklfkl
-```Swift
-    func cleanUpCameraRoll(_ completion: @escaping () -> ()) {
-        PHPhotoLibrary.shared().performChanges({
-            let assets = PHAsset.fetchAssets(with: nil)
-            PHAssetChangeRequest.deleteAssets(assets)
-        }, completionHandler: { success, error in
-            completion()
-        })
-    }
-
-    func addPhotosToCameraRoll() {
-        try? PHPhotoLibrary.shared().performChangesAndWait {
-            self.generateAssetCreationRequest(atLocation: self.pivotalLocation, onDate: self.date3)
-            self.generateAssetCreationRequest(atLocation: self.pivotalLocation, onDate: self.date2)
-            self.generateAssetCreationRequest(atLocation: self.nonPivotalLocation, onDate: self.date4)
-
-            for _ in (1...8) {
-                self.generateAssetCreationRequest(atLocation: self.pivotalLocation, onDate: self.date1)
-            }
-        }
-    }
-}
-```
-
-
-### System dialog
-```Swift
-class simulatorPhotoLibrarySetupUITests: XCTestCase {
+class cameraRollSetupUITests: XCTestCase {
 
     var app:XCUIApplication!
 
@@ -246,10 +241,12 @@ class simulatorPhotoLibrarySetupUITests: XCTestCase {
         app = XCUIApplication()
         app.launch()
 
+        // Have this ready before system dialogs pop up
         addUIInterruptionMonitor(withDescription: "alert handler") { alert -> Bool in
             if (alert.buttons["OK"].exists) {
                 alert.buttons["OK"].tap()
-                RunLoop.current.run(until: Date(timeInterval: 5, since: Date()))
+                // Prepare for the next system dialog
+                RunLoop.current.run(until: Date(timeInterval: 1, since: Date()))
             }
             else if (alert.buttons["Delete"].exists) {
                 alert.buttons["Delete"].tap()
@@ -263,9 +260,53 @@ class simulatorPhotoLibrarySetupUITests: XCTestCase {
     }
 
     func testDoesNothingJustWaitForSetupToFinish() {
-        RunLoop.current.run(until: Date(timeInterval: 5, since: Date()))
+        // System dialogs are in different thread, so give them some time to sync up
+        RunLoop.current.run(until: Date(timeInterval: 2, since: Date()))
+        // Activate the app to dismiss dialogs
         app.tap()
     }
 
 }
 ```
+
+### A separate app to setup device
+
+Deleting and inserting images to camera roll is using iOS Photos library, so it has to be in production code instead of tests. To avoid putting testing purpose code in our add and maybe interrupting the normal flow, we decided to have a separate app to do all the setup and fill camera roll with this cute cat picture.
+
+{{< responsive-figure src="/images/testing-in-swift/cat.jpg" class="center" >}}
+```Swift
+class CameraRollSetupViewController: UIViewController {
+
+    override func viewDidAppear(_ animated: Bool) {
+
+        super.viewDidAppear(animated)
+
+        PHPhotoLibrary.requestAuthorization { (authorizationStatus) in
+            self.cleanUpCameraRoll {
+                self.addPhotosToCameraRoll()
+            }
+        }
+    }
+
+    private func cleanUpCameraRoll(_ completion: @escaping () -> ()) {
+        PHPhotoLibrary.shared().performChanges({
+            let assets = PHAsset.fetchAssets(with: nil)
+            PHAssetChangeRequest.deleteAssets(assets)
+        }, completionHandler: { success, error in
+            completion()
+        })
+    }
+
+    private func addPhotosToCameraRoll() {
+        try? PHPhotoLibrary.shared().performChangesAndWait {
+            self.generateAssetCreationRequest(atLocation: self.nonPivotalLocation, onDate: self.date2)
+
+            for _ in (1...8) {
+                self.generateAssetCreationRequest(atLocation: self.pivotalLocation, onDate: self.date1)
+            }
+        }
+    }
+}
+```
+
+Here we are, all set for UI tests. Let's go grab a beer and play more Ping Pong!
