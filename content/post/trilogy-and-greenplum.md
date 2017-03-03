@@ -33,7 +33,7 @@ I would spend some time at the start of each project getting this setup working
 but it would always be somewhat hard-coded for the project at hand,
 and be difficult for new team members to understand without a lot of effort.
 
-{{< responsive-figure src="/images/trilogy-and-greenplum/trilogy_logo.png" class="right" >}}
+{{< figure src="/images/trilogy-and-greenplum/trilogy_logo.png" class="right" >}}
 
 My colleagues Konstantin and Cassio faced a [similar problem recently](http://engineering.pivotal.io/post/oracle-sql-tdd/) and decided to do something about it,
 by building a generic testing framework for SQL databases called [Trilogy](https://github.com/PivotalSharedIreland/trilogy).
