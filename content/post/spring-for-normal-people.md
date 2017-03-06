@@ -6,8 +6,8 @@ categories:
 - Spring Boot
 - TDD
 - Humans
-date: 2016-01-26T16:53:34-08:00
-draft: true
+date: 2017-03-06T10:45:03-08:00
+draft: false
 short: |
   Learn how to Spring Boot the easy way with TDD and Thymeleaf. All the gain, half the pain!
 title: Spring for Normal People
@@ -122,10 +122,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -133,8 +133,8 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = HtmlPageApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @WebIntegrationTest("server.port = 9999")
 public class WelcomeControllerTest {
     private MockMvc mvc;
@@ -171,8 +171,8 @@ public class WelcomeControllerTest {
 
 Next are the class annotations:
 
-- `@RunWith(SpringJUnit4ClassRunner.class)` tells the class to run with a JUnit test runner that knows about Spring.
-- `@SpringApplicationConfiguration(classes = HtmlPageApplication.class)` tells our test which Application class to use. This is important because the Application class has information that tells Spring how to configure the dependency injection engine.
+- `@RunWith(SpringRunner.class)` tells the class to run with a JUnit test runner that knows about Spring.
+- `@SpringBootTest` tells our test to run as Spring Boot Application. This is important because the Application class has information that tells Spring how to configure the dependency injection engine.
 - `@WebIntegrationTest("server.port = 9999")` tells JUnit this is a web integration test and allows us to use the `WebApplicationContext` class in this file. This means we can do integration test things like simulate requests to URL routes and assert on the responses. You don't have to specify `server.port`, but that will cause Spring to assign a random port when the tests are run, and randomness in tests has only ever lead me to pain and misery.
 
 Then, we've added some boilerplate setup for integration tests. Using the `@Autowired` annotation will cause the Spring dependency injection engine to inject a `WebApplicationContext` instance for our `wac` field when our test class is instantiated. We will also need to build a `MockMvc` instance, `mvc`, that we can use to simulate requests.
