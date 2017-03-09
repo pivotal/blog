@@ -65,6 +65,7 @@ figure img {
 
 figure.left  img { float: left;  padding-right: 1em; }
 figure.right img { float: right; padding-left: 1em; }
+figure.center { text-align: center; }
 
 figure.left img, figure.right img { max-width: 50%; clear: both; }
 figure.left.small img, figure.right.small img { max-width: 33%; }

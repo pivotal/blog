@@ -7,8 +7,8 @@ categories:
 - SQL
 - Databases
 - Greenplum Database
-date: 2017-01-17T14:37:38Z
-draft: true
+date: 2017-02-27T16:26:00Z
+draft: false
 short: |
     How to use a new SQL testing framework called
     Trilogy with Greenplum Database to help you
@@ -33,7 +33,7 @@ I would spend some time at the start of each project getting this setup working
 but it would always be somewhat hard-coded for the project at hand,
 and be difficult for new team members to understand without a lot of effort.
 
-{{< responsive-figure src="/images/trilogy-and-greenplum/trilogy_logo.png" class="right" >}}
+{{< figure src="/images/trilogy-and-greenplum/trilogy_logo.png" class="right" >}}
 
 My colleagues Konstantin and Cassio faced a [similar problem recently](http://engineering.pivotal.io/post/oracle-sql-tdd/) and decided to do something about it,
 by building a generic testing framework for SQL databases called [Trilogy](https://github.com/PivotalSharedIreland/trilogy).
@@ -47,6 +47,7 @@ code you are testing in SQL and the test itself.
 If you use Oracle, PostgreSQL or any other database you can get started with Trilogy
 by following [the README](https://github.com/PivotalSharedIreland/trilogy/blob/master/README.md).
 
+## Trilogy and Greenplum
 As a data scientist [test driving](http://engineering.pivotal.io/post/test-driven-development-for-data-science/) my code,
 I often use the open source
 [Greenplum Database](http://greenplum.org/) or its commercial counterpart
@@ -66,11 +67,11 @@ In this post I am going to describe how you can
 still use Trilogy with Greenplum without needing these anonymous code blocks.
 
 
-## Installing Greenplum
+### Installing Greenplum using Docker
 
-- Clone the repo including Docker file from https://github.com/dbbaskette/gpdb-docker.
-- Follow the instructions to download Greenplum from the Pivotal website.
-- Build the docker image with the following command, replacing `tag` with a suitable name:
+- Clone [this repo](https://github.com/dbbaskette/gpdb-docker) which includes a Dockerfile to build and run Greenplum.
+- Follow the instructions in [the README](https://github.com/dbbaskette/gpdb-docker/blob/master/README.md) to download Pivotal Greenplum from the Pivotal website.
+- Build the Docker image with the following command, replacing `tag` with a suitable name:
 
 ```
 docker build -t [tag] .
@@ -97,12 +98,12 @@ If everything has worked you should see something like:
 (1 row)
 ```
 
-## Building Trilogy
+### Building Trilogy
 - Clone repo from https://github.com/PivotalSharedIreland/trilogy.
 - If you don't want to build it yourself, download the JAR from https://github.com/PivotalSharedIreland/trilogy/releases.
 - Otherwise follow instructions to build Trilogy using Gradle.
 
-## Setting up Trilogy
+### Setting up Trilogy
 
 - First create a new database for this testing in psql:
 ```
@@ -307,7 +308,7 @@ As your data science SQL code grows, this project structure allows you to flexib
 add schemas and fixture scripts as needed.
 
 ## Summary
-In my opinion Trilogy is an interesting new testing framework for SQL databases that
+From what I've seen, Trilogy is an interesting new testing framework for SQL databases that
 solves some of the issues with other frameworks. Having shown how it can work with
-Greenplum databases I'm looking forward to making use of it in a future
-client project!
+Greenplum databases I'm looking forward to making use of it in future
+projects!
