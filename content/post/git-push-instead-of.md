@@ -15,7 +15,7 @@ title: "Git pushInsteadOf"
 ---
 
 # The problem(s)
-Are you're on a team that works with both public and private repositories on GitHub?  Do you use SSH authentication?
+Are you on a team that works with both public and private repositories on GitHub?  Do you use SSH authentication?
  (If not, [you should](http://tammersaleh.com/posts/building-an-encrypted-usb-drive-for-your-ssh-keys-in-os-x/).)
 
 If so, you may have encountered one of these problems...
@@ -27,7 +27,7 @@ When you try to pull an open-source repo
 cd my-public-repo
 git pull
 ```
-it should just work, regardless of whether you've added your SSH key.  Instead, you see
+it ought to just work, regardless of whether you've added your SSH key.  But instead, you might see
 
 ```text
 Permission denied (publickey).
@@ -41,13 +41,13 @@ That's an open-source repo: anyone should be able to pull it, right?
 
 ### Problem 2: You're prompted for username + password, but you prefer SSH
 
-You add your ssh-key and try to pull a private repo
+You add your SSH key and try to pull a private repo
 ```bash
 ssh-add -t 1H /Volumes/my-ssh-key/id_rsa
 cd my-private-repo
 git pull
 ```
-You want it to use your SSH key.  But instead you see:
+You want it to authenticate via SSH.  But instead you see:
 
 ```text
 Username for 'https://github.com': myusername
@@ -116,9 +116,9 @@ That's it!
 
 # Conclusion
 
-Use this wherever you're working with a mixture of open-source and closed-source repositories.
+Follow the steps above whenever you're working with a mixture of open-source and closed-source repositories.
 
-If your open-source project uses git submodules, be sure to use HTTPS for the submodule references too, so that anyone
+If your open-source project uses git submodules, be sure to use HTTPS for the submodule references too.  This way, anyone
 can easily pull and checkout all your submodules, even if they can't authenticate against the remote.
 
 ---
