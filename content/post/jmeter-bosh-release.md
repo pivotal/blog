@@ -7,7 +7,6 @@ categories:
 - Distributed Load Testing
 - Distributed Stress Testing
 date: 2017-03-11T09:42:46-05:00
-draft: true
 short: |
   JMeter Tornado, is a BOSH release for Apache JMeter. It simplifies the usage of JMeter in distributed mode, making it easier to perform load or stress testing.
 title: "BOSH + Apache JMeter = JMeter Tornado"
