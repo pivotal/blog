@@ -11,7 +11,7 @@ categories:
 - Histogram
 - Scatter Plot
 - ROC Curve
-date: 2017-03-17T17:47:48-05:00
+date: 2017-03-14T17:47:48-05:00
 short: A tutorial on how to build histograms, scatter plots, and ROC curves using an MPP database and plot them in Python or R.
 title: Plotting Using an MPP Database
 ---
