@@ -12,9 +12,8 @@ categories:
 - Scatter Plot
 - ROC Curve
 date: 2017-03-17T17:47:48-05:00
-draft: true
 short: A tutorial on how to build histograms, scatter plots, and ROC curves using an MPP database and plot them in Python or R.
-title: Plotting using an MPP Database
+title: Plotting Using an MPP Database
 ---
 
 Data visualization is the process of transforming and condensing data into an easily digestible graphic. It is crucial in helping data scientists understand their data and share their insights with others. With the recent surge of big data, data scientists must adapt their current techniques of visualizing data since traditional methods of plotting are limited by the machine's memory and thus only work on smaller, local data. This blog introduces methods of plotting to generate histograms and scatterplots—two of the most common ways to visualize univariate and bivariate data—in an MPP database such as <a href="https://pivotal.io/pivotal-greenplum">Pivotal Greenplum (GPDB)</a> or <a href="http://hawq.incubator.apache.org/">Apache HAWQ (incubating)</a> or in <a href="https://www.postgresql.org/">PostgreSQL</a>. Additionally, we will show how to compute an ROC curve, a plot which measures performance of a binary classifier, in-database. 
@@ -47,12 +46,12 @@ CREATE TABLE histogram_values
              (SELECT CASE WHEN column_name < max_val
                                THEN FLOOR((column_name - min_val)::NUMERIC
                                           /(max_val - min_val)
-                                          * 25
+                                          * nbins
                                          )
-                                    /25 * (max_val - min_val) 
+                                    /nbins * (max_val - min_val) 
                                     + min_val
                           WHEN column_name = max_val
-                               THEN (25 - 1)::NUMERIC/25 * (max_val - min_val) 
+                               THEN (nbins - 1)::NUMERIC/nbins * (max_val - min_val) 
                                     + min_val
                           ELSE NULL
                            END AS bin_loc
@@ -140,7 +139,7 @@ Scatter plots differ from histograms in that they do not condense data, that is,
 The resulting table would have three columns—the bin number in the x direction, the bin number in the y direction, and the frequency. We can visualize this by plotting the bin locations with partial transparency. Areas of lower density would be be more transparent and areas of higher density would be more opaque. We can use a similar query as before, but add another bin column to account for the added dimension.
 
 ### Plotting MPP Scatter Plots in Python
-We pull in our data into Python as before.
+We pull in our condensed data into Python as before.
 ```
 sql = '''
 SELECT *
@@ -150,7 +149,7 @@ SELECT *
 py_scat_df = psql.read_sql(sql, conn)
 ```
 
-Then we can make our plot using `matplotlib’s` `scatter` function.
+Then we can make our plot using `matplotlib`’s `scatter` function.
 
 ```
 # Manually specify color with opacity proportional to frequency
@@ -185,7 +184,7 @@ SELECT *
 r_scat_df <- dbGetQuery(conn, sql)
 ```
 
-We can also use ggplot to create a similar plot.
+We can also use `ggplot` to create a similar plot.
 
 ```
 ggplot(r_scat_df, aes(scat_bin_x, scat_bin_y, alpha = freq)) +
