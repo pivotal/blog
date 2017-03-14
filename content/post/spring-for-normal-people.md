@@ -34,7 +34,7 @@ In the spirit of doing The Simplest Thing That Could Possibly Work, let's make a
 
 ### Create a project
 
-Head over to http://start.spring.io. This site lets you create Spring Boot projects with a few clicks and is definitely the easist way to get things up and running. I used most of the default settings but changed the package to com.[loktar](http://wowwiki.wikia.com/wiki/Orcish), selected Java 8, and picked Gradle for our build system. I also added the `Web` and `Thymeleaf` dependencies.
+Head over to http://start.spring.io. This site lets you create Spring Boot projects with a few clicks and is definitely the easist way to get things up and running. I used most of the default settings but changed the package to com.[loktar](http://wowwiki.wikia.com/wiki/Orcish), the name to ` HtmlPageApplication` and picked Gradle for our build system. I also added the `Web` and `Thymeleaf` dependencies.
 
 `Web` gives us stuff we need to create web http endpoints and `Thymeleaf` is a Spring-friendly html template engine.
 
@@ -114,38 +114,27 @@ Now it's time for the fun part! In true TDD fashion we want to add some tests be
 There are several different ways to test a Spring controller, but let's start by simply asserting we get a successful response for our new page we will be adding at `/welcome`.
 
 ```java
-// src/test/java/WelcomeControllerTest.java
+// src/test/java/com/loktar/WelcomeControllerTest.java
 
 package com.loktar;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@WebIntegrationTest("server.port = 9999")
+@WebMvcTest
 public class WelcomeControllerTest {
-    private MockMvc mvc;
 
     @Autowired
-    private WebApplicationContext wac;
-
-    @Before
-    public void beforeEach() throws Exception {
-        mvc = MockMvcBuilders.webAppContextSetup(wac).build();
-    }
+    private MockMvc mvc;
 
     @Test
     public void welcome_shouldBeSuccessful() throws Exception {
@@ -155,7 +144,7 @@ public class WelcomeControllerTest {
 }
 ```
 
-There is a _lot_ going on here. Let's break it down.
+There is a quite a lot going on here. Let's break it down.
 
 First, there's some standard JUnit test stuff. We have a class to put our tests in, and methods with the `@Test` annotation will be run as our unit tests.
 
@@ -172,20 +161,17 @@ public class WelcomeControllerTest {
 Next are the class annotations:
 
 - `@RunWith(SpringRunner.class)` tells the class to run with a JUnit test runner that knows about Spring.
-- `@SpringBootTest` tells our test to run as Spring Boot Application. This is important because the Application class has information that tells Spring how to configure the dependency injection engine.
-- `@WebIntegrationTest("server.port = 9999")` tells JUnit this is a web integration test and allows us to use the `WebApplicationContext` class in this file. This means we can do integration test things like simulate requests to URL routes and assert on the responses. You don't have to specify `server.port`, but that will cause Spring to assign a random port when the tests are run, and randomness in tests has only ever lead me to pain and misery.
-
-Then, we've added some boilerplate setup for integration tests. Using the `@Autowired` annotation will cause the Spring dependency injection engine to inject a `WebApplicationContext` instance for our `wac` field when our test class is instantiated. We will also need to build a `MockMvc` instance, `mvc`, that we can use to simulate requests.
+- `@WebMvcTest` tells our test is a dedicated Spring MVC test. Spring Boot will only scan for `@Controller` classes and relevant MVC components. It will also configure `MockMvc` automatically. This won't actually start a web server at all.
+- Then using the `@Autowired` annotation will cause the auto-configured `MockMvc` bean to be injected. We can use it to simulate requests.
 
 ```java
-private MockMvc mvc;
+@RunWith(SpringRunner.class)
+@WebMvcTest
+public class WelcomeControllerTest {
 
-@Autowired
-private WebApplicationContext wac;
+    @Autowired
+    private MockMvc mvc;
 
-@Before
-public void beforeEach() throws Exception {
-    mvc = MockMvcBuilders.webAppContextSetup(wac).build();
 }
 ```
 
@@ -215,7 +201,7 @@ Actual   :404
 Now time for some app code! Here is the first version of our `WelcomeController`:
 
 ```java
-// src/main/java/WelcomeController.java
+// src/main/java/com/loktar/WelcomeController.java
 
 package com.loktar;
 
