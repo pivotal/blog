@@ -34,7 +34,7 @@ In the spirit of doing The Simplest Thing That Could Possibly Work, let's make a
 
 ### Create a project
 
-Head over to http://start.spring.io. This site lets you create Spring Boot projects with a few clicks and is definitely the easist way to get things up and running. I used most of the default settings but changed the package to com.[loktar](http://wowwiki.wikia.com/wiki/Orcish), the name to ` HtmlPageApplication` and picked Gradle for our build system. I also added the `Web` and `Thymeleaf` dependencies.
+Head over to http://start.spring.io. This site lets you create Spring Boot projects with a few clicks and is definitely the easiest way to get things up and running. I used most of the default settings but changed the package to com.[loktar](http://wowwiki.wikia.com/wiki/Orcish), the Artifact to `html-page` and picked Gradle for our build system. I also added the `Web` and `Thymeleaf` dependencies.
 
 `Web` gives us stuff we need to create web http endpoints and `Thymeleaf` is a Spring-friendly html template engine.
 
@@ -105,7 +105,7 @@ $ ./gradlew bootRun
 
 Our server doesn't have anything useful yet, but we should see the comforting message that it has started successfully:
 
-`com.loktar.HtmlPageApplication           : Started HtmlPageApplication in 7.061 seconds (JVM running for 8.021)`
+`com.loktar.HtmlPageApplication           : Started HtmlPageApplication in 4.284 seconds (JVM running for 4.618)`
 
 ### Our first page
 
@@ -161,8 +161,8 @@ public class WelcomeControllerTest {
 Next are the class annotations:
 
 - `@RunWith(SpringRunner.class)` tells the class to run with a JUnit test runner that knows about Spring.
-- `@WebMvcTest` tells our test is a dedicated Spring MVC test. Spring Boot will only scan for `@Controller` classes and relevant MVC components. It will also configure `MockMvc` automatically. This won't actually start a web server at all.
-- Then using the `@Autowired` annotation will cause the auto-configured `MockMvc` bean to be injected. We can use it to simulate requests.
+- `@WebMvcTest` tells our test it is a dedicated Spring MVC test. Spring Boot will only scan for `@Controller` classes and relevant MVC components. It will also configure `MockMvc` automatically. This won't actually start a web server at all.
+- Then, using the `@Autowired` annotation will cause the auto-configured `MockMvc` bean to be injected. We can use it to simulate requests to our app.
 
 ```java
 @RunWith(SpringRunner.class)
@@ -196,7 +196,7 @@ Expected :200
 Actual   :404
 ```
 
-#### Controller time!
+#### Controller time
 
 Now time for some app code! Here is the first version of our `WelcomeController`:
 
@@ -206,12 +206,11 @@ Now time for some app code! Here is the first version of our `WelcomeController`
 package com.loktar;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WelcomeController {
-    @RequestMapping(value = "/welcome", method = RequestMethod.GET)
+    @GetMapping("/welcome")
     public String welcome() {
         return "welcome";
     }
@@ -220,8 +219,8 @@ public class WelcomeController {
 
 And the interesting bits:
 
-- `@Controller` tells Spring this class is a controller that handles HTTP web requests.
-- `@RequestMapping(value = "/welcome", method = RequestMethod.GET)` tells Spring this method handles `GET` requests to the `/welcome` route.
+- `@Controller` tells Spring this class is a controller that handles HTTP requests.
+- `@GetMapping("/welcome")` tells Spring this method handles `GET` requests to the `/welcome` route.
 - `return "welcome";` tells Spring that we want to use an html template name `welcome`.
 
 If we run our tests again, we see that we get a new error:
@@ -265,3 +264,7 @@ And we can check out the page here: [http://localhost:8080/welcome](http://local
 So there we go - a real Spring Boot project with tests and templates! If this kind of post is useful for folks, I have a long list of topics I am hoping to cover in the future. Leave a comment and let me know what you want to learn about or what has caused you trouble in the past as you were learning, and we can start to help us Normal People get started with Spring. I am admittedly not a Spring expert, so any corrections or suggestions in this post would be much appreciated as well.
 
 Until next time...
+
+-------------
+
+Update 3/15/17: Huge thanks to Stéphane Nicoll and the Spring teams for helping update to this post to Spring Boot 1.5.
