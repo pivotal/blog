@@ -9,7 +9,7 @@ categories:
 date: 2017-03-11T09:42:46-05:00
 short: |
   Tornado for Apache JMeter&trade;, is a BOSH release for Apache JMeter&trade;. It simplifies the usage of JMeter&trade; in distributed mode, making it easier to perform load or stress testing.
-title: "BOSH + Apache JMeter&trade; = Tornado for Apache JMeter&trade;"
+title: "BOSH + Apache JMeter(TM) = Tornado for Apache JMeter(TM)"
 ---
 
 [BOSH](http://bosh.io/) is an open source tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
