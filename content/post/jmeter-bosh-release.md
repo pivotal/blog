@@ -19,8 +19,9 @@ BOSH can provision and deploy software over hundreds of VMs. It also performs fa
 
 [Tornado for Apache JMeter&trade;](https://github.com/jamlo/jmeter-bosh-release), is a [BOSH](https://bosh.io/) release for [Apache JMeter &trade;](http://jmeter.apache.org/). It simplifies the usage of JMeter&trade; in distributed mode, making it easier to perform distributed load/stress testing on multiple IAAS offerings.
 
-Note: Apache&trade;, Apache JMeter&trade; and JMeter&trade; are trademarks of the Apache Software Foundation (ASF).
-Note: This software is NOT associated with Apache JMeter&trade; software or the ASF.
+**Note: Apache&trade;, Apache JMeter&trade; and JMeter&trade; are trademarks of the Apache Software Foundation (ASF).**
+
+**Note: This software is NOT associated with Apache JMeter&trade; software or the ASF.**
 
 ## Release Features
 
