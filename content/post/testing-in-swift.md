@@ -7,8 +7,7 @@ categories:
 - Swift 3
 - Protocol
 - Testing
-date: 2017-02-28T10:55:42-05:00
-draft: true
+date: 2017-03-31T10:55:42-05:00
 short: |
   Testing against frameworks/libraries is tricky in Swift because we can't just spy on dependencies and fake out the response. Here is how we test neatly in Swift 3.
 title: Testing in Swift with Dependencies
