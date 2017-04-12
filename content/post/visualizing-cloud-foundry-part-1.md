@@ -9,7 +9,6 @@ categories:
 - Visualization
 - Distributed Systems
 date: 2017-04-12T10:51:52+01:00
-draft: true
 short: This is the first of two blog posts showing you how Weave Scope, a visualization and troubleshooting tool originally aimed at Docker and Kubernetes, can be used to reveal the hosts and network topologies for arbitrary BOSH deployments. As such, Scope is able to visualize the many components that make up Cloud Foundry and the interplay between them. This gives everyone, from newcomers to seasoned experts, new ways to learn about Cloud Foundry and troubleshoot a running system if necessary.
 title: Visualizing Cloud Foundry with Weave Scope - Part 1
 ---
