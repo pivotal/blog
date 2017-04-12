@@ -42,7 +42,7 @@ Using Cloud Foundry to deploy an application to the cloud is a really simple aff
 
 {{< tweet 598235841635360768 >}}
 
-But what happens behind the curtain? Cloud Foundry is actually a pretty complex distributed system. Trying to understand the many components and how they work together represents a steep learning curve. Operators and anyone with an interest that goes beyond deploying an application will have to build their mental model of the platform by looking at docs, logs, metrics, configuration files, or actual source code. Up to now, there was nothing that would allow them to visualize and explore Cloud Foundry in a more interactive and graphical way. Weave Scope provides exactly that: a novel tool that can be used to reveal Cloud Foundry’s topology and the interplay between the different components of the platform. This gives everyone, from newcomers to seasoned experts, new ways to learn about Cloud Foundry and troubleshoot a running system if necessary.
+But what happens behind the curtain? Cloud Foundry is actually a pretty complex distributed system. Trying to understand the many components and how they work together presents a steep learning curve. Operators and anyone with an interest that goes beyond deploying an application have to build their mental model of the platform by looking at docs, logs, metrics, configuration files, or actual source code. Until now, there was nothing that would allow them to visualize and explore Cloud Foundry in a more interactive and graphical way. Weave Scope provides exactly that: a novel tool that can be used to reveal Cloud Foundry’s topology and the interplay between the different components of the platform. This gives everyone, from newcomers to seasoned experts, new ways to learn about Cloud Foundry and to troubleshoot a running system if necessary.
 
 In this first of two blog posts, we will show you how we made Weave Scope, a tool originally aimed at Docker and Kubernetes, work happily alongside BOSH and Cloud Foundry. The second post will then introduce you to two plugins we wrote for  Weave Scope in order to visualize some Cloud Foundry-specific aspects. Before we dive in, though, you might want to check out [this demo](https://demo.scope.cf-app.com) to get a better idea of what Cloud Foundry looks like when visualized through Weave Scope.
 
@@ -67,7 +67,7 @@ In addition to the tooling BOSH provides, Cloud Foundry itself gives operators a
 
 Arguably, BOSH and real-time metrics represent sufficient means of monitoring and debugging Cloud Foundry deployments. However, using these tools effectively requires a high level of pre-existing knowledge about the system. Operators have to be aware of the different components, how they work together, and the relevant metrics and potential issues.
 
-As part of a recent hack day at Pivotal we explored alternative approaches to monitor and troubleshoot Cloud Foundry. We were especially interested in ways to visualize the topology of the overall system and allow operators to explore the different components in a more graphical and interactive form.
+As part of a recent hack day at Pivotal we looked at alternative approaches to monitor and troubleshoot Cloud Foundry. We were especially interested in ways of visualizing the topology of the overall system and allowing operators to explore the different components in a more graphical and interactive form.
 
 Just after we started our investigation into different approaches and existing tools, it became clear that [Weave Scope](https://www.weave.works/products/weave-scope/) would offer most of what we were hoping for out-of-the-box. The only problem was that Scope is primarily aimed at applications running on top of [Kubernetes](https://kubernetes.io/), [Apache Mesos](https://mesos.apache.org/), or [Amazon ECS](https://aws.amazon.com/ecs/). At the time we looked at it, there was no easy way to use it with Cloud Foundry or any other BOSH-deployed system.
 
@@ -81,7 +81,7 @@ At its core, Scope consists of two components — the Scope App and the Scop
 
 ### Scope App Job
 
-As a first step, we wanted to give operators a way to run the Scope App. We decided to do this by packaging the Scope binary inside a new BOSH release called [weave-scope-release](https://github.com/st3v/weave-scope-release) and creating a corresponding job named [scope_app](https://github.com/st3v/weave-scope-release/tree/master/jobs/scope_app). The single purpose of this job is to start the App as follows.
+As a first step, we wanted to give operators a way to run the Scope App. We decided to do this by packaging the Scope binary inside a new BOSH release called [weave-scope-release](https://github.com/st3v/weave-scope-release) and creating a corresponding job named [scope_app](https://github.com/st3v/weave-scope-release/tree/master/jobs/scope_app). The sole purpose of this job is to start the App as follows:
 
 ~~~bash
 ./scope --mode=app --weave=false
@@ -118,7 +118,7 @@ Once the Scope App has been deployed, you can get its IP by issuing `bosh vms we
 
 ### Scope Probe Add-on
 
-As a next step, in order to visualize BOSH deployments inside the Scope App we had to get the Scope Probe running on all BOSH-deployed hosts. To do that we decided to create a second job inside weave-scope-release that starts the Probe as follows.
+As a next step, in order to visualize BOSH deployments inside the Scope App we had to get the Scope Probe running on all BOSH-deployed hosts. To do that we decided to create a second job inside weave-scope-release that starts the Probe as follows:
 
 ~~~bash
 ./scope --mode=probe \
@@ -131,7 +131,7 @@ As a next step, in order to visualize BOSH deployments inside the Scope App we h
         ${SCOPE_APP_ADDRESS}
 ~~~
 
-We named this job [scope_probe](https://github.com/st3v/weave-scope-release/tree/master/jobs/scope_probe). It uses the same binary as the Scope App job. The binary supports a wide range of command line options. This makes both the App and the Probe highly customizable which helped us tremendously in coming up with a working prototype of our release within a single day. Using a subset of the available command-line options the scope_probe job starts Scope in Probe mode, tells it to not collect Docker- and Kubernetes-related metrics, disables integrations with [conntrack](http://conntrack-tools.netfilter.org/) and [Weave Net](https://www.weave.works/products/weave-net/), and instructs the Probe to look for available plugins in a particular directory, something we will cover in more detail in the second blog post in this series. Once started, the Probe gathers reports about the host it is running on and sends them to the previously deployed Scope App.
+Called [scope_probe](https://github.com/st3v/weave-scope-release/tree/master/jobs/scope_probe), this job uses the same binary as the Scope App job. The binary supports a wide range of command line options. This makes both the App and the Probe highly customizable which helped us tremendously in coming up with a working prototype of our release within a single day. Using a subset of the available command-line options, the scope_probe job starts Scope in Probe mode, tells it not to collect Docker- and Kubernetes-related metrics, disables integrations with [conntrack](http://conntrack-tools.netfilter.org/) and [Weave Net](https://www.weave.works/products/weave-net/), and instructs the Probe to look for available plugins in a particular directory, something we will cover in more detail in the second blog post in this series. Once started, the Probe gathers reports about the host it is running on and sends them to the previously deployed Scope App.
 
 After creating a BOSH job for the Scope Probe we had to ensure it would be colocated and executed on all hosts within any deployment that should be monitored. We achieved this by using add-ons, a BOSH feature that is configured through the so-called [runtime config](https://bosh.io/docs/runtime-config.html).
 
@@ -170,8 +170,8 @@ Clicking on any node in the graph will reveal more detailed information about a 
 
 ## What's next?
 
-As shown in this blog post it was rather easy to come up with a BOSH release for Weave Scope that can be used to reveal the hosts and network topology of arbitrary BOSH deployments. This release demonstrates that Weave Scope, out-of-the-box, is super useful in visualizing and troubleshooting Cloud Foundry. But it could be even better. What if were able to not only show the hosts that make up Cloud Foundry but also the containers that represent the applications that have been deployed to the platform? This is what we will look at in the second blog post of this series. Stay tuned.
+As shown in this blog post, it was relatively simple to come up with a BOSH release for Weave Scope that can be used to reveal the hosts and network topology of arbitrary BOSH deployments. This release demonstrates that Weave Scope, out-of-the-box, is super useful in visualizing and troubleshooting Cloud Foundry. But it could be even better. What if were able not only to show the hosts that make up Cloud Foundry but also the containers that represent the applications that have been deployed to the platform? This is what we will look at in the second blog post of this series. Stay tuned.
 
 ## Experimental Status
 
-As mentioned before, weave-scope-release was implemented as part of a one-day hackathon event. As such, some of the implementation is rather naive and lacks both testing and proper documentation. The work presented here should be seen as a proof of concept which depending on feedback and interest, might turn into a more robust and officially supported product at some point. **Until then, we highly recommend to not use this experimental release in any production environment.**
+As mentioned before, weave-scope-release was implemented as part of a one-day hackathon event. As such, some of the implementation is rather naive and lacks both testing and proper documentation. The work presented here should be seen as a proof of concept, which depending on feedback and interest, might turn into a more robust and officially supported product at some point. **Until then, we do not recommend using this experimental release in a production environment.**
