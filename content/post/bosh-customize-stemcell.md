@@ -106,8 +106,10 @@ sudo mount /dev/loop0p1 /mnt/stemcell
 sudo chroot /mnt/stemcell /bin/bash
  # update the stemcell to 3263.3.1
 echo -n 3263.3.1 > /var/vcap/bosh/etc/stemcell_version
- # we create user 'cunnie' in the 'admin' group (sudo), passwd `c1oudc0w`
-useradd -m -G admin -p $(openssl passwd -1 -salt xyz c1oudc0w) cunnie
+ # we create user 'cunnie' in the admin, bosh_sudoers, and bosh_sshers groups
+ # (sudo & ssh), passwd `c1oudc0w`.
+ # CentOS stemcells should use group wheel instead of group admin
+useradd -m -G admin,bosh_sudoers,bosh_sshers -p $(openssl passwd -1 -salt xyz c1oudc0w) cunnie
  # change to the new user's homedir
 cd ~cunnie
  # we create the directory
@@ -242,3 +244,11 @@ the secrets to be passed via the command line, e.g. `-l ~/secrets.yml` or
 `-l <(lpass show --note secrets)`
 
 The Golang CLI is in alpha and should not be used on production systems.
+
+## Corrections & Updates
+
+*2017-04-12*
+
+Userid created is a member of the `bosh_sshers` and `bosh_sudoers` groups.
+Newer stemcells have been hardened to only allow ssh access to users who
+are a member of the `bosh_sshers` group.
