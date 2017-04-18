@@ -11,6 +11,7 @@ short: |
   tests can be slow, brittle, or difficult to control. I'll describe two ways to address these
   issues by faking OAuth2 single sign-on in your tests. 
 title: Faking OAuth2 Single Sign-on in Spring, Two Ways
+package used: spring-security-test version 4.0.2.RELEASE 
 ---
 
 When writing a Java Spring web application that uses an OAuth2 single sign-on (SSO) service for
