@@ -74,10 +74,10 @@ networks:
       name: opaque # must match name of network in vSphere
 ```
 
-At this point, the seasoned BOSH manifest writer will have enough information to
-deploy to NSX-T networks, and may find the remainder of this post
-uninteresting.  The remainder of the blog post is directed towards who
-like to see detailed examples.
+At this point, the seasoned BOSH manifest writer will have enough information
+to deploy to NSX-T networks, and may find the remainder of this post
+uninteresting.  The remainder of the blog post is directed towards those
+interested in detailed examples.
 
 ## 1. Double Deployment: BOSH Director First, VMs Second
 
@@ -144,6 +144,16 @@ Now we create a minimal deployment consisting of two VMs ([BOSH manifest](https:
 bosh2 -e nsx-t -n deploy -d minimal minimal.yml
 ```
 
+We make sure the deploy succeeds &mdash; a successful deploy indicates the BOSH
+director and its two VMs are able to communicate over the opaque network:
+
+```bash
+...
+Task 56 done
+
+Succeeded
+```
+
 ## Addendum: Technical Requirements
 
 * [BOSH vSphere CPI](http://bosh.io/releases/github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release?all=1) v40+ (v40 tested)
@@ -156,11 +166,23 @@ We use [bosh-deployment](https://github.com/cloudfoundry/bosh-deployment) to
 generate our BOSH director's manifest. We use this [custom
 script](https://github.com/cunnie/deployments/blob/f591e80c7846754c6045e3ce3c8d097503c1a1ce/bin/vsphere.sh)
 which uses this [custom
-configuration](https://github.com/cunnie/deployments/blob/f591e80c7846754c6045e3ce3c8d097503c1a1ce/etc/vsphere.yml)
+configuration](https://github.com/cunnie/deployments/blob/f591e80c7846754c6045e3ce3c8d097503c1a1ce/etc/vsphere.yml).
+Much of the complexity derives from the need to create a dual-homed director.
 
 All hosts in a cluster should have at least one physical interface allocated to
 NSX-T. If not, VMs deployed to hosts with no physical cards allocated to NSX-T
 will not be able to communicate.
+
+If the operators of a vSphere environment have made the unfortunate decision to
+identically name multiple networks (e.g. `VM Network`), the distributed virtual
+port group will be selected first, followed by the opaque network, followed by
+the standard switch port group.
+
+Technical details: The BOSH vSphere CPI introduces a [new code
+path](https://github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release/blob/7185b00637a352adb7add09b136c78ec7ef171f3/src/vsphere_cpi/lib/cloud/vsphere/resources/nic.rb#L23-L28)
+which examines the type of network to which the VM is being attached, and, if
+it's an opaque network, uses the vSphere API to apply an opaque-specific
+backing to the VM's network interface card.
 
 ## Footnotes
 
