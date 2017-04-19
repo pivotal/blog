@@ -21,8 +21,9 @@ Recently, a client asked Pivotal's Data Science team to help convert some aging 
 * Implement data processing logic in Spark (PySpark specifically) to improve performance and scale
 * Follow extreme programming principles to improve productivity and seed cultural transformation across organization
 
-The last point is particularly important. Our goal as an organization is always to transfer knowledge and skills to our clients so they can carry on writing great code after Pivotal departs. Over the course of a few weeks, we delivered results across all three of the objectives above.  The graph below illustrates the performance improvements achieved as a result of the engagement.  As we increased the scope of our code to cover more units, performance scaled linearly (yellow bars and dots).  This was a huge performance gain compared to the legacy codebase, which scaled exponentially with more units (green bars and dots).
-{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/performance_improvements.png" class="center" >}}
+The last point is particularly important. Our goal as an organization is always to transfer knowledge and skills to our clients so they can carry on writing great code after Pivotal departs. Over the course of a few weeks, we delivered results across all three of the objectives above.  The graph below illustrates the performance improvements achieved as a result of the engagement.  As we increased the scope of our code to cover more units, performance scaled constantly (yellow bars and dots).  This was a huge performance gain compared to the legacy codebase, which scaled exponentially with more units (green bars and dots).
+{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/performance_scale.png" class="center" height="42" width="42">}}
+#### Figure 1. Constant O(1) order performance with adding more units 
 
 How did we, the Pivotal Data Science team and our client pairs, achieve these results? We followed <a name="seven_steps">“A Seven Step Approach”</a> for successful agile code development in processing pipelines for big data:
 
@@ -44,19 +45,21 @@ The procedural code lacks coding functionality, particularly in iterative constr
 To understand the SQL procedure better, we dissect each data modification step into a data flow diagram, which captures the underlying business logic, as shown in Figure 1.
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_1_figure_2.png" class="center" width="12000" >}}
-##### Figure 1. Capturing business logic in data and logic flow diagrams
+#### Figure 2. Capturing business logic in data flow diagrams
 
 During this step, inbound/outbound interaction points (columns/rows within data tables), interaction and creation of temporary data tables, SQL-variables, and nested constructs are identified. This step may be irrelevant if documents containing a data dictionary, information about data transformations and corresponding domain logic is provided. Otherwise, it is highly recommended to create data flow diagrams (like the one shown above) before moving to step 2.  
 
 ## <a name="define"> Step 2: Define data structures</a>
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_2_define_data_structures_1.png" class="center" width="12000" >}}
+#### Figure 3. Simplify data structures
 
 To remove data redundancy and achieve data consistency and robustness, in step 2 we define data structures to encapsulate the underlying business logic. Tables with thousands of attributes can disrupt normalized tabular designs. Create disjunctive simpler data frames that introduce modularity and reusability in Python and PySpark code. Several operations can be performed in parallel on multiple units of data or can be distributed across partitions on a Spark cluster, thus providing scalability.
 
 Data flow diagrams created in the previous step can help identify complex data structures, which involve nested operations and iterative constructs (e.g. while loops). Such complexities can introduce undesirable insertion, deletion and updates as the new data and attributes are added. A rule of thumb for creating data structures for big data is to avoid small-size data inserts, updates and selective deletes to data structures. Wherever possible, an append-only operation is preferred to avoid modifications in data that may conflict with information across multiple nodes in a distributed system.
 
-{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_2_broadcast_variable.png" class="center small" >}}
+{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_2_broadcast_variable_new_6.png" class="center" >}}
+#### Figure 4. Drawing out Broadcast variable 
 
 It’s important to identify and separate data transformations, which operate on mutually exclusive groups of columns or groups of rows, to increase the comprehensibility of the code base. This process also enhances the design of data structures so they are more informative to users.
 
@@ -66,19 +69,22 @@ Another key structure that exists in Spark is called accumulator. Accumulator pr
 
 ## <a name="partition"> Step 3: Partition workflows into reasonably distinct sections</a>
 
-{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_3_partition_procedure_into_sections.png" class="center small" >}}
+{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_3_partition_procedure_into_sections_new_2.png" class="center" >}}
+#### Figure 5. Identify reasonably distinct sections
 
 One of the key practices of working in extreme programming methodology is to create a prioritized list of the functionality to be developed in the product using Pivotal Tracker, an agile project management tool. By creating a backlog of agile user features (called “stories” in Tracker) that describe the functionality to be added over the course of a project, the SQL Server procedure is divided into several functionally testable sections. In stored procedures, each section is a combination of multiple SQL operations. Every section is functionally unique and produces key performance indicators or metrics that captures business logic. A section should produce a standalone set of tests.
 
 We use a ‘Given/When/Then’ format  as we transcribe each section into a Pivotal Tracker story.  Implementing each story will take us one step closer towards completing the data pipeline. For example, in Figure 5, we see how Section x, which is functionally distinct across the SQL procedures, is captured in a Pivotal Tracker story.
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_3_sections_into_story.png" class="center small" >}}
+#### Figure 6. Transcribe sections into Agile stories
 
 ## <a name="compose_tests">Step 4. Compose tests for each Section</a>
 
 A big part of our development culture is to write tests starting on day one. Tests guard against introducing bugs in newly implemented features. With well-tested code, existing functionality remains intact, programmers can more confidently design new ways to implement features, and refactoring becomes easier as the system’s complexity increases with time. 
 
-{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_4_compose_tests_for_sections.png" class="center small" >}}
+{{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_4_compose_tests_for_sections_new_1.png" class="center small" >}}
+#### Figure 7. Start writing tests and making them pass
 
 We used the unit-test module in Python to compose suites of tests for each section. A team can use any testing framework in its preferred language. Each test has a short setup function, which spins up Spark locally, and a short teardown function that closes the Spark session. Unit tests are written to execute business logic on the local Spark setup. Though sections are coherent, there is no dependency between individual tests. We used real data (e.g. copies of production data) in every test scenario so that each test case would optimally cover all verification points.
 
@@ -205,7 +211,7 @@ df.show(5, truncate=False)
 
 ```
 
-##<a name="acceptance"> Step 7. Define acceptance tests and criteria</a>
+## <a name="acceptance"> Step 7. Define acceptance tests and criteria</a>
 
 Acceptance tests for data pipelines are essential to help ensure that the data is transformed a way that meets business and analytic needs. In the context of redesigning and improving upon an existing data pipeline, we would want to check that the data output before and after the redesign is consistent.  For this, we created a bash script that compares the data points generated from parallel execution of multiple entities to the data points generated by the original SQL server procedures in a serial manner.
 
