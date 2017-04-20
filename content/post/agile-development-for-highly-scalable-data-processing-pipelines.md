@@ -11,11 +11,11 @@ categories:
 date: 2017-02-01T19:51:08-08:00
 draft: true
 short: |
-  Legacy data processing pipelines are slow, inaccurate, hard to debug, and can cause thousands of dollars in revenue. Conforming to agile methodology and a detailed seven-step approach can ensure efficient, reliable and high-quality data pipeline on distributed data processing framework like Spark.Learn how following TDD, careful creation of data structures ensures code competency and completeness, and parallel execution of multiple entities results in linearly scalable and robust big data pipeline in Spark. 
+  Legacy data processing pipelines are slow, inaccurate, hard to debug, and can cause thousands of dollars in revenue. Conforming to agile methodology and a detailed seven-step approach can ensure an efficient, reliable and high-quality data pipeline on distributed data processing framework like Spark.  Learn how following TDD, careful creation of data structures, and parallel execution results in: Code competency, code completeness, and a linearly scalable and robust big data pipeline. 
 title: Agile Development for Highly Scalable Data Processing Pipelines
 ---
 
-Recently, a client asked Pivotal's Data Science team to help it convert some aging T-SQL stored procedures used in their data processing pipeline into better code. The goals were to enable better scalability, improve its testability, and improve runtime performance.  More specifically, our job was to: 
+Recently, a client asked Pivotal's Data Science team to help convert some aging T-SQL stored procedures used in their data processing pipeline into better code. The goals were to enable better scalability, improve its testability, and improve runtime performance.  More specifically, our job was to: 
 
 * Improve the reliability and overall accuracy of the resulting code base
 * Implement data processing logic in Spark (PySpark specifically) to improve performance and scale
@@ -24,7 +24,7 @@ Recently, a client asked Pivotal's Data Science team to help it convert some agi
 The last point is particularly important. Our goal as an organization is always to transfer knowledge and skills to our clients so they can carry on writing great code after Pivotal departs. Over the course of a few weeks, we delivered results across all three of the objectives above.  The graph below illustrates the performance improvements achieved as a result of the engagement.  As we increased the scope of our code to cover more units, performance scaled linearly (yellow bars and dots).  This was a huge performance gain compared to the legacy codebase, which scaled exponentially with more units (green bars and dots).
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/performance_improvements.png" class="center" >}}
 
-How did we, the Pivotal Data Science team, and our client achieve these results? We followed <a name="seven_steps">“A Seven Step Approach”</a> for successful agile code development in data processing pipelines:
+How did we, the Pivotal Data Science team and our client pairs, achieve these results? We followed <a name="seven_steps">“A Seven Step Approach”</a> for successful agile code development in processing pipelines for big data:
 
 1. [Interpret legacy data transformation code] (#interpret)
 2. [Define data structures] (#define)
@@ -68,9 +68,9 @@ Another key structure that exists in Spark is called accumulator. Accumulator pr
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_3_partition_procedure_into_sections.png" class="center small" >}}
 
-One of the key practices of working in extreme programming methodology is to create a prioritized list of the functionality to be developed in the product using Pivotal Tracker, an agile project management tool. By creating a backlog of agile user features (called “stories” in Tracker) that describe the functionality to be added over the course of a project, the SQL Server procedure is divided into several functionally testable sections. In stored procedures, each section is a combination of multiple SQL operations. Every section is functionally unique and produces a key performance indicator or metrics that captures business logic. A section should produce a standalone set of tests.
+One of the key practices of working in extreme programming methodology is to create a prioritized list of the functionality to be developed in the product using Pivotal Tracker, an agile project management tool. By creating a backlog of agile user features (called “stories” in Tracker) that describe the functionality to be added over the course of a project, the SQL Server procedure is divided into several functionally testable sections. In stored procedures, each section is a combination of multiple SQL operations. Every section is functionally unique and produces key performance indicators or metrics that captures business logic. A section should produce a standalone set of tests.
 
-We use a ‘Given/When/Then’ format  as we transcribe each section into a Pivotal Tracker story Implementing each story will take us one step closer towards completing the data pipeline. For example, in Figure 5, we see how Section x, which is functionally distinct across the SQL procedures, is captured in a Pivotal Tracker story.
+We use a ‘Given/When/Then’ format  as we transcribe each section into a Pivotal Tracker story.  Implementing each story will take us one step closer towards completing the data pipeline. For example, in Figure 5, we see how Section x, which is functionally distinct across the SQL procedures, is captured in a Pivotal Tracker story.
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_3_sections_into_story.png" class="center small" >}}
 
@@ -142,7 +142,7 @@ SimpleApp().get_letter_count(lineData, "A")
 
 ## <a name="produce_code"> Step 5. Produce sufficient code to satisfy each failing</a> test</a>
 
-As illustrated in the diagram in Step 4, next we write just enough code to make the test pass. For the sake of implementing just enough, and the correct functionality, the code is written for a single entity. 
+As illustrated in the diagram in Step 4, next we write just enough code to make the test pass. For the sake of implementing just enough while satisfying correct functionality, the code is written for a single entity. 
 
 ``` 
 def get_letter_count( file, letter):
@@ -159,14 +159,14 @@ def get_letter_count( file, letter):
    # Output: count_a : 2 
 ```
 
-As an additional step, wherever possible, data structure and business logic implementation can be refactored again to gain clarity. This step ensures the tests pass and the code executes on Spark.
+As an additional step, wherever possible, implementation of data structures and business logic can be refactored to gain clarity. This step ensures that the tests pass and the code executes on Spark.
 
 
 ## <a name="optimize"> Step 6. Optimize for parallel execution of multiple entities</a>
 
 In order to scale to multiple units, we need to parallelly execute code on a distributed platform. We take the code and tests we implemented so far, and we write additional tests to ensure parallelism. Further, we will write scalable code that wraps functions defined in Step 5 by leveraging lambda architecture. 
 
-In the example below, we define a data frame with each row corresponding to one entity. Each entity has two properties, “Tokens”, a bag of words, and Letter, a singular case sensitive letter. To provide parallel execution for multiple entities across the Spark partitions, a new column letter_count is added to the data frame. Letter_count column stores the count of the number of times the letter, defined in ‘Letter’ column, occurs in ‘Tokens’ column.
+In the example below, we define a data frame with each row corresponding to one entity. Each entity has two properties: 'Tokens', a bag of words, and 'Letter', a singular case sensitive letter. To provide parallel execution for multiple entities across the Spark partitions, a new column letter_count is added to the data frame: Letter_count stores the count of the number of times the letter (defined in ‘Letter’ column) occurs in the ‘Tokens’ column.
 
 
 ```
@@ -207,7 +207,7 @@ df.show(5, truncate=False)
 
 ##<a name="acceptance"> Step 7. Define acceptance tests and criteria</a>
 
-One reason acceptance criteria are defined is to enable us to deliver the required functionality exactly the way the customer wants it. It eliminates the need for a product owner and/or project manager to scan through the code line by line to ensure it does what a developer says. Acceptance criteria for data pipelines are essential to ensure the data is transformed in the way the business needs. There could be many ways of adopting an acceptance technique, such as via dashboards or features on the user interface. For a data pipeline, we want each key data point to be exactly same in measurement. For this, we created a bash script that compares the data points generated from parallel execution of multiple entities to the data points generated by the SQL server procedures in a serial manner.
+Acceptance tests for data pipelines are essential to help ensure that the data is transformed a way that meets business and analytic needs. In the context of redesigning and improving upon an existing data pipeline, we would want to check that the data output before and after the redesign is consistent.  For this, we created a bash script that compares the data points generated from parallel execution of multiple entities to the data points generated by the original SQL server procedures in a serial manner.
 
 Following are the steps for writing such scripts:
 
@@ -259,13 +259,12 @@ As a practice, we highly recommend adopting continuous delivery, in addition to 
 
 # Main Takeaways
 
-Test driven development is core to delivering efficient and high-quality data pipelines.  Going a step further, following extreme programming principles also help making data centric projects successful.  While extreme programming is not religiously followed in creating scalable data pipelines, by following a process similar to the [‘7 Step Approach’](#seven_steps) described in this post, we believe that it is easy to adopt and apply to a wide spectrum of data-driven use cases.  Below is a recap of the key benefits of following such an approach:
+Test driven development is core to delivering efficient and high-quality data pipelines.  Going a step further, following extreme programming principles also help in making data centric projects successful.  By following a process similar to the [‘7 Step Approach’](#seven_steps) described in this post, we believe that extreme programming can be easy to adopt and apply to a wide spectrum of data-driven use cases.  Below is a recap of the key benefits of following such an approach:
 
-* Follow TDD to guarantee accuracy and performance enhancements of data processing pipeline
-* Enhanced developer productivity via cultural transformation and pair programming
-* Parallel execution of multiple entities will speed processing big data, hence resulting in fast analytics
-* Incorporating fault tolerance, debug logging, input/output bounds checking and management, and implementing normalized data structures ensures robustness
+* Follow TDD and extreme programming principles to increase robustness, tranparency, and quality of data processing pipelines
+* Parallel execution of multiple entities to speed processing of big data, increasing agility of model development cycles
+* Incorporating fault tolerance, debug logging, input/output bounds checking and management, and implementing normalized data structures to mitiage risks 
 
-From a technology perspective, parallel execution of analytics on distributed in-memory frameworks enhances performance, but troubleshooting Spark errors is tricky. In most cases, errors are due to ‘insufficient memory’ problems. Each data transformation and action is restricted by the total memory of the cluster. We also realized, through working with this particular client, that refactoring would be much easier with a focus on implementing the correct logic rather than reinventing the wheel in a new platform. If that is the case, business logic is encapsulated in PL/Python, PL/R, PL/Java or PL/C++ and parallelism attained via Pivotal Greenplum’s massively parallel processing framework.
+
 
 
