@@ -9,7 +9,7 @@ categories:
 - SPARK 
 - Pair-programming
 date: 2017-02-01T19:51:08-08:00
-draft: true
+draft: false
 short: |
   Legacy data processing pipelines are slow, inaccurate, hard to debug, and can cause thousands of dollars in revenue. Conforming to agile methodology and a detailed seven-step approach can ensure an efficient, reliable and high-quality data pipeline on distributed data processing framework like Spark.  Learn how following TDD, careful creation of data structures, and parallel execution results in: code competency and completeness, and a linearly or constantly scalable robust big data processing pipeline. 
 title: Agile Development for Highly Scalable Data Processing Pipelines
@@ -61,7 +61,7 @@ To remove data redundancy and achieve data consistency and robustness, in Step 2
 Data flow diagrams created in the previous step can help identify complex data structures, which involve nested operations and iterative constructs (e.g. while loops). It is important to separate iterations or nested operations which involve the same sets of columns, as these can be captured in a different data structure. Such complexities can introduce undesirable insertion, deletion and updates as any new data and/or attributes are added. A rule of thumb for creating data structures for big data is to avoid small-size data inserts, updates and selective deletes operations associated with data structures. Wherever possible, an append-only operation is preferred to avoid modifications in data that may conflict with information across multiple nodes in a distributed system.
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_2_broadcast_variable_new_6.png" class="center" >}}
-<p align="center"> Figure 4. Utilize programming framework's given data stores i.e. broadcast variables in Spark. </p>
+<p align="center"> Figure 4. Utilize Spark's Broadcast variables. </p>
 
 It’s important to identify and separate data transformations, which operate on mutually exclusive groups of columns or groups of rows, to increase the comprehensibility of the code base. This process also enhances the design of data structures so they are more informative to users.
 
@@ -86,17 +86,20 @@ We use a ‘Given/When/Then’ format as we transcribe each section into a Pivot
 A big part of our development culture is to write tests starting on day one. Tests guard against introducing bugs in newly implemented features. With well-tested code, existing functionality remains intact, programmers can more confidently design new ways to implement features, and refactoring becomes easier as the system’s complexity increases with time. 
 
 {{< responsive-figure src="/images/agile_development_for_highly_scalable_data_pipelines/step_4_compose_tests_for_sections_new_1.png" class="center small" >}}
-<p align="center"> Figure 7. Discuss, write tests, make them pass, refactor to improve design </p>
+<p align="center"> Figure 7. Discuss, write tests, make them pass, refactor and improve design. </p>
 
 We used the unittest module in Python to compose suites of tests for each section (a team can use any testing framework in its preferred language). Each test has a short setup function, which spins up Spark locally, and a short teardown function that closes the Spark session. Unit tests are written to execute business logic on the local Spark setup. Though sections could be coherent, there exists no dependency between individual tests. We used real data (e.g. copies of production data) in every test scenario so that each test case would optimally cover all verification points.
 
 Following is the setup and teardown functions that execute before each test. In the following code snippet, two tests are written to test a functionality that counts the occurrences of a letter in a list of words. The second test captures an "Exception object" when the letter is not found in a dictionary.
 
 ```
+
 class EntityTestCase(unittest.TestCase):
 
+    # setup local Spark session with basic configs 
     def setUp(self):
         """Setup a basic Spark session for testing"""
+
         SparkSession._instantiatedContext = None
         conf = SparkConf()
         conf.set("spark.executor.memory", "1g")
@@ -104,17 +107,20 @@ class EntityTestCase(unittest.TestCase):
         conf.set("spark.app.name", "entity_test_suite")
         conf.set("spark.driver.extraLibraryPath", self.getHadoopNative())
         conf.set("spark.ui.port", 6789)
+
         self.spark = SparkSession.builder.config(conf=conf).getOrCreate()
         self.sc = self.spark.sparkContext
         self.sc.setLogLevel("DEBUG")
+
         quiet_py4j()
 
     def tearDown(self):
+
         """
         Tear down the basic spark test case. This stops the running
         Spark session.
         """
-        print('Shutting down Spark Master ', os.getenv('SPARK_MASTER', "local[4]"))
+
         try:
             self.sc.stop()
             self.spark.stop()
@@ -129,12 +135,13 @@ class EntityTestCase(unittest.TestCase):
             self.sc._jvm.System.clearProperty("spark.driver.port")
             self.sc._jvm.System.clearProperty("spark.ui.port")
 
+
     def test_get_letter_count_pass(self):
         """Test get_letter_count to return counts of "a" letter present in the data dictionary"""
         list = ["Digital", "Hello", "World", "Boost", "Category"]
         lineData = self.sc.parallelize(list)
 	
-	 count_a = SimpleApp().get_letter_count(lineData, "a")
+	count_a = SimpleApp().get_letter_count(lineData, "a")
         assert count_a == 2
 
     def test_get_letter_count_fail(self):
@@ -142,9 +149,9 @@ class EntityTestCase(unittest.TestCase):
         list = ["Digital", "Hello", "World", "Boost", "Category"]
         lineData = self.sc.parallelize(list)
 	 
-	 With self.assertRaises(Exception) as context:
-SimpleApp().get_letter_count(lineData, "A")
-        self.assertTrue(‘Unknown Word in dictionary’ in context.exception)
+	With self.assertRaises(Exception) as context:
+            SimpleApp().get_letter_count(lineData, "A")
+            self.assertTrue(‘Unknown Word in dictionary’ in context.exception)
 ```
 
 
@@ -153,18 +160,25 @@ SimpleApp().get_letter_count(lineData, "A")
 As illustrated in Figure 7, next we write just enough code to make the test pass for one unit of data on one machine. For the sake of implementing just enough while satisfying 'correct' functionality, the code is written for a 'single' entity. 
 
 ``` 
-def get_letter_count( file, letter):
+    # define the function
+    def get_letter_count( file, letter):
         """counts of a letter present in the data dictionary"""
-	 count = sum([s.count(letter) for s in file])
-	 if count == 0:
-		# log exception, this could again be another feature
-        	raise Exception(‘Unknown Word in dictionary’)
-	 return count
+	   count = sum([s.count(letter) for s in file])
+	   if count == 0:
+
+		  # log exception, this could again be another data point to capture
+        	   raise Exception(‘Unknown Word in dictionary’)
+	   return count
 
    list = ["Digital", "Hello", "World", "Boost", "Category"]
+
+   # define a single list as an entity
    entity_X = sc.parallelize(list)
+   
    count_a = sum(entity_X.map(lambda x : get_letter_count(x,'a')).collect()[0])
+   
    # Output: count_a : 2 
+
 ```
 
 As an additional step, wherever possible, implementation of data structures and business logic can be refactored to improve clarity and design of code. This step ensures that the tests pass and the code executes on Spark.
@@ -180,10 +194,13 @@ In the example below, we define a data frame with each row corresponding to one 
 ```
 from pyspark.sql.types import *
 from pyspark.sql.functions import udf
+
+# Sample Data
 data = sc.parallelize([ 
 [('Tokens', ["take", "blubber", "pencil", "cloud", "moon", "water", "ant", "lily"]), ('Letter', 'l'), ('Entity', 'A')],
 [('Tokens', ["literature", "chair", "two", "window", "cords", "musical", "zebra", "xylophone"]), ('Letter', 't'), ('Entity', 'B')],
 [('Tokens', ["website", "banana", "uncle", "softly", "mega", "ten", "awesome", "attach"]), ('Letter', 'p'), ('Entity', 'C')]])
+
 # Convert to tuple
 data_converted = data.map(lambda x: (x[0][1], x[1][1], x[2][1]))
 
@@ -196,13 +213,21 @@ schema = StructType([
 
 # Create dataframe
 df = sqlContext.createDataFrame(data_converted, schema)
+
+# create UDFs
 def get_letter_count( file, letter):
     count = sum([s.count(letter) for s in file])
     return count
+
 letter_count_udf = udf(get_letter_count, IntegerType())
+
+# build a new feature
 df.withColumn('letter_count', letter_count_udf(df.Tokens, df.Letter))
 
 df.show(5, truncate=False)
+```
+```
+# OUTPUT
 +------------------------------------------------------------------+------+------+------------+
 |Tokens                                                            |Letter|Entity|letter_count|
 +------------------------------------------------------------------+------+------+------------+
