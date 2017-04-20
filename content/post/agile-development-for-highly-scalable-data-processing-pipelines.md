@@ -239,14 +239,14 @@ error=$?
 # next, the script checks error status
 if [ $error -eq 0 ]
 then
-	# if exit is zero, test passes, and records are matched 100%.
+	# if the exit is zero, test passes, and records are matched 100%.
 	echo "Test Passed. "$lines_1" records tested.
 	Percentage Matched: 100%"
 elif [ $error -eq 1 ]
 then
-	# If the exit not zero, 
+	# if the exit is not zero, 
 	# the script counts the mismatched lines, also the mismatch percentage
-	# and reports a failed test andthe mismatched lines.
+	# and reports a failed test and the mismatched lines.
 	D=''
 	mismatch=$(echo $(echo $resultA | expand | sed -e 's/[\ ]/'"$D"'/g' | sed -e $'s/</\\\n/g'| sed -e $'s/>/\\\n/g' | wc -l )/2| bc) 
 	mismatch_percent=$(echo "scale=10 ; ($lines_1 - $mismatch) / $lines_1 * 100" | bc)
@@ -265,9 +265,17 @@ As a practice, we highly recommend adopting continuous delivery, in addition to 
 
 Test driven development is core to delivering efficient and high-quality data pipelines.  Going a step further, following extreme programming principles also help in making data-centric projects successful.  By following a process similar to the [‘7 Step Approach’](#seven_steps) described in this post, we believe that extreme programming can be easy to adopt and apply to a wide spectrum of data-driven use cases.  Below is a recap of the key benefits of following such an approach:
 
-* Follow TDD and extreme programming principles to increase robustness, tranparency, and quality of data processing pipelines.
-* Parallel execution of multiple entities to speed processing of big data and to increase agility of model development cycles.
-* Incorporate fault tolerance, debug logging, input/output bounds checking and management, and implemente normalized data structures to mitigate various types of technical and non-technical risks. 
+* Follow TDD and extreme programming principles to increase robustness, transparency, and quality of data processing pipelines.
+* Parallel execution of multiple entities to speed processing of big data and to increase the agility of model development cycles.
+* Incorporate fault tolerance, debug logging, input/output bounds checking and management, and implement normalized data structures to mitigate various types of technical and non-technical risks. 
+
+If you want to learn more:
+
+* [Test-Driven Development for Data Science](http://engineering.pivotal.io/post/test-driven-development-for-data-science/)
+* [Data Science in the Balanced Team](http://www.ianhuston.net/2016/11/data-science-in-the-balanced-team/)
+* [What can data scientists learn from DevOps?](http://redmonk.com/dberkholz/2012/11/06/what-can-data-scientists-learn-from-devops/)
+* [8 Pro Tips for Using Concourse CI with Cloud Foundry](https://blog.altoros.com/concourse-ci-architecture-features-and-usage.html)
+* [Concourse CI](https://concourse.ci/)
 
 
 
