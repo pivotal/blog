@@ -1,3 +1,4 @@
+{{/* code for displaying categories and tags */}}
 {{ $.Scratch.Set "replace_title" .Title }}
 {{ if .Data.Singular }}
   {{ range .Data.Pages }}
@@ -10,6 +11,15 @@
     {{ end }}
   {{ end }}
 {{ end }}
+
+{{/* code for displaying author names */}}
+{{ $heading_type := $.Scratch.Get "heading_type" }}
+{{ if eq $heading_type "author" }}
+{{ $author := $.Scratch.Get "author" }}
+{{ $.Scratch.Set "replace_title" $author }}
+{{ end }}
+
+
 {{ $replace_title := $.Scratch.Get "replace_title" }}
 <head>
   <meta charset="utf-8">
