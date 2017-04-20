@@ -274,7 +274,6 @@ Test driven development is core to delivering efficient and high-quality data pi
 If you want to learn more:
 
 * [Test-Driven Development for Data Science](http://engineering.pivotal.io/post/test-driven-development-for-data-science/)
-* [Data Science in the Balanced Team](http://www.ianhuston.net/2016/11/data-science-in-the-balanced-team/)
 * [Agile: The Way to Develop Great Software](https://pivotal.io/agile)
 * [Data Science How-To: Using Apache Spark for Sports Analytics](https://content.pivotal.io/blog/how-data-science-assists-sports)
 
