@@ -267,9 +267,9 @@ As a practice, we highly recommend adopting continuous delivery, in addition to 
 
 Test driven development is core to delivering efficient and high-quality data pipelines.  Going a step further, following extreme programming principles also help in making data centric projects successful.  By following a process similar to the [‘7 Step Approach’](#seven_steps) described in this post, we believe that extreme programming can be easy to adopt and apply to a wide spectrum of data-driven use cases.  Below is a recap of the key benefits of following such an approach:
 
-* Follow TDD and extreme programming principles to increase robustness, tranparency, and quality of data processing pipelines
-* Parallel execution of multiple entities to speed processing of big data, increasing agility of model development cycles
-* Incorporating fault tolerance, debug logging, input/output bounds checking and management, and implementing normalized data structures to mitiage risks 
+* Follow TDD and extreme programming principles to increase robustness, tranparency, and quality of data processing pipelines.
+* Parallel execution of multiple entities to speed processing of big data, increasing agility of model development cycles.
+* Incorporating fault tolerance, debug logging, input/output bounds checking and management, and implementing normalized data structures to mitiage risks. 
 
 
 
