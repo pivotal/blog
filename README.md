@@ -13,6 +13,7 @@ This blog is built and maintained entirely by *you*!  Feel free to propose or ju
 1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
 1. [Ship it!](https://github.com/pivotal/blog#publishing-your-copy)
 
+
 Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).
 
 If you don't have push access, then send an ask ticket to have yourself added to the `all-pivots` github team in this org.
