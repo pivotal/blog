@@ -18,7 +18,7 @@
         {{ $all := .Site.Data.authors}}
         {{ $authors := .Params.authors}}
         <author>
-        {{ range $i, $author := $authors }}{{ with $a := (index $all $author)}}{{if (and $i $a.Name)}},{{end}}{{ if $a.Email}}{{$a.Email}}{{else}}info@pivotal.io{{ end }}{{ with $a.Name }} ({{.}}){{end}}{{end}}{{end}}
+        {{ range $i, $author := $authors }}{{ with $a := (index $all $author)}}{{if (and $i $a.Name)}},{{end}}{{ if $a.Email}}{{$a.Email}}{{else}}engineering-blog@pivotal.io{{ end }}{{ with $a.Name }} ({{.}}){{end}}{{end}}{{end}}
         </author>
       <guid>{{ .Permalink }}</guid>
       <description>{{ .Content | html }}</description>

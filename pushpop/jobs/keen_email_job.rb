@@ -51,8 +51,8 @@ job "keen email" do
     end
   else
     sendgrid do |response, step_responses|
-      to        "CF Eng Directors <cf-eng-directors@pivotal.io>"
-      from      "Blog Stats <cf-eng-directors@pivotal.io>"
+      to        "Engineering Blog <engineering-blog@pivotal.io>"
+      from      "Blog Stats <engineering-blog@pivotal.io>"
       subject   "Engineering Blog Weekly Traffic Report"
       body      Roadie::Document.new(template("email.html.erb", response, step_responses)).transform
     end

@@ -117,3 +117,5 @@ We also use:
 * [Feedburner](https://feedburner.google.com/fb/a/dashboard?id=lkvb0prnrmdpd4tdcvgd6uorpo) to track RSS subscriptions
 * A [twitter account](https://twitter.com/pivotaleng) ([automatically publishes each post](https://feedburner.google.com/fb/a/socialize?id=lkvb0prnrmdpd4tdcvgd6uorpo) via feedburner).
 * Keen.io and Segment.com for tracking analytics.
+
+All passwords are stored in Lastpass, available to the CF Engineering Directors, under the "Shared-Blog" folder.
