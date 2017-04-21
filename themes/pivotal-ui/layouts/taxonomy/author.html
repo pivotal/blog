@@ -24,27 +24,50 @@
           </div>
           {{ if (ne $name.Twitter nil) }}
             <div id="posts">
-              Twitter: <a href="https://twitter.com/{{ index $name.Twitter }}">{{ $name.Twitter }}</a>
+              Twitter:
+              {{ if (isset $name.Twitter 0) }}
+                <ul class="authors">
+                  {{ range $name.Twitter }}
+                    <li><a href="https://twitter.com/{{ . }}">@{{ . }}</a></li>
+                  {{ end }}
+                </ul>
+              {{ else }}
+                <ul class="authors">
+                  <li><a href="https://twitter.com/{{ $name.Twitter }}">@{{ $name.Twitter }}</a></li>
+                </ul>
+              {{ end }}
             </div>
           {{ end }}
           {{ if (ne $name.Blog nil) }}
             <div id="posts">
               Blog:
-              <ul class="authors">
-                {{ range $name.Blog }}
-                  <li><a href="{{ . }}">{{ . }}</a></li>
-                {{ end }}
-              </ul>
+              {{ if (isset $name.Blog 0) }}
+                <ul class="authors">
+                  {{ range $name.Blog }}
+                    <li><a href="{{ . }}">{{ . }}</a></li>
+                  {{ end }}
+                </ul>
+              {{ else }}
+                <ul class="authors">
+                  <li><a href="{{ $name.Blog }}">{{ $name.Blog }}</a></li>
+                </ul>
+              {{ end }}
             </div>
           {{ end }}
           {{ if (ne $name.Github nil) }}
             <div id="posts">
               GitHub:
-              <ul class="authors">
-                {{ range $name.Github }}
-                  <li><a href="https://github.com/{{ . }}">@{{ . }}</a></li>
-                {{ end }}
-              </ul>
+              {{ if (isset $name.Github 0) }}
+                <ul class="authors">
+                  {{ range $name.Github }}
+                    <li><a href="https://github.com/{{ . }}">@{{ . }}</a></li>
+                  {{ end }}
+                </ul>
+              {{ else }}
+                <ul class="authors">
+                  <li><a href="https://github.com/{{ $name.Github }}">@{{ $name.Github }}</a></li>
+                </ul>
+              {{ end }}
             </div>
           {{ end }}
         </div>
