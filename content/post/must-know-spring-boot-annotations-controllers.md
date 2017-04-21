@@ -10,7 +10,7 @@ date: 2017-04-21T08:50:03-07:00
 draft: true
 short: |
   Learn about the most essential, must-know annotations for Spring Boot controllers.
-title: Must-Know Spring Boot Annotations: Controllers
+title: "Must-Know Spring Boot Annotations: Controllers"
 ---
 
 ## Wh@t @re @nnotations @ll @bout?

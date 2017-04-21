@@ -1,21 +1,21 @@
 language: go
 go: '1.7'
 install:
-  - wget https://github.com/spf13/hugo/releases/download/v0.18.1/hugo_0.18.1_Linux-64bit.tar.gz
-  - tar xzf hugo_0.18.1_Linux-64bit.tar.gz
-  - mv hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64 hugo_0.18.1_linux_amd64/hugo
-  - export PATH=$PATH:$PWD/hugo_0.18.1_linux_amd64
+- wget https://github.com/spf13/hugo/releases/download/v0.18.1/hugo_0.18.1_Linux-64bit.tar.gz
+- tar xzf hugo_0.18.1_Linux-64bit.tar.gz
+- mv hugo_0.18.1_linux_amd64/hugo_0.18.1_linux_amd64 hugo_0.18.1_linux_amd64/hugo
+- export PATH=$PATH:$PWD/hugo_0.18.1_linux_amd64
 script: ./bin/build
 deploy:
-  - provider: cloudfoundry
-    edge: true
-    skip_cleanup: true
-    api: https://api.run.pivotal.io
-    username: engineering-blog@pivotal.io
-    organization: pivotal
-    space: blog
-    on:
-      repo: pivotal/blog
-      branch: master
-    password:
-      secure: "OyGb8nVcax+DrUfRW5DbwXDHRnmyu64jKpI+12/S2F70+KefVG4YOvUGAVIkyC6wCV7W5kOd100xbn8jmzn8wd33PBvV5uSeKmTzzMco3D/GCJ38MV+y7BE4I/FBxoA4DRNwHk7Pw3vDfLuWEJkC2C2RiSt7ULZ43EKPS8o7SgEidwi5/Apx4UguBPtYFnWtAZeRKkXA11lMj7Xfz6iiERO11CWOvzicq6t7/1E/SMRL/OdCv673guRBvT6WC0AjyJbkeojLWMTQa4AjvO7M41Uyjq2WeUD3zHQTIyPRTDk8ZHDMuNDRP3ZnUySrPvHml1SgnarE9MQ/FWec/1CF+1QunQse17+Z+4dTAiqBX30AIuDlq4+dqWCzyDk7MIWGgcxfYI+xQDxer0am3VupZwWrLghy4ROQQElxJjmPiwpSFxnJRz2qmZMyjKfh6FW2Szh+fCAhCmnwzkaVWuGYLLLlSGJVKso31zQerLq7lm1SITanSEjn8/hj63K0twpPvhTmLkTBJH/z7GojP1KLbPuQK3ujP7bwVFz4xgjUCWYEVq4AczVc5jJ5/sChOOxUmDnP6jIn1M9fSk96OnH4IAeU9UV3pJEOWHBr6w9UbmRkME8+l5ayGA8h3K9rKQbLM5ui3XdOb2avYLHRHrnQDFkQdqfwUzWlf2BwGGuEwHU="
+  provider: cloudfoundry
+  edge: true
+  skip_cleanup: true
+  api: https://api.run.pivotal.io
+  username: engineering-blog@pivotal.io
+  organization: pivotal
+  space: blog
+  on:
+    repo: pivotal/blog
+    branch: master
+  password:
+    secure: "WHwkaU/iMcqxj0j60hdmj07hjKsBsw35JWzIlgx/kZoR9ZJPsCraGiBOxw2gtd63tRL9tDg/G4BMJ9PaErTdCWFdopf8X/aoIjPt9FcmynIxYqU4vnxgPOsSxgfKjjVf8SGE0bLofvHHYNT43SCgyCT6T7VfwwGouMifR7fNQQ6KqHbPoa6wNEAYd+QiOe8o0iomPj9BxPjyg+Fe5WrpJxzcBzXZ2Mdv02ylwdV2P6jvgDOg89EEdUwlpWazJyx3TYAtHcagUpB8GQSAw0+SP6NpYcVFKiABAZmNLugw3Jo6kp4rL4/MJOFnanmI3nqPerShOA+M3EZ8ZKrP4g8K9i5Bnz500Jy0P7gEQ+cOYoa1YaZeUNsA2l0GJY5X8Pn4f+hrJfY0JwJw2EwLky5iMEaYuXhCb5nri0HDZwUWkbm5ZHxBN7I4woOpSKtvLETb+w4lYLKv9rKt+CRN1taXFU5gjBgz1nMDcO7wSv9hF4LyKeM9wzMjcI0rBszThZqq2YJPQ92V9lvIvDR96CfkZgkUUG9halpy0apHusk/CEWpksvexvNHqjQFnHN7FTy5EJZWepkheyF7QlQ9sRIeL7rELVU/WM3WJ3fXmcFyPdbjuI7B5ZtKZKJF7zidyEwSJlaLwXPnNvGKqWZ47oYZmaGCo63UT4wIoHh0fB21p4E="
