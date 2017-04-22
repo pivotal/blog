@@ -1,12 +1,10 @@
 # The Pivotal Engineering Journal
 
-Welcome to our little slice of the internets!  This blog is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
+Welcome to our little slice of the internets!  [This blog](http://engineering.pivotal.io/) is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
 This blog is built and maintained entirely by *you*!  Feel free to propose or just implement any improvement you believe in.  ANARCHY!!!!
 
 To discuss the blog, [join the Google Group](https://groups.google.com/a/pivotal.io/forum/#!members/engineering-blog), or jump into the [Slack channel](https://pivotal.slack.com/messages/C532XUA2W/).
-
-[Live site](http://engineering.pivotal.io/) | [Staging](http://pivotal-cf-blog-staging.cfapps.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Twitter](https://twitter.com/pivotaleng) | [Hugo](http://gohugo.io/) | [![Build Status](https://travis-ci.org/pivotal/blog.svg?branch=master)](https://travis-ci.org/pivotal/blog)
 
 ## Contributing
 
@@ -15,12 +13,13 @@ To discuss the blog, [join the Google Group](https://groups.google.com/a/pivotal
 1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
 1. [Ship it!](https://github.com/pivotal/blog#publishing-your-copy)
 
-
 Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).
 
 If you don't have push access, then send an ask ticket to have yourself added to the `all-pivots` github team in this org.
 
 ## Writing a Post
+
+It's a good idea to join the [Slack channel](https://pivotal.slack.com/messages/C532XUA2W/), if only to get notifications on build failures, etc.  It's also a good place to discuss article topics.
 
 1. Add yourself as an author (first time only, obvs.):
 
@@ -73,6 +72,10 @@ After cloning this repository, navigate into the new directory, run `bin/watch` 
 
 Hugo has [LiveReload](http://livereload.com/) built in, so if you have that configured in your browser, your window will update as soon as you make a change.  Hugo is *fast*, so you might not realize the reload has already happened.
 
+## Viewing on Staging
+
+You can also double check your work by looking on [the staging site](http://pivotal-cf-blog-staging.cfapps.io/).  Draft posts are only published there.
+
 ## Errors???
 
 If you get an error like:
@@ -118,6 +121,9 @@ We also use:
 
 * [Feedburner](https://feedburner.google.com/fb/a/dashboard?id=lkvb0prnrmdpd4tdcvgd6uorpo) to track RSS subscriptions
 * A [twitter account](https://twitter.com/pivotaleng) ([automatically publishes each post](https://feedburner.google.com/fb/a/socialize?id=lkvb0prnrmdpd4tdcvgd6uorpo) via feedburner).
-* Keen.io and Segment.com for tracking analytics.
+* [Keen.io to collect metrics](https://keen.io/projects/57162c7e59949a7660341912/) 
+* [Segment.com for annotating and sending them to Keen.io](https://segment.com/pivotal/sources).
+* [PushPop](https://github.com/pushpop-project/pushpop) for sending metrics emails.
+* And, of course, [Pivotal Web Services](https://console.run.pivotal.io/organizations/6f501f6a-947d-40e4-b9d8-d36786e85238/spaces/179c6d35-f94d-4226-8b30-83274104aa5c) for hosting ;)
 
 All passwords are stored in Lastpass, available to the CF Engineering Directors, under the "Shared-Blog" folder.
