@@ -4,6 +4,8 @@ Welcome to our little slice of the internets!  This blog is dedicated to technic
 
 This blog is built and maintained entirely by *you*!  Feel free to propose or just implement any improvement you believe in.  ANARCHY!!!!
 
+To discuss the blog, [join the Google Group](https://groups.google.com/a/pivotal.io/forum/#!members/engineering-blog), or jump into the [Slack channel](https://pivotal.slack.com/messages/C532XUA2W/).
+
 [Live site](http://engineering.pivotal.io/) | [Staging](http://pivotal-cf-blog-staging.cfapps.io/) | [Issues](https://github.com/pivotal/blog/issues) | [Twitter](https://twitter.com/pivotaleng) | [Hugo](http://gohugo.io/) | [![Build Status](https://travis-ci.org/pivotal/blog.svg?branch=master)](https://travis-ci.org/pivotal/blog)
 
 ## Contributing
