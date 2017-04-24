@@ -4,8 +4,8 @@ authors:
 categories:
 - Greenplum Database
 - Databases
-date: 2017-04-20T01:18:23+01:00
-draft: true
+date: 2017-04-24T01:18:23+01:00
+draft: false
 short: |
   The internals of the gpfdist protocol used for External Tables in Greenplum Database
 title: The gpfdist protocol for External Tables in Greenplum Database
@@ -37,6 +37,7 @@ One of the most used features in [Greenplum Database](https://www.greenplum.org/
 16. How is invalid input data handled?
 17. What happens if two gpfdist daemons read data from the same directory?
 18. How is the data distributed in writable external tables?
+19. Does gpfdist work with IPv4 and IPv6?
 
 
 
@@ -627,3 +628,27 @@ DISTRIBUTED RANDOMLY;
 ```
 
 
+## 19. Does gpfdist work with IPv4 and IPv6?
+
+gpfdist does not care (much) about the used IP version. It will serve requests on the specified port, using whatever protocol the Operating System supports:
+
+```
+gpfdist -d /data/source/ -p 8000 -v -V
+```
+
+Will result in the following output:
+
+```
+2017-04-24 22:47:40 2418 INFO Before opening listening sockets - following listening sockets are available:
+2017-04-24 22:47:40 2418 INFO IPV6 socket: [::]:8000
+2017-04-24 22:47:40 2418 INFO IPV4 socket: 0.0.0.0:8000
+2017-04-24 22:47:40 2418 INFO Trying to open listening socket:
+2017-04-24 22:47:40 2418 INFO IPV6 socket: [::]:8000
+2017-04-24 22:47:40 2418 INFO Opening listening socket succeeded
+2017-04-24 22:47:40 2418 INFO Trying to open listening socket:
+2017-04-24 22:47:40 2418 INFO IPV4 socket: 0.0.0.0:8000
+2017-04-24 22:47:40 2418 WARN Address already in use (errno = 98), port: 8000
+Serving HTTP on port 8000, directory /data/source
+```
+
+The output shows that gpfdist opens a socket on both IPv4 and IPv6.
