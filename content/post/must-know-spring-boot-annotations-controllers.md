@@ -4,9 +4,9 @@ authors:
 categories:
 - Spring
 - Spring Boot
-- TDD
-- Humans
-date: 2017-04-21T08:50:03-07:00
+- Annotations
+- MVC
+date: 2017-04-27T08:50:03-07:00
 draft: true
 short: |
   Learn about the most essential, must-know annotations for Spring Boot controllers.
@@ -17,29 +17,33 @@ title: "Must-Know Spring Boot Annotations: Controllers"
 
 The questions I most commonly get asked by people new to [Spring](https://spring.io/) and [Spring Boot](http://projects.spring.io/spring-boot/) are, "What's the deal with all these annotations?!" and "Which ones do I _actually_ need to use?"
 
-This post aims to explain the basics of the most commonly used annotations used in Spring Boot controllers. This post was written with Spring Boot v1.5.
+This post aims to explain the basics of the most common annotations used in Spring Boot controllers. This is by no means intended to be a reference for every feature available to Spring controllers, but should get you started with the basics of setting up a web app that can serve HTML and API endpoints.
+
+This post was written with Spring Boot v1.5.
 
 ### Annotation basics
 
 Before we dig in, it's important to understand what Java annotations actually are. At a high level, annotations are simply a way to add metadata to Java classes, fields, and methods. Annotations can be made available to the compiler and/or the Java runtime. If you're new to annotations, you can think of them as comments for the compiler or your app's code itself.
 
+Spring makes heavy use of annotations for all kinds of things. For example, a class can be annotated with `@Controller`, `@Service`, or `@Repository` to signify that it is one of those types of objects in your app. In this post, we will be focusing on classes annotated with `@Controller` and the related `@RestController` annotation.
+
 ## Controller annotations
 
 ### Controller types
 
-Controllers come in two flavors - generic and REST. You want to put exactly one of these annotations on your controller class.
+Controllers come in two flavors: generic and REST. You want to put exactly one of these annotations on your controller class.
 
-`@Controller` Used to render HTML and other templates. By default, your controller methods will return a string that indicates which template to render or which route to redirect to.
+`@Controller` is often used to serve web pages. By default, your controller methods will return a `String` that indicates which template to render or which route to redirect to.
 
-`@RestController` Your controller methods will return an object which will be serialized to JSON, XML, etc.
+`@RestController` is often used for APIs that serve JSON, XML, etc. Your controller methods will return an object that will be serialized to one or more of these formats.
 
-It's important to note that generic controllers (annotated with `@Controller`) can also return JSON, XML, etc., but that is outside the scope of this post. Some examples of different controller techniques can be found in (https://spring.io/guides/gs/actuator-service/)[this Spring Boot Guide].
+It's important to note that generic controllers (annotated with `@Controller`) can also return JSON, XML, etc., but that is outside the scope of this post. Some examples of different controller techniques can be found in [this Spring Boot Guide](https://spring.io/guides/gs/actuator-service/).
 
 ### Routes
 
 #### HTTP Methods
 
-Methods in your controller can be annotated with one of the following \*Mapping annotations to specify the route and HTTP method they handle:
+Methods in your controller can be annotated with one of the following `*Mapping` annotations to specify the route and HTTP method they handle:
 
 * `@GetMapping`
 * `@PostMapping`
@@ -47,7 +51,7 @@ Methods in your controller can be annotated with one of the following \*Mapping 
 * `@PatchMapping`
 * `@DeleteMapping`
 
-These annotations all take in an optional parameter to specify the path e.g. `@GetMapping("/users")`
+These annotations all take in an optional parameter to specify the path; e.g. `@GetMapping("/users")`
 
 A typical REST controller might map its routes like this:
 
@@ -71,55 +75,57 @@ public class UsersController {
 }
 ```
 
-Another common pattern is to put a `@RequestMapping` annotation on the controller itself. This will prefix all routes within the controller with the specified path. We could change our example above to be written like this:
+Another common pattern is to put a `@RequestMapping` annotation on the controller itself. This will prefix all routes within the controller with the specified path.
+
+We could change our example above to be written like this:
 
 ```java
 @RestController
 @RequestMapping("/users")
 public class UsersController {
     @GetMapping
-    public List<User> index() {}
+    public List<User> index() {...}
 
     @GetMapping("{id}")
-    public User show(...) {}
+    public User show(...) {...}
 
     @PostMapping
-    public User create(...) {}
+    public User create(...) {...}
 
     @PutMapping("{id}")
-    public User update(...) {}
+    public User update(...) {...}
 
     @DeleteMapping("{id}")
-    public void delete(...) {}
+    public void delete(...) {...}
 }
 ```
 
 #### Response status
 
-Controller methods can specify a custom response status. The default for methods returning a value is `200 OK`, and void methods default to `204 No Content`.
+Controller methods can specify a custom response status code. The default for methods returning a value is `200 OK`, and `204 No Content` for void methods.
 
 ```java
 @PostMapping
 @ResponseStatus(HttpStatus.CREATED)
-public User create(...) {}
+public User create(...) {...}
 ```
 
 #### Path variables
 
-Path variables can be captured by adding a `@PathVariable` parameter to the controller method. This parameter name must match the variable name in the path; e.g. a path of `"{id}"` must be accompanied by a `@PathVariable` named `id`.
+Values provided as path variables can be captured by adding a `@PathVariable` parameter to the controller method parameters. The parameter name must match the variable name in the path; e.g. a path of `"/users/{id}"` must be accompanied by a `@PathVariable` named `id`.
 
 ```java
 // DELETE /users/123
 
 @DeleteMapping("/users/{id}")
-public void delete(@PathVariable long id) {}
+public void delete(@PathVariable long id) {...}
 ```
 
 ```java
 // GET /users/me@example.com/edit
 
 @GetMapping("/users/{email}/edit")
-public String edit(@PathVariable String email) {}
+public String edit(@PathVariable String email) {...}
 ```
 
 ### Receiving Data
@@ -132,7 +138,7 @@ Query string parameters can be captured with `@RequestParam`.
 // GET /users?count=10
 
 @GetMapping("/users")
-public List<User> index(@RequestParam int count) {}
+public List<User> index(@RequestParam int count) {...}
 ```
 
 By default, the name of the variable must match the name of the query string parameter, but this can be overridden.
@@ -141,7 +147,7 @@ By default, the name of the variable must match the name of the query string par
 // GET /users?num_per_page=50
 
 @GetMapping("/users")
-public List<User> index(@RequestParam("num_per_page") int numPerPage) {}
+public List<User> index(@RequestParam("num_per_page") int numPerPage) {...}
 ```
 
 #### Posting HTML forms
@@ -169,12 +175,12 @@ The controller method should specify a `@ModelAttribute` parameter to capture th
 
 ```java
 @PostMapping("/users")
-public User create(@ModelAttribute UserCreateRequest request) {}
+public User create(@ModelAttribute UserCreateRequest request) {...}
 ```
 
 #### Posting JSON
 
-Just like the form example above, we will create a user with a name and email. We want a controller method that handles a JSON request like this:
+Just like the form example above, we will create a user with a name and email. We want a controller method that handles a JSON POST body like this:
 
 ```javascript
 {
@@ -201,11 +207,11 @@ public User create(@RequestBody UserCreateRequest request) {}
 
 ## Controller examples
 
+Here are examples using all of the annotations discussed above to create controllers. The controllers don't actually do anything useful (like creating or deleting users), but simply illustrate the annotations needed to create this type of class.
+
 ### Generic controller
 
-Here is an example using all of the annotations discussed above to create a generic controller. These controller methods return Strings that indicate the template path to render or the route to redirect to.
-
-This controller doesn't do anything useful, but simply illustrates the annotations needed to create this type of class.
+These controller methods return Strings that indicate the template path to render or the route to redirect to.
 
 ```java
 @Controller
@@ -241,9 +247,7 @@ public class UsersController {
 
 ### REST controller
 
-Here is an example using all of the annotations discussed above to create a REST controller. These controller methods return objects that will be serialized to JSON, XML, etc. They do not render HTML templates.
-
-This controller doesn't do anything useful, but simply illustrates the annotations needed to create this type of class.
+These controller methods return objects that will be serialized to JSON, XML, etc. They do not render HTML templates.
 
 ```java
 @RestController
