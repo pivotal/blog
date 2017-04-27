@@ -27,9 +27,7 @@ Before we dig in, it's important to understand what Java annotations actually ar
 
 Spring makes heavy use of annotations for all kinds of things. For example, a class can be annotated with `@Controller`, `@Service`, or `@Repository` to signify that it is one of those types of objects in your app. In this post, we will be focusing on classes annotated with `@Controller` and the related `@RestController` annotation.
 
-## Controller annotations
-
-### Controller types
+## Controller types
 
 Controllers come in two flavors: generic and REST. You want to put exactly one of these annotations on your controller class.
 
@@ -39,9 +37,9 @@ Controllers come in two flavors: generic and REST. You want to put exactly one o
 
 It's important to note that generic controllers (annotated with `@Controller`) can also return JSON, XML, etc., but that is outside the scope of this post. Some examples of different controller techniques can be found in [this Spring Boot Guide](https://spring.io/guides/gs/actuator-service/).
 
-### Routes
+## Routes
 
-#### HTTP Methods
+### HTTP Methods
 
 Methods in your controller can be annotated with one of the following `*Mapping` annotations to specify the route and HTTP method they handle:
 
@@ -100,7 +98,7 @@ public class UsersController {
 }
 ```
 
-#### Response status
+### Response status
 
 Controller methods can specify a custom response status code. The default for methods returning a value is `200 OK`, and `204 No Content` for void methods.
 
@@ -110,7 +108,7 @@ Controller methods can specify a custom response status code. The default for me
 public User create(...) {...}
 ```
 
-#### Path variables
+### Path variables
 
 Values provided as path variables can be captured by adding a `@PathVariable` parameter to the controller method parameters. The parameter name must match the variable name in the path; e.g. a path of `"/users/{id}"` must be accompanied by a `@PathVariable` named `id`.
 
@@ -128,9 +126,9 @@ public void delete(@PathVariable long id) {...}
 public String edit(@PathVariable String email) {...}
 ```
 
-### Receiving Data
+## Receiving Data
 
-#### Query string parameters
+### Query string parameters
 
 Query string parameters can be captured with `@RequestParam`.
 
@@ -150,7 +148,7 @@ By default, the name of the variable must match the name of the query string par
 public List<User> index(@RequestParam("num_per_page") int numPerPage) {...}
 ```
 
-#### Posting HTML forms
+### Posting HTML forms
 
 If we wanted to create a user with a name and email, we may want a controller method that handles requests from a form like this:
 
@@ -178,7 +176,7 @@ The controller method should specify a `@ModelAttribute` parameter to capture th
 public User create(@ModelAttribute UserCreateRequest request) {...}
 ```
 
-#### Posting JSON
+### Posting JSON
 
 Just like the form example above, we will create a user with a name and email. We want a controller method that handles a JSON POST body like this:
 
@@ -202,7 +200,7 @@ And our create method uses the `@RequestBody` annotation to capture the JSON POS
 
 ```java
 @PostMapping
-public User create(@RequestBody UserCreateRequest request) {}
+public User create(@RequestBody UserCreateRequest request) {...}
 ```
 
 ## Controller examples
