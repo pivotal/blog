@@ -13,13 +13,24 @@ short: |
 title: "Must-Know Spring Boot Annotations: Controllers"
 ---
 
+# Spring Boot controller annotations
+
+<div class="alert alert-info">
+This post was written with Spring Boot v1.5.
+</div>
+
 ## Wh@t @re @nnotations @ll @bout?
 
-The questions I most commonly get asked by people new to [Spring](https://spring.io/) and [Spring Boot](http://projects.spring.io/spring-boot/) are, "What's the deal with all these annotations?!" and "Which ones do I _actually_ need to use?"
+The questions I most commonly get asked by people new to [Spring](https://spring.io/) and [Spring Boot](http://projects.spring.io/spring-boot/) are, "What's the deal with all these annotations?!" and, "Which ones do I _actually_ need to use?"
 
 This post aims to explain the basics of the most common annotations used in Spring Boot controllers. This is by no means intended to be a reference for every feature available to Spring controllers, but should get you started with the basics of setting up a web app that can serve HTML and API endpoints.
 
-This post was written with Spring Boot v1.5.
+In this post we will cover:
+
+1. [Controller types (generic vs. REST)](#ControllerTypes)
+1. [Routes](#Routes)
+1. [Receiving data](#ReceivingData)
+1. [Controller examples](#Examples)
 
 ### Annotation basics
 
@@ -27,7 +38,7 @@ Before we dig in, it's important to understand what Java annotations actually ar
 
 Spring makes heavy use of annotations for all kinds of things. For example, a class can be annotated with `@Controller`, `@Service`, or `@Repository` to signify that it is one of those types of objects in your app. In this post, we will be focusing on classes annotated with `@Controller` and the related `@RestController` annotation.
 
-## Controller types
+## <a name="ControllerTypes">Controller types</a>
 
 Controllers come in two flavors: generic and REST. You want to put exactly one of these annotations on your controller class.
 
@@ -37,11 +48,13 @@ Controllers come in two flavors: generic and REST. You want to put exactly one o
 
 It's important to note that generic controllers (annotated with `@Controller`) can also return JSON, XML, etc., but that is outside the scope of this post. Some examples of different controller techniques can be found in [this Spring Boot Guide](https://spring.io/guides/gs/actuator-service/).
 
-## Routes
+## <a name="Routes">Routes</a>
+
+A route is comprised of a URL path and a HTTP method (GET, POST, PUT, PATCH, DELETE). In Spring apps, routes are declared by annotating methods in a controller class.
 
 ### HTTP Methods
 
-Methods in your controller can be annotated with one of the following `*Mapping` annotations to specify the route and HTTP method they handle:
+Methods in your controller can be annotated with one of the following `*Mapping` annotations to specify the HTTP method they handle:
 
 * `@GetMapping`
 * `@PostMapping`
@@ -110,7 +123,7 @@ public User create(...) {...}
 
 ### Path variables
 
-Values provided as path variables can be captured by adding a `@PathVariable` parameter to the controller method parameters. The parameter name must match the variable name in the path; e.g. a path of `"/users/{id}"` must be accompanied by a `@PathVariable` named `id`.
+Values provided as path variables can be captured by adding a `@PathVariable` parameter to the method.
 
 ```java
 // DELETE /users/123
@@ -119,18 +132,20 @@ Values provided as path variables can be captured by adding a `@PathVariable` pa
 public void delete(@PathVariable long id) {...}
 ```
 
+By default, the parameter name must match the variable name in the path; e.g. a path of `"/users/{id}"` must be accompanied by a `@PathVariable` named `id`. However, this can be overridden if desired.
+
 ```java
 // GET /users/me@example.com/edit
 
 @GetMapping("/users/{email}/edit")
-public String edit(@PathVariable String email) {...}
+public String edit(@PathVariable("email") String userEmail) {...}
 ```
 
-## Receiving Data
+## <a name="ReceivingData">Receiving data</a>
 
 ### Query string parameters
 
-Query string parameters can be captured with `@RequestParam`.
+Similarly to path parameters, query string parameters can be captured with `@RequestParam`.
 
 ```java
 // GET /users?count=10
@@ -139,7 +154,7 @@ Query string parameters can be captured with `@RequestParam`.
 public List<User> index(@RequestParam int count) {...}
 ```
 
-By default, the name of the variable must match the name of the query string parameter, but this can be overridden.
+By default, the name of the variable must match the name of the query string parameter, but this can be overridden as well.
 
 ```java
 // GET /users?num_per_page=50
@@ -150,7 +165,7 @@ public List<User> index(@RequestParam("num_per_page") int numPerPage) {...}
 
 ### Posting HTML forms
 
-If we wanted to create a user with a name and email, we may want a controller method that handles requests from a form like this:
+If we want to create a user with a name and email, we would want a controller method that handles requests from a form like this:
 
 ```html
 <form action="/users" method="POST">
@@ -160,16 +175,18 @@ If we wanted to create a user with a name and email, we may want a controller me
 </form>
 ```
 
-We could create a request model for our Spring app that matches the form structure:
+We would create a request model for our Spring app that matches the form structure:
 
 ```java
 class UserCreateRequest {
     private String name;
     private String email;
+
+    /* Getters & Setters omitted */
 }
 ```
 
-The controller method should specify a `@ModelAttribute` parameter to capture the form field values.
+The controller method can then capture the form values by specifying a `@ModelAttribute` parameter.
 
 ```java
 @PostMapping("/users")
@@ -193,17 +210,19 @@ We can use the same request model since it also matches the JSON structure:
 class UserCreateRequest {
     private String name;
     private String email;
+
+    /* Getters & Setters omitted */
 }
 ```
 
-And our create method uses the `@RequestBody` annotation to capture the JSON POST body and deserialize it to our `UserCreateRequest` model:
+Our create method uses the `@RequestBody` annotation to capture the JSON POST body and deserialize it to our `UserCreateRequest` model:
 
 ```java
 @PostMapping
 public User create(@RequestBody UserCreateRequest request) {...}
 ```
 
-## Controller examples
+## <a name="Examples">Controller examples</a>
 
 Here are examples using all of the annotations discussed above to create controllers. The controllers don't actually do anything useful (like creating or deleting users), but simply illustrate the annotations needed to create this type of class.
 
@@ -276,3 +295,11 @@ public class UsersController {
     public void delete(@PathVariable long id) {}
 }
 ```
+
+## Summary
+
+Hopefully this post has been useful in learning how to create simple controllers in a Spring Boot app. Configuring an app using annotations can seem a bit overwhelming at first, but by knowing the basics you can get a lot done very quickly.
+
+It's also worth knowing that Spring controllers are very powerful and flexible, with many features outside the scope of this article. That said, I would encourage you to get familiar with the basics before deciding which of the more advanced features you need.
+
+Happy Spring development, everyone!
