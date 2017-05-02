@@ -71,7 +71,15 @@ Non-trainable params: 0
 _________________________________________________________________
 ~~~
 
-For the training we used a [g2.2xlarge instance](https://aws.amazon.com/ec2/instance-types/) on AWS. We used stratified k-fold cross-validation where k=10 to evaluate the model against overfitting (although it is noted that we also used dropout to prevent overfitting). The average loss convergence for both training and validation for each split can be found in figure 2. We can see that the training and validation loss is decreasing very fast which means that the learning rate is probably too high. However, since it is decreasing it is very good for us.
+Note:
+
+* Sigmoid is used as activation function at every node. We also tried ReLU but this didn't perform well.
+* Dropout is utilized to prevent overfitting.
+* For the loss function, we used binary crossentropy with RMSprop as optimizer (SGD also performed well but needed more epoch to converge).
+* We applied mini-batch training (batch_size=32, epoch=20) with early stopping (patience=4) on an AWS [g2.2xlarge instance](https://aws.amazon.com/ec2/instance-types/).
+* Stratified k-fold cross-validation where k=10 was also used at the end to evaluate the model against overfitting.
+
+The average loss convergence for both training and validation for each split can be found in figure 2. We can see that the training and validation loss is decreasing very fast which means that the learning rate is probably too high. However, since it is decreasing it is very good for us.
 
 {{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/average_loss.png" class="center" >}}
 <p align="center">
@@ -253,10 +261,10 @@ FROM
     cached_data ;
 ~~~
 
-**Notes**
+Note:
 
-* The first argument is the full path to the model (must be on every segment)
-* The second argument is the table name containing data to score (optionally schema-qualified)
+* The first argument is the full path to the model (must be on every segment).
+* The second argument is the table name containing data to score (optionally schema-qualified).
 * If a segment's data shard has the potential to consume a significant amount of RAM, using a spill-to-disk data structure, like [chest](https://github.com/blaze/chest), will be necessary.
 
 ### Benchmark Results
