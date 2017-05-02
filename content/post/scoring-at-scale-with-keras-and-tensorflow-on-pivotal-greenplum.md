@@ -23,22 +23,13 @@ This post shows how we use [Keras](https://keras.io/) and [TensorFlow](https://w
 
 We have many customers who use [Apache MADlib](http://madlib.incubator.apache.org/) to do machine learning on Greenplum; a good fit for users with SQL-based workflow proficiency. Apache MADlib itself offers a wide range of standard machine learning algorithms such as logistic regression, support vector machines or ensemble methods like random forest. MADlib provides highly performant and scalable ML model fitting and scoring when using Greenplum, due to the [Massively Parallel Processing](https://dwarehouse.wordpress.com/2012/12/28/introduction-to-massively-parallel-processing-mpp-database/) (MPP) architecture.
 
-For deep learning capabilities, popular tools like TensorFlow may be more convenient, especially if users are already familiar with them or want to do transfer learning from public models. Deep learning model training involves a huge amount of matrix multiplication - especially deep topologies - an embarrassingly parallel task GPUs are well-suited for. After a model is trained, it can be used in a standalone fashion for inference and prediction. However, if the data is extremely large scalability becomes a concern; for example, a bank might want to detect fraud on millions of transactions with the same model. Bulk analytical operations is an area of differentiation for Greenplum. In this post, we will show how a deep learning model trained with Keras and TensorFlow can be deployed and scored directly in Greenplum.
+For deep learning capabilities, popular tools like TensorFlow may be more convenient, especially if users are already familiar with them or want to do transfer learning from public models. Neural network model training involves a huge amount of matrix multiplication - especially deep topologies - an embarrassingly parallel task GPUs are well-suited for. After a model is trained, it can be used in a standalone fashion for inference and prediction. However, if the data is extremely large scalability becomes a concern; for example, a bank might want to detect fraud on millions of transactions with the same model. Bulk analytical operations is an area of differentiation for Greenplum. In this post, we will show how a deep learning model trained with Keras and TensorFlow can be deployed and scored directly in Greenplum.
 
 ## Example
 
 ### Dataset
 
-We will use a [dataset from Kaggle](https://www.kaggle.com/dalpozz/creditcardfraud) which contains anonymized transactions made by credit cards in September 2013 by European cardholders.
-
-This dataset has only around 285k transactions that occurred in two days. Specifically, it has 28 numerical features (V1, V2, .. V28) that are principal components obtained with [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis), “Time” when the transactions was made and its corresponding “Amount”. Finally it also includes the dependent variable “Class” which is 1 in case of fraud and 0 otherwise.
-
-The dataset is highly unbalanced, the positive class (frauds) accounts for 0.172% of all transactions (see figure 1).
-
-{{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/distribution_classes_log_scale.png" class="center" >}}
-<p align="center">
-  Figure 1: Distribution of the two classes (log scale).
-</p>
+We will use a [dataset from Kaggle](https://www.kaggle.com/dalpozz/creditcardfraud) which contains anonymized transactions made by credit cards in September 2013 by European cardholders. This dataset has only around 285k transactions that occurred in two days. Specifically, it has 28 numerical features (V1, V2, .. V28) that are principal components obtained with [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis), “Time” is how many times the card has been used and an aggregate “Amount”. Finally it also includes the dependent variable “Class” which is 1 in case of fraud and 0 otherwise. The dataset is highly unbalanced, the positive class (frauds) accounts for 0.172% of all transactions.
 
 ### Problem
 
@@ -75,23 +66,21 @@ Note:
 
 * Sigmoid is used as activation function at every node. We also tried ReLU but this didn't perform well.
 * Dropout is utilized to prevent overfitting.
-* For the loss function, we used binary crossentropy with RMSprop as optimizer (SGD also performed well but needed more epoch to converge).
+* For the loss function, we used binary crossentropy with RMSprop as optimizer (SGD also performed well but needed more iterations to converge).
 * We applied mini-batch training (batch_size=32, epoch=20) with early stopping (patience=4) on an AWS [g2.2xlarge instance](https://aws.amazon.com/ec2/instance-types/).
-* Stratified k-fold cross-validation where k=10 was also used at the end to evaluate the model against overfitting.
+* Stratified k-fold cross-validation with k=10 was also used at the end to evaluate the model against overfitting.
 
-The average loss convergence for both training and validation for each split can be found in figure 2. We can see that the training and validation loss is decreasing very fast which means that the learning rate is probably too high. However, since it is decreasing it is very good for us.
+The average loss convergence for both training and validation for each split can be found in figure 1. We can see that the training and validation loss is decreasing which is good for us as the network is actually learning something.
+
 
 {{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/average_loss.png" class="center" >}}
 <p align="center">
-  Figure 2: Average loss for epoch=20 with early stopping.
+  Figure 1: Average loss for epoch=20 with early stopping.
 </p>
 
-On average we get very high recall and precision values (~99%) for each run (see figure 3).
+_(Note: We can also see that the validation loss is lower than the training loss. The difference in training and validation loss is due to dropout which is turned off at validation time. Moreover the loss is decreasing very fast which implies a high learning rate. We probably could tune up the learning rate better to improve this.)_
 
-{{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/evaluation_metrics.png" class="center" >}}
-<p align="center">
-  Figure 3: Various evaluation metrics for the binary classification problem.
-</p>
+On average we get very high recall and precision values (~99%) for each run.
 
 ### Scoring on Greenplum
 
@@ -202,20 +191,17 @@ CREATE ORDERED AGGREGATE stack_rows(
 The scoring function that is dispatched to to each segments matrix/shard of data is shown below:
 
 ~~~
-CREATE OR REPLACE FUNCTION score_keras(_model text, _table text)
+CREATE OR REPLACE FUNCTION score_keras(_model text, _data_key text)
 RETURNS SETOF INTEGER[]
 AS
 $$
 
-    # Begin: Work around to import Tensorflow
+    # Begin: Workaround to import TensorFlow
     import sys
 
     sys.argv = {0: ""}
     __file__ = ""
-    # End: Work around to import Tensorflow
-
-    #import numpy as np
-    from os import getpid
+    # End: Workaround to import TensorFlow
 
     if 'model' not in SD:
         from keras.models import load_model
@@ -253,7 +239,7 @@ GROUP BY
 )
 
 SELECT
-    score_keras2(
+    score_keras(
         '/home/gpadmin/model_file.h5',
         stacked_input_key
     ) AS results
@@ -269,9 +255,11 @@ Note:
 
 ### Benchmark Results
 
+Below are the benchmarking results, scaling out to one week of transactions (roughly two million). The native series refers to using Keras and TensorFlow to perform scoring, the MPP series refers to the above procedure in Greenplum.
+
 {{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/benchmark_results.png" class="center" >}}
 <p align="center">
-  Figure 4: Benchmark results.
+  Figure 2: Benchmark results.
 </p>
 
 While a modest 2x speedup is achieved, testing was only possible on a single node; actual Greenplum clusters would exhibit an incremental speedup for each additional cluster node, in accordance with [Amdahl's Law](https://en.wikipedia.org/wiki/Amdahl%27s_law).
