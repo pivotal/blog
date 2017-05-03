@@ -8,7 +8,7 @@ categories:
 - Greenplum
 - SQL
 - Python
-date: 2017-05-02T11:29:57+02:00
+date: 2017-05-03T11:29:57+02:00
 draft: true
 short: |
   How to train a deep neural network with Keras and TensorFlow and then apply it for scoring on Greenplum.
@@ -254,7 +254,7 @@ Note:
 
 Below are the benchmarking results, scaling out to one week of transactions (roughly two million). The native series refers to using Keras and TensorFlow to perform scoring, the MPP series refers to the above procedure in Greenplum.
 
-{{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/benchmark_results.png" class="center" >}}
+{{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/benchmark.png" class="center" >}}
 <p align="center">
   Figure 2: Benchmark results.
 </p>
