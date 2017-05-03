@@ -17,7 +17,7 @@ title: Scoring at Scale with Keras and TensorFlow on Greenplum
 
 _Joint work by [Dat Tran](https://de.linkedin.com/in/dat-tran-a1602320) (Senior Data Scientist) and [Kyle Dunn](https://www.linkedin.com/in/kylerdunn/) (Data Engineer)._
 
-This post shows how we use [Keras](https://keras.io/) and [TensorFlow](https://www.tensorflow.org/) to train a deep neural network on a toy problem and then do the scoring on [Greenplum](https://pivotal.io/pivotal-greenplum) in order to benefit from the MPP architecture. The accompanying code is [available on Github](https://github.com/datitran/Krimskrams/tree/master/FraudDetection).
+This post shows how we use [Keras](https://keras.io/) and [TensorFlow](https://www.tensorflow.org/) to train a deep neural network on a toy problem and then do the scoring on [Greenplum](https://pivotal.io/pivotal-greenplum) in order to benefit from the MPP architecture. The accompanying code is [available on Github](https://github.com/datitran/gp-scoring-keras-tf).
 
 ## Motivation
 
@@ -29,11 +29,11 @@ For deep learning capabilities, popular tools like TensorFlow may be more conven
 
 ### Dataset
 
-We will use a [dataset from Kaggle](https://www.kaggle.com/dalpozz/creditcardfraud) which contains anonymized transactions made by credit cards in September 2013 by European cardholders. This dataset has only around 285k transactions that occurred in two days. Specifically, it has 28 numerical features (V1, V2, .. V28) that are principal components obtained with [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis), “Time” is how many times the card has been used and an aggregate “Amount”. Finally it also includes the dependent variable “Class” which is 1 in case of fraud and 0 otherwise. The dataset is highly unbalanced, the positive class (frauds) accounts for 0.172% of all transactions.
+We will use a [dataset from Kaggle](https://www.kaggle.com/dalpozz/creditcardfraud) which contains anonymized transactions made by credit cards in September 2013 by European cardholders. This dataset has only around 285k transactions that occurred in two days. Specifically, it has 28 numerical features (V1, V2, .. V28) that are principal components obtained with [PCA](https://en.wikipedia.org/wiki/Principal_component_analysis), “Time” when the transactions occurred (given as seconds elapsed between each transactions and first transaction in the dataset) and its corresponding “Amount”. Finally it also includes the dependent variable “Class” which is 1 in case of fraud and 0 otherwise. The dataset is highly unbalanced, the positive class (frauds) accounts for 0.172% of all transactions.
 
 ### Problem
 
-We have a binary classification problem since the goal is to predict whether a transaction is fraud or genuine. And given that there is a high class imbalance, we will focus on precision and recall as measurement criteria for this problem (specifically priority will be given to recall as we don’t want to miss any fraud detection).
+We have a binary classification problem since the goal is to predict whether a transaction is fraud or genuine. And given that there is a high class imbalance, we will focus on precision and recall as measurement criteria for this problem (specifically priority will be given to recall as we don’t want to miss any fraud cases).
 
 ### Modeling
 
@@ -62,16 +62,16 @@ Non-trainable params: 0
 _________________________________________________________________
 ~~~
 
-Note:
+**Settings and results:**
 
 * Sigmoid is used as activation function at every node. We also tried ReLU but this didn't perform well.
 * Dropout is utilized to prevent overfitting.
 * For the loss function, we used binary crossentropy with RMSprop as optimizer (SGD also performed well but needed more iterations to converge).
-* We applied mini-batch training (batch_size=32, epoch=20) with early stopping (patience=4) on an AWS [g2.2xlarge instance](https://aws.amazon.com/ec2/instance-types/).
+* We applied mini-batch training (batch_size=32, epoch=20) with early stopping (patience=4) on an [AWS g2.2xlarge instance](https://aws.amazon.com/ec2/instance-types/).
 * Stratified k-fold cross-validation with k=10 was also used at the end to evaluate the model against overfitting.
-
-The average loss convergence for both training and validation for each split can be found in figure 1. We can see that the training and validation loss is decreasing which is good for us as the network is actually learning something.
-
+* The average loss convergence for both training and validation for each split can be found in figure 1. We can see that the training and validation loss is decreasing which is good for us as the network is actually learning something.
+* On average we get very high recall and precision values (~99%) for each run.
+* The trained neural network model for each k iteration was also saved and at the end we picked the best model for scoring according to the highest recall score.
 
 {{< responsive-figure src="/images/scoring-at-scale-with-keras-and-tensorflow-on-pivotal-greenplum/average_loss.png" class="center" >}}
 <p align="center">
@@ -79,8 +79,6 @@ The average loss convergence for both training and validation for each split can
 </p>
 
 _(Note: We can also see that the validation loss is lower than the training loss. The difference in training and validation loss is due to dropout which is turned off at validation time. Moreover the loss is decreasing very fast which implies a high learning rate. We probably could tune up the learning rate better to improve this.)_
-
-On average we get very high recall and precision values (~99%) for each run.
 
 ### Scoring on Greenplum
 
@@ -95,7 +93,7 @@ Install TensorFlow on each segment (as gpadmin):
 ~~~
 $ pip install tensorflow-1.1.0rc2-cp27-cp27m-linux_x86_64.whl
 ~~~
-_(Note, this package was custom compiled for CENTOS/RHEL6 compatibility)_
+_(Note, this package was custom compiled for CENTOS/RHEL6 compatibility.)_
 
 Install Keras and h5py (for model loading) on each segment (as gpadmin):
 ~~~
@@ -103,12 +101,11 @@ $ pip install keras
 $ pip install h5py
 ~~~
 
-First, download the data set from Kaggle and then use the following DDL and DML to load the data into Greenplum - you may consider using the single node sandbox from [Pivotal Network](http://greenplum.org/#download):
+Then use the following DDL and DML to load the data into Greenplum - you may consider using the single node sandbox from [Pivotal Network](http://greenplum.org/#download):
 
 ~~~
-CREATE TABLE credit_card
-(
-    Time NUMERIC, -- how many times this card has been used
+CREATE TABLE credit_card(
+    Time NUMERIC, -- seconds elapsed between each transaction
     V1 NUMERIC, -- first principal component
     V2 NUMERIC, -- second principal component
     V3 NUMERIC, -- third principal component
@@ -139,27 +136,27 @@ CREATE TABLE credit_card
     V28 NUMERIC, -- twenty-eighth principal component
     Amount NUMERIC, -- transaction amount
     Class NUMERIC -- the actual classification classes
-)
+    )
 WITH ( APPENDONLY=TRUE, COMPRESSTYPE=zlib, COMPRESSLEVEL=5 )
-DISTRIBUTED RANDOMLY ;
+DISTRIBUTED RANDOMLY;
 
 COPY credit_card FROM '/home/gpadmin/creditcard.csv' CSV HEADER;
 ~~~
 
-The PL/Python parallel scoring approach builds on the work from this [blog](http://engineering.pivotal.io/post/running-sklearn-models-at-scale-on-mpp) by [Vatsan Ramanujam](https://github.com/vatsan). The is broken into three parts:
+The PL/Python parallel scoring approach builds on the work from this [blog article](http://engineering.pivotal.io/post/running-sklearn-models-at-scale-on-mpp) by [Vatsan Ramanujam](https://github.com/vatsan). It can be broken into three parts:
 
-1. Define an aggregation/caching PL/Python function and a scoring PL/Python function
-2. Perform the aggregation/caching into memory as a "matrix" (really, a list of lists)
-3. Perform the scoring
+1. Define an aggregation/caching PL/Python function and a scoring PL/Python function.
+2. Perform the aggregation/caching into memory as a "matrix" (really, a list of lists).
+3. Perform the scoring.
 
-The following creates a caching function to store the features into a Global Data (GD) dictionary available for subsequent PL/Python functions in the same SQL transaction:
+The following creates a caching function to store the features into a global dictionary (GD) available for subsequent PL/Python functions in the same SQL transaction:
 
 ~~~
 CREATE FUNCTION stack_rows(
     key text,
     header text[], -- name of the features column
     features float8[] -- independent variables (as array)
-)
+    )
 RETURNS text AS
 $$
     if 'header' not in GD:
@@ -174,6 +171,7 @@ $$
 $$
 LANGUAGE plpythonu;
 ~~~
+(Remark: You might need to do `CREATE LANGUAGE plpythonu;` first before registering the function.)
 
 Next a wrapper is created to employ this caching function as a custom SQL aggregation:
 
@@ -181,21 +179,22 @@ Next a wrapper is created to employ this caching function as a custom SQL aggreg
 CREATE ORDERED AGGREGATE stack_rows(
         text[], -- header (feature names)
         float8[] -- features (feature values)
-)
+        )
 (
     SFUNC = stack_rows,
     STYPE = text -- the key in GD used to hold the data across calls
 );
 ~~~
 
-The scoring function that is dispatched to to each segments matrix/shard of data is shown below:
+The scoring function that is dispatched to each segments matrix/shard of data is shown below:
 
 ~~~
-CREATE OR REPLACE FUNCTION score_keras(_model text, _data_key text)
-RETURNS SETOF INTEGER[]
-AS
+CREATE OR REPLACE FUNCTION score_keras(
+    _model text,
+    _data_key text
+    )
+RETURNS SETOF INTEGER[] AS
 $$
-
     # Begin: Workaround to import TensorFlow
     import sys
 
@@ -213,13 +212,11 @@ $$
         del GD[_data_key]
 
     return result
-
 $$
-
-LANGUAGE plpythonu IMMUTABLE ;
+LANGUAGE plpythonu IMMUTABLE;
 ~~~
 
-To invoke the function, first the custom aggregation function is executed using a Common Table Expression, to stage the data in memory, then perform the scoring:
+To invoke the function, first the custom aggregation function is executed using a common table expression, to stage the data in memory, then perform the scoring:
 
 ~~~
 WITH cached_data AS (
@@ -240,16 +237,16 @@ GROUP BY
 
 SELECT
     score_keras(
-        '/home/gpadmin/model_file.h5',
-        stacked_input_key
+        '/home/gpadmin/model_file.h5', -- full path of the model
+        stacked_input_key -- table name containing data to score
     ) AS results
 FROM
-    cached_data ;
+    cached_data;
 ~~~
 
 Note:
 
-* The first argument is the full path to the model (must be on every segment).
+* The first argument of the `score_keras` function is the full path to the model (must be on every segment).
 * The second argument is the table name containing data to score (optionally schema-qualified).
 * If a segment's data shard has the potential to consume a significant amount of RAM, using a spill-to-disk data structure, like [chest](https://github.com/blaze/chest), will be necessary.
 
