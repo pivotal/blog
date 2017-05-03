@@ -16,7 +16,7 @@
                   {{ $authors := .Params.authors}}
                   {{ range $author := $authors }}
                     {{ with $a := (index $all $author)}}
-                      <li>{{ $a.Name }}</li>
+                      <li><a href="/authors/{{ $author | urlize }}">{{ $a.Name }}</a></li>
                     {{ end}}
                   {{ end }}
                   </ul>

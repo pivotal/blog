@@ -4,6 +4,7 @@ Title: Pivotal Engineering Journal
 taxonomies:
   tag: "tags"
   category: "categories"
+  author: "authors"
 Params:
   SubTitle: Technical articles from Pivotal engineers.
 ...

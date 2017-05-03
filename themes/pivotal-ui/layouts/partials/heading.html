@@ -31,7 +31,12 @@
       <h1 class="title type-dark-9 mvn" id="main-title"><a href="/" class="type-dark-11 em-low title">{{ .Site.Title }}</a></h1>
       <h3 class="type-dark-9 mvn">{{ .Site.Params.SubTitle }}</h3>
       {{ if .Data.Singular }}
-        <h4 class="type-dark-9 mvn">Category: {{ $.Scratch.Get "replace_title" }}</h4>
+        {{ $heading_type := $.Scratch.Get "heading_type" }}
+        {{ if eq $heading_type "author" }}
+          <h4 class="type-dark-9 mvn">Author: {{ $.Scratch.Get "author" }}</h4>
+        {{ else }}
+          <h4 class="type-dark-9 mvn">Category: {{ $.Scratch.Get "replace_title" }}</h4>
+        {{ end }}
       {{ end }}
     </div>
   </div>

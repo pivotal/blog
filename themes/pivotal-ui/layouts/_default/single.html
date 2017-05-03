@@ -23,13 +23,7 @@
             <ul class="authors">
             {{ range $author := $authors }}
               {{ with $a := (index $all $author)}}
-                <li>
-                  {{ if (ne $a.Twitter nil) }}
-                    <a href="https://twitter.com/{{ index $a.Twitter }}">{{ $a.Name }}</a>
-                  {{ else }}
-                    {{ $a.Name }}
-                  {{ end }}
-                </li>
+                <li><a href="/authors/{{ $author | urlize }}">{{ $a.Name }}</a></li>
               {{ end}}
             {{ end }}
             </ul>
