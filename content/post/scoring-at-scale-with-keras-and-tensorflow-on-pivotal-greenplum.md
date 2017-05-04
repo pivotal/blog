@@ -6,10 +6,11 @@ authors:
 categories:
 - Data Science
 - Greenplum
+- Greenplum Database
 - SQL
 - Python
-date: 2017-05-03T11:29:57+02:00
-draft: true
+date: 2017-05-04T11:29:57+02:00
+draft: false
 short: |
   How to train a deep neural network with Keras and TensorFlow and then apply it for scoring on Greenplum.
 title: Scoring at Scale with Keras and TensorFlow on Greenplum
@@ -23,7 +24,7 @@ This post shows how we use [Keras](https://keras.io/) and [TensorFlow](https://w
 
 We have many customers who use [Apache MADlib](http://madlib.incubator.apache.org/) to do machine learning on Greenplum; a good fit for users with SQL-based workflow proficiency. Apache MADlib itself offers a wide range of standard machine learning algorithms such as logistic regression, support vector machines or ensemble methods like random forest. MADlib provides highly performant and scalable ML model fitting and scoring when using Greenplum, due to the [Massively Parallel Processing](https://dwarehouse.wordpress.com/2012/12/28/introduction-to-massively-parallel-processing-mpp-database/) (MPP) architecture.
 
-For deep learning capabilities, popular tools like TensorFlow may be more convenient, especially if users are already familiar with them or want to do transfer learning from public models. Neural network model training involves a huge amount of matrix multiplication - especially deep topologies - an embarrassingly parallel task GPUs are well-suited for. After a model is trained, it can be used in a standalone fashion for inference and prediction. However, if the data is extremely large scalability becomes a concern; for example, a bank might want to detect fraud on millions of transactions with the same model. Bulk analytical operations is an area of differentiation for Greenplum. In this post, we will show how a deep learning model trained with Keras and TensorFlow can be deployed and scored directly in Greenplum.
+For deep learning capabilities, popular tools like TensorFlow may be more convenient, especially if users are already familiar with them or want to do transfer learning from public models. Neural network model training involves a huge amount of matrix multiplication - especially deep topologies - an embarrassingly parallel task GPUs are well-suited for. After a model is trained, it can be used in a standalone fashion for inference and prediction. However, if the data is extremely large, scalability becomes a concern; for example, a bank might want to detect fraud on millions of transactions with the same model. Bulk analytical operations is an area of differentiation for Greenplum. In this post, we will show how a deep learning model trained with Keras and TensorFlow can be deployed and scored directly in Greenplum.
 
 ## Example
 
@@ -266,3 +267,4 @@ _Note: TensorFlow automatically utilizes multi-core on a single node which cause
 ## Summary
 
 We showed the workflow to train a neural network with Keras and TensorFlow on a small toy problem. Then we applied the trained model on Greenplum for scoring. We also benchmarked our results in a sandbox environment where we already achieved a modest speedup. We expect a much better performance in an actual cluster environment.
+
