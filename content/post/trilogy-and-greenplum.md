@@ -17,7 +17,7 @@ title: Trilogy and Greenplum for Data Science TDD
 ---
 
 In this post I show how to use
-[Trilogy](https://github.com/PivotalSharedIreland/trilogy), a new testing framework for SQL databases,
+[Trilogy](https://github.com/pivotal/trilogy), a new testing framework for SQL databases,
 with the open source [Greenplum Database](http://greenplum.org/). The goal is to help you
 [test drive](http://engineering.pivotal.io/post/test-driven-development-for-data-science/)
 your data science SQL code. The accompanying code is [available on Github](https://github.com/ihuston/trilogy_gpdb).
@@ -36,7 +36,7 @@ and be difficult for new team members to understand without a lot of effort.
 {{< figure src="/images/trilogy-and-greenplum/trilogy_logo.png" class="right" >}}
 
 My colleagues Konstantin and Cassio faced a [similar problem recently](http://engineering.pivotal.io/post/oracle-sql-tdd/) and decided to do something about it,
-by building a generic testing framework for SQL databases called [Trilogy](https://github.com/PivotalSharedIreland/trilogy).
+by building a generic testing framework for SQL databases called [Trilogy](https://github.com/pivotal/trilogy).
 
 Trilogy is written in Java, but can be used simply from the command line, and
 can connect to any database with a JDBC driver (which is pretty much all of them).
@@ -45,7 +45,7 @@ simple Markdown template, so that there is no cognitive dissonance between the
 code you are testing in SQL and the test itself.
 
 If you use Oracle, PostgreSQL or any other database you can get started with Trilogy
-by following [the README](https://github.com/PivotalSharedIreland/trilogy/blob/master/README.md).
+by following [the README](https://github.com/pivotal/trilogy/blob/master/README.md).
 
 ## Trilogy and Greenplum
 As a data scientist [test driving](http://engineering.pivotal.io/post/test-driven-development-for-data-science/) my code,
@@ -99,8 +99,8 @@ If everything has worked you should see something like:
 ```
 
 ### Building Trilogy
-- Clone repo from https://github.com/PivotalSharedIreland/trilogy.
-- If you don't want to build it yourself, download the JAR from https://github.com/PivotalSharedIreland/trilogy/releases.
+- Clone repo from https://github.com/pivotal/trilogy.
+- If you don't want to build it yourself, download the JAR from https://github.com/pivotal/trilogy/releases.
 - Otherwise follow instructions to build Trilogy using Gradle.
 
 ### Setting up Trilogy

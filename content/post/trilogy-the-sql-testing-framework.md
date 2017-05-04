@@ -1,4 +1,4 @@
----
+--
 authors:
 - ksemenov
 categories:
@@ -34,7 +34,7 @@ framework that would provide the abilities to:
 
 ## Design
 
-As any agile project, [Trilogy](https://github.com/pivotalsharedireland/trilogy) did not have full upfront design. 
+As any agile project, [Trilogy](https://github.com/pivotal/trilogy) did not have full upfront design. 
 Rather, the items outlined above were providing guidance for decisions being made along the way.
 
 ### CI/CD integration
@@ -42,7 +42,7 @@ Rather, the items outlined above were providing guidance for decisions being mad
 The ability to run within a CI/CD workflow was one of the biggest, if not the framework's main purpose. And since 
 [Concourse](https://concourse.ci) is the most popular tool within Pivotal, the framework was initially designed so that
 it could be used with it. The framework itself has a Concourse 
-[test pipeline](https://github.com/PivotalSharedIreland/trilogy/tree/master/ci) that can be used as an example.
+[test pipeline](https://github.com/pivotal/trilogy/tree/master/ci) that can be used as an example.
 The current setup uses Oracle, but adding Postgres to the mix is fairly straightforward and is also planned in the 
 nearest future.
 
@@ -81,7 +81,7 @@ for Postgres to a later time, and to come up with generic tests instead (see bel
 
 Although, at the time of writing, Trilogy hasn't yet reached version 1.0, it already covers most
 critical use cases, and can be extremely useful during development. Feel free to grab the 
-[latest release](https://github.com/PivotalSharedIreland/trilogy/releases) and give it a try.
+[latest release](https://github.com/pivotal/trilogy/releases) and give it a try.
 
 Trilogy can run in two modes: `standalone test case` and `test project`. The standalone test case
 mode was the stepping stone for the test project mode, however it can still be useful sometimes.
@@ -251,8 +251,8 @@ Example
 # Examples
 
 To get a better idea of how the projects are structured and can be used, examine the sample 
-[projects](https://github.com/PivotalSharedIreland/trilogy/tree/master/src/test/resources/projects) and 
-[test cases](https://github.com/PivotalSharedIreland/trilogy/tree/master/src/test/resources/testcases) in the project's
+[projects](https://github.com/pivotal/trilogy/tree/master/src/test/resources/projects) and 
+[test cases](https://github.com/pivotal/trilogy/tree/master/src/test/resources/testcases) in the project's
 GitHub repository. These examples are used for testing the framework itself, so, unlike this blog post, they should 
 always be up to date.
 
