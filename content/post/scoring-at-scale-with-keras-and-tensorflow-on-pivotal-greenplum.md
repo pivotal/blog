@@ -266,5 +266,6 @@ _Note: TensorFlow automatically utilizes multi-core on a single node which cause
 
 ## Summary
 
-We showed the workflow to train a neural network with Keras and TensorFlow on a small toy problem. Then we applied the trained model on Greenplum for scoring. We also benchmarked our results in a sandbox environment where we already achieved a modest speedup. We expect a much better performance in an actual cluster environment.
+We showed the workflow to train a neural network with Keras and TensorFlow on a small toy problem. Then we applied the trained model on Greenplum for scoring. We also benchmarked our results in a sandbox environment where we already achieved a modest speedup. We expect a much better performance in an actual cluster environment*.
 
+***Update:** We've been able to test it on a four nodes DCA v3 with six segments per node on ~8m transactions (one month's worth of data instead of a week) and we achieved about 8x speedup over a single node machine.
