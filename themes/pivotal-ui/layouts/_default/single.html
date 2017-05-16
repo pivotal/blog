@@ -8,6 +8,7 @@
   <div class="container">
     <div id="post" class="bg-neutral-11 pbxxxl">
       <div class="post-header">
+        {{ partial "breadcrumb.html" . }}
         <div class="phxxl pvl">
           <h1 class="title em-low type-dark-1 mvn">
             {{ if .Draft }} <span class="type-sm btn btn-danger">DRAFT</span>{{ end }}
