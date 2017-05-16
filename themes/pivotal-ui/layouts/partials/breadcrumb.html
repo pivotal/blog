@@ -1,0 +1,14 @@
+{{ $url := replace .Permalink ( printf "%s" .Site.BaseURL) "" }}
+{{ $.Scratch.Add "path" .Site.BaseURL }}
+<div class="container">
+  <ul class="list-breadcrumb">
+    <li><a href="/">Home</a></li>
+    {{ $urlParts := split $url "/" }}
+    {{ if in $urlParts "post"}}
+      <li class="current"><span>Post</span></li>
+    {{ end }}
+    {{ if in $urlParts "authors"}}
+      <li class="current"><span>Author</span></li>
+    {{ end }}
+  </ul>
+</div>
