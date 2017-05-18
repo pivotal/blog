@@ -10,5 +10,9 @@
     {{ if in $urlParts "authors"}}
       <li class="current"><span>Author</span></li>
     {{ end }}
+    {{ if in $urlParts "categories"}}
+      <li class="current"><span>Category</span></li>
+      <li class="current"><span>{{ .Title }}</span></li>
+    {{ end }}
   </ul>
 </div>
