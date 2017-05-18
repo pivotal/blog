@@ -6,6 +6,7 @@
     <div class="container">
       <div class="bg-neutral-11">
         <div class="pan">
+        {{ partial "breadcrumb.html" . }}
           <div id="posts">
             <ol class="list-timeline">
               {{ range .Data.Pages }}
