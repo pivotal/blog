@@ -35,6 +35,9 @@ body {
   z-index: -1;
 }
 
+#author .list-cards li { min-height: 100px; }
+#author .phxxl.pvl { border-bottom: 1px solid #e0e4e5; }
+
 #posts .list-timeline-date { width: 30%; border-bottom: 1px solid #e0e4e5; }
 #posts .list-timeline-title { padding-top:    40px; padding-bottom: 40px; border-bottom: 1px solid #e0e4e5;}
 #posts ul.authors li { list-style: none; }

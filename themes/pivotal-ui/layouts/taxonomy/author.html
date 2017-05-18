@@ -1,97 +1,88 @@
 <!DOCTYPE html>
 <html class="bg-dark-10">
-    {{/* Set the type of header, will be used in "heading.html" */}}
-    {{ $.Scratch.Set "heading_type" "author" }}
-
-    {{/* Grab the author name (is in .Title) from the data/authors section */}}
-    {{ $.Scratch.Set "author" .Title }}
-    {{ $author_name := .Title | lower }}
-    {{ $name := index .Site.Data.authors $author_name }}
-    {{ $author_name := $name.Name }}
-    {{ $.Scratch.Set "author" $author_name }}
-    {{ $.Scratch.Set "replace_title" $author_name }}
+  {{/* Grab the author name (is in .Title) from the data/authors section */}}
+  {{ $.Scratch.Set "author" .Title }}
+  {{ $author_name := .Title | lower }}
+  {{ $name := index .Site.Data.authors $author_name }}
+  {{ $author_name := $name.Name }}
+  {{ $.Scratch.Set "author" $author_name }}
+  {{ $.Scratch.Set "replace_title" $author_name }}
   {{ partial "head.html" . }}
   <body>
     {{ partial "heading.html" . }}
-    {{ partial "breadcrumb.html" . }}
-    <br/>
-    <br/>
-
     <div class="container">
       <div class="bg-neutral-11">
-        <div class="pan">
-          <div id="posts">
-            Name: {{ $name.Name }}
-          </div>
-          {{ if (ne $name.Twitter nil) }}
-            <div id="posts">
-              Twitter:
-              {{ if (isset $name.Twitter 0) }}
-                <ul class="authors">
-                  {{ range $name.Twitter }}
-                    <li><a href="https://twitter.com/{{ . }}">@{{ . }}</a></li>
-                  {{ end }}
-                </ul>
-              {{ else }}
-                <ul class="authors">
-                  <li><a href="https://twitter.com/{{ $name.Twitter }}">@{{ $name.Twitter }}</a></li>
-                </ul>
-              {{ end }}
-            </div>
-          {{ end }}
+        {{ partial "breadcrumb.html" . }}
+        <div id="author">
+          <div class="phxxl pvl">
+          <h2>{{ $name.Name }}</h2>
+
+          <ul class="list-cards list-card-2 list-cards-xs fieldset">
           {{ if (ne $name.Blog nil) }}
-            <div id="posts">
-              Blog:
-              {{ if (isset $name.Blog 0) }}
-                <ul class="authors">
-                  {{ range $name.Blog }}
-                    <li><a href="{{ . }}">{{ . }}</a></li>
-                  {{ end }}
-                </ul>
-              {{ else }}
-                <ul class="authors">
-                  <li><a href="{{ $name.Blog }}">{{ $name.Blog }}</a></li>
-                </ul>
-              {{ end }}
-            </div>
-          {{ end }}
-          {{ if (ne $name.Github nil) }}
-            <div id="posts">
-              GitHub:
-              {{ if (isset $name.Github 0) }}
-                <ul class="authors">
-                  {{ range $name.Github }}
-                    <li><a href="https://github.com/{{ . }}">@{{ . }}</a></li>
-                  {{ end }}
-                </ul>
-              {{ else }}
-                <ul class="authors">
-                  <li><a href="https://github.com/{{ $name.Github }}">@{{ $name.Github }}</a></li>
-                </ul>
-              {{ end }}
-            </div>
-          {{ end }}
-        </div>
-      </div>
-    </div>
-    <br/>
+            <li class="tile-item">
+              <div class="panel">
+                <div class="panel-body">
+                  <i class="fa fa-globe fa-lg" aria-hidden="true"></i><br/>
+                    {{ if (isset $name.Blog 0) }}
+                      {{ range $name.Blog }}
+                      <a href="{{ . }}">{{ . }}</a>
+                      {{ end }}
+                    {{ else }}
+                      <a href="{{ $name.Blog }}">{{ $name.Blog }}</a>
+                    {{ end }}
+                </div>
+              </div>
+            </li>
+            {{ end }}
 
-    <div class="container">
-      <div class="bg-neutral-11">
-        <div class="pan">
+            {{ if (ne $name.Twitter nil) }}
+            <li class="tile-item">
+              <div class="panel">
+                <div class="panel-body">
+                  <i class="fa fa-twitter fa-lg" aria-hidden="true"></i><br/>
+                  {{ if (isset $name.Twitter 0) }}
+                    {{ range $name.Twitter }}
+                      <a href="https://twitter.com/{{ . }}">@{{ . }}</a><br/>
+                    {{ end }}
+                  {{ else }}
+                      <a href="https://twitter.com/{{ $name.Twitter }}">@{{ $name.Twitter }}</a>
+                  {{ end }}
+                </div>
+              </div>
+            </li>
+            {{ end }}
+            {{ if (ne $name.Github nil) }}
+            <li class="tile-item">
+              <div class="panel">
+                <div class="panel-body">
+                  <i class="fa fa-github fa-lg" aria-hidden="true"></i><br/>
+                  {{ if (isset $name.Github 0) }}
+                    {{ range $name.Github }}
+                    <a href="https://github.com/{{ . }}">@{{ . }}</a><br/>
+                    {{ end }}
+                  {{ else }}
+                    <a href="https://github.com/{{ $name.Github }}">@{{ $name.Github }}</a>
+                  {{ end }}
+                </div>
+              </div>
+            </li>
+            {{ end }}
+          </ul>
+          </div>
+
           <div id="posts">
             <ol class="list-timeline">
               {{ range .Data.Pages }}
               <li class="list-timeline-item post">
                 <div class="list-timeline-date">
                   <ul class="authors em-alt">
-                  {{ $all := .Site.Data.authors}}
-                  {{ $authors := .Params.authors}}
-                  {{ range $author := $authors }}
+                    {{ $all := .Site.Data.authors}}
+                    {{ $authors := .Params.authors}}
+                    {{ range $author := $authors }}
                     {{ with $a := (index $all $author)}}
-                      <li><a href="/authors/{{ $author | urlize }}">{{ $a.Name }}</a></li>
+                    <li><a href="/authors/{{ $author | urlize }}">{{ $a.Name }}</a></li>
                     {{ end}}
-                  {{ end }}
+                    {{ end }}
                   </ul>
                   <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
                 </div>
@@ -102,20 +93,20 @@
                     <span class="list-timeline-subtitle h5 type-dark-5">{{ .Params.short | markdownify }}</span>
                   </a>
                   {{ if .Params.tags }}
-                    <span class="list-timeline-tags em-alt">
-                      <span class="type-dark-6">Tags: &nbsp;</span>
-                      {{ range .Params.tags }}
-                        <a href="/tags/{{ . | urlize }}">{{ . }}</a> &nbsp;&nbsp;
-                      {{ end }}
-                    </span>
+                  <span class="list-timeline-tags em-alt">
+                    <span class="type-dark-6">Tags: &nbsp;</span>
+                    {{ range .Params.tags }}
+                    <a href="/tags/{{ . | urlize }}">{{ . }}</a> &nbsp;&nbsp;
+                    {{ end }}
+                  </span>
                   {{ end }}
                   {{ if .Params.categories }}
-                    <span class="list-timeline-tags em-alt">
-                      <span class="type-dark-6">Categories: &nbsp;</span>
-                      {{ range .Params.categories }}
-                        <a href="/categories/{{ . | urlize }}">{{ . }}</a> &nbsp;&nbsp;
-                      {{ end }}
-                    </span>
+                  <span class="list-timeline-tags em-alt">
+                    <span class="type-dark-6">Categories: &nbsp;</span>
+                    {{ range .Params.categories }}
+                    <a href="/categories/{{ . | urlize }}">{{ . }}</a> &nbsp;&nbsp;
+                    {{ end }}
+                  </span>
                   {{ end }}
                 </span>
               </li>
