@@ -66,9 +66,7 @@ PWS currently is currently hosted on us-east-1. We do not guarantee that this wi
 The effective list of possible IPs is as follows:
 
 ```bash
-curl https://ip-ranges.amazonaws.com/ip-ranges.json | \
-  ruby -rjson -e 'json = JSON.parse(STDIN.read); puts json["prefixes"].select {|v| v["region"] == "us-east-1" && v["service"] == "EC2"}.map{|v| v["ip_prefix"]}.to_json' \
-    | jq .
+curl https://ip-ranges.amazonaws.com/ip-ranges.json |   ruby -rjson -e 'puts JSON.pretty_generate( JSON.parse(STDIN.read)["prefixes"].select {|v| v["region"] == "us-east-1" && v["service"] == "EC2"}.map{|v| v["ip_prefix"]} )'
 ```
 
 One can subscribe to IP address range notifications following the documentation found [here](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html#subscribe-notifications).
