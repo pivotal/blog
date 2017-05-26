@@ -6,8 +6,8 @@ categories:
 - Spring Boot
 - Annotations
 - MVC
-date: 2017-04-27T08:50:03-07:00
-draft: true
+date: 2017-05-26T08:18:03-07:00
+draft: false
 short: |
   Learn about the most essential, must-know annotations for Spring Boot controllers.
 title: "Must-Know Spring Boot Annotations: Controllers"
