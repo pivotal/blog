@@ -8,6 +8,7 @@ categories:
 - Humans
 - Culture
 date: 2017-05-30T10:09:05-04:00
+draft: true
 short: |
   Key ingredients, directions, and some secret sauce for a day of pairing.
 title: A Recipe for Successful Pair Programming
