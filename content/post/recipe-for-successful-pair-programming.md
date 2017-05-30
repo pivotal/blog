@@ -6,7 +6,6 @@ categories:
 - Pair Programming
 - Extreme Programming
 - Humans
-- Pairing
 - Culture
 date: 2017-05-30T10:09:05-04:00
 draft: true
@@ -15,11 +14,25 @@ short: |
 title: A Recipe for Successful Pair Programming
 ---
 
+<style>
+
+figure {
+  margin:20px;
+}
+
+figcaption {
+  font-style: italic;
+}
+
+</style>
+
+{{< responsive-figure src="/images/recipe-for-successful-pair-programming/ayen-ybai-pairing.jpeg" class="center small" caption="The authors pairing on this blog post" >}}
+
 Pairing isn't just putting two programmers in front of a computer. This recipe outlines some basic ingredients and the secret sauce for a successful, productive pair programming session.
 
 ## Recipe
 
-Serving size: One Pair
+*Serving size: One Pair*
 
 ### Ingredients
 * 2 Engineers
@@ -43,7 +56,7 @@ Serving size: One Pair
 ### Directions
 1. Set up the *computer* so that *both monitors* show a mirrored display, and each *mouse* and *keyboard* is able to control it.
 1. Select any other *engineer* on your team as your pair.
-1. Pick the highest priority *problem* to work on.
+1. Pick the team's highest priority *problem* to work on.
 1. Talk with your pair about how you should tackle the problem. You will need to agree on a direction before any *code* can get written!
 1. Take turns *sharing* control of the mouse and keyboard, *constantly communicating* your thoughts when you have them, and helping each other to solve the problem at hand.
 1. When you run into a disagreement, you have to stop coding and have an *honest* chat about the pros and cons of each possible direction. You may pull in another pair to chat about technical decisions, or talk to a product manager or designer to check your understanding of the problem.
@@ -55,7 +68,7 @@ Serving size: One Pair
 
 **Internet Critic** commented: I feel like there's no way pairing can be more effective than two smart developers working separately. What gives?
 
-> **Avery & Bella** replied: The secret about the secret sauce of pairing, empathy, trust, constant communication, fast feedback, etc., is that it isn't a secret! These qualities will help any team be more effective at working together to solve problems and deliver better products faster. If a team isn't pairing, they often need to spend lots of additional time and effort to build all of these qualities up. Why not build this into your day, all day, every day? Pairing is a great way to do that!
+> **Avery & Bella** replied: The secret about the secret sauce of pairing, empathy, trust, constant communication, fast feedback, etc., is that it isn't a secret! These qualities will help any team be more effective at working together to solve problems and deliver better products faster. If a team isn't pairing, they often need to spend lots of additional time and effort to build all of these qualities up. We think these qualities are essential to effective and productive software development, so why not build this into your discipline, all day, every day? Pairing is a great way to do that! We'll be sure to address the effectiveness of pairing in a future post.
 
 **Super Hacker** commented: What if I'm pairing and I really need to check my email or Facebook? I don't want my pair snooping on my personal info!
 
