@@ -302,6 +302,6 @@ If you want to learn more:
 * [Agile: The Way to Develop Great Software](https://pivotal.io/agile)
 * [Data Science How-To: Using Apache Spark for Sports Analytics](https://content.pivotal.io/blog/how-data-science-assists-sports)
 
-
+Our team from Pivotal included [Jason Fraser](https://www.linkedin.com/in/jasonfraser/) ( Principal Product Manager ), [Aditya Padhye](https://www.linkedin.com/in/adityapadhye/) ( Data Engineer ) and [Swati Soni](https://www.linkedin.com/in/sonik/) ( Senior Data Scientist )
 
 
