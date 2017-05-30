@@ -26,9 +26,9 @@ figcaption {
 
 </style>
 
-{{< responsive-figure src="/images/recipe-for-successful-pair-programming/ayen-ybai-pairing.jpeg" class="center small" caption="The authors pairing on this blog post" >}}
+Pair programming isn't just putting two programmers in front of a computer! This recipe outlines the basic ingredients and some secret sauce for a successful, productive pairing session.
 
-Pairing isn't just putting two programmers in front of a computer. This recipe outlines some basic ingredients and the secret sauce for a successful, productive pair programming session.
+{{< responsive-figure src="/images/recipe-for-successful-pair-programming/ayen-ybai-pairing.jpeg" class="center small" caption="The authors pairing on this blog post" >}}
 
 ## Recipe
 
