@@ -12,7 +12,7 @@ date: 2017-05-30T10:09:05-04:00
 draft: true
 short: |
   Pivotal Labs practices a lot of pair programming. We find the benefits it offers for individuals, teams, and entire businesses is a huge driver in a sustainably rapid software development pace. Unfortunately, pairing isn't as simple as putting two engineers in front of the same code. Here are some methods that might help grow your pair programming practice.
-title: recipe for successful pair programming
+title: A Recipe for Successful Pair Programming
 ---
 
 Pivotal Labs practices a lot of pair programming. We find that, when two experienced pair programmers work together, the productivity of the pair is greater than the two engineers working separately on the same code. Not only that, but pairing is extremely effective at ramping up a new team member, turning that new team member into an experienced developer very quickly.
