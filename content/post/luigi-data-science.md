@@ -7,9 +7,8 @@ categories:
 - Greenplum
 - Python
 - SQL
-date: 2017-05-25T14:41:33-07:00
-short: |
-  This post shows how we use [Luigi](https://luigi.readthedocs.io/en/stable/) as a pipeline tool to manage a data science workflow.  We walk through an [example](https://github.com/ericwayman/luigi_gdb_pipeline_demo) analyzing network traffic logs. 
+date: 2017-05-30T14:41:33-07:00
+short: This post shows how we use Luigi as a pipeline tool to manage a data science workflow.  We walk through an example analyzing network traffic logs.
 title: Using Luigi Pipelines in a Data Science Workflow
 ---
 
