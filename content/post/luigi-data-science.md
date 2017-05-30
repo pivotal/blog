@@ -52,7 +52,7 @@ The workflow consists of 24 overlapping branches, one for each model.  Each bran
 
 *  For each of the 24 hours we  use the output of the previous step to create a table that is the input table for a model.
 
-*  For each of the 24 models, run the MADlib PCA function, which operates in parallel across GPDB nodes.
+*  For each of the 24 models, run the MADlib PCA algorithm, which operates in parallel across GPDB nodes.
 
 *  Using the output of the PCA models, flag users with highly variant activity.
 
@@ -61,7 +61,7 @@ Below is the code for a task which takes in a table representing a sparse matrix
 <script src="https://gist.github.com/ericwayman/283c252d20651e4c54c90d6a05c55df6.js"></script>
 
 
-A pipeline task is specified by writing a class which inherits from ```luigi.Task``` and by defining three class methods: ```requires()```, ```run()```, and ```output()```.   
+A general pipeline task is specified by writing a class which inherits from ```luigi.Task``` and by defining three class methods: ```requires()```, ```run()```, and ```output()```.   
     The ```requires()``` method returns a list of the previous task dependencies: 
 ~~~~
 [CreatePCAInputTable(date=self.date,hour=self.hour_id)]
@@ -91,7 +91,7 @@ To complete the pipeline, we define our pipeline dependency graph in a final wra
 
 A major advantage to wrapping our workflow into a pipeline is the ability to incorporate data level tests into our workflow.  In our example pipeline we run a simple test checking each column of newly created tables for the presence of null values.  Another example of a commonly useful data level test is checking the cardinality of the join keys before joining two tables, as a duplicate record could cause a many-to-many join, which may not be the intended behavior.  With tests that break the workflow early on failure and alert the user, we make it easier to pinpoint issues in the data and can save on wasted computation time.  To notify others of pipeline failures, Luigi supports [email alerts](http://luigi.readthedocs.io/en/stable/configuration.html#email)  which can be configured in the ```email``` section of the ```luigi.cfg``` config file.  
 
-Before running a pipeline in our analytics environment on the full data set, we recommend testing it locally on a small sample of data.  On smaller data sets we can discover bugs quicker and testing locally eliminates the risk of accidentally deleting a table in our analytics environment. To run GPDB locally, we install the [Pivotal Greenplum Sandbox Virtual Machine](https://network.pivotal.io/products/pivotal-gpdb#/releases/567/file_groups/337) which is available for free download on the Pivotal Network.   This sandbox is an easy-to-use virtual machine which runs in either VirtualBox or VMware Fusion  and contains a pre-built instance of the open source Greenplum database, PL/R and PL/Python as well as the [Apache MADlib (incubating) library](http://madlib.incubator.apache.org/).  
+Before running a pipeline in our analytics environment on the full data set, we recommend testing it locally on a small sample of data.  On smaller data sets we can discover bugs quicker, and testing locally eliminates the risk of accidentally deleting a table in our analytics environment. To run GPDB locally, we install the [Pivotal Greenplum Sandbox Virtual Machine](https://network.pivotal.io/products/pivotal-gpdb#/releases/567/file_groups/337) which is available for free download on the Pivotal Network.   This sandbox is an easy-to-use virtual machine which runs in either VirtualBox or VMware Fusion  and contains a pre-built instance of the open source Greenplum database, PL/R and PL/Python as well as the [Apache MADlib (incubating) library](http://madlib.incubator.apache.org/).  
 
 After loading the necessary tables in the GPDB sandbox, configuring the environment variables for the database connection to point to the sandbox database and setting ```luigi.cfg``` to match with the local tables, we are ready to run the pipeline.  We start the local-scheduler with
 ~~~
