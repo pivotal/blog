@@ -74,6 +74,11 @@ figure.left img, figure.right img { max-width: 50%; clear: both; }
 figure.left.small img, figure.right.small img { max-width: 33%; }
 figure.left.big img,   figure.right.big img   { max-width: 66%; }
 
+@media (max-width: 1200px) {
+  figure.fig-responsive { float: none !important; }
+  figure.fig-responsive.left img, figure.fig-responsive.right img { max-width: 100% !important; padding: 0; }
+}
+
 blockquote:before {
   content: none;
 }
