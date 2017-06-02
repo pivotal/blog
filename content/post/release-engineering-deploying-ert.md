@@ -101,7 +101,7 @@ Now that BOSH is ready to deploy VMs and the ERT is configured, the final step i
 
 The pipeline applies changes by issuing the following command:
 
-~~bash
+~~~bash
 $ om --target https://pcf.example.com --user some-user --password some-password apply-changes
 ~~~
 
