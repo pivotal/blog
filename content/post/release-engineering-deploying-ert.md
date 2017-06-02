@@ -35,11 +35,11 @@ After creating the necessary infrastructure, authentication needs to be configur
 
 In order to begin interacting with Ops Manager via the API, we set up authentication using the following command:
 
-```
+~~~bash
 $ om --target https://pcf.example.com configure-authentication \
   --user desired-username --password desired-password \
   --decryption-passphrase desired-passphrase
-```
+~~~
 
 ## Uploading Artifacts
 Next, the pipeline uploads the ERT and its stemcell. The ERT contains compiled releases of open-source Cloudfoundry components like loggregator, consul, and diego, as well as Pivotal Cloudfoundry components like autoscaling, apps manager, etc. The tile also contains metadata that describes tile properties and a manifest template that gets filled in with user-provided configuration (see “Configuring ERT”).
@@ -50,7 +50,7 @@ Stemcells can be found on [bosh.io](https://www.bosh.io). The required stemcell 
 
 Once we have the ERT and stemcell, they are uploaded to the Ops Manager via the following `om` commands:
 
-```
+~~~bash
 $ om --target https://pcf.example.com --user some-user --password password upload-product \
   --product /path/to/product/file.pivotal
 
@@ -59,25 +59,25 @@ $ om --target https://pcf.example.com --user some-user --password password stage
 
 $ om --target https://pcf.example.com --user some-user --password password upload-stemcell \
   --stemcell /path/to/stemcell/file.tgz
-```
+~~~
 
 ## Configuring BOSH
 Like deploying the open-source Cloud Foundry, Ops Manager uses BOSH. Much of the same configuration that is required when using bosh-init or bbl is applicable to configuring BOSH via Ops Manager.
 
 To configure the BOSH director, Ops Manager must be provided with details about the underlying infrastructure that it will be deploying VMs into. This is another place where `terraform` is handy. Our pipeline determines this information from the terraform state file `*.tfstate` via the following command:
 
-```
+~~~bash
 $ terraform output -state terraform.tfstate | jq -r ‘map_values(.value)’
-```
+~~
 
 These values are provided to the `configure-bosh` command. Here is an example that sets the IaaS configuration for the director:
 
-```
+~~~bash
 $ om --target https://pcf.example.com --username some-user --password some-password configure-bosh \
   --iaas-configuration '{"default_deployment_tag": "some-id-tag-for-vms", "project": "some-gcp-project"}'
 
 ...
-```
+~~~
 
 To fully configure the BOSH director, check out the examples in `configure-bosh` [command documentation](https://github.com/pivotal-cf/om/tree/master/docs/configure-bosh).
 
@@ -87,12 +87,12 @@ Configuration for open-source Cloud Foundry is provided via a manifest file. Whe
 
 Here's an example of part of an `om configure-product` command that is used to configure the “system domain” value that would be provided to the `cloud_controller` job:
 
-```
+~~~bash
 $ om --target https://pcf.example.com --username some-user --password some-password configure-product \
   --product_properties='{".cloud_controller.system_domain": {"value": "sys.example.com"}, ... }
 
 ...
-```
+~~~
 
 To fully configure the ERT, check out the examples in the `configure-product` [command documentation](https://github.com/pivotal-cf/om/tree/master/docs/configure-product).
 
@@ -101,9 +101,9 @@ Now that BOSH is ready to deploy VMs and the ERT is configured, the final step i
 
 The pipeline applies changes by issuing the following command:
 
-```
+~~bash
 $ om --target https://pcf.example.com --user some-user --password some-password apply-changes
-```
+~~~
 
 Running the `apply-changes` command will tail the Ops Manager installation output and exit `0` for a successful deployment and `1` for a failed deployment. The command is also reentrant meaning it will re-attach to an installation in progress.
 
