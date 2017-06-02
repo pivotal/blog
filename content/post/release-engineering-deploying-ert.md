@@ -1,6 +1,5 @@
 ---
 authors:
-- Add another author here
 - kkelani
 categories:
 - Infrastructure
@@ -11,7 +10,7 @@ date: 2017-05-25T21:48:16-07:00
 draft: true
 short: |
   A look at how Release Engineering deploys and tests the Elastic Runtime Tile
-title: Continuously Deploying Pivotal Cloudfoundry: Elastic Runtime Tile 
+title: "Continuously Deploying Pivotal Cloudfoundry: Elastic Runtime Tile"
 ---
 
 The Release Engineering team maintains the Elastic Runtime Tile. The ERT is a product of Pivotal Cloud Foundry that contains open-source Cloud Foundry components and proprietary components, built by Pivotal, that improve management of the platform.
