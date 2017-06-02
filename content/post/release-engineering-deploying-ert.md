@@ -68,7 +68,7 @@ To configure the BOSH director, Ops Manager must be provided with details about 
 
 ~~~bash
 $ terraform output -state terraform.tfstate | jq -r ‘map_values(.value)’
-~~
+~~~
 
 These values are provided to the `configure-bosh` command. Here is an example that sets the IaaS configuration for the director:
 
