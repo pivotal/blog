@@ -33,7 +33,7 @@
   <meta property="og:title" content="{{ .Title }}" />
   <meta property="og:site_name" content="{{ .Site.Title }}" />
   <meta property="og:url" content="{{ .Permalink }}" />
-  {{ with .Params.short }}
+  {{ with or .Params.short .Site.Params.SubTitle }}
     <meta property="og:description" content="{{ . }}" />
   {{ end }}
   {{ with .Params.image }}
