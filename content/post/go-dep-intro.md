@@ -5,10 +5,11 @@ categories:
 - Golang
 - Package Management
 - dep
-date: 2017-06-04T19:23:16-04:00
+date: 2017-06-07T14:31:04-04:00
 short: |
   Golang's future standard package manager is becoming more usable everyday. Here's why it's necessary and how you can try it out today.
 title: dep Coming to Unify Package Management in Go
+image: /images/warrior.jpg
 ---
 
 {{< responsive-figure src="/images/warrior.jpg" alt="Warrior standing atop a mountain, arm raised in victory" class="center" >}}
