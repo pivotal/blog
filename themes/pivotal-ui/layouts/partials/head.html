@@ -29,11 +29,13 @@
   <link rel="stylesheet" href="/github.css">
   <link rel="stylesheet" href="/local.css">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  <meta property="og:title" content="{{ if eq $replace_title .Site.Title }}{{ $replace_title }}{{else}}{{ $replace_title }} &middot; {{ .Site.Title }}{{ end }}</title>" />
-  <meta property="og:site_name" content="{{ .Site.Title }}" />
   <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
-  <meta property="og:url" content="{{ .Permalink }}" />
   <meta property="og:title" content="{{ .Title }}" />
+  <meta property="og:site_name" content="{{ .Site.Title }}" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  {{ with .Params.short }}
+    <meta property="og:description" content="{{ . }}" />
+  {{ end }}
   {{ with .Params.image }}
     <meta property="og:image" content="{{ . | absURL }}" />
   {{ end }}
