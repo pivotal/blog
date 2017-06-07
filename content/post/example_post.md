@@ -13,6 +13,7 @@ draft: true
 short: |
   Short description for index pages, and under title when viewing a post. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
 title: example_post
+image: /images/pairing.jpg
 ---
 
 Posts are written in [Markdown](https://help.github.com/articles/github-flavored-markdown/) -- tips below:
