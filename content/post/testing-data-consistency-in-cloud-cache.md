@@ -8,11 +8,12 @@ categories:
 - Cloud Cache
 
 date: 2017-06-07T17:16:57-04:00
-draft: true
+draft: false
 short: |
   Testing for data consistency on the Cloud Cache team using BOSH and Turbulence
 
 title: Testing for Data Consistency on Cloud Cache using BOSH and Turbulence
+image: /images/testing-data-consistency-in-cloud-cache/turbulence-kill-az.png
 ---
 
 ## What is Cloud Cache
