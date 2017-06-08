@@ -11,20 +11,13 @@
     <lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
     <atom:link href="{{.Permalink}}" rel="self" type="application/rss+xml" />
     {{ range where .Site.Pages "Section" "!=" "tweet" }}
+    {{ $all := .Site.Data.authors}}
+    {{ $authors := .Params.authors}}
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-        {{ $all := .Site.Data.authors}}
-        {{ $authors := .Params.authors}}
-        <author>
-          {{ range $i, $author := $authors }}
-          {{ with $a := (index $all $author)}}
-            {{if (and $i $a.Name)}} and {{end}}
-            {{ if $a.Twitter}}@{{$a.Twitter}}{{else}}{{$a.Name}}{{ end }}
-          {{end}}
-          {{end}}
-        </author>
+      <author>{{ range $i, $author := $authors }}{{ with $a := (index $all $author)}}{{if (and $i $a.Name)}} and {{end}}{{ if $a.Twitter}}@{{$a.Twitter}}{{else}}{{$a.Name}}{{ end }}{{end}}{{end}}</author>
       <guid>{{ .Permalink }}</guid>
       <description>{{ .Params.short | html }}</description>
     </item>
