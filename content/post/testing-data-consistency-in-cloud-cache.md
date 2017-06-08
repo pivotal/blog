@@ -38,7 +38,7 @@ This is accomplished by GemFire's ability to handle network partitioning (by set
 
 Network partitioning in GemFire is detected by a weighting system - when a GemFire node is spun up, it is given a weight. By default, cache servers have a weight of 10, locators have a weight of 3, and lead members have a weight of 15.
 
-When the membership coordinator calculates the membership weight and notices the quorum of the cluster is no longer sufficient to run as a distributed system, the "losing" side will declare a network partition has occurred and disconnect itself from the higher weighted side. Network partitions can be occur if Cloud Cache is deployed to only two AZs and one AZ loses connectivity to the second AZ.
+When the membership coordinator calculates the membership weight and notices the quorum of the cluster is no longer sufficient to run as a distributed system, the "losing" side will declare a network partition has occurred and disconnect itself from the higher weighted side. Network partitions can occur if Cloud Cache is deployed to only two AZs and one AZ loses connectivity to the second AZ.
 
 You can go to the official GemFire docs for more information on how GemFire handles networking partitioning [here](http://gemfire.docs.pivotal.io/geode/managing/network_partitioning/network_partitioning_scenarios.html).
 
