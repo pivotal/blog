@@ -72,7 +72,7 @@
 
           <div id="posts">
             <ol class="list-timeline">
-              {{ range .Data.Pages }}
+              {{ range where .Data.Pages "Section" "!=" "tweet" }}
               <li class="list-timeline-item post">
                 <div class="list-timeline-date">
                   <ul class="authors em-alt">
