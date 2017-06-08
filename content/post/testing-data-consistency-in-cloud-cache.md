@@ -18,7 +18,7 @@ image: /images/testing-data-consistency-in-cloud-cache/turbulence-kill-az.png
 
 ## What is Cloud Cache
 
-The Cloud Cache for Pivotal Cloud Foundry product provides on-demand in-memory data clusters that can be used by app developers in CF. App developers are able to store any kind of data objects in the Cloud cache cluster provided they are Java-serializable. Cloud Cache uses Pivotal GemFire, the Pivotal distribution of [Apache Geode](http://geode.apache.org).
+The Cloud Cache for Pivotal Cloud Foundry product provides on-demand in-memory data clusters that can be used by app developers in CF. App developers are able to store any kind of data objects in the Cloud Cache cluster provided they are Java-serializable. Cloud Cache uses Pivotal GemFire, the Pivotal distribution of [Apache Geode](http://geode.apache.org).
 
 ## CAP Theorem
 
@@ -73,13 +73,13 @@ As part of our development workflow we run our stress tests against every develo
  * terminate VMs one at a time
  * take down an entire AZ
 5. Wait for BOSH's resurrector to resurrect terminated VMs
-6. Read all the keys and values written in step 3 and ensure **no data was loss**
+6. Read all the keys and values written in step 3 and ensure **no data was lost**
 
 ### Demo!
 
 The load testing app in this demo has three endpoints: `start`, `stop`, and `generate_report`.
 
-When the `start` endpoint is called, the app will continuously and write data to the bound cloud cache service instance.
+When the `start` endpoint is called, the app will continuously and write data to the bound Cloud Cache service instance.
 
 When the `stop` and `generate_report` endpoints are called, the app will stop the writing and generate a report that reports the number of successful writes and reads. In addition it will ensure **every** key has the expected value that was written.
 
