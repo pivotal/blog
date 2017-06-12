@@ -4,8 +4,8 @@ authors:
 categories:
 - Docker
 - Cloud Foundry
-date: 2017-06-08T17:16:22Z
-draft: true
+date: 2017-06-12T11:40:22Z
+draft: false
 short: |
   Pushing a Docker Registry to Cloud Foundry can be a powerful approach
   to distributing private Docker images to teams with minimal overhead.
