@@ -97,6 +97,6 @@ We can view our pipeline status and the dependency graph by opening a browser to
 
 ## Conclusion
 
-In summary, while building a pipeline adds some overhead to your workflow, the benefits of coordinating the running, monitoring and data testing multiple iterations of end-to-end models can be well worth the cost.  If you have a workflow with long running batch processes, such as regularly training and scoring variations of a model, then ability to wrap your workflow into a pipeline is a worthwhile tool to have in your arsenal.  
+In summary, while building a pipeline adds some overhead to your workflow, the benefits of coordinating the running, monitoring and data testing multiple iterations of end-to-end models can be well worth the cost.  If you have a workflow with long running batch processes, such as regularly training and scoring variations of a model, then the ability to wrap your workflow into a pipeline is a worthwhile tool to have in your arsenal.
 
  
