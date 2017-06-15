@@ -8,7 +8,7 @@ categories:
 - JDBC
 - Java Database Connectivity
 - Repositories
-date: 2017-06-01T08:53:03-07:00
+date: 2017-06-15T08:53:03-07:00
 draft: true
 short: An exploration in replacing Hibernate with JDBC in Spring.
 title: Hibernate to JDBC
@@ -22,15 +22,15 @@ Here's why and how.
 
 Because we practice test-driven development, many of our problems stemmed from Hibernate in the testing environment. When using Hibernate to persist data, it will not save the data to the database without `entityManager.persist` and `entityManager.flush`.
 
-Each of our tests run within transactions so that we can roll back the testing database if a test fails. This got tricky when we had Hibernate transactions wrapped inside of our test transactions and the Hibernate transaction would fail. When debugging these failed tests, the lines of code we traced them to would be deep inside the Hibernate/Spring code instead of in our code. We lost a lot of time to debugging these issues.
+Each of our tests run within transactions so that we can roll back the testing database if a test fails. This got tricky when we had Hibernate transactions wrapped inside of our test transactions and the Hibernate transaction would fail.
 
-This was manifested when our test data wouldn't hit database constraints until the test completed. This gave us problems when trying to test those database constraints. For example, if a table column had a uniqueness constraint on it and in our test we violated that constraint, the test would fail with an exception whose stacktace originated in the Spring code while the transaction was finishing up instead of earlier where we had made the erroneous object.
+This was particularly a problem when our test data wouldn't hit database constraints and we were trying to test those database constraints. For example, if a table column had a uniqueness constraint on it and in our test we violated that constraint, the test would fail with an exception whose stacktrace originated in the Spring code while the transaction was finishing up instead of earlier where we had made the erroneous object. We lost a lot of time to debugging these issues.
 
-When we were considering removing Hibernate, we did look into using an already-made JDBC repository library such as this [Spring Data JDBC generic DAO implementation](https://github.com/jirutka/spring-data-jdbc-repository), however it was not a good fit for us because we have many-to-many relationships. If we had simple CRUD uses, it would have been a better fit, but we also might not have needed to move away from Hibernate if that were the case.
+When we were considering removing Hibernate, we did look into using an already-made JDBC repository library such as this [Spring Data JDBC generic DAO implementation](https://github.com/jirutka/spring-data-jdbc-repository), however it was not a good fit for us because we have many-to-many, one-to-many, and many-to-one relationships. If we had simple CRUD uses, it would have been a better fit, but we also might not have needed to move away from Hibernate if that were the case.
 
 
 ## Sample Hibernate Model and Repository
-We use Lombok, so our models don't have explicit getters and setters on them.
+Note: we use Lombok, so our models don't have explicit getters and setters.
 
 ### Garden Model
 ```
@@ -171,7 +171,7 @@ public class GardenJdbcRepository implements GardenRepository {
         }
     }
 
-    // Other functions like findAll, delete, etc....
+    // Other functions eg. findAll, delete, etc....
 }
 ```
 
@@ -254,7 +254,7 @@ public class Flower {
 
 ## Testing without Hibernate
 
-To demonstrate how testing is more direct without Hibernate, here is an example test in the GardenRepository while we were still using Hibernate. We mocked our responses because of Hibernate not saving the records to the database while in the test transaction.
+To demonstrate how testing is more direct without Hibernate, here is an example test for the GardenRepository while we were still using Hibernate. We mocked our responses because of Hibernate not saving the records to the database while in the test transaction.
 
 ```
   public class GardenRepositoryTest {
@@ -280,7 +280,7 @@ To demonstrate how testing is more direct without Hibernate, here is an example 
   }
 ```
 
-Without Hibernate, it looks like this. We don't have to mock responses; we can create the records in our test, which gives us more confidence that repositories are working correctly. Note our subject is a new `GardenJdbcRepository` because `GardenRepository` is now an interface that `GardenJdbcRepository` implements. Because this test calls through to the database, it also replaces the [`GardenDatabaseRepositoryTest`](#testing-hibernate-database-repository) above.
+Without Hibernate we don't have to mock responses; we can create the records in our test, which gives us more confidence that repositories are working correctly. Note our subject is a new `GardenJdbcRepository` because `GardenRepository` is now an interface that `GardenJdbcRepository` implements. Because this test calls through to the database, it also replaces the [`GardenDatabaseRepositoryTest`](#testing-hibernate-database-repository) above.
 
 ```
   @RunWith(SpringRunner.class)
