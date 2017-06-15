@@ -22,20 +22,20 @@ Here's why and how.
 
 Because we practice test-driven development, many of our problems stemmed from Hibernate in the testing environment. When using Hibernate to persist data, it will not save the data to the database without `entityManager.persist` and `entityManager.flush`.
 
-Each of our tests are transactions so that we can roll back the testing database if a test fails. This got tricky when we had Hibernate transactions wrapped inside of our test transactions and the Hibernate transaction would fail. When debugging these failed tests, the lines of code we traced them to would be deep inside the Hibernate/Spring code instead of in our code. We lost a lot of time to debugging these issues.
+Each of our tests run within transactions so that we can roll back the testing database if a test fails. This got tricky when we had Hibernate transactions wrapped inside of our test transactions and the Hibernate transaction would fail. When debugging these failed tests, the lines of code we traced them to would be deep inside the Hibernate/Spring code instead of in our code. We lost a lot of time to debugging these issues.
 
-This was manifested when our test data wouldn't hit database constraints until the test completed. This gave us problems when trying to test those database constraints. For example, if a table column had a uniqueness constraint on it and in our test we violated that constraint, the test would fail in the Spring code while the transaction was finishing up instead of earlier where we had made the erroneous object.
+This was manifested when our test data wouldn't hit database constraints until the test completed. This gave us problems when trying to test those database constraints. For example, if a table column had a uniqueness constraint on it and in our test we violated that constraint, the test would fail with an exception whose stacktace originated in the Spring code while the transaction was finishing up instead of earlier where we had made the erroneous object.
 
 When we were considering removing Hibernate, we did look into using an already-made JDBC repository library such as this [Spring Data JDBC generic DAO implementation](https://github.com/jirutka/spring-data-jdbc-repository), however it was not a good fit for us because we have many-to-many relationships. If we had simple CRUD uses, it would have been a better fit, but we also might not have needed to move away from Hibernate if that were the case.
 
 
 ## Sample Hibernate Model and Repository
+We use Lombok, so our models don't have explicit getters and setters on them.
 
 ### Garden Model
 ```
 @Data
 @Builder
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "gardens")
@@ -47,14 +47,14 @@ public class Garden {
     private String name;
 
     public void addFlowers(Flower... flowers) {
-      if (this.flowers == null) {
-        this.flowers = new HashSet<>();
-      }
+        if (this.flowers == null) {
+          this.flowers = new HashSet<>();
+        }
 
-      for (Flower flower : flowers) {
-        flower.setGarden(this);
-        this.flowers.add(flower);
-      }
+        for (Flower flower : flowers) {
+          flower.setGarden(this);
+          this.flowers.add(flower);
+        }
     }
 }
 
@@ -77,8 +77,6 @@ public class Flower {
 
     @ManyToOne
     private Garden garden;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "flower", orphanRemoval = true)
 }
 ```
 
@@ -106,7 +104,7 @@ public class GardenRepository {
 
 ## Testing Hibernate Database Repository
 
-I didn't share the GardenDatabaseRepository above because it simply calls through to the CrudRespository, but having the Flower associated on the Garden, we want to make sure that deletion of a Garden cascades to deletion of its flowers. This means we need to add tests for the GardenDatabaseRepository.
+I didn't share the GardenDatabaseRepository above because it simply calls through to the [JpaRepository](https://github.com/spring-projects/spring-data-examples/tree/master/jpa/jpa21), but having the Flower associated on the Garden, we want to make sure that deletion of a Garden cascades to deletion of its flowers. This means we need to add tests for the GardenDatabaseRepository.
 
 ```
 @RunWith(SpringRunner.class)
@@ -115,60 +113,35 @@ I didn't share the GardenDatabaseRepository above because it simply calls throug
 @Transactional
 public class GardenDatabaseRepositoryTest {
 
-  @Autowired
-  FlowerDatabaseRepository flowerDatabaseRepository;
+    @Autowired
+    FlowerDatabaseRepository flowerDatabaseRepository;
 
-  GardenDatabaseRepository subject;
+    GardenDatabaseRepository subject;
 
-  @Autowired
-  EntityManager entityManager;
-
-  @Test
-  public void delete_shouldDeleteAssociatedFlowers() throws Exception {
-    Flower flower1 = new Flower();
-    Flower flower2 = new Flower();
-
-    Garden garden = Garden.builder().name("Community Flower Garden").build;
-    garden.addFlowers(flower1, flower2);
-
-    entityManager.persist(garden);
-
-    Iterable<Flower> flowers = flowerDatabaseRepository.findAll();
-    assertThat(flowers).hasSize(2);
-
-    subject.delete(garden.getId());
-
-    Iterable<Flower> flowersAfterDelete = flowerDatabaseRepository.findAll();
-    assertThat(flowersAfterDelete).hasSize(0);
-  }
-}
-```
-Notice that we call `.persist` on the EntityManager in order to save the created flowers in the test database. This is because we want to make sure the database repository returns the objects we expect. Without the `.persist` call, the created flowers would not really be created in the database, but in memory. Hibernate does this to be efficient. That works well in your code, but not in test.
-
-You'll also notice that we had to explicitly instantiate flowers to be added to the garden. With Hibernate, you have to modify the exact instance of the model you want. If we wanted to set attributes on those flowers, we would have needed `flower1.setColor("red")`. Moving away from Hibernate allows us create objects with a builder instead of making the object and then setting attributes on them. This makes our tests easier to read.
-
-Because most of the GardenDatabaseRepository functions are from the extended CRUD Repository, we did not write a lot of tests for custom functions, but when we moved away from Hibernate, we needed to write a lot more tests. Here is an example of a `GardenRepositoryTest`:
-
-```
-@RunWith(SpringRunner.class)
-class GardenRepositoryTest {
-    /* Autowiring of all the components here, left out for brevity */
-
-    private GardenRepository subject;
+    @Autowired
+    EntityManager entityManager;
 
     @Test
-    public void findAll_shouldReturnAllTheGardens() throws Exception {....}
+    public void delete_shouldDeleteAssociatedFlowers() throws Exception {
+        Flower flower1 = new Flower();
+        Flower flower2 = new Flower();
 
-    public void findOne_shouldReturnTheSpecifiedGarden() throws Exception {....}
-    public void create_shouldSaveGardenAndReturnResult() throws Exception {....}
-    public void create_whenDuplicateName_shouldReturnFailedResult() throws Exception {....}
-    public void delete_whenSuccessful_shouldReturnSuccess throws Exception {....}
-    public void delete_shouldDeleteAssociatedFlowers() throws Exception {....}
-    public void delete_whenFailed_shouldReturnFailedResult() throws Exception {....}
+        Garden garden = Garden.builder().name("Community Flower Garden").build;
+        garden.addFlowers(flower1, flower2);
 
-    /* Other tests as needed */
+        entityManager.persist(garden);
+
+        Iterable<Flower> flowers = flowerDatabaseRepository.findAll();
+        assertThat(flowers).hasSize(2);
+
+        subject.delete(garden.getId());
+
+        Iterable<Flower> flowersAfterDelete = flowerDatabaseRepository.findAll();
+        assertThat(flowersAfterDelete).hasSize(0);
+    }
 }
 ```
+Notice that we call `.persist` on the `EntityManager` in order to save the created flowers in the test database. This is because we want to make sure the database repository returns the objects we expect. Without the `.persist` call, the created flowers would not really be created in the database, but in memory. Hibernate does this to be efficient. That works well in your code, but not in test.
 
 ## The Replacement JDBC Repository
 
@@ -179,26 +152,26 @@ To replace Hibernate, we create a GardenJdbcRepository that calls to a GardenJdb
 ```
 @Service
 public class GardenJdbcRepository implements GardenRepository {
-  private final GardenJdbcPersister gardenJdbcPersister;
+    private final GardenJdbcPersister gardenJdbcPersister;
 
-  GardenJdbcRepository(GardenJdbcPersister gardenJdbcPersister) {
-    this.gardenJdbcPersister = gardenJdbcPersister;
-  }
-
-  public Optional<Garden> findOne(long gardenId) {
-    return gardenJdbcPersister.findOne(gardenId);
-  }
-
-  public Result<Long, RepositoryFailure> create(Garden garden) {
-    try {
-      final long createGardenId = gardenJdbcPersister.create(garden);
-      return Result.success(createGardenId);
-    } catch (RepositoryException e) {
-      return RepositoryFailureFactory.failure(e, garden);
+    GardenJdbcRepository(GardenJdbcPersister gardenJdbcPersister) {
+        this.gardenJdbcPersister = gardenJdbcPersister;
     }
-  }
 
-  // Other functions like findAll, delete, etc....
+    public Optional<Garden> findOne(long gardenId) {
+        return gardenJdbcPersister.findOne(gardenId);
+    }
+
+    public Result<Long, RepositoryFailure> create(Garden garden) {
+        try {
+            final long createGardenId = gardenJdbcPersister.create(garden);
+            return Result.success(createGardenId);
+        } catch (RepositoryException e) {
+            return RepositoryFailureFactory.failure(e, garden);
+        }
+    }
+
+    // Other functions like findAll, delete, etc....
 }
 ```
 
@@ -207,39 +180,39 @@ public class GardenJdbcRepository implements GardenRepository {
 ```
 @Component
 public class GardenJdbcPersister {
-  private final JdbcTemplate = jdbcTemplate;
-  private final DbLastInsertedIdProvider dbLastInsertedIdProvider;
+    private final JdbcTemplate = jdbcTemplate;
+    private final DbLastInsertedIdProvider dbLastInsertedIdProvider;
 
-  public GardenJdbcPersister(JdbcTemplate jdbcTemplate, DbLastInsertedIdProvider dbLastInsertedIdProvider) {
-    this.jdbcTemplate = jdbcTemplate;
-    this.dbLastInsertedIdProvider = dbLastInsertedIdProvider;
-  }
-
-  public Optional<Garden> findOne(long id) {
-    final Garden garden = jdbcTemplate.queryForObject("select * from gardens where id = ?", new GardenRowMapper(), id);
-
-    return Optional.of(garden;)
-  }
-
-  public long create(Garden garden) throws RepositoryException {
-    updateSingleRecord(
-      "insert into gardens (name) " + "values (?)",
-      garden.getName());
-
-    return dbLastInsertedIdProvider.lastInsertedId();
-  }
-
-  // Other functions eg. findAll, delete, etc....
-
-  private class GardenRowMapper implements RowMapper<Garden> {
-    @Override
-    public Garden mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Garden.builder()
-                .id(rs.getLong("id"))
-                .name(rs.getString("name"))
-                .build();
+    public GardenJdbcPersister(JdbcTemplate jdbcTemplate, DbLastInsertedIdProvider dbLastInsertedIdProvider) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.dbLastInsertedIdProvider = dbLastInsertedIdProvider;
     }
-  }
+
+    public Optional<Garden> findOne(long id) {
+        final Garden garden = jdbcTemplate.queryForObject("select * from gardens where id = ?", new GardenRowMapper(), id);
+
+        return Optional.of(garden;)
+    }
+
+    public long create(Garden garden) throws RepositoryException {
+        updateSingleRecord(
+            "insert into gardens (name) " + "values (?)",
+            garden.getName());
+
+        return dbLastInsertedIdProvider.lastInsertedId();
+    }
+
+    // Other functions eg. findAll, delete, etc....
+
+    private class GardenRowMapper implements RowMapper<Garden> {
+        @Override
+        public Garden mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return Garden.builder()
+                  .id(rs.getLong("id"))
+                  .name(rs.getString("name"))
+                  .build();
+      }
+    }
 }
 ```
 
@@ -257,11 +230,10 @@ Now that Hibernate is out of our code, our model code is simplified.
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "gardens")
+@Value
 public class Garden implements NameableEntity {
-  @Id
-  private Long id;
-  private String name;
+    private Long id;
+    private String name;
 }
 ```
 
@@ -272,17 +244,88 @@ public class Garden implements NameableEntity {
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Value
 public class Flower {
-  private Long id;
-  private ZonedDateTime createdAt;
-  private Long gardenId;
+    private Long id;
+    private ZonedDateTime createdAt;
+    private Long gardenId;
 }
+```
+
+## Testing without Hibernate
+
+To demonstrate how testing is more direct without Hibernate, here is an example test in the GardenRepository while we were still using Hibernate. We mocked our responses because of Hibernate not saving the records to the database while in the test transaction.
+
+```
+  public class GardenRepositoryTest {
+      @Mock
+      GardenDatabaseRepository gardenDatabaseRepository;
+      private GardenRepository subject;
+
+      @Before
+      public void beforeEach() {
+          MockitoAnnotations.initMocks(this);
+
+          subject = new GardenRepository(gardenRepository);
+      }
+
+      @Test
+      public void findAll_shouldReturnAllTheGardens() throws Exception {
+          List<Garden> gardens = Arrays.asList(Garden.builder().name("Keukenhof Gardens").build(), Garden.builder().name("Jardim Botânico de Curitiba").build());
+          doReturn(gardens).when(gardenDatabaseRepository).findAll();
+
+          Result<Iterable<App>, ?> result = subject.findAll();
+          assertThat(result.getSuccess()).isEqualTo(gardens);
+      }
+  }
+```
+
+Without Hibernate, it looks like this. We don't have to mock responses; we can create the records in our test, which gives us more confidence that repositories are working correctly. Note our subject is a new `GardenJdbcRepository` because `GardenRepository` is now an interface that `GardenJdbcRepository` implements. Because this test calls through to the database, it also replaces the [`GardenDatabaseRepositoryTest`](#testing-hibernate-database-repository) above.
+
+```
+  @RunWith(SpringRunner.class)
+  public class GardenRepositoryTest {
+
+    @Autowired
+    private GardenJdbcPersister gardenJdbcPersister;
+
+    private GardenRepository subject;
+
+    @Before
+    public void beforeEach() {
+      subject = new GardenJdbcRepository(gardenJdbcPersister);
+    }
+
+    @Test
+    public void findAll_shouldReturnAllTheGardens() throws Exception {
+        final Garden garden1 = createGarden("Keukenhof Gardens");
+        final Garden garden2 = createGarden("Jardim Botânico de Curitiba");
+
+        final Iterable<App> result = subject.findAll();
+
+        assertThat(result).containsOnly(garden1, garden2);
+    }
+
+    private Garden createGarden(String name) {
+      final Garden garden = Garden.builder().name(name).build();
+      final long gardenId = subject.create(garden).getSuccess();
+
+      return subject.findOne(appId).get();
+    }
+
+    // Other tests in this file:
+    public void findOne_shouldReturnTheSpecifiedGarden() throws Exception {....}
+    public void create_shouldSaveGardenAndReturnResult() throws Exception {....}
+    public void create_whenDuplicateName_shouldReturnFailedResult() throws Exception {....}
+    public void delete_whenSuccessful_shouldReturnSuccess throws Exception {....}
+    public void delete_shouldDeleteAssociatedFlowers() throws Exception {....}
+    public void delete_whenFailed_shouldReturnFailedResult() throws Exception {....}
+  }
 ```
 
 ## Pros/Cons of the transition
 
 Honestly, this was a lot of work. We were lucky that the app we were converting away from Hibernate was small. One great part of this re-organization is that it gave us a chance to re-think the structure of our app and spot some code cycles that we needed to untangle. We also discovered places where we depended on Hibernate's behavior instead of thinking through our app's architecture.
-
 
 ## Would we do it again?
 
