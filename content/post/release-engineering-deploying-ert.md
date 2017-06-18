@@ -29,7 +29,7 @@ This post will explain the [Concourse](https://www.concourse.ci)-driven system w
 
 {{< figure src="/images/release-engineering-deploying-ert/pipeline.png" class="center" caption="ERT 1.11 pipeline">}}
 
-## Creating Infrastructure
+## <a name="creating-infrastructure" href="#creating-infrastructure">Creating Infrastructure</a>
 [Terraform](https://www.terraform.io) is a tool for creating and modifying infrastructure in an automated manner. It currently supports all major cloud providers. Users define their desired infrastructure components such as load balancer, DNS, network configuration, etc, in template `*.tf` files. After running `terraform apply`, the user is given a state `*.tfstate` file, which contains information about the infrastructure. This is an important file as it allows you to manipulate and destroy your infrastructure in a painless, reentrant way.
 
 Our team maintains a series of repos that contain terraform templates that stand up the required infrastructure to deploy the ERT. These template files exist for [Google Cloud](https://github.com/pivotal-cf/terraforming-gcp), [AWS](https://github.com/pivotal-cf/terraforming-aws), and [Azure](https://github.com/pivotal-cf/terraforming-azure). Since template files do not contain any credentials, they are easy to distribute. Having the ability to describe your infrastructure in template files instead of documentation or writing a client program to interact with the IaaS, is one of the major benefits of terraform.
@@ -38,7 +38,7 @@ To create the infrastructure, our pipeline pulls templates from one of the afore
 
 Check out the README.md in the terraforming repo of your choice for specific info on how to get started.
 
-## Configuring Ops Manager
+## <a name="configuring-ops-man-authentication" href="#configuring-ops-man-authentication">Configuring Ops Manager Authentication</a>
 After creating the necessary infrastructure, authentication needs to be configured for interacting with Ops Manager. Since we are focused on automation through Concourse, we use `om` (https://github.com/pivotal-cf/om) to interact with the Ops Manager API. Some of you may be familiar with `opsmgr`, which was a similar tool but used Capybara to automate form submission. Unfortunately, `opsmgr` was susceptible to a high rate of false negatives, like failing to find elements on a page because they were overlapping. As a result, we created `om` to improve the reliability of our pipelines.
 
 {{< figure src="/images/release-engineering-deploying-ert/opsmgr.png" class="center" caption="Configuring Ops Manager authentication" >}}
@@ -73,8 +73,8 @@ $ om --target https://pcf.example.com --user some-user --password password uploa
   --stemcell /path/to/stemcell/file.tgz
 ~~~
 
-## Configuring BOSH
-Like deploying the open-source Cloudfoundry, Ops Manager uses BOSH. Much of the same configuration that is required when using bosh-init or bbl is applicable to configuring BOSH via Ops Manager.
+## <a name="configuring-bosh" href="#configuring-bosh">Configuring BOSH</a>
+Like deploying the open-source Cloudfoundry, Ops Manager uses BOSH. Much of the same configuration that is required when using [bosh-init](https://bosh.io/docs/using-bosh-init.html) or [bbl](https://github.com/cloudfoundry/bosh-bootloader) is applicable to configuring BOSH via Ops Manager.
 
 {{< figure src="/images/release-engineering-deploying-ert/opsmgr-configure-bosh.png" class="center" caption="BOSH configuration" >}}
 
@@ -121,8 +121,8 @@ $ om --target https://pcf.example.com --username some-user --password some-passw
 
 To fully configure the ERT, check out the examples in the `configure-product` [command documentation](https://github.com/pivotal-cf/om/tree/master/docs/configure-product).
 
-## Deploying ERT
-Now that BOSH is ready to deploy VMs and the ERT is configured, the final step is to deploy the platform. Under the hood, Ops Manager uses `bosh-init` to deploy the director with the configuration provided to the `om configure-bosh` command in the “Configuring BOSH” section. It issues a `bosh deploy` to deploy a manifest with the configuration provided to the `om configure-product` command in “Configuring the ERT” section. The lengthy compilation step is skipped since components in the ERT have already been compiled.
+## <a name="deploying-ert" href="#deploying-ert">Deploying ERT</a>
+Now that BOSH is ready to deploy VMs and the ERT is configured, the final step is to deploy the platform. Under the hood, Ops Manager uses `bosh-init` to deploy the director with the configuration provided to the `om configure-bosh` command in the <a href="#configuring-bosh">Configuring BOSH</a> section. It issues a `bosh deploy` to deploy a manifest with the configuration provided to the `om configure-product` command in <a href="#configuring-ert">Configuring the ERT</a> section. The lengthy compilation step is skipped since the BOSH releases in the ERT have already been compiled.
 
 The pipeline applies changes by issuing the following command:
 
@@ -132,5 +132,5 @@ $ om --target https://pcf.example.com --user some-user --password some-password 
 
 Running the `apply-changes` command will tail the Ops Manager installation output and exit `0` for a successful deployment and `1` for a failed deployment. The command is also reentrant meaning it will re-attach to an installation in progress.
 
-## Conclusion
+## <a name="conclusion" href="#conclusion">Conclusion</a>
 Automation is critical to testing the Elastic Runtime Tile. To ensure we discover problems before releasing the tile to our customers, it is imperative that we deploy and test different versions, upgrade paths, and configurations on numerous infrastructures. Tools like `terraform` make creating and managing infrastructure state simple. We created `om` to automate a stable and reentrant interaction with Ops Manager. Tooling is at the heart of Release Engineering and it has allowed us to maintain long-term support and confidence in the products we ship to customers.
