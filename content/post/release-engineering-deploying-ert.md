@@ -51,14 +51,14 @@ $ om --target https://pcf.example.com configure-authentication \
   --decryption-passphrase desired-passphrase
 ~~~
 
-## Uploading Artifacts
+## <a name="uploading-artifacts" href="#uploading-artifacts">Uploading Artifacts</a>
 Next, the pipeline uploads the ERT and its stemcell. As mentioned earlier, the ERT contains compiled releases of open-source Cloudfoundry components like loggregator, consul, and diego, as well as Pivotal Cloudfoundry components like autoscaling, apps manager, etc. The tile also contains metadata that describes tile properties and a manifest template that gets filled in with user-provided configuration (see “Configuring ERT”).
 
 {{< figure src="/images/release-engineering-deploying-ert/opsmgr-upload.png" class="center" caption="Uploading a tile" >}}
 
 Once again, since our focus is on automation, uploading is performed using `om`. The ERT is found on [Pivotal Network](https://network.pivotal.io), a site that contains many Pivotal products like the Redis Tile, Spring Cloud Services, and Runtime for Windows.
 
-Stemcells can be found on [bosh.io](https://www.bosh.io). The required stemcell version for an ERT is found on the tile’s download page. For automation purposes, our pipeline unzips the tile, finds the metadata file, and extracts the required stemcell version from the `stemcell criteria` section of the metadata.
+Stemcells can be found on [bosh.io](https://www.bosh.io). The required stemcell version for an ERT is found on the tile’s download page. For automation purposes, our pipeline unzips the tile, finds the metadata file, and extracts the required stemcell version from the `stemcell_criteria` section of the metadata.
 
 Once we have the ERT and stemcell, they are uploaded to the Ops Manager via the following `om` commands:
 
@@ -104,9 +104,9 @@ $ om --target https://pcf.example.com --username some-user --password some-passw
 
 To fully configure the BOSH director, check out the examples in `configure-bosh` [command documentation](https://github.com/pivotal-cf/om/tree/master/docs/configure-bosh).
 
-# Configuring ERT
+## <a name="configuring-ert" href="#configuring-ert">Configuring ERT</a>
 
-Configuration for open-source Cloudfoundry is provided via a manifest file. When deploying the ERT, configuration is provided to Ops Manager and it generates the manifest the BOSH director will deploy. Through Ops Manager, values like instance size and counts, SSL certificates, authentication, and application logging can be specified. Properties you might find on a job in open-source Cloudfoundry are exposed via the form fields of Ops Manager.
+Configuration for open-source Cloudfoundry is provided via a manifest file. However, configuration of the ERT is exposed by a series of forms on Ops Manager and these values are populated into the manifest. The forms allow operators to enable features like container networking, tcp routing, and specify values like SSL certificates for the routers, a destination for external system logging, configuring the Cloud Controller database, etc. Values that are provided in these forms are translated into properties for their respective BOSH jobs.
 
 {{< figure src="/images/release-engineering-deploying-ert/opsmgr-configure-ert.png" class="center" caption="ERT configuration" >}}
 
