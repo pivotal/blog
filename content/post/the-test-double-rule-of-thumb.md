@@ -401,8 +401,8 @@ Let's imagine an interface called `UsedLaunchCodes` that keeps track of, well, u
 ```java
 @Test
 void reusedLaunchCodeTriggersCodeRedAbort(){
-  launchMissile(missile,     validLaunchCode, **usedLaunchCodes**);
-  launchMissile(mockMissile, validLaunchCode, **usedLaunchCodes**);
+  launchMissile(missile,     validLaunchCode, usedLaunchCodes);
+  launchMissile(mockMissile, validLaunchCode, usedLaunchCodes);
 
   mockMissile.verifyCodeRedAbort();
 }
