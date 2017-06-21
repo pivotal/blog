@@ -9,6 +9,7 @@ draft: false
 short: |
   A guide to understanding and effectively utilizing test doubles.
 title: The Test Double Rule of Thumb
+image: /images/pairing.jpg
 ---
 
 {{< responsive-figure src="/images/pairing.jpg" class="left" >}}
