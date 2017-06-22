@@ -611,3 +611,9 @@ If you want to explore more, check out the [manual pages for `namespaces`](http:
 - Create a "virtual ethernet" pair using `ip link add`, then try to "connect one namespace to another" using `ip link set dev`.  Can you make a network connection (via `nc`) from one namespace to another?
 
 Next time, we'll dive into Go language *goroutines*, what problems they solve and how they are different from threads.
+
+## UPDATE
+I got busy and never wrote parts 2 and 3, BUT the excellent folks at Weave Works have a
+[great blog post](https://www.weave.works/blog/linux-namespaces-and-go-don-t-mix) covering most of what I was aiming for.
+You may also be interested in [this GitHub issue](https://github.com/golang/go/issues/20676) which may provide a real fix
+in Go 1.10.
