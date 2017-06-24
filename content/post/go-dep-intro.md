@@ -96,7 +96,7 @@ This will fetch the dependency listed in the manifest file using the latest revi
 You can see that because of `color`, `dep` has pulled in transitive dependencies `go-colorable` and `go-isatty`, and `sys`, which `color` relies on. If you examine the `vendor` directory, you’ll see all the packages there:
 
 ```
-$ find /path/ -type d -print
+$ find ./vendor -type d -print
 ./vendor
 ./vendor/github.com
 ./vendor/github.com/fatih
