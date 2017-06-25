@@ -1,0 +1,42 @@
+<script type="application/ld+json">
+{
+  {{ if .IsPage }}
+    "@type": "BlogPosting",
+    {{ with or .Params.short .Site.Params.SubTitle }}
+      "description": "{{ . }}",
+    {{ end }}
+    "headline": "{{ .Title }}",
+    "datePublished": "{{ .Date.Format "2006-01-02T15:04:05-08:00" }}",
+    "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05-08:00" }}",
+    "author": [
+        {{ $all := .Site.Data.authors }}
+        {{ $authors := .Params.authors }}
+        {{ $len := (len $authors) }}
+        {{ range $index, $author := $authors }}
+          {{ with $a := (index $all $author) }}
+            {"name": "{{ $a.Name }}", "@type": "Person"}{{ if ne (add $index 1) $len }},{{ end }}
+          {{ end }}
+        {{ end }}
+    ],
+    {{ with .Params.image }}
+      "image": "{{ . | absURL }}",
+    {{ end }}
+  {{ else }}
+    "@type": "WebSite",
+  {{ end }}
+  "publisher": {
+    "@type": "Organization",
+    "name": "Pivotal Software, Inc.",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ "/images/logo.svg" | absURL }}",
+      "width": 145,
+      "height": 60
+    },
+    "url": "https://pivotal.io/"
+  },
+  "@id": "{{ .Permalink }}",
+  "mainEntityOfPage": "{{ .Permalink }}",
+  "@context": "http://schema.org"
+}
+</script>
