@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="/github.css">
   <link rel="stylesheet" href="/local.css">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
   <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
   <meta property="og:title" content="{{ .Title }}" />
   <meta property="og:site_name" content="{{ .Site.Title }}" />
@@ -36,9 +37,25 @@
   {{ with or .Params.short .Site.Params.SubTitle }}
     <meta property="og:description" content="{{ . }}" />
   {{ end }}
-  {{ with .Params.image }}
-    <meta property="og:image" content="{{ . | absURL }}" />
+  {{ if .Params.Image }}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:image" content="{{ .Params.image | absURL }}" />
+    <meta name="twitter:image:alt" content="{{ .Site.Title }}" />
+  {{ else }}
+    <meta name="twitter:card" content="summary" />
   {{ end }}
+  <meta name="twitter:site" content="@pivotaleng" />
+  {{ $all := .Site.Data.authors }}
+  {{ with $authors := .Params.authors }}
+    {{ $len := (len $authors) }}
+    {{ range $index, $author := $authors }}
+      {{ with $a := (index $all $author) }}
+        {{ if $a.Twitter }}<meta name="twitter:creator" content="@{{ $a.Twitter }}" />{{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ partial "schema.html" . }}
+
   <!-- The feedburner account is managed by Tammer.  Contact him for any tweaks. -->
   <link href="http://feeds.feedburner.com/PivotalEngineeringJournal" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
   <script type="text/javascript">
