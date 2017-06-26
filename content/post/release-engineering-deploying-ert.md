@@ -73,7 +73,7 @@ $ om --target https://pcf.example.com --user some-user --password password uploa
   --product /path/to/product/file.pivotal
 
 $ om --target https://pcf.example.com --user some-user --password password stage-product \
-  --product-name cf --product-version 1.10.12
+  --product-name cf --product-version 1.11.1
 
 $ om --target https://pcf.example.com --user some-user --password password upload-stemcell \
   --stemcell /path/to/stemcell/file.tgz
