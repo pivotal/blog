@@ -127,6 +127,12 @@ $ om --target https://pcf.example.com --username some-user --password some-passw
 
 To fully configure the ERT, check out the examples in the `configure-product` [command documentation](https://github.com/pivotal-cf/om/tree/master/docs/configure-product).
 
+Note: Ops Manager has a useful API method that [displays all configurable
+properties of a
+tile](https://opsman-dev-api-docs.cfapps.io/#viewing-product-properties). This
+can be useful when crafting an `om` command to configure a property not covered
+in the `om` examples and documentation.
+
 ## <a name="deploying-ert" href="#deploying-ert">Deploying ERT</a>
 Now that BOSH is ready to deploy VMs and the ERT is configured, the final step is to deploy the platform!
 
