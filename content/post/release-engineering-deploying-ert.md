@@ -17,7 +17,7 @@ Foundry's Elastic Runtime"
 ---
 At Pivotal, we strive for empathy with our customers. One way we achieve this: running and managing our own products, just as a customer would. Here’s a look at how our Release Engineering team maintains the [Elastic Runtime Tile (ERT)](https://network.pivotal.io/products/elastic-runtime). The ERT includes both open-source and proprietary components that power [Pivotal Cloud Foundry](https://pivotal.io/platform). [Ops Manager](https://docs.pivotal.io/pivotalcf/1-11/customizing/) is a web application that platform operators use to configure and deploy tiles, such as the ERT, [MySQL](https://network.pivotal.io/products/pivotal-mysql), [Redis](https://network.pivotal.io/products/p-redis), [RabbitMQ](https://network.pivotal.io/products/pivotal-rabbitmq-service), etc.
 
-{{< responsive-figure src="/images/release-engineering-deploying-ert/opsmgr.png" class="center small" caption="Ops Manager Web App" >}}
+{{< responsive-figure src="/images/release-engineering-deploying-ert/opsman-initial.png" class="center small" caption="Ops Manager Web App" >}}
 
 Our team works in the space between platform component teams and customers. Our core responsibilities are to consume platform components, expose configuration options to operators in a user-friendly manner via forms on Ops Manager, and test the platform. Furthermore, the team applies bug fixes and critical vulnerability patches to previous versions of the ERT.
 
@@ -25,11 +25,11 @@ Our team works in the space between platform component teams and customers. Our 
 
 It is critical that we deploy and test the product in production-like situations on the infrastructures our customers use. After all, customers depend on us for long-term support. Our testing matrix below details the versions, upgrade paths, and infrastructures we test.
 
-{{< responsive-figure src="/images/release-engineering-deploying-ert/testing-matrix.png" class="center small" caption="ERT Testing Matrix" >}}
+{{< responsive-figure src="/images/release-engineering-deploying-ert/testing-matrix.png" class="center small" caption="ERT Testing Matrix (N, M are latest versions)" >}}
 
 This post explains the [Concourse](https://www.concourse.ci)-driven system we use to deploy and test the ERT. We use [terraform](https://www/terraform.io) to create infrastructure and an Ops Manager instance. We built a tool called `om` that interacts with Ops Manager to configure and deploy the ERT. To see the pipelines in action go to [https://releng.ci.cf-app.com](https://releng.ci.cf-app.com).
 
-{{< figure src="/images/release-engineering-deploying-ert/pipeline.png" class="center" caption="ERT 1.11 pipeline">}}
+{{< figure src="/images/release-engineering-deploying-ert/pipeline.png" class="center" caption="Pipeline deploying ERT 1.11 on GCP">}}
 
 ## <a name="creating-infrastructure" href="#creating-infrastructure">Creating Infrastructure</a>
 [Terraform](https://www.terraform.io)  automates the creation and modification of infrastructure. It supports all major cloud providers. Users define their infrastructure components (load balancer, DNS, network configuration, etc.) in template `.tf` files. After running `terraform apply`, the user is given a `.tfstate` state file that contains information about the infrastructure. This is an important file - it allows you to manipulate and destroy your infrastructure in a painless, reentrant way. As long as you have the state file, terraform can do its job.
@@ -60,7 +60,7 @@ $ om --target https://pcf.example.com configure-authentication \
 ## <a name="uploading-artifacts" href="#uploading-artifacts">Uploading Artifacts</a>
 Next, the pipeline uploads the ERT and its stemcell to Ops Manager. The ERT contains compiled releases of open-source Cloud Foundry components like [loggregator](https://www.github.com/cloudfoundry/loggregator), [UAA](https://www.github.com/cloudfoundry/uaa-release), and [Diego](https://www.github.com/cloudfoundry/diego-release), as well as Pivotal Cloud Foundry components like [App Autoscaler](https://docs.pivotal.io/pivotalcf/1-10/appsman-services/autoscaler/using-autoscaler.html) and [Apps Manager](https://docs.pivotal.io/pivotalcf/1-11/console/index.html). The tile also contains metadata that describes its properties, and a manifest template that’s populated with user-provided configuration (see [Configuring ERT](#configuring-ert)).
 
-{{< figure src="/images/release-engineering-deploying-ert/opsmgr-upload.png" class="center" caption="Uploading a tile" >}}
+{{< figure src="/images/release-engineering-deploying-ert/opsman-upload.png" class="center" caption="Uploading stemcell for ERT" >}}
 
 Since our focus is automation, we use `om` for the upload. The ERT bits are on [Pivotal Network](https://network.pivotal.io), a site that contains many Pivotal products like [Redis](https://network.pivotal.io/products/p-redis), [Spring Cloud Services](https://network.pivotal.io/products/p-spring-cloud-services), and [Pivotal Cloud Foundry Runtime for Windows](https://network.pivotal.io/products/runtime-for-windows).
 
@@ -82,7 +82,7 @@ $ om --target https://pcf.example.com --user some-user --password password uploa
 ## <a name="configuring-bosh" href="#configuring-bosh">Configuring BOSH</a>
 Cloud Foundry uses BOSH for deployment; so does Ops Manager in Pivotal’s commercial distribution. Much of the same configuration that is required when using [bosh-init](https://bosh.io/docs/using-bosh-init.html) or [bbl](https://github.com/cloudfoundry/bosh-bootloader) is applicable to configuring BOSH via Ops Manager.
 
-{{< figure src="/images/release-engineering-deploying-ert/opsmgr-configure-bosh.png" class="center" caption="BOSH configuration" >}}
+{{< figure src="/images/release-engineering-deploying-ert/opsman-configure-bosh.png" class="center" caption="Configuring BOSH director" >}}
 
 To configure the BOSH Director, you need to provide Ops Manager with details about the infrastructure the platform will be deployed into (see [Creating infrastructure](#creating-infrastructure)). Terraform to the rescue! Our pipeline extracts this information from the terraform state file `.tfstate` via the following command:
 
@@ -114,7 +114,7 @@ To fully configure the BOSH Director, check out the examples in `configure-bosh`
 
 Configuration for open-source Cloud Foundry is provided via a manifest file. However, configuration of the ERT is exposed by a series of forms on Ops Manager and these values are populated into the manifest. The forms allow operators to enable features like container networking, TCP routing, and specify values like SSL certificates for the routers, a destination for external system logging, desired location for the Cloud Controller database, etc. Values that are provided in these forms are translated into properties for their respective BOSH jobs.
 
-{{< figure src="/images/release-engineering-deploying-ert/opsmgr-configure-ert.png" class="center" caption="ERT configuration" >}}
+{{< figure src="/images/release-engineering-deploying-ert/opsman-configure-ert.png" class="center" caption="Configuring ERT" >}}
 
 Here's an example of part of an `om configure-product` command that is used to configure the [`system_domain`](https://github.com/cloudfoundry/cloud_controller_ng/blob/c11841b5675aaa47ccd2a70b742eb25601d26d2c/bosh/jobs/cloud_controller_ng/spec#L74-L75) value that would be provided to the `cloud_controller` job:
 
