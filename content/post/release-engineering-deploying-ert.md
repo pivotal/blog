@@ -47,7 +47,7 @@ After the infrastructure is stood up, it’s time to configure authentication so
 
 Some of you may be familiar with `opsmgr` - a similar tool that used Capybara to automate form submission. Unfortunately, opsmgr was susceptible to a high rate of false negatives, like failing to find elements on a page because they were overlapping. As a result, we created om to improve the reliability and speed of our pipelines.
 
-{{< figure src="/images/release-engineering-deploying-ert/configuring-opsman.png" class="center" caption="Configuring Ops Manager authentication" >}}
+{{< figure src="/images/release-engineering-deploying-ert/opsman-configure-authentication.png" class="center" caption="Configuring Ops Manager authentication" >}}
 
 To start interacting with [Ops Manager via the API](https://opsman-dev-api-docs.cfapps.io/), we set up authentication using the following command:
 
