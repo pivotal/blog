@@ -8,8 +8,7 @@ categories:
 - Terraform
 - Ops Manager
 - om
-date: 2017-06-01T19:52:30-07:00
-draft: true
+date: 2017-06-27T22:00:00-07:00
 short: |
   A look at how Release Engineering deploys and tests the Elastic Runtime Tile
 title: "Using Terraform, Concourse, and om to Continuously Deploy Pivotal Cloud
