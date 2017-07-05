@@ -97,7 +97,8 @@ cd ../image
  # unpack the bootable Linux disk image
 tar xvf ../stemcell/image
  # connect the bootable Linux disk image to a loopback device
-sudo losetup /dev/loop0 disk.raw
+ # the extracted file may be `disk.raw` instead of `root.img`
+sudo losetup /dev/loop0 root.img
  # probe for the new partitions
 sudo partprobe /dev/loop0
  # mount the disk image
@@ -214,6 +215,48 @@ them). Tread carefully, the ice is thin.
 
 </div>
 
+## 5. Alternate Stemcell Formats: `.vmdk`
+
+[Virtual Machine Disk](https://en.wikipedia.org/wiki/VMDK) (VMDK) is a
+format frequently used by VMware and VirtualBox virtualization.
+
+The above instructions do _not_ work for `.vmdk`-format disks; however,
+such disks _can_ be customized with additional steps. The steps require
+the executable `qemu-img`, a utility which converts different
+disk formats.
+
+We need to convert the `.vmdk` to a raw disk image (`root.img`);
+Run the following command _after_ running `tar xvf ../stemcell/image`
+in the instructions above:
+
+```bash
+if [ -f image-disk1.vmdk ]; then
+  qemu-img convert image-disk1.vmdk -O raw root.img
+fi
+```
+
+Similarly, when we tar up the new stemcell, we need to convert
+the raw disk image (`root.img`) back to a `.vmdk`. Run the
+following command _after_ running `sudo losetup -d /dev/loop0`
+in the instructions above:
+
+```bash
+if [ -f image-disk1.vmdk ]; then
+  rm image-disk1.vmdk
+  qemu-img convert root.img -O vmdk image-disk1.vmdk
+  rm root.img
+  SHASUM=($(shasum image-disk1.vmdk))
+  perl -pi -e "s/vmdk\)=\s\S+\$/vmdk\)= $SHASUM/" image.mf
+fi
+```
+
+Note that we have taken the opportunity to update the
+Secure Hash Algorithms
+([SHA](https://en.wikipedia.org/wiki/Secure_Hash_AlgorithmsSHA))
+inside the image's manifest (`image.mf`).
+If we didn't update the SHA, the stemcell would fail to upload to
+the director.
+
 ---
 
 ## Footnotes
@@ -246,6 +289,10 @@ the secrets to be passed via the command line, e.g. `-l ~/secrets.yml` or
 The Golang CLI is in alpha and should not be used on production systems.
 
 ## Corrections & Updates
+
+*2017-07-04*
+
+Added instructions for customizing `.vmdk` stemcells.
 
 *2017-04-12*
 
