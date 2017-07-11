@@ -70,6 +70,7 @@
           </ul>
           </div>
 
+          <div class="pvl phxxl">Posts By {{ $name.Name }}</div>
           <div id="posts">
             <ol class="list-timeline">
               {{ range where .Data.Pages "Section" "!=" "tweet" }}
