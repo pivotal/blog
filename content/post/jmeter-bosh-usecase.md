@@ -7,26 +7,26 @@ categories:
 - Distributed Load Testing
 - Distributed Stress Testing
 date: 2017-07-11T09:44:46-05:00
+draft: false
 short: |
   This post details the steps of utilizing BOSH to setup half a million (potentially much more) concurrent and distributed Apache JMeter threads for load testing.
 title: "Half a Million Concurrent/Distributed JMeter Users with BOSH ... in 10 Minutes"
+image: /images/jmeter-bosh-usecase/jmeter-bosh-usecase-1.png
 ---
 
 [BOSH](http://bosh.io/) is an open source tool for release engineering, deployment, lifecycle management, and monitoring of distributed systems.
 BOSH can provision and deploy software over hundreds of VMs. It also performs failure recovery and software updates with zero-to-minimal downtime.
 
-[Apache JMeter&trade;](http://jmeter.apache.org/) is open source software, a 100% pure Java application designed to load test functional behavior and measure performance. It was originally designed for testing Web Applications but has since expanded to other test functions. JMeter may be used to test performance both on static and dynamic resources, Web dynamic applications. It can be used to simulate a heavy load on a server, group of servers, network or object to test its strength or to analyze overall performance under different load types.
+[Apache JMeter&trade;](http://jmeter.apache.org/) is open source software, a 100% pure Java application designed to load test functional behavior and measure performance. It was originally designed for testing web applications but has since expanded to other test functions. JMeter may be used to test performance both on static and dynamic resources, web dynamic applications. It can be used to simulate a heavy load on a server, group of servers, network or object to test its strength or to analyze overall performance under different load types.
 
 [Tornado for Apache JMeter&trade;](https://github.com/jamlo/jmeter-bosh-release), is a [BOSH](https://bosh.io/) release for [Apache JMeter &trade;](http://jmeter.apache.org/). It simplifies the usage of JMeter&trade; in distributed mode, making it easier to perform distributed load/stress testing on multiple IAAS offerings.
-
-**Note: Apache&trade;, Apache JMeter&trade;, and JMeter&trade; are trademarks of the Apache Software Foundation (ASF).**
 
 ---
 ## Prerequisites
 
 * Check this previous [blog post](http://engineering.pivotal.io/post/jmeter-bosh-release/) for more details about [Tornado for Apache&trade; JMeter&trade;](https://github.com/jamlo/jmeter-bosh-release) bosh release.
 * A Bosh director deployed on AWS. See [Docs for details](https://bosh.io/docs/init-aws.html).
-* Your AWS account quota limits should allow the creation of a minimum 102 `m4.large` instances.
+* Your AWS account quota limits should allow the creation of a minimum 100 `m4.large` instances.
 * **Note: AWS is used here as an example. This experiment can be repeated on multiple IAAS offerings [(GCP, Azure, OpenStack, Softlayer)](http://bosh.io/docs/init.html)**
 
 ---
@@ -259,3 +259,5 @@ Congrats! You have just simulated 0.5 million users. Make sure to delete the dep
 
 ## Notes
 In our test, each thread will make an HTTP call every 5 seconds. If you want to lower that number, the number of threads per every JMeter instance needs to be lowered down, too.
+
+**Note: Apache&trade;, Apache JMeter&trade;, and JMeter&trade; are trademarks of the Apache Software Foundation (ASF).**
