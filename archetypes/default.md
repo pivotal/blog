@@ -1,15 +1,19 @@
 ---
-draft: true
-categories: ["BOSH", "CF Runtime", "API", "Logging & Metrics", "Agile", "Humans"]
 authors:
 - Add another author here
 - tammer
-short: >
-  Short description for index pages, and under
-  title when viewing a post. Lorem ipsum dolor sit amet,
-  consectetur adipisicing elit, sed do eiusmod tempor
-  incididunt ut labore et dolore magna aliqua. Ut
-  enim ad minim veniam.
+categories:
+- BOSH
+- CF Runtime
+- API
+- Logging & Metrics
+- Agile
+date: 2015-11-17T17:16:22Z
+draft: true
+short: |
+  Short description for index pages, and under title when viewing a post. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+title: example_post
+image: /images/pairing.jpg
 ---
 
 Posts are written in [Markdown](https://help.github.com/articles/github-flavored-markdown/) -- tips below:
@@ -26,7 +30,7 @@ People want to to be educated and enlightened.  Our audience are engineers, so t
 
 {{< responsive-figure src="/images/pairing.jpg" class="right small" >}}
 
-Use headers to break up your text.  Each image you add to your post increases its XP by 100.  Diagrams, screen shots, or humorous "meme" (_|memā|_) gifs...  They all add color.  If you don't have [OmniGraffle](https://www.omnigroup.com/omnigraffle), then submit an ask ticket.  There's no excuse for monotony.
+Use headers to break up your text.  Each image you add to your post increases its XP by 100.  Diagrams, screen shots, or humorous "meme" (_|memā|_) gifs...  They all add color.  If you don't have OmniGraffle, then submit an ask ticket.  There's no excuse for monotony.
 
 ### Your 10th grade teacher was right.
 
@@ -65,12 +69,11 @@ instance = Class.new("foo")
 ~~~
 
 | Header 1        | Header 2  | ...        |
-| --------------  | --------- | ---------: |
+| --------------  | :-------: | ---------: |
 | SSH (22)        | TCP (6)   | 22         |
 | HTTP (80)       | TCP (6)   | 80         |
 | HTTPS (443)     | TCP (6)   | 443        |
 | Custom TCP Rule | TCP (6)   | 2222       |
 | Custom TCP Rule | TCP (6)   | 6868       |
 
-{{< responsive-figure src="/images/pairing.jpg" >}}
-
+{{< responsive-figure src="/images/pairing.jpg" class="center" >}}

@@ -2,4 +2,4 @@
 
 [ -z $1 ] && echo "Usage: $0 post-name" && exit 1
 
-hugo new post/$1.md -f yaml
+hugo new post/$1.md -k yaml
