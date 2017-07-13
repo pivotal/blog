@@ -9,7 +9,7 @@ categories:
 - Greenplum
 - Apache Spark
 date: 2017-07-13T17:51:13-04:00
-draft: true
+draft: false
 short: |
     An IPython library to help data scientists write SQL code
 title: "sql_magic: Jupyter Magic to Write SQL for Apache Spark and Relational Databases"
