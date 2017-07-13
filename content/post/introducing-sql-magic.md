@@ -1,6 +1,5 @@
 ---
 authors:
-- Add another author here
 - chrisrawles
 categories:
 - Data Science
