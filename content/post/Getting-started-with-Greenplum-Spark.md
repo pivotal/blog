@@ -66,15 +66,15 @@ val df = spark.
 ### Write data into Greenplum
 In this section, you can write data from Spark DataFrame into Greenplum table. Spark DataFrame class provides four write modes for different use cases.
 
-- "Error" When saving a DataFrame to a data source, if data already exists, an exception is expected to be thrown.
+1.**"Error"** mode means When saving a DataFrame to a data source, if data already exists, an exception is expected to be thrown.
 
-- "append" When saving a DataFrame to a data source, if data/table already exists, contents of the DataFrame are expected to be appended to existing data.
+2.**"append"** mode means when saving a DataFrame to a data source, if data/table already exists, contents of the DataFrame are expected to be appended to existing data.
 
-- "overwrite"	Overwrite mode means that when saving a DataFrame to a data source, if data/table already exists, existing data is expected to be overwritten by the contents of the DataFrame.
+3.**overwrite** mode means that when saving a DataFrame to a data source, if data/table already exists, existing data is expected to be overwritten by the contents of the DataFrame.
 
-- "ignore"	Ignore mode means that when saving a DataFrame to a data source, if data already exists, the save operation is expected to not save the contents of the DataFrame and to not change the existing data. This is similar to a CREATE TABLE IF NOT EXISTS in SQL.
+4.**ignore** mode means that when saving a DataFrame to a data source, if data already exists, the save operation is expected to not save the contents of the DataFrame and to not change the existing data. This is similar to a CREATE TABLE IF NOT EXISTS in SQL.
 
-This example illustrates how to write
+This example illustrates how to append DataFrame data into Greenplum table.
 ~~~scala
 scala> :paste
 // Entering paste mode (ctrl-D to finish)
