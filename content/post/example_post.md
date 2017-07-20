@@ -76,5 +76,4 @@ instance = Class.new("foo")
 | Custom TCP Rule | TCP (6)   | 2222       |
 | Custom TCP Rule | TCP (6)   | 6868       |
 
-{{< responsive-figure src="/images/pairing.jpg" >}}
-
+{{< responsive-figure src="/images/pairing.jpg" class="center" >}}

@@ -9,4 +9,5 @@ Params:
   SubTitle: Technical articles from Pivotal engineers.
 baseURL: "http://engineering.pivotal.io"
 googleAnalytics: UA-39702075-1
+rssLimit: 25
 ...

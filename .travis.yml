@@ -7,7 +7,6 @@ install:
 script: ./bin/build
 deploy:
   provider: cloudfoundry
-  edge: true
   skip_cleanup: true
   api: https://api.run.pivotal.io
   username: engineering-blog@pivotal.io
