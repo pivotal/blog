@@ -8,8 +8,7 @@ categories:
 - JDBC
 - Java Database Connectivity
 - Repositories
-date: 2017-06-15T08:53:03-07:00
-draft: true
+date: 2017-07-21T08:53:03-07:00
 short: An exploration in replacing Hibernate with JDBC in Spring.
 title: Hibernate to JDBC
 ---
