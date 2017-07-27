@@ -12,10 +12,11 @@ date: 2017-07-26T14:31:04-04:00
 short: |
   Must license auditing always be a burden to a product’s release process? Pivotal tackles this hairy issue at competing ends of the spectrum: implementing more thorough license inspections while also speeding up the time to delivery for our software.
 title: Open Source License Compliance at the Speed of Your Code
+image: /images/the-village-lawyers-office.jpg
 draft: true
 ---
 
-(title image)
+{{< responsive-figure src="/images/the-village-lawyers-office.jpg" caption="Depiction of conventional open source license review process" alt="painting of a lawyer's office from a previous age" class="center" >}}
 
 When people discuss agile development, the usual topics come to mind: CI/CD, microservices, and devops. However, many enterprises also have to take into account another facet of creating software: license compliance. While it might sound straightforward, open source license (OSL) compliance requires collaboration between multiple internal teams and involves several important steps. Each step presents challenges that could potentially slow down the release cycle. I’ll explain what they are, the problems Pivotal encountered with our old workflow, and what our new strategy is.
 
@@ -35,7 +36,7 @@ The spreadsheet of license data was then passed to the OSL team, who cleaned up 
 
 The process had built-in bottlenecks and certainly wasn’t agile. Product teams had to waste time regularly generating reliable dependency reports, taking focus away from feature work. PMs had to schedule their dependency audits after a code freeze, which means close to the end of the release cycle — generally a busy time for a PM. At such a late stage, if the legal review team discovered an issue, it was very likely to cause a delay.
 
-(Gantt chart showing old crappy process)
+{{< responsive-figure src="/images/osl_old_process.jpg" alt="a timeline of the old process, showing that legal review happens after development, holding up the product release" class="center" >}}
 
 Dealing with unexpected license problems had product delays in the past. It was nobody’s fault, but the issue required a group effort to come up with a solution.
 
@@ -68,7 +69,7 @@ Even though we created a great utility to scan for licenses, there were still pr
 
 To solve this problem, we began treating license scanning the same way we treated integration tests — codifying them in continuous integration. Using [Concourse](https://concourse.ci), the OSL team set up pipelines that observed changes in the code repos of every Pivotal product. Every time there was a code change, it would automatically initiate a license scan and the resulting list of dependencies and licenses were sent for later processing. This early-and-often style of automated scanning reduced the burden for products teams and the OSL team.
 
-(picture of concourse dashboard)
+{{< responsive-figure src="/images/osl_pipelines.png" caption="The dashboard for the many OSL scanning pipelines — there's one for each product. Sometimes, pipelines go red when there's a problem determining dependencies." alt="a dashboard with many open source license scanning Concourse pipelines, one for each Pivotal product" class="center" >}}
 
 As an added benefit, we were also able to take advantage of Concourse’s strengths:
 
@@ -91,10 +92,11 @@ Of all the stages in our workflow, the legal review process was the most challen
 
 Without reducing the thoroughness of our legal review, we took some steps to make the process more agile. To start, we created an app called Oslo which presented a view of every Pivotal product and all the licenses and copyrights within these products. The app continuously received new information from the automation pipelines discussed in the previous section. If a blacklisted license ever came into the system, it would be automatically flagged, and a notification was sent to the OSL team. This shortened the time before a dialog could be initiated with the product team and reduced the back-loading of potential delays caused by these conversations.
 
-<screenshot of Oslo>
+{{< responsive-figure src="/images/oslo.png" caption="A recent beta build of Oslo" alt="a screenshot of Oslo" class="center" >}}
 
 Oslo is still a work in progress and we’re continually experimenting with it to find inefficiencies in our workflow. With it, the legal review team will be able to preview the licenses of an upcoming product even before a code freeze. They can then more flexibly schedule reviews to be done in advance according to product priority and legal resource availability.  This more agile style of legal review will help reduce the risk of unexpected delays and put less stress across the organization.
 
+{{< responsive-figure src="/images/osl_new_process.jpg" alt="a timeline of the new process, showing that legal review occurs concurrently with development, no longer blocking release" class="center" >}}
+
 ## Conclusion
 Legal review is an important concern for many enterprises but unfortunately it’s easy to forget its effects on the release schedule. Furthermore, a rigorous legal compliance process will never be the first target of an agile transformation. However, successfully modernizing this rigid workflow allows an organization to release software more regularly, preserve valuable R&D time, reduce liability, and build confidence with their customers.
-
