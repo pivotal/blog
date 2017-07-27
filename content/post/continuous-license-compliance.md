@@ -15,7 +15,7 @@ title: Open Source License Compliance at the Speed of Your Code
 draft: true
 ---
 
-<title image>
+(title image)
 
 When people discuss agile development, the usual topics come to mind: CI/CD, microservices, and devops. However, many enterprises also have to take into account another facet of creating software: license compliance. While it might sound straightforward, open source license (OSL) compliance requires collaboration between multiple internal teams and involves several important steps. Each step presents challenges that could potentially slow down the release cycle. I’ll explain what they are, the problems Pivotal encountered with our old workflow, and what our new strategy is.
 
@@ -35,7 +35,7 @@ The spreadsheet of license data was then passed to the OSL team, who cleaned up 
 
 The process had built-in bottlenecks and certainly wasn’t agile. Product teams had to waste time regularly generating reliable dependency reports, taking focus away from feature work. PMs had to schedule their dependency audits after a code freeze, which means close to the end of the release cycle — generally a busy time for a PM. At such a late stage, if the legal review team discovered an issue, it was very likely to cause a delay.
 
-<Gantt chart showing old crappy process>
+(Gantt chart showing old crappy process)
 
 Dealing with unexpected license problems had product delays in the past. It was nobody’s fault, but the issue required a group effort to come up with a solution.
 
@@ -68,7 +68,7 @@ Even though we created a great utility to scan for licenses, there were still pr
 
 To solve this problem, we began treating license scanning the same way we treated integration tests — codifying them in continuous integration. Using [Concourse](https://concourse.ci), the OSL team set up pipelines that observed changes in the code repos of every Pivotal product. Every time there was a code change, it would automatically initiate a license scan and the resulting list of dependencies and licenses were sent for later processing. This early-and-often style of automated scanning reduced the burden for products teams and the OSL team.
 
-<picture of concourse dashboard>
+(picture of concourse dashboard)
 
 As an added benefit, we were also able to take advantage of Concourse’s strengths:
 
