@@ -215,7 +215,7 @@ public class GardenJdbcPersister {
 }
 ```
 
-One interesting tidbit above is the DbLastInsertedIdProvider. When you successfully create or update an entry in sql, sql does not return the id of the object. We wrote a function that uses the sql `"select LAST_INSERT_ID()"` so that we can return the id of the object created/updated.
+One interesting tidbit above is the DbLastInsertedIdProvider. We are using MySQL so when you successfully create or update an entry in sql, sql does not return the id of the object. Most other datbases will not have this problem. The [JDBC docs](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcOperations.html#update-org.springframework.jdbc.core.PreparedStatementCreator-org.springframework.jdbc.support.KeyHolder-) state that the `int` returned from an `update` is the number of rows affected and sadly, not the id. We wrote a function that uses the sql `"select LAST_INSERT_ID()"` so that we can return the id of the object created/updated. However, if your application is handling many SQL requests in short succession, you may run into problems getting the correct id if another line is modified in the process of updating and retrieving the desired id. Our app currently has low enough SQL traffic that this hasn't been an issue for us.
 
 We also made a FlowerJdbcRepository and FlowerJdbcPersister in the same vein.
 
