@@ -1,67 +1,81 @@
 ---
 draft: true
-categories: ["greenplum", "Apache Spark", "JDBC", "Postgresql",]
+categories: ["Greenplum", "Apache Spark", "JDBC", "Postgresql"]
 authors:
-- kongc
+- kochan
+- gtadi
+
 short: >
   Learn how to configure Greenplum and Apache Spark using JDBC
 
-title: Getting Started with Greenplum and Apache Spark
+title: Greenplum and Apache Spark via JDBC
 ---
-Greenplum Database® is an advanced, fully featured, open source data warehouse. It provides powerful and rapid analytics on petabyte scale data volumes. Apache Spark is a light fast cluster computing runs programs up to 100x faster than Hadoop MapReduce in memory. Despite Apache Spark's general purpose data processing and growth in Spark adoption rate, Apache Spark is not a data store as it depends on external data store.
+Greenplum Database® is an advanced, fully featured, open source data warehouse. It provides powerful and rapid analytics on petabyte scale data volumes.
 
-Greenplum users want to use Spark for in-memory processing such as running in-memory analytics, pre-processing data in memory before loading the data into Greenplum. Using Postgresql JDBC driver, you can load and unload data between Greenplum  cluster and Spark cluster.  
+Apache Spark is a lightning-fast cluster computing framework that runs programs up to 100x faster than Hadoop MapReduce in-memory. Despite Apache Spark's general purpose data processing and growth in Spark adoption rate, Apache Spark is not a data store as it depends on external data store.
 
-This article illustrates how to read and write data between Greenplum and Spark and how to speed-up data transfer by using Spark built-in parallelism.
+Greenplum users want to use Spark for running in-memory analytics and data pre-processing before loading the data into Greenplum.
+Using Postgresql JDBC driver, we can load and unload data between Greenplum and Spark clusters.  
 
-###  How to connect to Greenplum with JDBC driver
-In this example, we will describe how to configure JDBC driver when you run Spark-shell. First, execute the command below to download jar into  ~/.ivy2/jars directory :
+This article illustrates how:
 
-~~~bash
-root@master:/usr/spark-2.1.0#bin/spark-shell --packages org.postgresql:postgresql:42.1.1
-Ivy Default Cache set to: /root/.ivy2/cache
-The jars for the packages stored in: /root/.ivy2/jars
-:: loading settings :: url = jar:file:/usr/spark-2.1.0/jars/ivy-2.4.0.jar!/org/apache/ivy/core/settings/ivysettings.xml
-org.postgresql#postgresql added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent;1.0
-	confs: [default]
-	found org.postgresql#postgresql;42.1.1 in central
-:: resolution report :: resolve 366ms :: artifacts dl 3ms
-...
-~~~
+- Apache Spark can perform read and write on Greenplum via JDBC and
+- Faster data-transfers are achieved using Spark's built-in parallelism.
 
-By default,the driver file is located at ~/.ivy2/jars/. Next, you can run your spark-shell to load this [Postgresql driver](https://jdbc.postgresql.org/download.html).
+### Pre-requisites
 
-~~~bash
-bin/spark-shell --driver-class-path ~/.ivy2/jars/org.postgresql_postgresql-42.1.1.jar
-~~~
+- Greenplum is installed and running.
+- At least one table is created and contain some data.
 
-###  How to verify JDBC driver is successfully loaded by Spark Shell
-You can follow the example below to verify the JDBC driver. The scala repl confirms the driver is accessible by show "res1" result.
+###  Start spark-shell with Postgresql driver
+Execute the command below to download jar into  ~/.ivy2/jars directory
 
-~~~scala
+```bash
+[root@master]> $SPARK_HOME/bin/spark-shell --packages org.postgresql:postgresql:42.1.1
+.......
+```
+```
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.1.1
+      /_/
+
 scala> Class.forName("org.postgresql.Driver")
 res1: Class[_] = class org.postgresql.Driver
-~~~
+```
 
 ### Read data from Greenplum
 
-In this section, we will load data from a Greenplum table. By default, you can run the command below to retrieve data from Greenplum with a single data partition in Spark cluster
+Load data from a Greenplum table with a single data partition in Spark cluster
 
-~~~scala
-// that gives an one-partition Dataset
-val opts = Map(
-  "url" -> "jdbc:postgresql://greenplumspark_gpdb_1/basic_db?user=gpadmin&password=pivotal",
-  "dbtable" -> "basicdb")
-val df = spark.
-  read.
-  format("jdbc").
-  options(opts).
-  load
-  ...
-  opts: scala.collection.immutable.Map[String,String] = Map(url -> jdbc:postgresql://greenplumspark_gpdb_1/basic_db?user=gpadmin&password=pivotal, dbtable -> basicdb)
-  df: org.apache.spark.sql.DataFrame = [id: int, value: string]
-~~~
+```scala
+scala> val options = Map(
+         "url" -> "jdbc:postgresql://localhost:5432/gpadmin", // JDBC url
+         "user" -> "gpadmin",
+         "password" -> "pivotal",
+         "driver" -> "org.postgresql.Driver",// JDBC driver
+         "dbtable" -> "greenplum_table") // Table name
+
+scala> val df = spark.read.format("jdbc").options(options).load
+df: org.apache.spark.sql.DataFrame = [col_string: string, col_int: int]
+
+
+scala> df.printSchema()
+root
+ |-- col_string: string (nullable = true)
+ |-- col_int: integer (nullable = true)
+
+
+scala> df.show() // By default prints 20 rows
++----------+-------+
+|col_string|col_int|
++----------+-------+
+| aaaaaaaa | 11111 |
++----------+-------+
+| bbbbbbbb | 22222 |
++----------+-------+
+```
 
 ### Write data into Greenplum
 In this section, you can write data from Spark DataFrame into Greenplum table. Spark DataFrame class provides four write modes for different use cases.
