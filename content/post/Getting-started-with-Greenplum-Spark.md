@@ -4,7 +4,7 @@ categories: ["Greenplum", "Apache Spark", "JDBC", "Postgresql"]
 authors:
 - kochan
 - gtadi
-
+date: 2017-08-01T14:00:36.000Z
 short: >
   Using Greenplum and Apache Spark via JDBC in 5 minutes
 
