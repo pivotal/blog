@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 categories: ["Greenplum", "Apache Spark", "JDBC", "Postgresql"]
 authors:
 - kochan
