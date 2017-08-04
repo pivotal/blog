@@ -8,7 +8,7 @@ draft: true
 short: |
   A day in the life of a Pivotal Cloud Foundry software engineer in LA.
 title: Day in the Life - LA style
-image: /images/pairing.jpg
+image: /images/day-in-the-life-la/pairing.jpg
 ---
 
 <p align="center"  style="font-weight:bold">
