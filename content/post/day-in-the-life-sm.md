@@ -43,7 +43,7 @@ This is a day in my life!
 
 ## 6 AM - 9 AM
 
-{{< responsive-figure src="/images/day-in-the-life-la/santa-monica.jpg" class="center small" caption="Early morning Santa Monica.">}}
+{{< responsive-figure src="/images/day-in-the-life-sm/santa-monica.jpg" class="center small" caption="Early morning Santa Monica.">}}
 
 I like to start early.
 
@@ -90,7 +90,7 @@ If you want to know how **remote pair programming** works, check out
 
 This is where the fun begins, it’s time to start programming/debugging/exploring.
 
-{{< responsive-figure src="/images/day-in-the-life-la/pairing.jpg" class="center small" caption="Angela and I pairing.">}}
+{{< responsive-figure src="/images/day-in-the-life-sm/pairing.jpg" class="center small" caption="Angela and I pairing.">}}
 
 Cloud Foundry is an open source PaaS with contributions from a number of
 organizations and individual developers. My team works entirely in the
@@ -217,7 +217,7 @@ Lunches for D&I are sometimes a support forum and sometimes action-oriented
 where we plan for upcoming internal or external events, like with [Project
 Scientist](http://www.projectscientist.org/).
 
-{{< responsive-figure src="/images/day-in-the-life-la/project-scientist.jpg" class="center small" caption="Myself, Tiffany, Angela, and Bronwyn during Project Scientist. #ilooklikeanengineer" >}}
+{{< responsive-figure src="/images/day-in-the-life-sm/project-scientist.jpg" class="center small" caption="Myself, Tiffany, Angela, and Bronwyn during Project Scientist. #ilooklikeanengineer" >}}
 
 On days without lunch events, I like to walk one block over and down the
 California Incline to the beach. I’m from Montreal so I find time during the day
