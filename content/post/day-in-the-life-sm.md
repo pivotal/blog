@@ -6,9 +6,9 @@ categories:
 date: 2017-08-20T17:16:22Z
 draft: true
 short: |
-  A day in the life of a Pivotal Cloud Foundry software engineer in LA.
-title: Day in the Life - LA style
-image: /images/day-in-the-life-la/pairing.jpg
+  A day in the life of a Pivotal Cloud Foundry software engineer in Santa Monica, California.
+title: Day in the Life - Santa Monica style
+image: /images/day-in-the-life-sm/pairing.jpg
 ---
 
 <p align="center"  style="font-weight:bold">
@@ -201,7 +201,7 @@ After a break, we work till lunch.
 
 Lunch is a really popular time of day for events and clubs.
 
-Angela and I run the Diversity & Inclusion initiatives in the LA office. She led
+Angela and I run the Diversity & Inclusion initiatives in the Santa Monica office. She led
 an incredible **book club** for *Citizen: An American Lyric*.
 
 Lunches for D&I are sometimes a support forum and sometimes action-oriented
