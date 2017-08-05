@@ -97,41 +97,30 @@ organizations and individual developers. My team works entirely in the
 open-source.
 
 Working with the **open-source community** is exciting because you get more brain
-power on a problem. I’ll often find issues or pull requests in my Tracker
-backlog from individual developers looking to add support for some new feature
+power on a problem. I’ll often find issues or pull requests in my
+[backlog](https://www.pivotaltracker.com/n/projects/1488988)
+from individual developers looking to add support for some new feature
 or they are simply interested in contributing a refactor.
 
 I like that I can talk about what I do in great detail with anyone...
 *unfortunately for those I'm talking to.*
 
+### Infrastructure
 
 My team maintains 3 very different projects - cue the Charlie’s
-Angels theme song - there is **etcd-release**, **consul-release**, and **bbl**
-(short for bosh-bootloader).
+Angels theme song - there is:
 
-### etcd and consul
+- [bosh-bootloader](https://github.com/cloudfoundry/bosh-bootloader)
+- [consul-release](https://github.com/cloudfoundry-incubator/consul-release)
+- [etcd-release](https://github.com/cloudfoundry-incubator/etcd-release)
 
-When you are working on CF, you’ll often be solving problems in the domain of
-**distributed computing**. `etcd` and `consul` are two such distributed
-computing systems in CF. They are key-value stores that serve
-different purposes in a CF installation.
-
-<li>
-[etcd-release](https://github.com/cloudfoundry-incubator/etcd-release) is used
-to store information about where and how processes are running within the
-container runtime.
-</li>
-
-<li>
-[consul-release](https://github.com/cloudfoundry-incubator/consul-release)
-provides service discovery, key-value configuration,
-and distributed locks.
-</li>
-
-You can learn more about how these components are used in Diego with
+`etcd` and `consul` are 3rd-party software components that we packaged to run on
+[BOSH](https://bosh.io).
+We maintain those packages for the numerous teams working on CF. You can learn
+more about these components with
 [Onsi’s talk](https://www.youtube.com/watch?v=1OkmVTFhfLY).
 
-### bbl
+### bosh-bootloader, or bbl for short
 
 Now, on to the new kid on the block.
 
@@ -140,10 +129,10 @@ your choosing for a
 [Cloud Foundry](https://www.cloudfoundry.org/) or
 [concourse](http://concourse.ci/) installation.
 
-`bbl` currently supports Amazon Web Services and Google Cloud
+Currently, `bbl` supports Amazon Web Services and Google Cloud
 Platform.
 
-#### Using bbl
+#### How do you use it?
 
 
 To get a BOSH director and load balancers for CF, run:
@@ -165,15 +154,35 @@ bbl down
 # yup, really
 ```
 
-`bbl` is currently opinionated in terms of networks and security groups.
+`bbl` is opinionated in terms of networks and security groups.
 
-We use **terraform** for creating resources.
+We are currently adding a security feature where `bbl` deploys a **jumpbox** in
+front of your BOSH director. You can think of a jumpbox as a bastion: a single
+point of entry to the system. A jumpbox has fewer ports open than the BOSH
+director (only an ssh port) and the ingress rules for the BOSH director can be
+reduced to only the jumpbox instead of accepting traffic from anywhere on a
+handful of ports.
+
+This is important because it drastically reduces the surface area with which
+your CF or concourse installation can be compromised.
+
+You can experiment with it on GCP:
+
+```
+bbl up --iaas gcp --jumpbox --name super-duper-secure-environment
+```
 
 #### Why is bbl interesting to me?
 
 Creating, configuring, securing, migrating, and destroying **"things in the cloud"**
-is tricky and fun. Different IaaSes have different rules and `bbl` users can
+is tricky and fun. Different IaaSes have different rules and different `bbl` users can
 have very different needs.
+
+We use [terraform](https://www.terraform.io) to create these resources as it supports the IaaSes we
+currently pave and the ones we want to support in the (near) future.
+
+At Pivotal, we **<3** test-driving and automation. Being able to do that with
+infrastructure management is made easier with terraform.
 
 *Side Note:* In terms of **test-driving**, Cloud Foundry is a really interesting case.
 Nima and Amit have a
@@ -199,14 +208,14 @@ After a break, we work till lunch.
 
 ## 12:30 PM - 1:30 PM
 
-Lunch is a really popular time of day for events and clubs.
+Speaking of lunch, it's a really popular time of day for events and clubs.
 
 Angela and I run the Diversity & Inclusion initiatives in the Santa Monica office. She led
 an incredible **book club** for *Citizen: An American Lyric*.
 
 Lunches for D&I are sometimes a support forum and sometimes action-oriented
-where we plan for upcoming internal or external events, like with Project
-Scientist.
+where we plan for upcoming internal or external events, like with [Project
+Scientist](http://www.projectscientist.org/).
 
 {{< responsive-figure src="/images/day-in-the-life-la/project-scientist.jpg" class="center small" caption="Myself, Tiffany, Angela, and Bronwyn during Project Scientist. #ilooklikeanengineer" >}}
 
