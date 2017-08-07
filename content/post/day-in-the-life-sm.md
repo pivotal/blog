@@ -47,15 +47,14 @@ This is a day in my life!
 
 I like to start early.
 
-As such, this is what happens before breakfast:
-
-I (sometimes) wake up before my alarm, jump out of bed, grab my spin clothes,
+As such, this is what happens before breakfast: I (sometimes) wake up before my
+alarm, jump out of bed, grab my spin clothes,
 and head out the door to a cycling studio nearby. Angela, another software
 engineer with Pivotal Cloud Foundry, meets me there and we strap in. After
 class, I race home, get ready for work, and pick up a latte on my way.
 
-Everyone gets to the office before 9 AM because we have **catered breakfast** in
-the office! Can’t miss out on the
+Everyone gets to the office before 9 AM because we have **catered breakfast**!
+You don’t want to miss out on the
 [omlette or juice bar](https://hbr.org/2017/05/why-my-company-serves-free-breakfast-to-all-employees?mkt_tok=eyJpIjoiTXpZNE0yUmtOamMyTm1OaiIsInQiOiJ6TWtWSENrRncwNVZtZUM3dmdWdFVvTjQ1NVRUa3I3SlY4NlZOd1Z1OU1yQTlkSFBHV0xrVE9pWlFqZ0pQMyswN2NiNEM1eG9ZR1VjSnllSG1YSklTZ1JvR3p4WGZxeFBTbWpXdjd0cUJWRFQrRVgyMHcyejZramtRS1FUWU54QSJ9).
 
 
@@ -92,7 +91,7 @@ This is where the fun begins, it’s time to start programming/debugging/explori
 
 {{< responsive-figure src="/images/day-in-the-life-sm/pairing.jpg" class="center small" caption="Angela and I pairing.">}}
 
-Cloud Foundry is an open source PaaS with contributions from a number of
+Cloud Foundry is an open source Platform-as-a-Service with contributions from a number of
 organizations and individual developers. My team works entirely in the
 open-source.
 
@@ -107,8 +106,8 @@ I like that I can talk about what I do in great detail with anyone...
 
 ### Infrastructure
 
-My team maintains 3 very different projects - cue the Charlie’s
-Angels theme song - there is:
+My team maintains 3 very different projects - cue the *Charlie’s
+Angels* theme song. They are:
 
 - [bosh-bootloader](https://github.com/cloudfoundry/bosh-bootloader)
 - [consul-release](https://github.com/cloudfoundry-incubator/consul-release)
