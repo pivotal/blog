@@ -287,8 +287,10 @@ BOSH director manifest file, `bosh-gce.yml`.
 
 ## Acknowledgements
 
-[Dmitriy Kalinin](https://github.com/cppforlife/) offered frank & candid
-feedback on this post.
+[Dmitriy Kalinin](https://github.com/cppforlife/) suggested collapsing
+the two stages into one. [Danny Berger](https://github.com/dpb587)
+suggested adopting a more objective tone with respect to the current
+set of security tools (i.e. iptables, SELinux, AppArmor, auditd).
 
 ## Footnotes
 
@@ -329,4 +331,4 @@ poorly on the author and the journal. The present statement is more neutral in
 tone.
 
 Removed an incomplete sentence, described the provenance of the `--var-store`
-file.
+file, clarified the contributions in the Acknowledgements section.
