@@ -32,8 +32,9 @@ This blog post may be of use to organizations who desire the following:
 - use CA-issued SSL certificates on their BOSH director
 - set specific passwords on the BOSH director's services (e.g. login, PostgreSQL)
 - dispense with the `--var-store` file (which stores the auto-generated passwords
-and the self-signed SSL certificate authority's certificate), a file which
-normally must be stored in a safe &amp; secure manner
+and the self-signed SSL certificate authority's certificate), a file created by
+the BOSH CLI during deployment and which normally must be stored in a safe
+&amp; secure manner
 
 This blog posts assumes familiarity with [BOSH CLI
 v2](https://bosh.io/docs/cli-v2.html) and with the procedure to deploy a BOSH
@@ -291,12 +292,14 @@ feedback on this post.
 
 ## Footnotes
 
-<a name="security"><sup>[Security]</sup></a> The author has shown a reckless
-disregard for many best-practices in the security space; for example, the author
-regularly deploys VMs with public IP addresses, runs with no firewalls, and
-disables [AppArmor](https://en.wikipedia.org/wiki/AppArmor),
+<a name="security"><sup>[Security]</sup></a> The author has mixed feelings
+for many of the best-practices in the security space; for example, the author
+feels that firewalls are no substitute for knowing which services should
+(and should not) be running on one's server and that tools such as
+[AppArmor](https://en.wikipedia.org/wiki/AppArmor),
 [SELinux](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), and
-[auditd](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html).
+[auditd](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html) often introduce subtle and hard-to-debug failures at the
+expense of arguably modest security improvements.
 
 ## Bibliography
 
@@ -314,4 +317,16 @@ BOSH CLI uses to apply changes to the BOSH template (e.g.
 `external-ip-not-recommended.yml` is a *go-patch*-format file in the
 [bosh-deployment](https://github.com/cloudfoundry/bosh-deployment) GitHub repo,
 which, when applied to the `bosh.yml` manifest file, creates the necessary
-properties for a BOSH director with an external IP address (many choose
+properties for a BOSH director with an external IP address.
+
+## Corrections & Updates
+
+*2017-08-17*
+
+Clarified the author's statement with regard to the pros and cons of current
+security practices. The original statement was controversial and could reflect
+poorly on the author and the journal. The present statement is more neutral in
+tone.
+
+Removed an incomplete sentence, described the provenance of the `--var-store`
+file.
