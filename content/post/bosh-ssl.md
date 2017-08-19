@@ -9,7 +9,7 @@ short: |
   A BOSH director is typically deployed with self-signed SSL (Secure Sockets
   Layer) certificates; however, the director can be deployed with certificates
   issued by a trusted CA (Certificate Authority). Here's how.
-title: Deploying a BOSH Director With Valid SSL Certificates
+title: Deploying a BOSH Director With SSL Certificates Issued by Recognized CA
 ---
 
 ## 0. Abstract
@@ -152,6 +152,17 @@ private_key: ((nono_io_key))
 We run the `bosh interpolate` to create our intermediate manifest,
 `bosh-gce.yml`.
 
+<div class="alert alert-success" role="alert">
+
+If you're not interested in creating an intermediate manifest, you're better off
+using <b>bosh create-env</b> instead of <b>bosh interpolate</b>; your workflow will be
+simpler. You can use the same arguments as <b>bosh interpolate</b>, but be sure
+to include the additional secrets file as a parameter, e.g. <b>-l secrets.yml</b>.
+
+</div>
+
+<p />
+
 ```bash
 bosh interpolate ~/workspace/bosh-deployment/bosh.yml \
   -o ~/workspace/bosh-deployment/misc/powerdns.yml \
@@ -287,10 +298,11 @@ BOSH director manifest file, `bosh-gce.yml`.
 
 ## Acknowledgements
 
-[Dmitriy Kalinin](https://github.com/cppforlife/) suggested collapsing
-the two stages into one. [Danny Berger](https://github.com/dpb587)
-suggested adopting a more objective tone with respect to the current
-set of security tools (i.e. iptables, SELinux, AppArmor, auditd).
+[Dmitriy Kalinin](https://github.com/cppforlife/) suggested collapsing the two
+stages into one, and making the title more accurate. [Danny
+Berger](https://github.com/dpb587) suggested adopting a more objective tone with
+respect to the current set of security tools (i.e. iptables, SELinux, AppArmor,
+auditd).
 
 ## Footnotes
 
@@ -312,7 +324,7 @@ operations files. Manifest operations files use the
 [go-patch](#go_patch) syntax.
 
 <a
-name="go_patch">[go-patch](https://github.com/cppforlife/go-patch/blob/master/docs/examples.md)</a>
+name="go_patch">[go-patch](http://bosh.io/docs/cli-ops-files)</a>
 is a tool which modifies a target YAML file based on directives, the directives
 which in turn are are also YAML files. *go-patch* is the mechanism which the
 BOSH CLI uses to apply changes to the BOSH template (e.g.
@@ -332,3 +344,9 @@ tone.
 
 Removed an incomplete sentence, described the provenance of the `--var-store`
 file, clarified the contributions in the Acknowledgements section.
+
+*2017-08-18*
+
+Tweaked the wording in the title (added "Recognized CA"), emphasized collapsing
+the two stages into one, centered the labels in the boxes, updated the URL for
+go-patch.
