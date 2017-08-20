@@ -11,7 +11,7 @@ title = "Elixir Clustering And Discovery On Cloud Foundry"
 
 ## Objective
 
-We want to be able to deploy a multi node Elixir application to Cloud Foundry and have it automatically cluster using Erlang networking. This post will show you how to accomplish this making use of Cloud Foundry's container to container networking (C2C) as well as how to enable automatic cluster formation and healing. We make use of the [Netflix Eureka Service Registry](https://github.com/Netflix/eureka) which can be easily configured on most Cloud Foundry instances. We will deploy a simple application to PWS to demonstrate all these parts. For simplicity this tutorial will just use an Elixir app created by Mix, but if you're using a phoenix application most of this should still work.
+We want to be able to deploy a multi node Elixir application to Cloud Foundry and have it automatically cluster using Erlang networking. This post will show you how to accomplish this making use of Cloud Foundry's container to container networking (C2C) as well as how to enable automatic cluster formation and healing. We make use of the [Netflix Eureka Service Registry](https://github.com/Netflix/eureka) which can be easily configured on all Pivotal Cloud Foundry instances. We will deploy a simple application to PWS to demonstrate all these parts. For simplicity this tutorial will just use an Elixir app created by Mix, but if you're using a phoenix application most of this should still work.
 
 For the rest of this post we assume you have [Elixir Lang](https://elixir-lang.org/) installed and running on your system. As well as the [cf cli](https://github.com/cloudfoundry/cli) and are already signed into a CF instance. You can [sign up for PWS for a free trial to follow along](http://run.pivotal.io/).
 
@@ -31,7 +31,7 @@ Then:
 $ cd my_clustered_app
 ```
 
-Now your app is created we want to add an HTTP route which will be used to view the clustered nodes. If you're using Phoenix rather
+Now your app is created we want to add an HTTP route which will be used to view the clustered nodes.
 
 Firstly we'll need to add few dependencies. We'll use [cowboy](https://github.com/ninenines/cowboy) for the webserver, [plug](https://github.com/elixir-plug/plug) for routing and [poison](https://github.com/devinus/poison) for JSON parsing. Update your `mix.exs` file like so:
 
@@ -69,6 +69,10 @@ defmodule MyClusteredApp.Router do
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(201, Poison.encode!(response))
+  end
+  
+  match _ do
+    send_resp(conn, 404, "Not Found")
   end
 end
 ```
@@ -132,7 +136,7 @@ In order to do self discovery for our application we'll need to create and bind 
 $ cf create-service p-service-registry standard service-registry
 ```
 
-You'll now need to wait a minute for Cloud Foundry to finish setting up the service. You can check the status by running:
+You'll now need to wait a few minutes for Cloud Foundry to finish setting up the service. Feel free to grab a coffee here. You can check the status by running:
 
 ```bash
 $ cf services
@@ -146,11 +150,10 @@ Once it is finished you can bind it to your application:
 $ cf bind-service my-clustered-app service-registry
 ```
 
-Now since we'll be making use of the new C2C feature in Cloud Foundry we'll need to install the [access plugin](https://github.com/cloudfoundry-incubator/cf-networking-release) if you don't already have it installed. Download the latest version from [the releases page](https://github.com/cloudfoundry-incubator/cf-networking-release/releases). Find the path to the downloaded plugin the update the command below and run to install the plugin.
+Now since we'll be making use of the new C2C feature in Cloud Foundry we'll need to install the [network-policy plugin](https://github.com/cloudfoundry-incubator/cf-networking-release) if you don't already have it installed:
 
 ```bash
-$ chmod +x <path-to-plugin>
-$ cf install-plugin <path-to-plugin>
+$ cf install-plugin -r CF-Community network-policy
 ```
 
 Now that we have the plugin installed we can configure some access rules to allow network access between our nodes on Cloud Foundry:
