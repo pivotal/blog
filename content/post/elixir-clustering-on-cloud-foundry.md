@@ -126,7 +126,23 @@ $ cf push
 
 Once the app is deployed we should be able to visit it in our browser. If you deployed to PWS your URL will look like https://changeme-clustered-app.cfapps.io
 
-Since we've convfigured 4 instances of our application Cloud Foundry should be routing our requests to different nodes each request. If you refresh the browser several times you should notice that you're connecting to different nodes by looking at the `current_node`.
+Since we've configured 4 instances of our application Cloud Foundry should be routing our requests to different nodes each request. If you refresh the browser several times you should notice that you're connecting to different nodes by looking at the `current_node`.
+
+NOTE: If you run into issues with deploying because of a mismatch with elixir version in your `mix.exs` you have two options. The best option is probably to configure the elixir buildpack to run the same version of Elixir as you're running locally. To figure that out run:
+
+```bash
+$ elixir --version
+```
+
+Then configure the buildpack by creating a file in the root directory of your app called `elixir_buildpack.config` with the following content for example:
+
+```
+elixir_version=1.5.1
+```
+
+After that you can `cf push` again and see the issue should be fixed.
+
+Alternatively you can just update the version in your `mix.exs` file but it may not be compatible depending on the version you used to generate your project.
 
 ## Configure It To Automatically Cluster
 
