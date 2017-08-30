@@ -1,0 +1,139 @@
+---
+authors:
+- glestaris
+- gareth
+- marie
+- njbennett
+categories:
+- Operations
+date: 2017-08-29T17:16:22Z
+draft: true
+short: |
+  Our rollout of GrootFS to Pivotal Web Services was a gradual, iterative process that allowed us to test it on a small subset of production, roll back, make improvements, and finally release it with confidence. We talk about the process and about takeaways for other teams deploying new features to production.
+title: grootfs_to_pws
+---
+
+Posts are written in [Markdown](https://help.github.com/articles/github-flavored-markdown/) -- tips below:
+
+# Deploying GrootFS to PWS
+
+## Change is the Only Constant on PWS
+Pivotal’s Cloud Operations (CloudOps) team deploys changes to Pivotal Web Services (PWS) almost every day, sometimes multiple times a day. Most of those changes are relatively small and invisible to users. We might deploy a change that encrypts communication between two components, or fixes a few bugs. Often deployments don’t impact applications running on the platform at all; at most Diego might reshuffle application instances between cells as the cells are restarted.
+
+### Making Bigger Changes
+Sometimes, however, Cloud Foundry R&D wants to change something like “the underlying filesystem for all containers running on Diego, along with the system for managing those filesystems.” Like smaller changes, this change ought to be invisible to users. It’s also big, requires understanding low-level details about the kernel, and has potentially far-reaching, hard-to-predict consequences for applications running on the platform. For larger changes like this, we like to do gradual rollouts, so that we can compare the behavior of existing and new code side-by-side in production.
+
+The GrootFS and CloudOps team recently collaborated on deploying this change to Pivotal Web Services, in order to deliver feedback on how GrootFS behaved in real-world conditions. We used a progressive roll-out strategy to minimize risk and maximize information, discovered a mysterious bug, collaborated a lot, improved GrootFS monitoring and diagnostics, and ultimately found and fixed a problem with our kernel configuration.
+
+
+## What Is GrootFS?
+
+When an application instance is started on a Diego cell, it is running inside a Garden-runC container. Containerization prevents apps from seeing processes that belong to other apps, and limits their access to shared CPU or memory resources. Containers also isolate apps from each others filesystems. The application processes has read/write access to what looks like a dedicated Linux filesystem. No application is able to read or write changes to filesystems that belong to any other applications.
+
+Before [GrootFS](https://github.com/cloudfoundry/grootfs), Garden-runC used a built-in component called Garden Shed to handle file system-level isolation, container images, and disk space management. More than a year ago, we decided that it needed to be replaced, mainly because it is based on AUFS, a layer filesystem with limited support from the Linux Kernel community. 
+
+GrootFS is a complete rewrite, and uses a very different underlying filesystem. While we expect this to be invisible to applications on the cluster, it is a significant change to the underlying abstraction. Before delivering it to customer sites, it was important to observe its behavior in a working production system.
+
+
+## Initial Rollout
+
+{{< responsive-figure src="/images/pairing.jpg" class="right small" >}}
+
+We started by deploying GrootFS to 10% of our Diego cells. We had a Datadog dashboard comparing performance metrics between GrootFS-enabled cells and non-GrootFS-enabled cells. After a few days of reasonable-looking performance on the GrootFS cells, we decided to expand the rollout to 50%.
+
+Shortly after we rolled GrootFS out to 50% of our Diego cells, we started to catch cell failures where various processes in the cell would be stuck in [uninterruptible sleep](https://en.wikipedia.org/wiki/Sleep_(system_call)#Uninterruptible_sleep) (_D-state_) permanently. This situation would eventually cause at least some applications on the cell to block. After investigation, we realized that processes were only getting stuck in _D-state_ on GrootFS-enabled cells. This was a pretty good indication that the problem was due to GrootFS.
+
+In order to troubleshoot the issue, we had to ‘hide’ the malfunctioning Diego cells from BOSH to prevent BOSH from recreating them before we could investigate. This blocked us from doing any deploys that affected the entire pool of Diego cells, which blocked the rollout of several other features that we wanted to test on PWS. After a few days of holding cells for investigation, we decided to roll back the deployment and see if we could reproduce it in a non-production scenario. The rollback resolved the _D-state_ issues.
+
+### What did we learn?
+After the first rollout, we realized that even though our Datadog dashboard had performance metrics, we did not monitor error and health metrics for GrootFS-enabled cells. We were so focused on comparing the performance of GrootFS and Garden-Shed that we did not think about the effect the new file system stack could have on the Kernel.
+
+We also learned that [statistics rollups are evil](https://lonesysadmin.net/2012/10/18/statistics-rollups-are-evil/). For instance, while we knew that our container creation duration (CCD) was spiky, the average CCD was fairly satisfying but some containers took a bit longer to be created. We did not know how bad our spikes where though, due to default statistical rollup that Datadog applies. Datadog was essentially adjusting reality without us knowing.
+
+## Follow-Up Work
+Having removed the code from production, we spent about a week trying to reproduce the issue on a test environment.  We were not able to reproduce the issue, most likely because of a unique characteristic of production such as number of cells, load on cells, or some unusual app behavior.  We opted at that point to improve our instrumentation and monitoring and re-deploy to production.  In the interim, a Diego fix had shipped that reduced the impact of these _D-state_ processes, so we were confident that the issue would have less user impact if it reoccurred.
+
+### Instrumentation and Monitoring Improvements
+We created a `grootfs-diagnostics` release that we deployed to all cells. This release contains a number of tools to help us investigate issues. The release included:
+
+1. Long-running _D-state_ process detection. This triggers a pipeline that extracts trace logs that we identified as useful to investigating _D-state_ processes. It also alerts us via Slack.
+2. _D-state_-process counter. This reports, per cell, how many _D-state_ processes are running on a given cell at a certain point. This is a secondary source of information; if the number starts to rise, it may indicate an issue.
+
+We also drew on our experience in the first rollout to expand our Datadog dashboard to be more comprehensive. We added health metrics and error metrics, and updated the visualization for performance metrics to resolve an issue where Datadog was over-smoothing spikes.
+
+## Second Rollout
+Our expanded Datadog dashboard was useful right away, since we could see side-by-side performance of GrootFS cells vs. shed cells. This immediately allowed us to identify an issue where GrootFS cells were becoming unhealthy. The issue turned out to be caused by a misconfigured property, which we identified and fixed. Our improved performance metric visualization in Datadog made it easier to detect spikes in container creation time, and made us more confident about expanding our rollout after the initial validation.
+
+We found that our long-running _D-state_ process detection was not accurate, but since we had a secondary information source of a counter, we were able to fall back to that method. We’re currently working on v2 of our long-running _D-state_ process detection.
+
+GrootFS is now fully deployed to PWS! 
+
+## Takeaways for Other Production Deployers
+We learned a lot from our first rollout that helped us make our second rollout more successful. The goal of this blog post is to share our experiences with you so your first rollout can go smoothly. Here’s a list of takeaways for other folks just starting down the path to production.
+
+### Think about health metrics _before_ rollout!
+Make sure you have a dashboard that monitors your product’s health so you have an indicator if things are going south.
+How things behave in your test environment isn’t necessarily representative of how things go at scale. Think about how your health metrics and monitoring may behave on a larger scale.
+
+### Know your dependencies
+Our failures were because of a kernel bug. 
+Try to understand your dependencies so you have a head start if you need to troubleshoot them. Figure out how you can monitor your dependencies to see if they’re at fault for issues you find. This will allow you to quickly narrow down the scope of your investigation.
+
+### Rollback is not failure, it's iteration
+It can be easy to spend a lot of time trying to debug information from the scraps of information that you happen to have available. It’s often more effective to stop investigation and instead improve the information the product will produce the next time the problem occurs.
+
+### Talk to your ops team!
+You’re the expert on your product, and they’re the expert on running the system, so it’s important to make sure both groups are on the same page about how the rollout will go. 
+
+It’s also important to be clear about expectations up front. What do you need if your product has an issue - is there a script to run? Are there logs to collect? Should the ops team wait to roll back, or can they do it right away?
+
+Establish who will be paged for what issues, and make sure everyone knows how to get in touch with the other team. Consider cross-team pairing on the deployment, if your deployment is complex.
+
+## A Happy Ending
+Now that GrootFS is deployed to PWS and incorporated into Cloud Foundry, ______
+
+### Your 10th grade teacher was right.
+
+Make use of the hamburger technique.  Your audience doesn't have a lot of time.  Tell them what you're going to write, write it, and then tell them what you've written.  Spend time on your opening.  Make it click.
+
+### Pair all the time.
+
+We do everything as a team, and this is no different.  Get feedback from your friends and coworkers.  Show them the post on the staging site, and ask them to tear it apart.
+
+### Make it pretty.
+
+Pivotal-ui comes with a bunch of nice helpers.  Make use of them.  Check out the example styles below:
+
+---
+
+# Header 1 
+
+Don't use this, since it looks like a main title.
+
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
+
+###### Header 6
+
+{{< responsive-figure src="/images/pairing.jpg" class="left" >}}
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+~~~ruby
+instance = Class.new("foo")
+~~~
+
+| Header 1        | Header 2  | ...        |
+| --------------  | :-------: | ---------: |
+| SSH (22)        | TCP (6)   | 22         |
+| HTTP (80)       | TCP (6)   | 80         |
+| HTTPS (443)     | TCP (6)   | 443        |
+| Custom TCP Rule | TCP (6)   | 2222       |
+| Custom TCP Rule | TCP (6)   | 6868       |
+
+{{< responsive-figure src="/images/pairing.jpg" class="center" >}}
