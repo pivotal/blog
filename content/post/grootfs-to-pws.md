@@ -20,7 +20,7 @@ Posts are written in [Markdown](https://help.github.com/articles/github-flavored
 ## Change is the Only Constant on PWS
 Pivotal’s Cloud Operations (CloudOps) team deploys changes to Pivotal Web Services (PWS) almost every day, sometimes multiple times a day. Most of those changes are relatively small and invisible to users. We might deploy a change that encrypts communication between two components, or fixes a few bugs. Often deployments don’t impact applications running on the platform at all; at most Diego might reshuffle application instances between cells as the cells are restarted.
 
-### Making Bigger Changes
+### Making bigger changes
 Sometimes, however, Cloud Foundry R&D wants to change something like “the underlying filesystem for all containers running on Diego, along with the system for managing those filesystems.” Like smaller changes, this change ought to be invisible to users. It’s also big, requires understanding low-level details about the kernel, and has potentially far-reaching, hard-to-predict consequences for applications running on the platform. For larger changes like this, we like to do gradual rollouts, so that we can compare the behavior of existing and new code side-by-side in production.
 
 The GrootFS and CloudOps team recently collaborated on deploying this change to Pivotal Web Services, in order to deliver feedback on how GrootFS behaved in real-world conditions. We used a progressive roll-out strategy to minimize risk and maximize information, discovered a mysterious bug, collaborated a lot, improved GrootFS monitoring and diagnostics, and ultimately found and fixed a problem with our kernel configuration.
@@ -37,16 +37,18 @@ GrootFS is a complete rewrite, and uses a very different underlying filesystem. 
 
 ## Initial Rollout
 
-{{< responsive-figure src="/images/pairing.jpg" class="right small" >}}
+{{< responsive-figure src="/images/grootfs-to-pws/pws-v1-dashboard.png" class="right small" caption="Dashboard for initial GrootFS to PWS rollout, containing only latency information.">}}
 
 We started by deploying GrootFS to 10% of our Diego cells. We had a Datadog dashboard comparing performance metrics between GrootFS-enabled cells and non-GrootFS-enabled cells. After a few days of reasonable-looking performance on the GrootFS cells, we decided to expand the rollout to 50%.
 
 Shortly after we rolled GrootFS out to 50% of our Diego cells, we started to catch cell failures where various processes in the cell would be stuck in [uninterruptible sleep](https://en.wikipedia.org/wiki/Sleep_(system_call)#Uninterruptible_sleep) (_D-state_) permanently. This situation would eventually cause at least some applications on the cell to block. After investigation, we realized that processes were only getting stuck in _D-state_ on GrootFS-enabled cells. This was a pretty good indication that the problem was due to GrootFS.
 
-In order to troubleshoot the issue, we had to ‘hide’ the malfunctioning Diego cells from BOSH to prevent BOSH from recreating them before we could investigate. This blocked us from doing any deploys that affected the entire pool of Diego cells, which blocked the rollout of several other features that we wanted to test on PWS. After a few days of holding cells for investigation, we decided to roll back the deployment and see if we could reproduce it in a non-production scenario. The rollback resolved the _D-state_ issues.
+In order to troubleshoot the issue, we had to ‘hide’ the malfunctioning Diego cells from BOSH to prevent BOSH from recreating them before we could investigate. This blocked us from doing any deploys that affected the entire pool of Diego cells, delaying the rollout of several other features that we wanted to test on PWS. After a few days of holding cells for investigation, we decided to roll back the deployment and see if we could reproduce it in a non-production scenario. The rollback resolved the _D-state_ issues.
 
 ### What did we learn?
 After the first rollout, we realized that even though our Datadog dashboard had performance metrics, we did not monitor error and health metrics for GrootFS-enabled cells. We were so focused on comparing the performance of GrootFS and Garden-Shed that we did not think about the effect the new file system stack could have on the Kernel.
+
+{{< responsive-figure src="/images/grootfs-to-pws/pws-ccd-worse-vs-avg.png" class="left small" caption="Both lines represent image creation time. The blue line is the average, and the red line is the max. We wanted to be viewing the max, but didn't realize we needed to switch away from the default of average. This hid spikes of up to 700ms.">}}
 
 We also learned that [statistics rollups are evil](https://lonesysadmin.net/2012/10/18/statistics-rollups-are-evil/). For instance, while we knew that our container creation duration (CCD) was spiky, the average CCD was fairly satisfying but some containers took a bit longer to be created. We did not know how bad our spikes where though, due to default statistical rollup that Datadog applies. Datadog was essentially adjusting reality without us knowing.
 
@@ -62,6 +64,8 @@ We created a `grootfs-diagnostics` release that we deployed to all cells. This r
 We also drew on our experience in the first rollout to expand our Datadog dashboard to be more comprehensive. We added health metrics and error metrics, and updated the visualization for performance metrics to resolve an issue where Datadog was over-smoothing spikes.
 
 ## Second Rollout
+{{< responsive-figure src="/images/grootfs-to-pws/pws-v2-dashboard.png" class="right small" caption="The second iteration of our dashboard, with metrics representing latency, traffic, errors, and saturation - Google's \"four golden signals\".">}}
+
 Our expanded Datadog dashboard was useful right away, since we could see side-by-side performance of GrootFS cells vs. shed cells. This immediately allowed us to identify an issue where GrootFS cells were becoming unhealthy. The issue turned out to be caused by a misconfigured property, which we identified and fixed. Our improved performance metric visualization in Datadog made it easier to detect spikes in container creation time, and made us more confident about expanding our rollout after the initial validation.
 
 We found that our long-running _D-state_ process detection was not accurate, but since we had a secondary information source of a counter, we were able to fall back to that method. We’re currently working on v2 of our long-running _D-state_ process detection.
@@ -89,51 +93,5 @@ It’s also important to be clear about expectations up front. What do you need 
 
 Establish who will be paged for what issues, and make sure everyone knows how to get in touch with the other team. Consider cross-team pairing on the deployment, if your deployment is complex.
 
-## A Happy Ending
-Now that GrootFS is deployed to PWS and incorporated into Cloud Foundry, ______
-
-### Your 10th grade teacher was right.
-
-Make use of the hamburger technique.  Your audience doesn't have a lot of time.  Tell them what you're going to write, write it, and then tell them what you've written.  Spend time on your opening.  Make it click.
-
-### Pair all the time.
-
-We do everything as a team, and this is no different.  Get feedback from your friends and coworkers.  Show them the post on the staging site, and ask them to tear it apart.
-
-### Make it pretty.
-
-Pivotal-ui comes with a bunch of nice helpers.  Make use of them.  Check out the example styles below:
-
----
-
-# Header 1 
-
-Don't use this, since it looks like a main title.
-
-## Header 2
-
-### Header 3
-
-#### Header 4
-
-##### Header 5
-
-###### Header 6
-
-{{< responsive-figure src="/images/pairing.jpg" class="left" >}}
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-~~~ruby
-instance = Class.new("foo")
-~~~
-
-| Header 1        | Header 2  | ...        |
-| --------------  | :-------: | ---------: |
-| SSH (22)        | TCP (6)   | 22         |
-| HTTP (80)       | TCP (6)   | 80         |
-| HTTPS (443)     | TCP (6)   | 443        |
-| Custom TCP Rule | TCP (6)   | 2222       |
-| Custom TCP Rule | TCP (6)   | 6868       |
-
-{{< responsive-figure src="/images/pairing.jpg" class="center" >}}
+## Where Are They Now?
+Now that GrootFS is deployed to PWS and incorporated into Cloud Foundry, the GrootFS team is focusing on improving their product by finishing rootless containers support, adding support for OCI Images, and improving cache management (particularly cache cleanup). The CloudOps team continues to deploy bleeding-edge Cloud Foundry code to PWS on a daily basis.
