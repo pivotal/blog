@@ -1,8 +1,8 @@
 ---
 authors:
 - glestaris
-- gclay
 - marie
+- gclay
 - njbennett
 categories:
 - Operations
@@ -10,13 +10,8 @@ date: 2017-08-29T17:16:22Z
 draft: true
 short: |
   Our rollout of GrootFS to Pivotal Web Services was a gradual, iterative process that allowed us to test it on a small subset of production, roll back, make improvements, and finally release it with confidence. We talk about the process and about takeaways for other teams deploying new features to production.
-title: grootfs_to_pws
+title: Deploying GrootFS to Pivotal Web Services (PWS)
 ---
-
-Posts are written in [Markdown](https://help.github.com/articles/github-flavored-markdown/) -- tips below:
-
-# Deploying GrootFS to Pivotal Web Services (PWS)
-
 ## Change is the Only Constant on PWS
 Pivotal’s Cloud Operations (CloudOps) team deploys changes to Pivotal Web Services (PWS) almost every day, sometimes multiple times a day. Most of those changes are relatively small and invisible to users. We might deploy a change that encrypts communication between two components, or fixes a few bugs. Often deployments don’t impact applications running on the platform at all; at most Diego might reshuffle application instances between cells as the cells are restarted.
 
@@ -37,7 +32,7 @@ GrootFS is a complete rewrite, and uses a very different underlying filesystem. 
 
 ## Initial Rollout
 
-{{< responsive-figure src="/images/grootfs-to-pws/pws-v1-dashboard.png" class="right small" caption="Dashboard for initial GrootFS to PWS rollout, containing only latency information.">}}
+{{< responsive-figure src="/images/grootfs-to-pws/pws-v1-dashboard.png" class="right medium" caption="Dashboard for initial GrootFS to PWS rollout, containing only latency information.">}}
 
 We started by deploying GrootFS to 10% of our Diego cells. We had a Datadog dashboard comparing performance metrics between GrootFS-enabled cells and non-GrootFS-enabled cells. After a few days of reasonable-looking performance on the GrootFS cells, we decided to expand the rollout to 50%.
 
@@ -64,7 +59,7 @@ We created a `grootfs-diagnostics` release that we deployed to all cells. This r
 We also drew on our experience in the first rollout to expand our Datadog dashboard to be more comprehensive. We added health metrics and error metrics, and updated the visualization for performance metrics to resolve an issue where Datadog was over-smoothing spikes.
 
 ## Second Rollout
-{{< responsive-figure src="/images/grootfs-to-pws/pws-v2-dashboard.png" class="right small" caption="The second iteration of our dashboard, with metrics representing latency, traffic, errors, and saturation - Google's \"four golden signals\".">}}
+{{< responsive-figure src="/images/grootfs-to-pws/pws-v2-dashboard.png" class="right medium" caption="The second iteration of our dashboard, with metrics representing latency, traffic, errors, and saturation - Google's \"four golden signals\".">}}
 
 Our expanded Datadog dashboard was useful right away, since we could see side-by-side performance of GrootFS cells vs. shed cells. This immediately allowed us to identify an issue where GrootFS cells were becoming unhealthy. The issue turned out to be caused by a misconfigured property, which we identified and fixed. Our improved performance metric visualization in Datadog made it easier to detect spikes in container creation time, and made us more confident about expanding our rollout after the initial validation.
 
