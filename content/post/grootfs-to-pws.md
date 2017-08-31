@@ -1,9 +1,9 @@
 ---
 authors:
-- glestaris
 - marie
-- gclay
+- glestaris
 - njbennett
+- gclay
 categories:
 - Operations
 date: 2017-08-29T17:16:22Z
