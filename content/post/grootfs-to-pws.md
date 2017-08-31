@@ -1,7 +1,7 @@
 ---
 authors:
 - glestaris
-- gareth
+- gclay
 - marie
 - njbennett
 categories:
