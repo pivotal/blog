@@ -32,7 +32,7 @@ GrootFS is a complete rewrite, and uses a very different underlying filesystem. 
 
 ## Initial Rollout
 
-{{< responsive-figure src="/images/grootfs-to-pws/pws-v1-dashboard.png" class="center large" caption="Dashboard for initial GrootFS to PWS rollout, containing only latency information.">}}
+{{< responsive-figure src="/images/grootfs-to-pws/pws-v1-dashboard.png" class="center small" caption="Dashboard for initial GrootFS to PWS rollout, containing only latency information.">}}
 
 We started by deploying GrootFS to 10% of our Diego cells. We had a Datadog dashboard comparing performance metrics between GrootFS-enabled cells and non-GrootFS-enabled cells. After a few days of reasonable-looking performance on the GrootFS cells, we decided to expand the rollout to 50%.
 
@@ -43,7 +43,7 @@ In order to troubleshoot the issue, we had to ‘hide’ the malfunctioning Dieg
 ### What did we learn?
 After the first rollout, we realized that even though our Datadog dashboard had performance metrics, we did not monitor error and health metrics for GrootFS-enabled cells. We were so focused on comparing the performance of GrootFS and Garden-Shed that we did not think about the effect the new file system stack could have on the Kernel.
 
-{{< responsive-figure src="/images/grootfs-to-pws/pws-ccd-worse-vs-avg.png" class="center medium" caption="Both lines represent image creation time. The blue line is the average, and the red line is the max. We wanted to be viewing the max, but didn't realize we needed to switch away from the default of average. This hid spikes of up to 700ms.">}}
+{{< responsive-figure src="/images/grootfs-to-pws/pws-ccd-worse-vs-avg.png" class="center small" caption="Both lines represent image creation time. The blue line is the average, and the red line is the max. We wanted to be viewing the max, but didn't realize we needed to switch away from the default of average. This hid spikes of up to 700ms.">}}
 
 We also learned that [statistics rollups are evil](https://lonesysadmin.net/2012/10/18/statistics-rollups-are-evil/). For instance, while we knew that our container creation duration (CCD) was spiky, the average CCD was fairly satisfying but some containers took a bit longer to be created. We did not know how bad our spikes where though, due to default statistical rollup that Datadog applies. Datadog was essentially adjusting reality without us knowing.
 
@@ -59,7 +59,7 @@ We created a `grootfs-diagnostics` release that we deployed to all cells. This r
 We also drew on our experience in the first rollout to expand our Datadog dashboard to be more comprehensive. We added health metrics and error metrics, and updated the visualization for performance metrics to resolve an issue where Datadog was over-smoothing spikes.
 
 ## Second Rollout
-{{< responsive-figure src="/images/grootfs-to-pws/pws-v2-dashboard.png" class="center large" caption="The second iteration of our dashboard, with metrics representing latency, traffic, errors, and saturation - Google's \"four golden signals\".">}}
+{{< responsive-figure src="/images/grootfs-to-pws/pws-v2-dashboard.png" class="center small" caption="The second iteration of our dashboard, with metrics representing latency, traffic, errors, and saturation - Google's \"four golden signals\".">}}
 
 Our expanded Datadog dashboard was useful right away, since we could see side-by-side performance of GrootFS cells vs. shed cells. This immediately allowed us to identify an issue where GrootFS cells were becoming unhealthy. The issue turned out to be caused by a misconfigured property, which we identified and fixed. Our improved performance metric visualization in Datadog made it easier to detect spikes in container creation time, and made us more confident about expanding our rollout after the initial validation.
 
