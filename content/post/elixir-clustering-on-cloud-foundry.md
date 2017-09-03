@@ -9,9 +9,15 @@ title = "Elixir Clustering And Discovery On Cloud Foundry"
 
 +++
 
+## Motivation
+
+The Erlang Virtual Machine (BEAM) and subsequently the Elixir Programming Language which runs on it are designed for building highly concurrent systems. The language primitives offer support for concurrency that can easily be extended to executing code on remote machines. As such this platform is often used for building distributed systems (eg. Riak). [The Phoenix web framework](http://phoenixframework.org/) for example uses this feature of Erlang/Elixir to publish messages across nodes and push those to all [clients connected via websockets](https://hexdocs.pm/phoenix/channels.html). These distributed systems made up of "nodes" form clusters and communicate via Erlang messaging, but in order to do this they need to be able to discover and "connect" to each other via TCP. Once connected they are able to send messages between processes running across nodes as easily as between processes running on different nodes.
+
+Cloud Foundry's new Container to Container networking (C2C) feature now enables for application with these kinds of architectures to run on Cloud Foundry.
+
 ## Objective
 
-We want to be able to deploy a multi node Elixir application to Cloud Foundry and have it automatically cluster using Erlang networking. This post will show you how to accomplish this making use of Cloud Foundry's container to container networking (C2C) as well as how to enable automatic cluster formation and healing. We make use of the [Netflix Eureka Service Registry](https://github.com/Netflix/eureka) which can be easily configured on all Pivotal Cloud Foundry instances. We will deploy a simple application to PWS to demonstrate all these parts. For simplicity this tutorial will just use an Elixir app created by Mix, but if you're using a phoenix application most of this should still work.
+We want to be able to deploy a multi node Elixir application to Cloud Foundry and have it automatically cluster using Erlang networking. This post will show you how to accomplish this making use of Cloud Foundry's Container to Container networking (C2C) as well as how to enable automatic cluster formation and healing. We make use of the [Netflix Eureka Service Registry](https://github.com/Netflix/eureka) which can be easily configured on all Pivotal Cloud Foundry instances. We will deploy a simple application to PWS to demonstrate all these parts. For simplicity this tutorial will just use an Elixir app created by Mix, but if you're using a phoenix application most of this should still work.
 
 For the rest of this post we assume you have [Elixir Lang](https://elixir-lang.org/) installed and running on your system. As well as the [cf cli](https://github.com/cloudfoundry/cli) and are already signed into a CF instance. You can [sign up for PWS for a free trial to follow along](http://run.pivotal.io/).
 
@@ -33,7 +39,7 @@ $ cd my_clustered_app
 
 Now your app is created we want to add an HTTP route which will be used to view the clustered nodes.
 
-Firstly we'll need to add few dependencies. We'll use [cowboy](https://github.com/ninenines/cowboy) for the webserver, [plug](https://github.com/elixir-plug/plug) for routing and [poison](https://github.com/devinus/poison) for JSON parsing. Update your `mix.exs` file like so:
+Firstly we'll need to add few dependencies. We'll use [cowboy](https://github.com/ninenines/cowboy) for the web server, [plug](https://github.com/elixir-plug/plug) for routing and [poison](https://github.com/devinus/poison) for JSON parsing. Update your `mix.exs` file like so:
 
 ```elixir
 defp deps do
@@ -70,14 +76,14 @@ defmodule MyClusteredApp.Router do
     |> put_resp_content_type("application/json")
     |> send_resp(201, Poison.encode!(response))
   end
-  
+
   match _ do
     send_resp(conn, 404, "Not Found")
   end
 end
 ```
 
-Then you will need to update the start function in your `lib/my_clustered_app/application.ex` to start your webserver:
+Then you will need to update the start function in your `lib/my_clustered_app/application.ex` to start your web server:
 
 ```elixir
 def start(_type, _args) do
@@ -192,7 +198,7 @@ applications:
     command: elixir --name app$CF_INSTANCE_INDEX@$CF_INSTANCE_INTERNAL_IP --cookie secret-cookie --erl "-kernel inet_dist_listen_min 9001 inet_dist_listen_max 9001" -S mix run --no-halt
 ```
 
-NOTE: While Cloud Foundry networking security will mean your Erlang nodes should not be accessible via Erlang networking unless you allow explicit access you still may wish to update the cookie in the above configuration for additional security. For even more security you probably want to set an environment variable for your node and use that instead of hardcoding it.
+NOTE: While Cloud Foundry networking security will mean your Erlang nodes should not be accessible via Erlang networking unless you allow explicit access you still may wish to update the cookie in the above configuration for additional security. For even more security you probably want to set an environment variable for your node and use that instead of hard-coding it.
 
 For maintaining the cluster we're going to use the popular [libcluster library](https://github.com/bitwalker/libcluster) along with a [plugin strategy built for Cloud Foundry and Eureka](https://github.com/DylanGriffith/libcluster-cloud-foundry).
 
@@ -254,4 +260,10 @@ After the deployment finishes you should be able to visit your app again in the 
 
 ## Summary
 
-In summary we've managed to deploy a multi-intance Elixir application to Cloud Foundry and have the nodes automatically discover and connect to each other.
+In summary we've managed to deploy a multi-instance Elixir application to Cloud Foundry and have the nodes automatically discover and connect to each other. These clustered nodes will now be able to send messages between processes and execute code on remote nodes.
+
+All of the code we used in this tutorial can be found [in this repo](https://github.com/DylanGriffith/my-clustered-app)
+
+The [clustering strategy](https://github.com/DylanGriffith/libcluster-cloud-foundry) makes use of the [Service Registry](https://console.run.pivotal.io/marketplace/services/dfb4bee2-c56a-4257-93c4-0499e35637b3) tile available on all Pivotal Cloud Foundry instances. This will poll the service registry every 10 seconds to register the current instance and discover then connect to the other registered instances.
+
+You can find more examples on how to use C2C networking on the [cf-networking-release repo](https://github.com/DylanGriffith/libcluster-cloud-foundry).
