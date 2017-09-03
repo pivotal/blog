@@ -2,7 +2,7 @@
 authors = ["dgriffith"]
 categories = ["Elixir", "Cloud Foundry"]
 date = "2017-08-20T14:11:20+10:00"
-draft = true
+draft = false
 image = ""
 short = "A tutorial for configuring an Elixir application to automatically cluster on Cloud Foundry (eg. PWS) using container to container networking.\n"
 title = "Elixir Clustering And Discovery On Cloud Foundry"
