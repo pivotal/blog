@@ -87,15 +87,21 @@ a wildcard certificate is not necessary, and a regular SSL certificate
 
 ### 2.2 Create a Manifest Operations (`gce.yml`) File to Insert the SSL Certificate
 
-We create a manifest operations YAML file (`gce.yml`) to insert our SSL
-certificate. Note that although we populate the SSL certificate, we do _not_
-populate the SSL key; instead, we use a variable, `((nono_io_key))`, which will
-be interpolated in the second stage (double parentheses, "`(())`", are an
-indicator to the BOSH CLI parser to perform variable substitution).
+We create a manifest operations YAML file (`gce.yml`) that contains the
+directives to adjust the generic BOSH director's manifest template (`bosh.yml`)
+to use our CA-issued certificate.  Our certificate is a chained certificate,
+which means that it includes the CA bundle (i.e. the certificates of the CAs
+that issued our certificate). <sup><a href="#root_cert"
+class="alert-link">[Chained Certificate]</a></sup>
+
+We use a variables to substitute the SSL certificate and key in our manifest
+(`((nono_io_crt))` and  `((nono_io_key))`, respectively), which will be
+interpolated in the second stage (double parentheses, "`(())`", are an indicator
+to the BOSH CLI parser to perform variable substitution).
 
 Below is a shortened version of our manifest operations file; the full one can be
 viewed on
-[GitHub](https://github.com/cunnie/deployments/blob/d769ca78cb733491493defea7729859a57422c58/etc/gce.yml):
+[GitHub](https://github.com/cunnie/deployments/blob/7511ba27ba5d23b40e7cd2b15d7f9bbd6df0465a/etc/gce.yml):
 
 ```YAML
 - type: replace
@@ -103,49 +109,21 @@ viewed on
   value: ((nono_io_key))
 - type: replace
   path: /instance_groups/name=bosh/properties/director/ssl/cert?
-  value: |
-    -----BEGIN CERTIFICATE-----
-    MIIFXDCCBESgAwIBAgIQOvRHkhKyb/k9O4xvIi9zZTANBgkqhkiG9w0BAQsFADCB
-    <snip>
-    NaaNSyS8pHUJhaq+ZiC7zM2YsuLBICPQfsunHGrho4k=
-    -----END CERTIFICATE-----
-    -----BEGIN CERTIFICATE-----
-    MIIGCDCCA/CgAwIBAgIQKy5u6tl1NmwUim7bo3yMBzANBgkqhkiG9w0BAQwFADCB
-    <snip>
-    pu/xO28QOG8=
-    -----END CERTIFICATE-----
+  value: ((nono_io_crt))
 ```
 
-### 2.3 Create the Message Bus Bootstrap SSL and Certificates (`mbus_bootstrap_ssl.yml`) File
+### 2.3 Create the SSL Certificate (`nono.io.crt`) File
 
-We create a YAML file that contains the SSL Certificate and the
-substitution-directive, `((nono_io_key))`, for the private key used
-during the message bus bootstrap process.
+We create a PEM-formatted ([Privacy Enhanced
+Mail](https://en.wikipedia.org/wiki/Privacy-enhanced_Electronic_Mail)) file that
+contains the SSL chained certificate.
 
-Typically we would set a variable via the CLI when using to create our
-intermediate manifest (e.g. to set the external IP via the CLI: `bosh
-interpolate ~/workspace/bosh-deployment/bosh.yml -v external_ip="104.154.39.128" ...`);
-however, we cannot set the variable because it's too complex (it's not a simple
-value; instead it's YAML), so we use the BOSH CLI's `--var-file` option (e.g.
-`--var-file mbus_bootstrap_ssl=etc/mbus_bootstrap_ssl.yml`), which has been
-created to accommodate situations like these.
+We will set the `nono_io_crt` variable via the CLI to the contents of the
+`nono.io.crt` file when we perform our first stage, interpolation, which will
+substitute the SSL certificate in the appropriate locations.
 
-Below is a shortened version of our `mbus_bootstrap_ssl.yml` operations file;
-the full one can be viewed on
-[GitHub](https://github.com/cunnie/deployments/blob/5382d1f2f0b007232db353b936514844346a7249/etc/mbus_bootstrap_ssl.yml):
-
-```YAML
-certificate: |
-  -----BEGIN CERTIFICATE-----
-  MIIFXDCCBESgAwIBAgIQOvRHkhKyb/k9O4xvIi9zZTANBgkqhkiG9w0BAQsFADCB
-  NaaNSyS8pHUJhaq+ZiC7zM2YsuLBICPQfsunHGrho4k=
-  -----END CERTIFICATE-----
-  -----BEGIN CERTIFICATE-----
-  MIIGCDCCA/CgAwIBAgIQKy5u6tl1NmwUim7bo3yMBzANBgkqhkiG9w0BAQwFADCB
-  +AZxAeKCINT+b72x
-  -----END CERTIFICATE-----
-private_key: ((nono_io_key))
-```
+Our certificate file  can be viewed on
+[GitHub](https://github.com/cunnie/deployments/blob/7511ba27ba5d23b40e7cd2b15d7f9bbd6df0465a/etc/nono.io.crt).
 
 ### 2.4  Run `bosh interpolate` to Create Intermediate Manifest
 
@@ -155,9 +133,10 @@ We run the `bosh interpolate` to create our intermediate manifest,
 <div class="alert alert-success" role="alert">
 
 If you're not interested in creating an intermediate manifest, you're better off
-using <b>bosh create-env</b> instead of <b>bosh interpolate</b>; your workflow will be
-simpler. You can use the same arguments as <b>bosh interpolate</b>, but be sure
-to include the additional secrets file as a parameter, e.g. <b>-l secrets.yml</b>.
+using <b>bosh create-env</b> instead of <b>bosh interpolate</b>; your workflow
+will be simpler. You can use the same arguments as <b>bosh interpolate</b>, but
+be sure to include the additional secrets file as a parameter, e.g. <b>-l
+secrets.yml</b>.
 
 </div>
 
@@ -170,7 +149,7 @@ bosh interpolate ~/workspace/bosh-deployment/bosh.yml \
   -o ~/workspace/bosh-deployment/external-ip-not-recommended.yml \
   -o ~/workspace/bosh-deployment/jumpbox-user.yml \
   -o etc/gce.yml \
-  --var-file mbus_bootstrap_ssl=etc/mbus_bootstrap_ssl.yml \
+  --var-file nono_io_crt=etc/nono.io.crt \
   -v dns_recursor_ip="169.254.169.254" \
   -v internal_gw="10.128.0.1" \
   -v internal_cidr="10.128.0.0/20" \
@@ -217,11 +196,19 @@ on the BOSH director. The private key is kept in `~/.ssh/google` on our
 workstation. The command to ssh into our director is the following:
 `ssh -i ~/.ssh/google jumpbox@bosh-gce.nono.io`
 
-We use a script to create our intermediate manifest; our script can be viewed
-on [GitHub](https://github.com/cunnie/deployments/blob/5382d1f2f0b007232db353b936514844346a7249/bin/gce.sh).
+The `--var-file nono_io_crt=etc/nono.io.crt` directive tells the BOSH CLI to
+substitute every occurrence of `((nono_io_crt))` with the contents of the file
+`etc/nono.io.crt`) (our SSL certificate).
+
+The `-v` arguments set variables which are interpolated, e.g. `-v
+dns_recursor_ip="169.254.169.254"` replaces occurrences of `((dns_recursor_ip))`
+with `169.254.169.254` in our manifest.
+
+We use a script to create our intermediate manifest; our script can be viewed on
+[GitHub](https://github.com/cunnie/deployments/blob/980ae18de7d82b8e1c66b0d6b55eda05e2c7950c/bin/gce.sh).
 
 Our intermediate manifest (without secrets) can also be seen on
-[GitHub](https://github.com/cunnie/deployments/blob/5382d1f2f0b007232db353b936514844346a7249/bosh-gce.yml).
+[GitHub](https://github.com/cunnie/deployments/blob/980ae18de7d82b8e1c66b0d6b55eda05e2c7950c/bosh-gce.yml).
 
 ### 2.5 Create a Secrets File
 
@@ -315,6 +302,63 @@ feels that firewalls are no substitute for knowing which services should
 [auditd](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html) often introduce subtle and hard-to-debug failures at the
 expense of arguably modest security improvements.
 
+<a name="root_cert"><sup>[Chained Certificates]</sup></a> The order in which the
+certificates appear and whether the root certificate is included is important.
+
+We recommend placing the server's certificate topmost and the root
+certificate last in order to conform with the [Transport Layer Security (TLS) Protocol
+Version 1.2 Request For Comment
+(RFC)](https://tools.ietf.org/html/rfc5246#section-7.4.2):
+
+> This is a sequence (chain) of certificates.  The sender's
+certificate MUST come first in the list.  Each following
+certificate MUST directly certify the one preceding it.  Because
+certificate validation requires that root keys be distributed
+independently, the self-signed certificate that specifies the root
+certificate authority MAY be omitted from the chain, under the
+assumption that the remote end must already possess it in order to
+validate it in any case.
+
+We recommend omitting the root certificate (and so do
+[others](https://community.qualys.com/thread/11026)), for it is the one
+certificate that is included on every client machine, so there's no need to
+transmit it (and if it's not already on the client machine, then you have bigger
+worries).
+
+The recommendation for certificate ordering has been borne out in practice.
+Apache, for example, [recommends placing the server certificate
+first](https://httpd.apache.org/docs/current/mod/mod_ssl.html#sslcertificatefile),
+and the root certificate last:
+
+> The files may also include intermediate CA certificates, sorted from leaf to root
+
+Nginx makes a similar [recommendation](http://nginx.org/en/docs/http/configuring_https_servers.html#chains):
+
+> The server certificate must appear before the chained certificates in the combined file
+
+[Golang, too](https://golang.org/pkg/crypto/tls/#Certificate):
+
+> A Certificate is a chain of one or more certificates, leaf first.
+
+For those curious about how a root certificate differs from a regular certificate,
+the answer is simple: the root certificate is a self-signed certificate. That
+is to say, the certificate's _Subject_ is the same as the _Issuer_.
+
+We can use the `openssl` command to examine our server certificate and determine
+that the Issuer and Subject are different, and thus be sure that our server
+certificate is not a root certificate:
+
+```
+$ openssl x509 -in etc/nono.io.crt -noout -text | egrep "Subject:|Issuer:"
+        Issuer: C=GB, ST=Greater Manchester, L=Salford, O=COMODO CA Limited, CN=COMODO RSA Domain Validation Secure Server CA
+        Subject: OU=Domain Control Validated, OU=PositiveSSL Multi-Domain, CN=*.nono.io
+```
+
+The presence of the root certificate in the chain may cause validation problems;
+The author, for example, recollects fixing a problem where his web server's
+certificate was flagged as invalid on Android (but not on other platforms). It
+was fixed by removing the root certificate from the certificate chain file.
+
 ## Bibliography
 
 <a name="bosh_deployment">
@@ -350,3 +394,14 @@ file, clarified the contributions in the Acknowledgements section.
 Tweaked the wording in the title (added "Recognized CA"), emphasized collapsing
 the two stages into one, centered the labels in the boxes, updated the URL for
 go-patch.
+
+*2017-09-03*
+
+We dispensed with `mbus_bootstrap_ssl` file; it was both complex and
+unnecessary.
+
+We fixed a bug where the mbus bootstrap SSL was interpolated incorrectly,
+resulting in an error (`cannot unmarshal !!str 'certifi...' into
+manifest.Certificate`) when using newer versions (>= 2.0.32) of the BOSH CLI.
+
+We refactored the SSL certificate into its own file, `nono.io.crt`.
