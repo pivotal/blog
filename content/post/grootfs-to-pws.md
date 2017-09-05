@@ -11,7 +11,6 @@ categories:
 - CF
 - Agile
 date: 2017-09-05T17:16:22Z
-draft: false
 short: |
   Our rollout of GrootFS to Pivotal Web Services was a gradual, iterative process that allowed us to test on a small subset of production instances, roll the changes back, make improvements, and finally release it with confidence. We talk about the process and provide takeaways for other teams deploying new features to production.
 title: Deploying GrootFS to Pivotal Web Services (PWS)
