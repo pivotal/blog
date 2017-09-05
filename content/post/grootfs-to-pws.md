@@ -14,6 +14,7 @@ date: 2017-09-05T17:16:22Z
 short: |
   Our rollout of GrootFS to Pivotal Web Services was a gradual, iterative process that allowed us to test on a small subset of production instances, roll the changes back, make improvements, and finally release it with confidence. We talk about the process and provide takeaways for other teams deploying new features to production.
 title: Deploying GrootFS to Pivotal Web Services (PWS)
+image: /images/grootfs-to-pws/pws-v2-dashboard.png
 ---
 ## Change is the Only Constant on PWS
 Pivotal’s Cloud Operations (CloudOps) team deploys changes to Pivotal Web Services (PWS) almost every day, sometimes multiple times a day. Most of those changes are relatively small and invisible to users. For example, we might deploy a change that encrypts communication between two components, or a change that fixes a few bugs. Often, deployments don’t impact applications running on the platform at all; at most, Diego might reshuffle application instances between cells as the cells are restarted.
