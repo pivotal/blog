@@ -91,4 +91,4 @@ Establish who will be paged for what issues, and make sure everyone knows how to
 ## Where Are They Now?
 Now that GrootFS is deployed to PWS and incorporated into Cloud Foundry, the GrootFS team is focusing on improving their product by finishing rootless containers support, adding support for OCI Images, and improving cache management (particularly cache cleanup). The CloudOps team continues to deploy bleeding-edge Cloud Foundry code to PWS on a daily basis.
 
-* Note that we have since developed a process to fully isolate Diego cells from BOSH without blocking deploys. Look out for more details on that in a later blog post.
+\* Note that we have since developed a process to fully isolate Diego cells from BOSH without blocking deploys. Look out for more details on that in a later blog post.
