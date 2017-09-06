@@ -3,8 +3,8 @@ authors:
 - genevieve
 categories:
 - BBL
-date: 2017-08-20T17:16:22Z
-draft: true
+- Cloud Foundry
+date: 2017-09-06T08:30:00Z
 short: |
   A day in the life of a Pivotal Cloud Foundry software engineer in Santa Monica, California.
 title: Day in the Life - Santa Monica Style
