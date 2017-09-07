@@ -8,7 +8,7 @@ categories = ["Greenplum Database","PostgreSQL", "Greenplum"]
 
 +++
 
-[_Greenplum Database_](http://greenplum.org/) was originally forked from [_PostgreSQL_](https://www.postgresql.org/) 8.2. With version 5.0, we [merged _PostgreSQL_ 8.3](http://localhost:1313/post/GPDB_merge_with_PostgreSQL_8.3/) and learned quite a lot along the way. In particular, it is not enough to just merge the database code - the tooling around the database needs to evolve as well, and customers and users want and need an upgrade path. This all got fixed in the past months, and the 5.0 version will roll out of the door soon.
+[_Greenplum Database_](http://greenplum.org/) was originally forked from [_PostgreSQL_](https://www.postgresql.org/) 8.2. With version 5.0, we [merged _PostgreSQL_ 8.3](http://engineering.pivotal.io/post/gpdb_merge_with_postgresql_8.3/) and learned quite a lot along the way. In particular, it is not enough to just merge the database code - the tooling around the database needs to evolve as well, and customers and users want and need an upgrade path. This all got fixed in the past months, and the 5.0 version will roll out of the door soon.
 
 Time to start thinking about the next steps!
 
