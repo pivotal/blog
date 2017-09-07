@@ -2,8 +2,8 @@
 authors = ["hlinnakangas", "dgustafsson", "ascherbaum"]
 title = "Merging new PostgreSQL versions into Greenplum Database"
 short = "This blog post explains how we plan to merge newer PostgreSQL versions into Greenplum Database."
-draft = true
-date = "2017-09-06T17:16:22Z"
+draft = false
+date = "2017-09-07T20:00:00Z"
 categories = ["Greenplum Database","PostgreSQL", "Greenplum"]
 
 +++
