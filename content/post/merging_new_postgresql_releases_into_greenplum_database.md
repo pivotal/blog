@@ -14,7 +14,7 @@ Time to start thinking about the next steps!
 
 ## GitHub
 
-Our development takes place on [_GitHub_](https://github.com/greenplum-db/gpdb). After cutting the 5.0 branch, the master branch is again open for new features and patches, which will go into upcoming release.
+Our development takes place on [_GitHub_](https://github.com/greenplum-db/gpdb). After cutting the 5.0 branch ([5X_STABLE](https://github.com/greenplum-db/gpdb/tree/5X_STABLE)), the master branch is again open for new features and patches, which will go into upcoming release.
 
 In order not to "disturb" the main repository with too many commits from the merge, this process was moved into a separate [public repository](https://github.com/greenplum-db/gpdb-postgres-merge). Anyone is welcome to clone this repository and look into merge conflicts. After all conflicts in this repository are solved, and all tests pass, it will be merged back into the main repository.
 
@@ -28,7 +28,7 @@ For the merge, a [separate pipeline](https://gpdb.ci.pivotalci.info/teams/gpdb/p
 
 ## Planned steps
 
-Our plan is to have a major release of _Greenplum Database_ once a year, this follows the _PostgreSQL_ release cycle. We also plan to merge 3 _PostgreSQL_ major versions until we release version 6.0 of Greenplum Database. This gives us roughly 3 months to merge one major version, plus additional time to prepare the upcoming release.
+Our plan is to have a major release of _Greenplum Database_ once a year, this follows the _PostgreSQL_ release cycle. We also plan to merge 3 _PostgreSQL_ major versions before we release version 6.0 of Greenplum Database. This gives us roughly 3 months to merge one major version, plus additional time to prepare the upcoming release.
 
 The merge of one major _PostgreSQL_ version is again broken down into smaller steps. Each step will process roughly 2-4 months of upstream commits.
 
