@@ -283,6 +283,20 @@ section and merging its options with the `bosh create-env` step. Indeed, the
 only advantage of using a two-stage process is the creation of the intermediate
 BOSH director manifest file, `bosh-gce.yml`.
 
+## 4. SSL Certificates on Other Infrastructures
+
+This technique applies equally well to other IaaSes (such as AWS, Azure, and vSphere). As a proof of concept, we have deployed BOSH directors with
+CA-issued SSL certificates to each of the IaaSes listed below (ignore the "forbidden"
+page when clicking _BOSH Director_ links; instead, pay attention
+to the valid SSL certificate presented to the browser):
+
+| Infrastructure | BOSH Director (URL) | BOSH Director Manifest |
+| -----|---------------|----|
+| Amazon AWS | <https://bosh-aws.nono.io:25555/info> | [bosh-aws.yml](https://github.com/cunnie/deployments/blob/17f8300550e5f3830ea56db91e1c7442cf026505/bosh-aws.yml) |
+| Google GCP | <https://bosh-gce.nono.io:25555/info> | [bosh-gce.yml](https://github.com/cunnie/deployments/blob/17f8300550e5f3830ea56db91e1c7442cf026505/bosh-gce.yml) |
+| Microsoft Azure | <https://bosh-azure.nono.io:25555/info> | [bosh-azure.yml](https://github.com/cunnie/deployments/blob/17f8300550e5f3830ea56db91e1c7442cf026505/bosh-azure.yml) |
+| VMware vSphere | <https://bosh-vsphere.nono.io:25555/info> | [bosh-vsphere.yml](https://github.com/cunnie/deployments/blob/17f8300550e5f3830ea56db91e1c7442cf026505/bosh-vsphere.yml) |
+
 ## Acknowledgements
 
 [Dmitriy Kalinin](https://github.com/cppforlife/) suggested collapsing the two
@@ -405,3 +419,7 @@ resulting in an error (`cannot unmarshal !!str 'certifi...' into
 manifest.Certificate`) when using newer versions (>= 2.0.32) of the BOSH CLI.
 
 We refactored the SSL certificate into its own file, `nono.io.crt`.
+
+*2017-09-07*
+
+Added the section, _SSL Certificates on Other Infrastructures_.
