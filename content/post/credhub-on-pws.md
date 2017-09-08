@@ -31,7 +31,7 @@ properties:
 		api: api.example.com
 		apps_domain: example.com
 		admin_user: watermelon
-		admin_password: EH7kee4eenei0Oh
+		admin_password: apology_cake
 ```
 
 Running `secrets-sanitizer` on this file might look like this:
