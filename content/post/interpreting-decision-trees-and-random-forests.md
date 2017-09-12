@@ -16,12 +16,12 @@ The random forest has been a burgeoning machine learning technique in the last f
 ## How Do Decision Trees Work?
 Decision trees work by iteratively splitting the data into distinct subsets in a greedy fashion. For regression trees, they are chosen to minimize either the MSE (mean squared error) or the MAE (mean absolute error) within all of the subsets. For classification trees, the splits are chosen so as to minimize entropy or Gini impurity in the resulting subsets.
 
-The resulting classifier separates the feature space into distinct subsets. Predictions are made based on which subset an observation falls into.
+The resulting classifier separates the feature space into distinct subsets. Prediction of an observation is made based on which subset the observation falls into.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/dt_iterations.png" class="center">}}
 <center><em>Figure 1: Iterations of a Decision Tree</em></center>
 
-Decision Tree Contributions
+## Decision Tree Contributions
 Let's use the abalone data set as an example. We will try to predict the number of rings based on variables such as shell weight, length, diameter, etc. We will fit a shallow decision tree for illustrative purposes.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/reg_dt_path.png" class="center">}}
