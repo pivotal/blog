@@ -3,17 +3,17 @@ authors:
 - genevieve
 categories:
 - BBL
-date: 2017-08-20T17:16:22Z
-draft: true
+- Cloud Foundry
+date: 2017-09-06T08:30:00Z
 short: |
   A day in the life of a Pivotal Cloud Foundry software engineer in Santa Monica, California.
-title: Day in the Life - Santa Monica style
+title: Day in the Life - Santa Monica Style
 image: /images/day-in-the-life-sm/pairing.jpg
 ---
 
 <p align="center"  style="font-weight:bold">
 
-Did you ever imagine yourself at work, drinking an almond latte, as you worked
+Did you ever imagine yourself at work, drinking coffee, working
 on an acceptance test for a CLI that paves an IaaS environment for your users to
 do their work on? That between sips you’d work to automate deployment of a
 heavily distributed PaaS software system in a fraction of the time it would take
@@ -106,8 +106,8 @@ I like that I can talk about what I do in great detail with anyone...
 
 ### Infrastructure
 
-My team maintains 3 very different projects - cue the *Charlie’s
-Angels* theme song. They are:
+My team maintains 3 very different projects - cue the Charlie’s
+Angels theme song. They are:
 
 - [bosh-bootloader](https://github.com/cloudfoundry/bosh-bootloader)
 - [consul-release](https://github.com/cloudfoundry-incubator/consul-release)
@@ -128,8 +128,8 @@ your choosing for a
 [Cloud Foundry](https://www.cloudfoundry.org/) or
 [concourse](http://concourse.ci/) installation.
 
-Currently, `bbl` supports Amazon Web Services and Google Cloud
-Platform.
+Currently, `bbl` supports Amazon Web Services, Google Cloud
+Platform, and Microsoft Azure.
 
 #### How do you use it?
 
@@ -155,7 +155,7 @@ bbl down
 
 `bbl` is opinionated in terms of networks and security groups.
 
-We are currently adding a security feature where `bbl` deploys a **jumpbox** in
+We are currently completing a security feature where `bbl` deploys a **jumpbox** in
 front of your BOSH director. You can think of a jumpbox as a bastion: a single
 point of entry to the system. A jumpbox has fewer ports open than the BOSH
 director (only an ssh port) and the ingress rules for the BOSH director can be
@@ -187,15 +187,17 @@ infrastructure management is made easier with terraform.
 Nima and Amit have a
 [great explanation here!](https://www.cloudfoundry.org/challenges-testing-highly-distributed-highly-scalable-cloud-platform-case-cloud-foundry/)
 
+To learn more about `bbl`, check out Angela and Christian's talk
+on [deploying Cloud Foundry with bbl, BOSH 2.0, and cf-deployment](https://www.youtube.com/watch?v=lIhx69WfRcE).
+
 Alright, where were we?
 
 
 
 ## 11:00 AM - 11:15 AM
 
-In the middle of the morning, we take a break.
-
-You can sit on the balcony to get some sun, go for a walk, or chat others up.
+In the middle of the morning, we take a break. You can sit on the balcony to get
+some sun, go for a walk, or chat others up.
 
 
 
@@ -224,35 +226,12 @@ to call my family back home. Or I listen to **Kaytranada’s 99.9%** because it�
 phenomenal and will never get old.
 
 
-#### Flex hours
-
-At this point you might be thinking: *“This schedule feels a little rigid.”*
-
-Pivotal has a set **9 AM - 12:30 PM / 1:30 PM - 5 PM** schedule.
-
-That’s 35 hours with your team. The other 5 hours can be moved anywhere. These
-five hours a week don’t need to be spent in your team’s backlog or in the
-office. You can explore new technical domains or work on diversity and inclusion
-efforts. It’s flexible in time, topic, and location.
-
-We believe in **sustainable pace** - you hear it a lot in the industry and we
-*really* practice it.
-
-If your peers see you working into the evening one night, the next night,
-they’ll be standing right there next to you saying *“[insert your nickname here] -
-time to go home!”*
-
-When you take vacation, even to somewhere with cell service, you don’t have to
-worry about being contacted. We respect each other’s mornings, evenings, and
-weekends.
-
-
 
 ## 1:30 PM - 2:00 PM
 
 As anchor, once a week I have a pre-IPM with Evan, our product manager.
 
-An **Iteration Planning Meeting** is where the team meets to talk about stories in
+An **iteration planning meeting** is where the team meets to talk about stories in
 the backlog and point them based on their anticipated complexity.
 
 In the pre-IPM, Evan and I work to flesh out stories with acceptance criteria.
@@ -276,9 +255,30 @@ in Santa Monica by the beach and sunshine is addictive!
 
 ## 3:15 PM - 5:00 PM
 
-Our day ends at 5PM and we disperse. Depending on the week, I’ll spend flex
-hours at a coffee shop on a Saturday morning. I can pick up an interesting story
-in the icebox or work on an iOS application just to change it up!
+Our day ends at 5PM and we disperse.
+
+
+#### Flex hours
+
+At this point you might be thinking: *“This schedule feels a little rigid.”*
+
+Pivotal has a set **9 AM - 12:30 PM / 1:30 PM - 5 PM** schedule.
+
+That’s 35 hours with your team. The other 5 hours can be moved anywhere. These
+five hours a week don’t need to be spent in your team’s backlog or in the
+office. You can explore new technical domains or work on diversity and inclusion
+efforts. It’s flexible in time, topic, and location.
+
+We believe in **sustainable pace** - you hear it a lot in the industry and we
+*really* practice it.
+
+When you take vacation, even to somewhere with cell service, you don’t have to
+worry about being contacted. We respect each other’s mornings, evenings, and
+weekends.
+
+Depending on the week, I’ll spend flex hours at a coffee shop on Saturday morning.
+I can pick up an interesting story in the icebox or
+work on an iOS/Go application just to change it up!
 
 
 
