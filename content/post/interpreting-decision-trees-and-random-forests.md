@@ -30,9 +30,13 @@ Let's use the abalone data set as an example. We will try to predict the number 
 To predict the number of rings for an abalone, a decision tree will traverse down the tree until it reaches a leaf. Each step splits the current subset into two. For a specific split, the contribution of the variable that determined the split is defined as the change in mean number of rings.
 
 For example, if we take an abalone with a shell weight of 0.02 and a length of 0.220, it will fall in the left-most leaf, with a predicted number of rings as 4.4731. Shell weight will have a contribution of
-
+```
+(7.587 - 9.958) + (5.701 - 7.587) = -4.257
+```
 Length will have a contribution of
-
+```
+(4.473 - 5.701) = -1.228
+```
 These negative contributions imply that the shell weight and length values for this particular abalone drive its predicted number of rings down.
 
 We can get these contributions by running the following code:
@@ -47,7 +51,7 @@ The contributions variable, `dt_reg_contrib`, is a 2d numpy array with dimension
 We can plot these contributions for a given abalone to see which features most impact its predicted value.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_dt_reg.png" class="center">}}
-<center><em>Figure 3: Decision Tree contribution plot for one example</em><center>
+<center><em>Figure 3: Decision Tree contribution plot for one example</em></center>
 
 We can compare this particular abalone’s contributions to the entire population by using violin plots.
 
@@ -98,20 +102,24 @@ This is more easily explained with an example. Suppose we instead are trying to 
 Each node has 3 values—the percentage of abalones in the subset that are female, male, and infants respectively. An abalone with a viscera weight of 0.1 and a shell weight of 0.1 would end up in the left-most leaf (with probabilities of 0.082, 0.171, and 0.747). The same logic of contributions for regression trees applies here.
 
 The contribution of viscera weight to this particular abalone being in infant is:
-
+```
+(0.59 - 0.315) = 0.275
+```
 And the contribution of shell weight is:
-
+```
+(0.747 - 0.59) = 0.157
+```
 
 We can plot a contribution plot for each class. Below, we have shown one such plot for the infant class.
 
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_multi_clf_dt.png" class="center">}}
-Figure 10: Contribution plot for infant class in multi-class Decision Tree
+<center><em>Figure 10: Contribution plot for infant class in multi-class Decision Tree</em></center>
 
 And as before, we can also plot the contributions vs. the features for each class
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_by_sex_rf.png" class="center">}}
-Figure 11: Contribution vs. shell weight for each class (Random Forest)
+<center><em>Figure 11: Contribution vs. shell weight for each class (Random Forest)</em></center>
 
 ## Final Thoughts
 We have shown in this blog that by looking at the paths, we can gain a deeper understanding of decision trees and random forests. This is especially useful since random forests are an embarrassingly parallel, typically high performing machine learning model. By interpreting them better, its value increases.
