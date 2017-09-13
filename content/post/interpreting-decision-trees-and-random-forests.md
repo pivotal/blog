@@ -22,54 +22,50 @@ The resulting classifier separates the feature space into distinct subsets. Pred
 <center><em>Figure 1: Iterations of a Decision Tree</em></center>
 
 ## Decision Tree Contributions
-Let's use the abalone data set as an example. We will try to predict the number of rings based on variables such as shell weight, length, diameter, etc. We will fit a shallow decision tree for illustrative purposes.
+Let's use the [abalone data set](https://archive.ics.uci.edu/ml/datasets/abalone) as an example. We will try to predict the number of rings based on variables such as shell weight, length, diameter, etc. We will fit a shallow decision tree for illustrative purposes.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/reg_dt_path.png" class="center">}}
-<center><em>Figure 2: Decision Tree path for number of rings prediction</em></center>
+<center><em>Figure 2: Decision Tree path for predicting number of rings</em></center>
 
 To predict the number of rings for an abalone, a decision tree will traverse down the tree until it reaches a leaf. Each step splits the current subset into two. For a specific split, the contribution of the variable that determined the split is defined as the change in mean number of rings.
 
-For example, if we take an abalone with a shell weight of 0.02 and a length of 0.220, it will fall in the left-most leaf, with a predicted number of rings as 4.4731. Shell weight will have a contribution of
+For example, if we take an abalone with a shell weight of 0.02 and a length of 0.220, it will fall in the left-most leaf, with a predicted number of rings as 4.4731. Shell weight will have a contribution of:
 ```
 (7.587 - 9.958) + (5.701 - 7.587) = -4.257
 ```
-Length will have a contribution of
+Length will have a contribution of:
 ```
 (4.473 - 5.701) = -1.228
 ```
 These negative contributions imply that the shell weight and length values for this particular abalone drive its predicted number of rings down.
 
-We can get these contributions by running the following code:
+We can get these contributions by running the below code. 
 
 ```
 from treeinterpreter import treeinterpreter as ti
 dt_reg_pred, dt_reg_bias, dt_reg_contrib = ti.predict(dt_reg, X_test)
 ```
 
-The contributions variable, `dt_reg_contrib`, is a 2d numpy array with dimensions (`n_obs`, `n_features`), where `n_obs` is the number of observations and `n_features` is the number of features.
+The variable `dt_reg` is the sklearn classifier object and `X_test` is a Pandas DataFrame or numpy array containing the features we wish to derive the predictions and contributions from. The contributions variable, `dt_reg_contrib`, is a 2d numpy array with dimensions (`n_obs`, `n_features`), where `n_obs` is the number of observations and `n_features` is the number of features.
 
 We can plot these contributions for a given abalone to see which features most impact its predicted value.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_dt_reg.png" class="center">}}
-<center><em>Figure 3: Decision Tree contribution plot for one example</em></center>
+<center><em>Figure 3: Contribution plot for one example (Decision Tree)</em></center>
 
 We can compare this particular abalone’s contributions to the entire population by using violin plots.
 
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_dt_reg.png" class="center">}}
-<center><em>Figure 4: Decision Tree contribution plot with violin for one example</em></center>
+<center><em>Figure 4: Contribution plot with violin for one observation (Decision Tree)</em></center>
 
 These plots, while insightful, still do not give us a full understanding on how a specific variable affects the number of rings an abalone has. Instead, we may plot a given feature's contribution against its values.
 
-
-{{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_dt_reg.png" class="center">}}
-<center><em>Figure 4: Decision Tree contribution plot with violin for one example</em></center>
-
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_dt.png" class="center">}}
-<center><em>Figure 5: Decision Tree contribution vs. shell weight plot</em></center>
+<center><em>Figure 5: Contribution vs. shell weight (Decision Tree)</em></center>
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shucked_weight_contribution_dt.png" class="center">}}
-<center><em>Figure 6: Decision Tree contribution vs. shucked weight plot</em></center>
+<center><em>Figure 6: Contribution vs. shucked weight (Decision Tree)</em></center>
 
 Now, we can see the number of rings increase with shell weight. Shucked weight, on the other hand, has a non-linear, non-monotonic relationship with the number of rings.
 
@@ -78,16 +74,16 @@ This process of determining the contributions can naturally be extended to Rando
 
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_rf.png" class="center">}}
-<center><em>Figure 7: Random Forest contribution plot with violin for one example</em></center>
+<center><em>Figure 7: Contribution plot with violin for one observation (Random Forest)</em></center>
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_rf.png" class="center">}}
-<center><em>Figure 8: Random Forest contribution vs. shell weight plot</em></center>
+<center><em>Figure 8: Contribution vs. shell weight (Random Forest)</em></center>
 
 Now that we have injected a bit of randomness by using Random Forests, there can be variability in contribution for a given shell weight. However, the increasing trend still remains as shown by the smoothed black trend line.
 
 Again, we may see more complicated, non-monotonic trends.
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/diameter_contribution_rf.png" class="center">}}
-<center><em>Figure 9: Random Forest contribution vs. for diameter plot</em></center>
+<center><em>Figure 9: Contribution vs. diameter (Random Forest)</em></center>
 
 Diameter appears to have a dip in contribution at about 0.45 and a peak in contribution around 0.3 and 0.6. Apart from that, there seems to be a general increasing relationship between diameter and number of rings.
 
@@ -96,7 +92,7 @@ We have shown that feature contribution for regression trees is derived from the
 
 This is more easily explained with an example. Suppose we instead are trying to predict sex, i.e., whether the abalone is a female, male, or an infant.
 
-{{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_multi_clf_dt.png" class="center">}}
+{{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/multi_clf_dt_path.png" class="center">}}
 <center><em>Figure 10: Decision Tree path for multinomial classification</em></center>
 
 Each node has 3 values—the percentage of abalones in the subset that are female, male, and infants respectively. An abalone with a viscera weight of 0.1 and a shell weight of 0.1 would end up in the left-most leaf (with probabilities of 0.082, 0.171, and 0.747). The same logic of contributions for regression trees applies here.
@@ -112,11 +108,10 @@ And the contribution of shell weight is:
 
 We can plot a contribution plot for each class. Below, we have shown one such plot for the infant class.
 
-
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_multi_clf_dt.png" class="center">}}
-<center><em>Figure 10: Contribution plot for infant class in multi-class Decision Tree</em></center>
+<center><em>Figure 10: Contribution plot with violin for one infant observation (Multi-Class Decision Tree)</em></center>
 
-And as before, we can also plot the contributions vs. the features for each class
+And as before, we can also plot the contributions vs. the features for each class.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_by_sex_rf.png" class="center">}}
 <center><em>Figure 11: Contribution vs. shell weight for each class (Random Forest)</em></center>
