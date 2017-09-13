@@ -45,6 +45,7 @@ Here goes:
 4. Add the IP of the sequestered instance to the Diego manifest's reserved IPs section so that BOSH doesn't try to reuse that IP.
 5. Tell BOSH to totally forget about the sequestered VM with `bosh cck`. Choose `delete VM reference`
    a. Verify that `bosh vms` returns `-` for the sequestered instance's status
+5. TODO: add step about killing processes like route emitter 
 6. *While BOSH resurrection is still disabled*, deploy the manifest with the reserved IP so it doesn't get reallocated
 7. Re-enable resurrection
 `bosh -e prod -d diego-deployment update-resurrection on`
@@ -75,3 +76,5 @@ ls -1 /var/vcap/data/garden/depot | grep -v $ig | xargs -n1 -I {} echo /var/vcap
 
 ### Gotchas
 Depending on the types of applications you're hosting on your Diego cell, the last step ("Clear out apps you don't need") may be pretty important. When we ran through this, we caused an interesting and mysterious bug where one Pivotal engineering team's requests were failing some of the time. This turned out to be because a worker on a sequestered cell was still pulling tasks from their queue, but wasn't able to complete them. If we'd only been running web apps on those cells, though, we would have been fine!
+
+TODO: Add something about routing issue we saw (killing processes)
