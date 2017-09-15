@@ -117,4 +117,4 @@ And as before, we can also plot the contributions vs. the features for each clas
 <center><em>Figure 11: Contribution vs. shell weight for each class (Random Forest)</em></center>
 
 ## Final Thoughts
-We have shown in this blog that by looking at the paths, we can gain a deeper understanding of decision trees and random forests. This is especially useful since random forests are an embarrassingly parallel, typically high performing machine learning model. By interpreting them better, its value increases.
+We have shown in this blog that by looking at the paths, we can gain a deeper understanding of decision trees and random forests. This is especially useful since random forests are an embarrassingly parallel, typically high performing machine learning model. By interpreting them better, their value increases.
