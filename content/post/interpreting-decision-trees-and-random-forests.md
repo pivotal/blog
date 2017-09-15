@@ -109,7 +109,7 @@ We can plot a contribution plot for each class. Below, we have shown one such pl
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_multi_clf_dt.png" class="center">}}
 <center><em>Figure 10: Contribution plot with violin for one infant observation (Multi-Class Decision Tree)</em></center>
 
-And as before, we can also plot the contributions vs. the features for each class.
+And as before, we can also plot the contributions vs. the features for each class. The contributions for the abalone being female increases as shell weight increases while the contribution for it being an infant decreases. For males, the contribution increases initially and then decreases when shell weight is above 0.5.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_by_sex_rf.png" class="center">}}
 <center><em>Figure 11: Contribution vs. shell weight for each class (Random Forest)</em></center>
