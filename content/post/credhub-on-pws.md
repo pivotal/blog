@@ -1,132 +1,188 @@
 ---
 authors:
 - dreeve
+- cinnis
 categories:
 - CredHub
 - Operations
 date: 2017-09-04T14:57:22Z
 draft: true
-short: 
-title: Transitioning From Using Locally-Stored Secrets To Using CredHub For Pivotal Web Services
+short: |
+  [CredHub](https://github.com/cloudfoundry-incubator/credhub) is designed to store passwords, keys, certificates, and other sensitive information for a [BOSH](https://bosh.io)-managed environment. Pivotal's Cloud Operations (CloudOps) team recently migrated credentials for PWS to CredHub. Here's how we did that.
+title: Transitioning to CredHub on Pivotal Web Services (PWS)
 image: /images/pairing.jpg
 ---
 
-# CredHub On PWS
+## "Best Practices"
 
-[Credhub](https://github.com/cloudfoundry-incubator/credhub<Paste>) is designed to manage passwords, secrets, certificates, and other secret information for a Cloud Foundry environment. The Pivotal CloudOps team uses a CredHub instance co-located with a BOSH Director to manage the secrets required to continuously deploy Pivotal Web Services with minimal downtime. This article will discuss how the team moved from storing secret information in flat files to storing secrets -- and automatically generating SSL certificates! -- using BOSH variable generation and CredHub.
+Pivotal's Cloud Operations (CloudOps) team manages deployments to a shared environment, [Pivotal Web Services (PWS)](https://run.pivotal.io); shared in the sense that other teams manage deployments for which PWS is a dependency. To facilitate collaboration and collective ownership, these manifests are maintained in a single repository.
+
+> A litmus test for whether an app has all config correctly factored out of the code is whether the codebase could be made open source at any moment, without compromising any credentials.<br>
+> \- [*The Twelve-Factor App*](https://12factor.net/config)
+
+So we can easily update configuration that is variable across deployments (e.g., when rotating credentials, deploying the same manifest to an alternate environment), we keep much of that config stored elsewhere, outside of the manifests.
+
+Historically, CloudOps managed these credentials and such with [`secrets-sanitizer`](https://github.com/pivotal-cloudops/secrets-sanitizer), a tool we built. With the recent introduction of the [BOSH](https://bosh.io) "config server" concept as the (soon-to-be) recommended mechanism for managing variable configuration and, in particular, [CredHub](https://github.com/cloudfoundry-incubator/credhub) as a concrete implementation, we decided to migrate everything to that new (and glorious) world.
+
+Here's how we did that...
 
 
-## Before CredHub
+## First, a Brief Introduction to...
 
-Before using CredHub with BOSH variables, the CloudOps team used a tool named [secrets-sanitizer](https://github.com/pivotal-cloudops/secrets-sanitizer) to remove (or “sanitize”) secret values from manifests so that we could store them in a separate repository. Given that the team was working with manifests that already contained secrets, the `secrets-sanitizer` tool had the side-effect of being a useful abstraction on our path to importing all of our secret credentials to CredHub.
+### `secrets-sanitizer`
 
+In a pre-CredHub world, CloudOps built [`secrets-sanitizer`](https://github.com/pivotal-cloudops/secrets-sanitizer) to extract (or "sanitize") and re-insert (yep, "desanitize") sensitive details from deployment manifests. Given a manifest with properties deemed (via heuristics and configuration) to be "secret", processing that with `secrets-sanitizer` would extract those property values and store them in JSON files, replacing the manifest entries with interpolation placeholders marked as `{{property_key}}`. The sensitive details were then stored elsewhere, in a private repository.
 
-## A Brief Introduction to `secrets-sanitizer`
+So, given a manifest with the following snippet:
 
-`secrets-sanitizer` is a CloudOps-developed tool that can be used to remove secrets from manifest files. `secrets-sanitizer` edits the given manifest, replacing values that it deems “secret” with a reference to a value that is stored elsewhere. Given the following snippet from a manifest:
-
-```
+```yaml
 properties:
-	acceptance_tests:
-		api: api.example.com
-		apps_domain: example.com
-		admin_user: watermelon
-		admin_password: apology_cake
+  acceptance_tests:
+    api:            api.example.com
+    apps_domain:    example.com
+    admin_user:     watermelon
+    admin_password: apology_cake
 ```
 
-Running `secrets-sanitizer` on this file might look like this:
+Running `secrets-sanitizer` against that manifest might look like:
 
-```
-sanitize -i mani.yml -s ~/production_secrets/
+```shell
+$ sanitize -i manifest.yml -s ~/production-secrets/
 ```
 
-The resulting manifest has the secret value replaced by a key wrapped in double curly braces (`{{}}`):
+Resulting in a manifest with the password extracted and replaced with a `{{placeholder}}`, as such:
 
 ```yaml
 properties:
   acceptance_tests:
-    api: api.example.com
-    apps_domain: example.com
-    admin_user: watermelon
+    api:            api.example.com
+    apps_domain:    example.com
+    admin_user:     watermelon
     admin_password: "{{properties_acceptance_tests_admin_password}}"
 ```
 
-`secrets-sanitizer` removed the secret value and stored it in the file secrets-mani.json in the location specified by the `-s` argument. “De-sanitizing” the same manifest with the same arguments (by running `desanitize -i mani.yml -s ~/my_secrets/`) would re-insert `EH7kee4eenei0Oh` for the value of `admin_password`.
+At deploy-time, the properties were injected into the manifest without being saved. Something like:
 
-## Installing CredHub
+```shell
+$ bosh deploy <(desanitize -i manifest.yml -s ~/production-secrets/`)
+```
 
-Credhub is deployed as a co-located BOSH release. Further instructions for deployment can be found in the [`credhub-release` documentation](https://github.com/pivotal-cf/credhub-release#deploying-credhub).
 
-## Converting A Deployment To Use CredHub
+### BOSH Interpolation & CredHub
 
-Given that the manifests we use to deploy PWS had been run through the `secrets-sanitizer` tool, they had values surrounded by double curly braces. To fully utilize CredHub, CloudOps was interested in using BOSH variable interpolation to automatically replace the appropriate tags in each deployment manifest. 
+As of v2, the BOSH CLI and Director now have native support for [variable interpolation](https://bosh.io/docs/cli-int.html). When deploying, the variables to be interpolated in the manifest may be satisfied via a number of "value sources". For example:
 
-Converting one of PWS’ manifests to use CredHub was a straightforward process:
-- Import credentials into CredHub
-- Convert manifest from `secrets-sanitizer` format to a BOSH interpolation-friendly format
-- Configure BOSH to use CredHub as a config server
+- a CLI parameter; `bosh <command> --var=VAR=VALUE`
+- a `vars-file`; `bosh <command> --vars-file=PATH`
+- a `vars-store`; `bosh <command> --vars-store=PATH`
+- a "Config Server" implementing an API specified by the BOSH
 
-### Importing Credentials Into CredHub
+Given a manifest with the following snippet:
 
-As mentioned previously, the `secrets-sanitizer` tool creates a JSON file to store credentials. From a machine that could connect to the co-located CredHub instance, we ran a handful of lines of ruby that read each credential from the appropriate JSON credentials file and set that value in CredHub. 
+```yaml
+admin_password: ((password_variable))
+```
 
+Running that manifest through `bosh interpolate` with a parameter as follows:
+
+```shell
+$ bosh int manifest --var password_variable=apology_cake
+```
+
+Results in:
+
+```yaml
+admin_password: apology_cake
+```
+
+And, CredHub implements the Config Server API.
+
+
+## Migrating to CredHub
+
+### Deploying
+
+CredHub is deployed as a BOSH release. Instructions for deployment can be found in the [`credhub-release` documentation](https://github.com/pivotal-cf/credhub-release#deploying-credhub).
+
+We opted to configure CredHub as a colocated Config Server with [UAA](https://docs.cloudfoundry.org/concepts/architecture/uaa.html) as follows:
+
+```yaml
+config_server:
+  enabled:         true
+  url:             "((config_server_endpoint))"
+  ca_cert:         "((config_server_ca_cert))"
+  uaa:
+    url:           "((uaa_endpoint))"
+    ca_cert:       "((config_server_uaa_ca_cert))"
+    client_id:     credhub_director
+    client_secret: "((config_server_uaa_client_secret))"
+```
+
+
+### Importing Credentials
+
+As mentioned above, the `secrets-sanitizer` tool creates JSON files to store credentials. To import those credentials into CredHub, we ran a Ruby script to read from the appropriate JSON file and generate a BASH script to add those credentials to our CredHub.
+
+For example, running this script:
 
 ```ruby
 #!/usr/bin/env ruby
-
 require 'json'
 
-input = ARGV ? $< : File.new(ARGV[0])
+alias $DEFAULT_INPUT $<
+credentials = JSON.parse($DEFAULT_INPUT.read)
 
-credentials = JSON.parse(input.read)
+STDOUT.puts "#!/usr/bin/env bash"
 
 credentials.each do |key, value|
   output = "credhub set --name /secrets-sanitizer/#{key} --value #{value} --type value"
-  puts output
+  STDOUT.puts output
 end
 ```
 
-A few notes. This script reads from `STDIN` and prints the `credhub` CLI command to `STDOUT`.
+Results in something like:
 
-The `--name` we give each value in CredHub is prepended with `/secrets-sanitizer`. CredHub supports namespacing data by paths, so we used `/secrets-sanitizer` as a way of identifying credentials that were loaded using our `secrets-sanitizer` tool.
+```shell
+#!/usr/bin/env bash
+credhub set --name /secrets-sanitizer/properties_acceptance_tests_admin_password --value apology_cake --type value
+```
 
-CredHub has a handful of [credential types](https://docs.cloudfoundry.org/credhub/credential-types.html), including the generic `value`, as well as more specific types such as `password` and `certificate`. Our initial load imported all credentials as type `value`s. Since the majority of our credentials were named things like `cert` or `password`, a few modifications of the script allowed us to easily create new credentials with the appropriate types.
+*Notes:*
+
+- The script reads from "default input" (`STDIN` in our case) and prints the `credhub` CLI commands to `STDOUT`, resulting in a runnable BASH script.
+- The `--name` we give each value in CredHub is prefixed with `/secrets-sanitizer`. BOSH implements variable namespacing along the lines of `/bosh-director-name/deployment-name/variable`, so we used `/secrets-sanitizer` as a way of identifying credentials that were loaded using our `secrets-sanitizer` tool.
+- CredHub has a handful of [credential types](https://docs.cloudfoundry.org/credhub/credential-types.html), including the generic `value`, as well as more specific types such as `password` and `certificate`. Our initial load imported all credentials as type `value`s. Since the majority of our credentials were named things like `cert` or `password`, a few modifications of the script allowed us to easily create new credentials with the appropriate types.
+
 
 After loading these values into CredHub, we needed to convert the manifest from the `secrets-sanitizer` format to a BOSH interpolation-friendly format.
 
 
-### Converting The Manifest From Secrets-Sanitizer to BOSH Interpolation
+### Converting a Deployment to Use CredHub
 
-We didn't spend very much effort on this. This is about all we needed to convert the braces and prepend `/secrets-sanitizer/` to the BOSH interpolation references.
+The manifests we use to deploy [Cloud Foundry](https://www.cloudfoundry.org/) on PWS had been run through the `secrets-sanitizer` tool. As such, the sensitive properties were surrounded by double curly braces.
 
-```
-sed 's/{{/((\/secrets-sanitizer\//g' mani.yml | sed 's/}}/))/g'
-```
+BOSH variable interpolation uses a similar format, only with parens instead of curly braces. So...
 
-
-### Configure BOSH to Use CredHub as a Config Server
-
-We configured CredHub as a BOSH Config Server using UAA and pointing to the appropriate endpoints:
-
-```
-config_server:
-  enabled: true
-  url: https://bosh.run.pivotal.io:8844/api/
-  ca_cert: "((director_config_server_ca_cert))"
-  uaa:
-    url: https://bosh.run.pivotal.io:8443
-    client_id: credhub_director
-    client_secret: "((director_config_server_uaa_client_secret))"
-    ca_cert: "((director_config_server_uaa_ca_cert))"
-
+```shell
+# given a manifest path,
+# - use `sed` to convert curly braces to parens
+# - add our prefix to each entry
+# - write to STDOUT
+sed 's/{{/((\/secrets-sanitizer\//g' manifest.yml | sed 's/}}/))/g' \
+  > converted.yml
 ```
 
-## We Re-Deployed, And It Worked!
+### Deploy
 
-...After a few `bosh deploy --dry-run`s to check the output. We've been using CredHub as a BOSH Config Server to deploy PWS on a frequent basis ever since.
+```shell
+$ bosh deploy converted.yml
+```
 
-## How Has Deploying Manifests Since CredHub Changed?
 
-After we converted the appropriate credentials to the `password` and `certificate` types, we can more easily configure deployment secrets to be [automatically rotated](https://builttoadapt.io/the-three-r-s-of-enterprise-security-rotate-repave-and-repair-f64f6d6ba29d).
+## What's Next?
 
-In addition, adding new properties is easier. We can declare new [BOSH Variables](https://bosh.io/docs/cli-int.html#variables) to generate values for us. BOSH stores the variables in CredHub, so we have one place, automatically, to store our credentials, no human intervention necessary. 
+
+Now that we have converted the appropriate credentials to the `password` and `certificate` types, we will be able to easily configure deployment secrets to be [automatically rotated](https://builttoadapt.io/the-three-r-s-of-enterprise-security-rotate-repave-and-repair-f64f6d6ba29d).
+
+In addition, adding new properties is easier. We can declare new [BOSH Variables](https://bosh.io/docs/cli-int.html#variables) to generate values for us, as opposed to using legacy, custom scripts. And, BOSH stores the variables in CredHub, so we have one place to find and manage our credentials.
+
