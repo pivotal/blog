@@ -5,12 +5,13 @@ authors:
 categories:
 - CredHub
 - Operations
-date: 2017-09-04T14:57:22Z
+- Cloud Foundry
+- CF
+date: 2017-09-15T19:14:00Z
 draft: true
 short: |
   [CredHub](https://github.com/cloudfoundry-incubator/credhub) is designed to store passwords, keys, certificates, and other sensitive information for a [BOSH](https://bosh.io)-managed environment. Pivotal's Cloud Operations (CloudOps) team recently migrated credentials for PWS to CredHub. Here's how we did that.
 title: Transitioning to CredHub on Pivotal Web Services (PWS)
-image: /images/pairing.jpg
 ---
 
 ## "Best Practices"
