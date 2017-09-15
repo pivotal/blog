@@ -14,8 +14,6 @@ short: |
 title: Transitioning to CredHub on Pivotal Web Services (PWS)
 ---
 
-## "Best Practices"
-
 Pivotal's Cloud Operations (CloudOps) team manages deployments to a shared environment, [Pivotal Web Services (PWS)](https://run.pivotal.io); shared in the sense that other teams manage deployments for which PWS is a dependency. To facilitate collaboration and collective ownership, these manifests are maintained in a single repository.
 
 > A litmus test for whether an app has all config correctly factored out of the code is whether the codebase could be made open source at any moment, without compromising any credentials.<br>
