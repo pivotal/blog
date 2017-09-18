@@ -84,6 +84,9 @@ Again, we may see complicated, non-monotonic trends. Diameter appears to have a 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/diameter_contribution_rf.png" class="center">}}
 <center><em>Figure 9: Contribution vs. diameter (Random Forest)</em></center>
 
+TEMP
+You might be wondering, "How does this differ from plotting a scatter plot of the number of rings versus shell weight?"
+
 
 ## Classification
 We have shown that feature contribution for regression trees is derived from the mean number of rings and how it changes at successive splits. We can extend this to binomial and multinomial classification by looking instead at the percentage of observations of a certain class within each subset. The contribution for a feature is the total change in the percentage caused from that feature.
@@ -107,12 +110,12 @@ And the contribution of shell weight is:
 We can plot a contribution plot for each class. Below, we have shown one such plot for the infant class.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_multi_clf_dt.png" class="center">}}
-<center><em>Figure 10: Contribution plot with violin for one infant observation (Multi-Class Decision Tree)</em></center>
+<center><em>Figure 11: Contribution plot with violin for one infant observation (Multi-Class Decision Tree)</em></center>
 
 And as before, we can also plot the contributions vs. the features for each class. The contributions for the abalone being female increases as shell weight increases while the contribution for it being an infant decreases. For males, the contribution increases initially and then decreases when shell weight is above 0.5.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_by_sex_rf.png" class="center">}}
-<center><em>Figure 11: Contribution vs. shell weight for each class (Random Forest)</em></center>
+<center><em>Figure 12: Contribution vs. shell weight for each class (Random Forest)</em></center>
 
 ## Final Thoughts
 We have shown in this blog that by looking at the paths, we can gain a deeper understanding of decision trees and random forests. This is especially useful since random forests are an embarrassingly parallel, typically high performing machine learning model. For many of Pivotal's clients, we need to deliver them not only a highly predictive model, but also one that is explainable. That is, we do not want to give them a black box regardless of how well it performs. This requirement is important when dealing with clients in government or the financial space since our models will need to pass through compliance.
