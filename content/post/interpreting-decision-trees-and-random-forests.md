@@ -25,7 +25,7 @@ The resulting classifier separates the feature space into distinct subsets. Pred
 Let's use the [abalone data set](https://archive.ics.uci.edu/ml/datasets/abalone) as an example. We will try to predict the number of rings based on variables such as shell weight, length, diameter, etc. We fit a shallow decision tree for illustrative purposes. We achieve this by limiting the maximum depth of the tree to 3 levels.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/reg_dt_path.png" class="center">}}
-<center><em>Figure 2: Decision Tree path for predicting number of rings</em></center>
+<center><em>Figure 2: Decision tree path for predicting number of rings</em></center>
 
 To predict the number of rings for an abalone, a decision tree will traverse down the tree until it reaches a leaf. Each step splits the current subset into two. For a specific split, the contribution of the variable that determined the split is defined as the change in mean number of rings.
 
@@ -69,12 +69,12 @@ Shucked weight, on the other hand, has a non-linear, non-monotonic relation with
 <center><em>Figure 6: Contribution vs. shucked weight (Decision Tree)</em></center>
 
 ## Extending to Random Forests
-This process of determining the contributions of features can naturally be extended to Random Forests by taking the mean contribution for a variable across all trees in the forest.
+This process of determining the contributions of features can naturally be extended to random forests by taking the mean contribution for a variable across all trees in the forest.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/contribution_plot_violin_rf.png" class="center">}}
 <center><em>Figure 7: Contribution plot with violin for one observation (Random Forest)</em></center>
 
-Because Random Forests are inherently random, there is variability in contribution at a given shell weight. However, the increasing trend still remains as shown by the smoothed black trend line. As with the Decision Tree, we see that increasing shell weight corresponds to an higher contribution.
+Because random forests are inherently random, there is variability in contribution at a given shell weight. However, the increasing trend still remains as shown by the smoothed black trend line. As with the decision tree, we see that increasing shell weight corresponds to an higher contribution.
 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/shell_weight_contribution_rf.png" class="center">}}
 <center><em>Figure 8: Contribution vs. shell weight (Random Forest)</em></center>
@@ -115,4 +115,4 @@ And as before, we can also plot the contributions vs. the features for each clas
 <center><em>Figure 11: Contribution vs. shell weight for each class (Random Forest)</em></center>
 
 ## Final Thoughts
-We have shown in this blog that by looking at the paths, we can gain a deeper understanding of decision trees and random forests. This is especially useful since random forests are an embarrassingly parallel, typically high performing machine learning model. By interpreting them better, their value increases.
+We have shown in this blog that by looking at the paths, we can gain a deeper understanding of decision trees and random forests. This is especially useful since random forests are an embarrassingly parallel, typically high performing machine learning model. For many of Pivotal's clients, we need to deliver them not only a highly predictive model, but also one that is explainable. That is, we do not want to give them a black box regardless of how well it performs. This requirement is important when dealing with clients in government or the financial space since our models will need to pass through compliance.
