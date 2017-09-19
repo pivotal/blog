@@ -84,10 +84,6 @@ Again, we may see complicated, non-monotonic trends. Diameter appears to have a 
 {{<responsive-figure src="/images/interpreting-decision-trees-and-random-forests/diameter_contribution_rf.png" class="center">}}
 <center><em>Figure 9: Contribution vs. diameter (Random Forest)</em></center>
 
-TEMP
-You might be wondering, "How does this differ from plotting a scatter plot of the number of rings versus shell weight?"
-
-
 ## Classification
 We have shown that feature contribution for regression trees is derived from the mean number of rings and how it changes at successive splits. We can extend this to binomial and multinomial classification by looking instead at the percentage of observations of a certain class within each subset. The contribution for a feature is the total change in the percentage caused from that feature.
 
