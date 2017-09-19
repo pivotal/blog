@@ -10,7 +10,7 @@ short: This blog dives deeper into the fundamentals of decision trees and random
 title: Interpreting Decision Trees and Random Forests
 ---
 
-The random forest has been a burgeoning machine learning technique in the last few years. It is a non-linear tree-based model that often provides accurate results. However, being mostly black box, it is oftentimes hard to interpret and fully understand. In this blog, we will deep dive into the fundamentals of random forests to better grasp them. We start by looking at the decision tree—the building block of the random forest. This work is an extension of the work done by Ando Saabas (https://github.com/andosa/treeinterpreter).
+The random forest has been a burgeoning machine learning technique in the last few years. It is a non-linear tree-based model that often provides accurate results. However, being mostly black box, it is oftentimes hard to interpret and fully understand. In this blog, we will deep dive into the fundamentals of random forests to better grasp them. We start by looking at the decision tree—the building block of the random forest. This work is an extension of the work done by Ando Saabas (https://github.com/andosa/treeinterpreter). Code to create the plots in this blog can be found on my [GitHub](https://github.com/gregtam/interpreting-decision-trees-and-random-forests).
 
 ## How Do Decision Trees Work?
 Decision trees work by iteratively splitting the data into distinct subsets in a greedy fashion. For regression trees, they are chosen to minimize either the MSE (mean squared error) or the MAE (mean absolute error) within all of the subsets. For classification trees, the splits are chosen so as to minimize entropy or Gini impurity in the resulting subsets.
