@@ -5,8 +5,7 @@ categories:
 - Decision Tree
 - Random Forest
 - Data Science
-date: 2017-09-12
-draft: true
+date: 2017-09-19
 short: This blog dives deeper into the fundamentals of decision trees and random forests to better interpret them.
 title: Interpreting Decision Trees and Random Forests
 ---
