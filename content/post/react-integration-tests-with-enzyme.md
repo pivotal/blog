@@ -9,33 +9,30 @@ categories:
 date: 2017-09-29T14:05:25Z
 draft: true
 short: |
-  Enzyme is a popular React unit test library
-  but we took a stab at using it for full-on frontend integration tests.
-  This blog post is an account of the challenges we faced, how we dealt with them
-  and where it took us.
+  We used Enzyme, a popular React unit testing library, for full-on frontend integration tests.
+  Find out how this greatly improved feedback, and avoid some pitfalls we've come across.
 title: React integration testing with Enzyme
 image: /images/react-integration-tests-with-enzyme.gif
 ---
 
 # The beginning
-Earlier this year while setting up a new Spring Boot + React Redux project we realised
-there was a hole in our setup: frontend integration tests weren’t really there.
-We had unit tests for components and end-to-end tests exercising both frontend and backend
+Earlier this year while setting up a React Redux project, we realised
+there was a layer missing in our testing pyramid: integration tests weren’t really there.
+Multiple starter-seeds we looked at had unit tests for components and end-to-end tests
 but the latter were slow making for a very long feedback loop.
-We figured that fast integration tests for just the frontend could help a lot.
+We figured that fast integration tests could help a lot.
 
 It seemed that lack of integration tests in a React Redux app was particularly painful
 because of the following two reasons:
 
-- JavaScript is an untyped language. When app’s state structure changes, the compiler is not helpful
-  in finding which unit tests should be updated;
-- In the Redux architecture everything is very loosely coupled. Various parts of the app (reducers, components, middleware) don’t know of each other’s existence as state changes are driven only by dispatched actions. Testing individual bits in isolation gives absolutely no confidence that the whole thing works.
+- JavaScript is an untyped language. When the app’s state structure changes, the compiler cannot helpfind unit tests that need adjusting
+- In the Redux architecture everything is very loosely coupled. Various parts of the app (reducers, components, middleware) by design don’t know of each others existence as state changes are driven only by dispatched actions. Testing individual bits in isolation gives absolutely no confidence that the whole thing works.
 
 ## Enzyme to the rescue?
 [Enzyme](http://airbnb.io/enzyme/) is a test utility which allows you to take a React component, render it in memory
 and inspect the output with a jQuery-like API.
 Primarily it is used as a unit test library:
-you typically render one component (and all its nested components)
+you typically render one component with it's nested components
 and verify that the output is as expected.
 Enzyme implements React components' lifecycle methods
 and is suitable for testing of things like prop updates,
@@ -43,7 +40,7 @@ state changes, event handlers or unmount hooks.
 
 Fortunately for us everything in React is a component,
 in particular the router and the store provider.
-So, technically, nothing bars Enzyme from rendering the entire app
+So, technically, nothing stops Enzyme from rendering the entire app
 and acting as an integration test engine.
 
 
@@ -104,7 +101,7 @@ class AppTestHelper {
 }
 ~~~
 
-That was easy. In the actual test we need to set up a fake server response
+**That was easy**. In the actual test we need to set up a fake server response
 with the items and wait for the app to make a HTTP request and update UI.
 ~~~JavaScript
 beforeEach(async () => {
@@ -137,7 +134,7 @@ synchronous code.
 On the project we experimented with our own Promise implementation
 that offered a synchronous `flush` function.
 It was certainly fun to write it, but it required a lot of bespoke code
-that needed to be maintained and perhaps it all wasn't worth the effort
+that needed to be maintained and wasn't worth the effort
 just for the benefit of clean stack traces.
 
 ## Interactions
@@ -237,7 +234,7 @@ getting to certain pages in the warm start mode may require multiple interaction
 Then when something major breaks on one page
 it affects tests of pages which are later in the user flow.
 As a consequence we have a sea of failed tests and it's not clear what actually went wrong
-- there is no UI in the browser to look at.
+- there is no UI in the browser to look at. Also, keeping oversight on the stubs as the number of interactions increase is difficult and makes debugging harder.
 With cold start tests some of that red noise goes away.
 
 During the project we first wrote warm start integration tests in Enzyme
@@ -318,27 +315,33 @@ Here are some good and bad sides we found:
 
 ## The yeahs
 - Tests can run in Node, so they are *insanely* fast.
-  Tens of tests involving UI interactions and visiting multiple pages run in a matter of a few seconds.
-  Try to beat that with a real browser!
-- Compared to a previous React project when we didn't have such tests, green bar in the frontend gave us a lot of confidence. As a consequence we would run slow end-to-end tests less often.
+  Hundreds of tests involving UI interactions and visiting multiple pages run in a matter of a few seconds.
+  Feedback is fast, coverage is vast.
+- There was less need to run full-blown end-to-end tests, which saves time.
 - No context switch for developers between unit and integration tests. It's React, Javascript and Enzyme (almost) all the time.
-- Very simple setup: it's all there in `package.json`, you just `yarn` and you are good to go.
 - You *can* test how non-React libraries integrate with the React app.
 - It is easier to test various edge cases then in traditional Selenium tests - e.g. asserting on UI state
   both before and after it updated as a result of a server response.
 
 ## The mehs
-- Sometimes when tests fail it's hard to tell what actually wrong as there is no graphical UI to look at.
-  It may take a few `console.log(screen.debug())` to find out what's broken (however preferring cold-start tests
-  over warm starts alleviates the pain).
+- Sometimes when tests fail it is hard to tell what actually went wrong as there is no graphical UI to look at.
+  It may take a few `console.log(screen.debug())` to find out what's broken. Cold-start approach can help in some cases.
 - In some scenarios it is not too easy to set up a test. Usually because of limitations of mocking the API responses.
 - Testing non-react libraries requires a bit of fiddling (see example above).
+- Enzyme does not clean the state between tests, you will need to manage test pollution yourself by cleaning state after each test.
 
-Overall I think that the experience was very positive - I would definitely be up for setting this up this way again!
+# Summary
+We took an experimental path and used Enzyme for writing integration tests that mounted
+an entire React-Redux application.
+There were a few things that we had to figure out in order to make it work for a large application
+such as mocking server responses, testing the UI around asynchronous callbacks or testing
+integrations with non-React code.
+The tests were very fast and were giving us a lot of confidence in the frontend before we
+started slow end-to-end suite. 
 
 # Looking ahead
 Thinking of issues that were causing the integration tests to fail,
-many arouse from the fact that we were writing untyped code.
+many arose from the fact that we were writing untyped code.
 In Redux architecture everything revolves around the application state object.
 When that object is strongly typed and compiler gives us type errors,
 we get quicker feedback on certain defects and spend less time looking why the integration tests are red.
@@ -348,12 +351,3 @@ and was impressed by how easy it is to [add Typescript](https://github.com/Micro
 to [create-react-app](https://github.com/facebookincubator/create-react-app).
 This is definitely an area I am interested to continue exploring to further improve
 developer effectiveness and experience.
-
-# Summary
-We took an experimental path and used Enzyme for writing integration tests that mounted
-an entire React-Redux application.
-There were a few things that we had to figure out in order to make it work for a large application
-such as mocking server responses, testing the UI around asynchronous callbacks or testing
-integrations with non-React code.
-The tests were very fast and were giving us a lot of confidence in the frontend before we
-started slow end-to-end suite.
