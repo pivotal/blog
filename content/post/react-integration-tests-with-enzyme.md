@@ -17,7 +17,7 @@ image: /images/react-integration-tests-with-enzyme.gif
 
 # The beginning
 Earlier this year while setting up a React Redux project, we realised
-there was a layer missing in our testing pyramid: integration tests weren’t really there.
+there was a layer missing in our testing pyramid: integration tests.
 Multiple starter-seeds we looked at had unit tests for components and end-to-end tests
 but the latter were slow making for a very long feedback loop.
 We figured that fast integration tests could help a lot.
