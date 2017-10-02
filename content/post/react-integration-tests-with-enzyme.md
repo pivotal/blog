@@ -25,7 +25,7 @@ We figured that fast integration tests could help a lot.
 It seemed that lack of integration tests in a React Redux app was particularly painful
 because of the following two reasons:
 
-- JavaScript is an untyped language. When the app’s state structure changes, the compiler cannot helpfind unit tests that need adjusting
+- JavaScript is a dynamically typed language. When the app’s state structure changes, the compiler cannot helpfind unit tests that need adjusting
 - In the Redux architecture everything is very loosely coupled. Various parts of the app (reducers, components, middleware) by design don’t know of each others existence as state changes are driven only by dispatched actions. Testing individual bits in isolation gives absolutely no confidence that the whole thing works.
 
 ## Enzyme to the rescue?
@@ -329,6 +329,8 @@ Here are some good and bad sides we found:
 - In some scenarios it is not too easy to set up a test. Usually because of limitations of mocking the API responses.
 - Testing non-react libraries requires a bit of fiddling (see example above).
 - Enzyme does not clean the state between tests, you will need to manage test pollution yourself by cleaning state after each test.
+- Running in Node environment, Enzyme tests cannot fully replace browser testing that guarantees we are not
+  missing some polyfill or lacking a hack required by IE.
 
 # Summary
 We took an experimental path and used Enzyme for writing integration tests that mounted
@@ -337,13 +339,13 @@ There were a few things that we had to figure out in order to make it work for a
 such as mocking server responses, testing the UI around asynchronous callbacks or testing
 integrations with non-React code.
 The tests were very fast and were giving us a lot of confidence in the frontend before we
-started slow end-to-end suite. 
+started slow end-to-end suite.
 
 # Looking ahead
 Thinking of issues that were causing the integration tests to fail,
-many arose from the fact that we were writing untyped code.
+many arose from the fact that we were writing in dynamically typed language.
 In Redux architecture everything revolves around the application state object.
-When that object is strongly typed and compiler gives us type errors,
+In a statically typed world, where compiler gives us type errors early,
 we get quicker feedback on certain defects and spend less time looking why the integration tests are red.
 
 I quickly [played with Typescript and React](https://github.com/jacek-rzrz/react-app-typescript) recently
