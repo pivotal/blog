@@ -40,7 +40,7 @@ In the _faultinjector.c_ file, the *FaultInjector_NewHashEntry()* function handl
 And finally, the fault injection code must added in the software, where the fault is supposed to happen. Look for [*FaultInjector_InjectFaultIfSet()* calls](https://github.com/greenplum-db/gpdb/search?utf8=%E2%9C%93&q=FaultInjector_InjectFaultIfSet&type=) in the existing code.
 
 
-## Testing the fault
+## Injecting the fault from inside the database
 
 The [*gp_inject_fault*](https://github.com/greenplum-db/gpdb/tree/master/contrib/gp_inject_fault) extension is used to test certain error cases - obviously this should not be used in production but only for testing.
 
@@ -56,6 +56,7 @@ SELECT gp_inject_fault(...)
 ```
 
 Some of the parameters are required, some are optional. There is a long version of this function, which requires 8 parameters, and a shorter, more convenient function which requires the 3 most used parameters.
+
 
 ### Short version
 
@@ -73,6 +74,11 @@ Some of the parameters are required, some are optional. There is a long version 
 * number of repeats for the fault
 * sleep time for the fault
 * database id (from *gp_segment_configuration*)
+
+
+## Injecting the fault on operating system level
+
+Some problems can't be tested from inside the database, using regular SQL commands. One prime example are faults which are to inject into the mirror segments - the mirrors by default only receive file operations, no SQL commands. The fault injection framework uses the [_gpfaultinjector_](https://github.com/greenplum-db/gpdb/blob/master/gpMgmt/bin/gpfaultinjector) tool to [test such more complicated cases](https://github.com/greenplum-db/gpdb/search?utf8=%E2%9C%93&q=gpfaultinjector&type=).
 
 
 
