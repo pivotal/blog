@@ -18,9 +18,9 @@ My scenario for my application is fairly simplistic. I own a highly-rated pizza 
 
 For my scenario I create models for Pizza, Customer, and Pizza Order. Unfortunately, my pizza shop has a very slow point of sales (PoS) system. Trying to integrate with such a slow PoS system could cause problems, such as not being able to pull and view orders from my application quickly enough to be able to start the pizza order and satisfy my customers. This is a good opportunity to use a cache and have it backed by Pivotal Cloud Cache.
 
-## Creating a GemFire cluster
+## Creating a PCC cluster
 
-If you are a proud user of Pivotal Cloud Foundry like me and have access to the Pivotal Cloud Cache Tile, then you can quickly create a GemFire cluster with just a single command through the Cloud Foundry cli:
+If you are a proud user of Pivotal Cloud Foundry like me and have access to the Pivotal Cloud Cache Tile, then you can quickly create a PCC cluster with just a single command through the Cloud Foundry cli:
 
 So first, type in the following command:
 
