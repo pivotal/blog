@@ -7,18 +7,24 @@ categories:
 - Replatforming
 - Modernization
 - Pivotal Cloud Foundry
-- Cloud Native Continuum
+- Cloud Native ROI Continuum
 - Agile
 - XP
 date: 2017-09-14T17:16:22Z
 draft: true
 short: |
   This blog post explores how enterprises can reduce waste and continuously experiment leading to the product evolution and effective use of CAPEX to realize the true ROI Value of cloud native with Pivotal
-title: Cloud Native ROI Continuum
+title: Continuous Market Disruption
 image:
 ---
 
-How does one quantify the real value of Cloud Native and the value-add that a Platform like Cloud Foundry brings to your organization's objectives. In this blog post we dig deep into the Why and How of cloud native ROI with Pivotal.
+The key to Continuous Disruption of both the marketplace and your competitors starts with the first principal in the Agile Manifesto.
+
+> Our highest priority is to satisfy the customer through early and continuous delivery of valuable software.
+
+What is the _value_ of overhauling the software delivery culture, replatforming and modernizing application workloads, greenfield etc. Or better yet _WHY_ are we doing this? As you work in life, you need to understand this. If you can't answer that question, then should evaluate why you are spending time on that activity. How does one quantify the real value of Cloud Native and the value-add that a Platform like Cloud Foundry brings to your organization's strategic objectives. In this blog post we dig deep into the Why and How of cloud native ROI with Pivotal Cloud Foundry and the Pivotal Way .
+
+What if OPEX reduction isn’t the true promise of the conversation. What if we move the conversation forward from the reduction in software capitalization to the effective use of CAPEX. What if we make hypothesis market testing a first class citizen in feedback loops to CFO decision making. What if we validate our hypothesis with the granularity of cloud native microservices architecture. What if we let platform like PCF offload the technical complexity of managing microservices. What if features that don't work get sunset quicker, reducing technical debt sooner simultaneously increasing stickiness by continued budget for development and evolution. What if the savings from pruning technical debt early are quickly reallocated to new hypotheses. What if this is the agility we need to respond to innovate in a martket.
 
 ## Software as a Cost Center
 
@@ -47,9 +53,9 @@ For a full understanding of software capitalization, CAPEX and OPEX check out th
 
 You can speed up release cycles with a two-phased approach:
 
-1. Maximize software delivery throughput by busting lead times to production getting new features to your users. We look at the value chain from idea to production as a backlog prioritized delivery flow from sprint to production. We thus create a simple value stream to baseline, the time it currently takes your  teams to move changes from concept to production.  PCF optimizes KPIs like [MTTR](https://content.pivotal.io/blog/how-pcf-metrics-helps-you-reduce-mttr-for-spring-boot-apps-and-save-money-too),  MTBD, release frequency, mean number of hosts simultaneously receiving updates, number of patched CVEs, number of Support Tickets, QA costs & cycle time.
+ 1. Maximize software delivery throughput by busting lead times to production getting new features to your users. We look at the value chain from idea to production as a backlog prioritized delivery flow from sprint to production. We thus create a simple value stream to baseline, the time it currently takes your  teams to move changes from concept to production.  PCF optimizes KPIs like [MTTR](https://content.pivotal.io/blog/how-pcf-metrics-helps-you-reduce-mttr-for-spring-boot-apps-and-save-money-too),  MTBD, release frequency, mean number of hosts simultaneously receiving updates, number of patched CVEs, number of Support Tickets, QA costs & cycle time.
 
-2. Convert existing teams into XP cross-functional teams. Remove the “last mile” to delivery by injecting it into each delivery team’s responsibility sphere of control. Practice continuous improvement within each delivery team until all of the constraints move out of the software delivery team and move into the market i.e. Sales and Market Segmentation Analysis.
+ 2. Convert existing teams into XP cross-functional teams. Remove the “last mile” to delivery by injecting it into each delivery team’s responsibility sphere of control. Practice continuous improvement within each delivery team until all of the constraints move out of the software delivery team and move into the market i.e. Sales and Market Segmentation Analysis.
 
 ## Predictable Velocity at Reduced OPEX
 
