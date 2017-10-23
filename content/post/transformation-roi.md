@@ -59,9 +59,13 @@ You can speed up release cycles with a two-phased approach:
 
 ## Predictable Velocity at Reduced OPEX
 
-Pivotal Cloud Foundry aids in an initial reduction in OPEX through greater software delivery efficiencies and shared cloud scale application resource provisioning. In addition to this initial savings, the true value that PCF creates is the evolution of the fundamental building blocks for reducing your wasteful software delivery CAPEX and maximizing it for future investment.
+Pivotal Cloud Foundry aids in an initial reduction in OPEX through automation, resource consolidation and software reduction. These savings manifest themselves in the form of
+ 1. Increased *Speed* of environment setup and consistent release management practices and day 2 operations  
+ 2. Better *Stability* of apps with Blue/Green canaries, Resilience and self-healing
+ 3. Increased *Scalability* with dynamic routing and on-demand auto elasticity
+ 4. Enhanced *Security* with the ability to rotate, repair, repave and automatically patch VMs and apps
 
-In the initial transformation phase we increase throughput - defined as the value of the delivered user stories. The value is the sales price (or budget) less any direct costs such as middleware and operating expenses involved in delivery and deployment, licensure, and hardware. This is where transforming your team into cross-functional delivery units and use of PCF plus Continuous Delivery pipelines, gain the initial and sustained reduction in OPEX.
+PCF creates the fundamental building blocks for reducing your wasteful software delivery CAPEX and maximizing it for future investment.In the initial transformation phase we increase throughput - defined as the value of the delivered user stories. The value is the sales price (or budget) less any direct costs such as middleware and operating expenses involved in delivery and deployment, licensure, and hardware. This is where transforming your team into cross-functional delivery units and use of PCF plus Continuous Delivery pipelines, gain the initial and sustained reduction in OPEX.
 
 The sum left after direct costs are subtracted is the Throughput value of the delivered Stories. Any direct costs that can be attributed to the commissioning of working software in this time period must get deducted. The remainder is the True Basis Throughput value.
 
