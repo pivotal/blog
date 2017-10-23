@@ -13,7 +13,7 @@ categories:
 date: 2017-09-14T17:16:22Z
 draft: true
 short: |
-  This blog post explores how enterprises can reduce waste and continuously experiment leading to the product evolution and effective use of CAPEX to realize the true ROI Value of cloud native with Pivotal
+  This blog post explores how enterprises can reduce waste and continuously experiment leading to the product evolution and effective use of CAPEX to realize the true ROI Value of cloud native with Pivotal.
 title: Continuous Market Disruption
 image:
 ---
@@ -69,7 +69,7 @@ PCF creates the fundamental building blocks for reducing your wasteful software 
 
 The sum left after direct costs are subtracted is the Throughput value of the delivered Stories. Any direct costs that can be attributed to the commissioning of working software in this time period must get deducted. The remainder is the True Basis Throughput value.
 
-Calculating the ROI after our initial Platform Phase I and II dojos and Application Transformation engagements  looks like this:
+Calculating the ROI after our initial Platform Phase I and II Dojos and Application Transformation engagements  looks like this:
 
 ```
 ROI (iteration) = ( T(iteration) – OE(iteration) ) / I (iteration)
@@ -99,12 +99,14 @@ Our true value proposition is what you effectively target with your CAPEX and re
 
 ## Target Effective CAPEX
 
-1. Enable your lines of businesses to narrow in on which new features resonate the most with your users through continuous experimentation via the platform and efficient delivery model. We enable developers to do this by utilizing the platform to do hypothesis testing (Blue/Green and multi-variate A/B testing) with every new feature roll out leading to an overall revenue.App Modernization helps achieve this velocity and enables teams to practice HDD with frequent feature releases.  
+ 1. Enable your lines of businesses to narrow in on which new features resonate the most with your users through continuous experimentation via the platform and efficient delivery model. We enable developers to do this by utilizing the platform to do hypothesis testing (Blue/Green and multi-variate A/B testing) with every new feature roll out leading to an overall revenue.App Modernization helps achieve this velocity and enables teams to practice HDD with frequent feature releases.  
 
   {{< responsive-figure src="/images/adventure1.png" class="left" >}}
   {{< responsive-figure src="/images/adventure2.png" class="right" >}}
 
-2. Create a team oriented understanding of how each modernization candidate affects revenue measured by removing ineffective features and adding synergistic ones. Frame the portfolio into those candidates that are revenue generating and those that are business critical. For business critical apps a secondary decision filter is applied as to how its modernization yields agility to those apps that the business critical application supports.  If, by increasing this business critical application’s agility, we correlate a greater yield in user retention or growth, reduction in user acquisition cost, or reduction in churn, then it is a viable candidate, if not, then not. We must continuously holistically evaluate how current Application Modernization investments affect the increase or decrease in your revenue generation with effective CAPEX. Each investment slice is connected to a business value that is visible.
+  The above images illustrate how a new world of customer understanding can be derived by instrumenting the highest bounce rate microservices with gamification to understand motivation and intent. We can understand what is most valuable to your product through B/G deployments that help isolate the attraction and understand how to expand the attraction to other areas in the product. A number of experiments can be run with UI/UX Heat Maps combined with A/B with Navigation and Design Layout Variations to determine the threshold  that signify the conversion tipping point and measure impact through the entire funnel.
+  
+ 2. Create a team oriented understanding of how each modernization candidate affects revenue measured by removing ineffective features and adding synergistic ones. Frame the portfolio into those candidates that are revenue generating and those that are business critical. For business critical apps a secondary decision filter is applied as to how its modernization yields agility to those apps that the business critical application supports.  If, by increasing this business critical application’s agility, we correlate a greater yield in user retention or growth, reduction in user acquisition cost, or reduction in churn, then it is a viable candidate, if not, then not. We must continuously holistically evaluate how current Application Modernization investments affect the increase or decrease in your revenue generation with effective CAPEX. Each investment slice is connected to a business value that is visible.
 
 For instance we can directly connect easily measured business value in a revenue generating service via a subscription model in which we can calculate effectiveness by how many new subscribers are attracted to the service. Correlated indicators like number of subscribers, subscriber growth, cost of acquisition, churn rate are used to determine how many features should be included in future releases by monitoring the ROI. If it is falling, less investment in future releases to maintain current ROI or if ROI is falling and Churn is increasing it is an early indicator of consumer confidence and more investment may need to be spent on the quality of the requirements temporarily reducing the current ROI with hopes of stimulating higher revenues later.
 
