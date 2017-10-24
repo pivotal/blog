@@ -13,7 +13,7 @@ categories:
 date: 2017-09-14T17:16:22Z
 draft: false
 short: |
-  This blog post explores how enterprises can reduce waste and continuously experiment evolving the product through effective use of CAPEX, to realize the true return of investment from cloud native with Pivotal.
+  This blog post explores how enterprises can reduce waste, continuously experiment and evolve the product through effective use of CAPEX, to realize the true return of investment from cloud native with Pivotal.
 title: Continuous Market Disruption
 image:
 ---
