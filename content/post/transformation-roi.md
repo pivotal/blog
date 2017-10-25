@@ -34,8 +34,9 @@ Treating software as a cost center leads the CFO and CTO to start thinking of co
 
 {{< responsive-figure src="/images/continuum.jpeg" class="center" caption="Beyond the Buzz Words  https://youtu.be/h0g044IWtTA by  Keith Strini,  Duncan Winn,  Sean Keery">}}
 
+Pivots [Keith Strini](https://www.linkedin.com/in/keith-strini-a3bb1a6/), [Sean Keery](https://www.linkedin.com/in/zgrinch/) and [Duncan Winn](https://www.linkedin.com/in/duncan-winn-3019506/) spoke on *Beyond the Buzzwords - Wave To Turn Trends into Profit* at the recently concluded Cloud Foundry Summit 2017 Berlin. Checkout their [video](https://www.youtube.com/watch?v=h0g044IWtTA&list=PLhuMOCWn4P9hsn9q-GRTa77gxavTOnHaa&index=50) and [slides](https://t.co/loZ7mh0bAf) here to get additional insight into this topic.
 
-_First some definitions ..._
+Now lets get into some definitions ...
 
 ### Software Capitalization
 
