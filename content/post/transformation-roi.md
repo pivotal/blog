@@ -95,6 +95,8 @@ This means that with the nature of new feature development, two thirds have zero
 
 ## Pivotal Cloud Foundry Enables Rapid Iterative Continuous Experiment Driven Development
 
+{{< responsive-figure src="/images/prices.jpg" >}}
+
 We enable, through the platform, your lines of business to hypothesize, test and receive immediate feedback from users. Teams can provide decision makers effective indicators for making sound investment decisions in a continuous fashion and minimize the lost revenue from missed market opportunities. This has the additional benefit of minimizing your maintenance footprint by distilling your applications complexity (OPEX) and by helping delivery teams focus on only those features that are wanted (Efficient CAPEX) thereby allowing you greater velocity and investment budgets for future feature additions that resonate more strongly with your user base.
 
 This is the value proposition of the cloud native architecture design and microservices as the fundamental building blocks. By demarcating bounded contexts and implementing subdomains as a composition of microservices, you fundamentally change the economics of software delivery. This approach simplifies the delivery and releasability aspects, which reduces the overall risk and cost of delivery. Compartmentalizing the new features released as microservices minimizes the potential ripple effect across the architecture.
