@@ -53,7 +53,7 @@ For a full understanding of software capitalization, CAPEX and OPEX check out th
 - [Why software capitalization can be  wasteful](https://www.cio.com/article/3150163/it-strategy/why-software-capitalization-can-be-wasteful.html)
 - [CapEX and OpEx](http://www.scaledagileframework.com/capex-and-opex/)
 - [Why Should Agilists Care About Capitalization](https://www.infoq.com/articles/agile-capitalization)
-
+- [Agile management for software engineering: Applying the theory of constraints for business results](https://www.amazon.com/Agile-Management-Software-Engineering-Constraints/dp/0131424602)
 
 ## Reduce Release Cycle Time To Meet the Pace of Innovation  
 
