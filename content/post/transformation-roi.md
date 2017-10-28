@@ -73,7 +73,7 @@ Pivotal Cloud Foundry aids in an initial reduction in OPEX through automation, r
 
 PCF creates the fundamental building blocks for reducing your wasteful software delivery CAPEX and maximizing it for future investment. In the initial transformation phase we increase throughput - defined as the value of the delivered user stories. The value is the sales price (or budget) less any direct costs such as middleware and operating expenses involved in delivery and deployment, licensure, and hardware. This is where transforming your team into cross-functional delivery units and the use of PCF plus Continuous Delivery pipelines, gain the initial and sustained reduction in OPEX. The sum left after direct costs are subtracted is the Throughput value of the delivered Stories. Any direct costs that can be attributed to the commissioning of working software in this time period must get deducted. The remainder is the True Basis Throughput value.
 
-Calculating the ROI after our initial Platform Phase I and II Dojos and Application Transformation engagements looks like this:
+Calculating the ROI after our initial Platform Phase I and II Dojos and Application Transformation engagements illustrated below looks like this:
 
 ```
 ROI (iteration) = ( T(iteration) – OE(iteration) ) / I (iteration)
