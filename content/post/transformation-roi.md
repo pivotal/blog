@@ -103,7 +103,7 @@ Our true value proposition is what you effectively target with your CAPEX and re
 
 ## Target Effective CAPEX
 
-{{< responsive-figure src="/images/cartoon.png"  >}}
+{{< responsive-figure src="/images/signalNoise.jpg"  >}}
 
 Enable your lines of businesses to narrow in on which new features resonate the most with your users through continuous experimentation via the platform and efficient delivery model. We enable developers to do this by utilizing the platform to do hypothesis testing (Blue/Green and multi-variate A/B testing) with every new feature roll out leading to an overall revenue.App Modernization helps achieve this velocity and enables teams to practice HDD with frequent feature releases.  
 
