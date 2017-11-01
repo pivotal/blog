@@ -2,7 +2,7 @@
 title = "Testing Greenplum Database using fault injection"
 short = "How to test Greenplum Database using fault injection"
 draft = true
-date = "2017-10-06T14:00:00Z"
+date = "2017-11-01T14:00:00Z"
 categories = ["Greenplum Database", "Greenplum", "Testing frameworks", "Testing"]
 authors = ["ascherbaum"]
 
@@ -64,6 +64,14 @@ Some of the parameters are required, some are optional. There is a long version 
 * fault type name
 * database id (from *gp_segment_configuration*)
 
+```
+SELECT gp_inject_fault('executor_run_high_processed', 'skip', dbid)
+  FROM gp_segment_configuration
+ WHERE role = 'p';
+```
+
+
+
 ### Long/Complete version
 
 * name of the fault which should be injected
@@ -75,11 +83,11 @@ Some of the parameters are required, some are optional. There is a long version 
 * sleep time for the fault
 * database id (from *gp_segment_configuration*)
 
-
-## Injecting the fault on operating system level
-
-Some problems can't be tested from inside the database, using regular SQL commands. One prime example are faults which are to inject into the mirror segments - the mirrors by default only receive file operations, no SQL commands. The fault injection framework uses the [_gpfaultinjector_](https://github.com/greenplum-db/gpdb/blob/master/gpMgmt/bin/gpfaultinjector) tool to [test such more complicated cases](https://github.com/greenplum-db/gpdb/search?utf8=%E2%9C%93&q=gpfaultinjector&type=).
-
+```
+SELECT gp_inject_fault('executor_run_high_processed', 'skip', '', '', '', 0, 0, dbid)
+  FROM gp_segment_configuration
+ WHERE role = 'p';
+```
 
 
 ## An example
