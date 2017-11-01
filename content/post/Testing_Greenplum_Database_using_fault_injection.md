@@ -1,7 +1,7 @@
 +++
 title = "Testing Greenplum Database using fault injection"
 short = "How to test Greenplum Database using fault injection"
-draft = true
+draft = false
 date = "2017-11-01T14:00:00Z"
 categories = ["Greenplum Database", "Greenplum", "Testing frameworks", "Testing"]
 authors = ["ascherbaum"]
