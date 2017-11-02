@@ -71,7 +71,7 @@ String userProvidedServices = vcapServices.get("user-provided");
 
 ## `@ConfigurationProperties` To The Rescue!
 
-It turns out, Spring Boot and the Java buildpack for CF has solved this problem for us! When we create a user-provided service, the Java buildpack automatically injects our cat_picture_service into the environment for us as a property called  `vcap.services.cat_picture_service.credentials`.
+It turns out, Spring Boot and the [Cloud Foundry VCAP Environment Post Processor](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/cloud/CloudFoundryVcapEnvironmentPostProcessor.html) has solved this problem for us! When we create a user-provided service, the VCAP post-processor automatically injects our cat_picture_service into the environment for us as a property called  `vcap.services.cat_picture_service.credentials`.
 
 The `@ConfigurationProperties` annotation allows us to take advantage of this by creating a plain old data object which Spring Boot will automatically inject with the corresponding credentials.
 
@@ -121,7 +121,7 @@ Alternatively, we can omit the `@Configuration` annotation (leaving just `@Confi
 ~~~
 
 ## Local Properties
-Now that we are taking advantage of the Spring Boot [Cloud Foundry VCAP Environment Post Processor](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/cloud/CloudFoundryVcapEnvironmentPostProcessor.html), we can also now easily provide local/development credentials where needed.
+Now that we are taking advantage of the VCAP post-processor, we can also now easily provide local/development credentials where needed.
 
 #### application-dev.yml
 ~~~yaml
