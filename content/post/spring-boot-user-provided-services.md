@@ -24,9 +24,9 @@ How can we get these credentials into the app without lots of code and configura
 
 Cloud Foundry has two standard ways of providing configuration to your application: through the environment, and through _services_, which can be configured through the `cf` command line tool. As far as your Spring Boot app is concerned, however, a service is just yet another environment variable, which is stored in `VCAP_SERVICES`.
 
-In the case of the cat picture service, we'll prefer a user-provided service over environment variables, since a service allows us to group relevant data together, and it allows us to bind these credentials to multiple applications if we choose.
+In the case of the cat picture service, I generally prefer a user-provided service over environment variables, since a service allows us to group relevant credentials together, and it allows us to bind these credentials to multiple applications if we choose.
 
-So if we run:
+So if you run:
 
 ~~~bash
 cf cups cat_picture_service -p "username,password"
