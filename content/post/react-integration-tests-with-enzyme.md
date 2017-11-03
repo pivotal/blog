@@ -1,12 +1,13 @@
 ---
 authors:
 - jacek
+- bgrohbiel
 categories:
 - React
 - Enzyme
 - Javascript
 - Testing
-date: 2017-09-29T14:05:25Z
+date: 2017-11-05T14:05:25Z
 draft: true
 short: |
   We used Enzyme, a popular React unit testing library, for full-on frontend integration tests.
@@ -18,21 +19,23 @@ image: /images/react-integration-tests-with-enzyme.gif
 # The beginning
 Earlier this year while setting up a React Redux project, we realised
 there was a layer missing in our testing pyramid: integration tests.
-Multiple starter-seeds we looked at had unit tests for components and end-to-end tests
+Multiple starter-seeds we looked at had unit tests (testing individual components)
+and end-to-end tests (testing both frontend and backend via a browser)
 but the latter were slow making for a very long feedback loop.
-We figured that fast integration tests could help a lot.
 
 It seemed that lack of integration tests in a React Redux app was particularly painful
 because of the following two reasons:
 
-- JavaScript is a dynamically typed language. When the app’s state structure changes, the compiler cannot helpfind unit tests that need adjusting
+- JavaScript is a dynamically typed language. When the app’s state structure changes, the compiler cannot help find unit tests that need adjusting
 - In the Redux architecture everything is very loosely coupled. Various parts of the app (reducers, components, middleware) by design don’t know of each others existence as state changes are driven only by dispatched actions. Testing individual bits in isolation gives absolutely no confidence that the whole thing works.
+
+We were looking for a way to quickly test how all the loosely coupled parts work together. Run the real router, the real middleware and the real reducers, but without the performance overhead brought by a browser.  
 
 ## Enzyme to the rescue?
 [Enzyme](http://airbnb.io/enzyme/) is a test utility which allows you to take a React component, render it in memory
 and inspect the output with a jQuery-like API.
 Primarily it is used as a unit test library:
-you typically render one component with it's nested components
+you typically render one component with its nested components
 and verify that the output is as expected.
 Enzyme implements React components' lifecycle methods
 and is suitable for testing of things like prop updates,
@@ -89,31 +92,28 @@ One very basic integration test that we may want is to check that
 the app displays shopping list items. Let’s begin by mounting the app with Enzyme!
 
 ~~~JavaScript
-class AppTestHelper {
 
-  constructor() {
-    this.screen = mount(<App/>);
-  }
+let screen;
 
-  getItems() {
-    return this.screen.find('[data-qa="item-name"]').map(node => node.text());
-  }
-}
-~~~
-
-**That was easy**. In the actual test we need to set up a fake server response
-with the items and wait for the app to make a HTTP request and update UI.
-~~~JavaScript
 beforeEach(async () => {
     mockApi.mockGetItems([{id: 11, name: 'apples'}, {id: 12, name: 'bananas'}]);
-    app = new AppTestHelper();
+    screen = mount(<App/>);
     await asyncFlush();
 });
 
 it('displays shopping items fetched from the server', () => {
-    expect(app.getItems()).toEqual(['apples', 'bananas']);
+    expect(getItems()).toEqual(['apples', 'bananas']);
 });
+
+getItems() {
+  return screen.find('[data-qa="item-name"]').map(node => node.text());
+}
 ~~~
+
+We set up a mock server response with two items on the list, mount the app, wait for it to
+fetch the items from the server (more on that below) and assert the app renders those items.
+It's a very simple test, but it touches the router, middleware, reducers and components,
+so it adds a lot of confidence in different parts of the app working together.
 
 ## Waiting for all the async
 When we call `mount` for the first time in `AppTestHelper` constructor, only the initial
@@ -141,37 +141,34 @@ just for the benefit of clean stack traces.
 Let’s move on to testing a more complex scenario - adding an item to the list.
 The `beforeEach` block a bit earlier initialises the list with
 apples and bananas. In the test below, we add carrots and simulate that
-at the some time someone deleted apples and added dill.
+someone else simultaneously deleted apples and added dill.
 
 The first `expect` checks the state before,
 while the other one after the server response has been handled.
 
 ~~~JavaScript
-it('users can add items to the shopping list', async () => {
+it('users can add items to the shopping list simultaneously', async () => {
     // optimistic update (local only):
-    app.clickAddNewItemButton();
-    app.fillInItemName('carrots');
-    app.clickSaveNewItemButton();
+    clickAddNewItemButton();
+    fillInItemName('carrots');
+    clickSaveNewItemButton();
 
-    expect(app.getItems()).toEqual(['apples', 'bananas', 'carrots']);
+    expect(getItems()).toEqual(['apples', 'bananas', 'carrots']);
 
     // sync with server:
     mockApi.mockGetItems([{id: 12, name: 'bananas'}, {id:13, name: 'carrots'}, {id: 14, name: 'dill'}]);
     await asyncFlush();
 
-    expect(app.getItems()).toEqual(['bananas', 'carrots', 'dill']);
+    expect(getItems()).toEqual(['bananas', 'carrots', 'dill']);
 });
-~~~
 
-UI interaction functions:
-~~~JavaScript
 clickAddNewItemButton() {
-    const button = this.screen.find(`[data-qa="${'add-new-item'}"]`)
+    const button = screen.find(`[data-qa="${'add-new-item'}"]`)
     click(button);
 }
 
 fillInItemName(name) {
-    const input = this.screen.find(`[data-qa="${'new-item-name'}"]`)
+    const input = screen.find(`[data-qa="${'new-item-name'}"]`)
     setValue(input, name);
 }
 ~~~
@@ -213,8 +210,8 @@ warm start or cold start:
 Warm start:
 ```
 beforeEach(async () => {
-    app = new AppTestHelper();
-    app.clickAddNewItemButton();
+    screen = mount(<App />);
+    clickAddNewItemButton();
     await asyncFlush();
 });
 ```
@@ -222,8 +219,9 @@ beforeEach(async () => {
 Cold start:
 ```
 beforeEach(async () => {
-    app = new AppTestHelper();
-    app.goTo('/new-item');
+    screen = mount(<App />);
+    const store = screen.find(Provider).prop('store');
+    store.dispatch(push('/new-item'));
     await asyncFlush();
 });
 ```
@@ -289,20 +287,26 @@ It is created directly at the DOM level, so we need to be inspecting the DOM
 in order to find it.
 
 Fortunately, Enzyme's `mount` provides us with a way to pass an element
-where our React component will be attached. We can change our `AppTestHelper`
-constructor in the following way:
+where our React component will be attached. We can introduce a `dom`
+to our test:
 
 ~~~JavaScript
-export class AppTestHelper {
+let dom;
 
-    constructor() {
-        this.dom = document.createElement("div");
-        this.screen = mount(<App/>, { attachTo: this.dom });
-    }
+let screen;
 
-    getDate() {
-        return this.dom.querySelector('[data-qa="today"]').innerHTML;
-    }
+beforeEach(() => {
+    mockDate.set(new Date(2017, 11, 31));
+    dom = document.createElement("div");
+    screen = mount(<App/>, { attachTo: this.dom });
+});
+
+it('renders current date', () => {
+    expect(getDate()).toBe('31/12/2017');
+});
+
+getDate() {
+    return dom.querySelector('[data-qa="today"]').innerHTML;
 }
 ~~~
 
@@ -332,13 +336,33 @@ Here are some good and bad sides we found:
 - Running in Node environment, Enzyme tests cannot fully replace browser testing that guarantees we are not
   missing some polyfill or lacking a hack required by IE.
 
+# What about acceptance tests?
+Being able to write very high level integration tests in JavaScript,
+one question that we found ourselves wondering about was:
+what do we need acceptance tests for?
+Both test suites were very similar, and we always want to avoid writing
+redundant tests. We decided that in the case of our app there was value
+in keeping both:
+
+- Our acceptance tests exercised both frontend and backend.
+- Acceptance tests run in a browser and allowed to test a particular version of IE.
+- Acceptance tests were checking the app in warm start view, and JavaScript integration tests were exercising cold start more often.
+
+However, it is conceivable that the above criteria will not be relevant in another project.
+For example, with help of a contract testing framework (e.g. [Pact](https://docs.pact.io/)
+or [Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/)),
+testing real frontend and real backend together may not be necessary.
+The other points above are not relevant to every single project either.
+If Enzyme can provide good coverage and fast feedback loop,
+in some cases it may not be necessary to bother with slow Selenium tests.
+
 # Summary
 We took an experimental path and used Enzyme for writing integration tests that mounted
 an entire React-Redux application.
 There were a few things that we had to figure out in order to make it work for a large application
-such as mocking server responses, testing the UI around asynchronous callbacks or testing
+such as mocking server responses, testing the UI around asynchronous callbacks and testing
 integrations with non-React code.
-The tests were very fast and were giving us a lot of confidence in the frontend before we
+The tests were very fast and gave us a lot of confidence in the frontend before we
 started slow end-to-end suite.
 
 # Looking ahead
@@ -348,8 +372,11 @@ In Redux architecture everything revolves around the application state object.
 In a statically typed world, where compiler gives us type errors early,
 we get quicker feedback on certain defects and spend less time looking why the integration tests are red.
 
-I quickly [played with Typescript and React](https://github.com/jacek-rzrz/react-app-typescript) recently
-and was impressed by how easy it is to [add Typescript](https://github.com/Microsoft/TypeScript-React-Starter)
-to [create-react-app](https://github.com/facebookincubator/create-react-app).
-This is definitely an area I am interested to continue exploring to further improve
-developer effectiveness and experience.
+We recently made an experiment of translating a React Native application from JavaScript to TypeScript.
+We were impressed by how easy it was to gradually introduce Typescript to the codebase
+and how much it improved developer's experience and efficiency.
+This is definitely an area we will continue to explore.
+
+
+
+*Thanks to Callum, Daniela and Gagan for reading early versions of this post!*
