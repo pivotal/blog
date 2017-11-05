@@ -11,25 +11,23 @@ date: 2017-11-05T14:05:25Z
 draft: true
 short: |
   We used Enzyme, a popular React unit testing library, for full-on frontend integration tests.
-  Find out how this greatly improved feedback, and avoid some pitfalls we've come across.
+  Find out how our setup greatly improves feedback and avoid the pitfalls we've come across.
 title: React integration testing with Enzyme
 image: /images/react-integration-tests-with-enzyme.gif
 ---
 
 # The beginning
 Earlier this year while setting up a React Redux project, we realised
-there was a layer missing in our testing pyramid: integration tests.
-Multiple starter-seeds we looked at had unit tests (testing individual components)
-and end-to-end tests (testing both frontend and backend via a browser)
-but the latter were slow making for a very long feedback loop.
+that multiple React starter-seeds were missing integration tests.
+The starter-seeds usually shipped configuration for unit tests and end-to-end tests.
 
-It seemed that lack of integration tests in a React Redux app was particularly painful
+We found the lack of integration tests in a React Redux application was particularly painful
 because of the following two reasons:
 
-- JavaScript is a dynamically typed language. When the app’s state structure changes, the compiler cannot help find unit tests that need adjusting
-- In the Redux architecture everything is very loosely coupled. Various parts of the app (reducers, components, middleware) by design don’t know of each others existence as state changes are driven only by dispatched actions. Testing individual bits in isolation gives absolutely no confidence that the whole thing works.
+- The decoupled design of Redux: The Redux building blocks like reducers, components, middleware don’t know of each others existence. Testing individual bits in isolation gives absolutely no confidence that they work together.
+- JavaScript is a dynamically typed language: when the app’s state structure changes, the compiler cannot help find unit tests that need adjusting
 
-We were looking for a way to quickly test how all the loosely coupled parts work together. Run the real router, the real middleware and the real reducers, but without the performance overhead brought by a browser.  
+We were interested to test how any subset or even all the loosely coupled parts together - with a tight feedback loop, hence no browser or Selenium involved.
 
 ## Enzyme to the rescue?
 [Enzyme](http://airbnb.io/enzyme/) is a test utility which allows you to take a React component, render it in memory
@@ -43,8 +41,10 @@ state changes, event handlers or unmount hooks.
 
 Fortunately for us everything in React is a component,
 in particular the router and the store provider.
-So, technically, nothing stops Enzyme from rendering the entire app
+Technically, nothing stops Enzyme from rendering the entire app in memory
 and acting as an integration test engine.
+
+Enzyme can be run in node using [jsdom](https://github.com/tmpvar/jsdom) to simulate a browser.
 
 
 # The toy app
@@ -92,7 +92,6 @@ One very basic integration test that we may want is to check that
 the app displays shopping list items. Let’s begin by mounting the app with Enzyme!
 
 ~~~JavaScript
-
 let screen;
 
 beforeEach(async () => {
@@ -115,7 +114,7 @@ fetch the items from the server (more on that below) and assert the app renders 
 It's a very simple test, but it touches the router, middleware, reducers and components,
 so it adds a lot of confidence in different parts of the app working together.
 
-## Waiting for all the async
+## Waiting for asynchronous events
 When we call `mount` for the first time in `AppTestHelper` constructor, only the initial
 app render happens. It synchronously starts the HTTP request to get the shopping list
 from the API items but response callback will be called asynchronously.
@@ -137,7 +136,7 @@ It was certainly fun to write it, but it required a lot of bespoke code
 that needed to be maintained and wasn't worth the effort
 just for the benefit of clean stack traces.
 
-## Interactions
+## Testing user interactions
 Let’s move on to testing a more complex scenario - adding an item to the list.
 The `beforeEach` block a bit earlier initialises the list with
 apples and bananas. In the test below, we add carrots and simulate that
@@ -176,6 +175,7 @@ fillInItemName(name) {
 `click` and `setValue` call Enzyme's `simulate`.
 It is fairly simple: `simulate('someEvent')` looks for a prop
 called `onSomeEvent` and invokes it if there is one.
+
 ~~~JavaScript
 const click = enzymeNode => {
   enzymeNode.simulate('click', {button: 0}); // button: 0 means left mouse button
@@ -187,20 +187,11 @@ const setValue = (enzymeNode, value) => {
 };
 ~~~
 
-## Warm start vs cold start
-Our frontend was a single page app: its sources would load only once per session.
-Then everything is local except for any calls to a REST API that the app would do.
-When you clicked on a link somewhere on the page you would see address changing in the URL bar
-but the page wouldn't actually fully reload
-(the browser wouldn't make a HTTP request to the new URL).
-The app maintained an internal state - mostly cached resources fetched
-from the API. That state would build up as users navigated through
-various pages in the application.
-
+## Testing url states
+As opposed to testing user interactions, you probably also want to test url states.
 Continuing with the shopping list example, there are two ways to get to the new item form:
-
-- User going to the root address and navigating to `/new-item` with an internal link (we called it warm start);
-- User going to `/new-item` straight away (cold start).
+- By interaction: user going to the root address and navigating to `/new-item` with an internal link (we named this warm start);
+- By url state: user going to `/new-item` straight away (we named this cold start).
 
 They should see exactly the same page regardless of how they arrived at that URL
 however each of these cases executes slightly different code.
@@ -226,19 +217,11 @@ beforeEach(async () => {
 });
 ```
 
-Difference between the two is very small in this example.
-With a real application however,
-getting to certain pages in the warm start mode may require multiple interactions.
-Then when something major breaks on one page
-it affects tests of pages which are later in the user flow.
-As a consequence we have a sea of failed tests and it's not clear what actually went wrong
-- there is no UI in the browser to look at. Also, keeping oversight on the stubs as the number of interactions increase is difficult and makes debugging harder.
+It is worth noting that testing states by interactions can become cumbersome in larger applications.
+The more interations a test requires, the more likely it is that one of the interactions fails. If this is the case, it is hard to figure out what exactly went wrong. In particularly keeping oversight on the stubs as the number of interactions increase is difficult and makes debugging hard.
 With cold start tests some of that red noise goes away.
 
-During the project we first wrote warm start integration tests in Enzyme
-but then realised the benefit of cold start and switched.
-In terms of coverage, our end-to-end tests were exercising longer user interactions
-so they were mostly testing warm start.
+In the beginning of the project we wrote mainly interaction-based integration tests in Enzyme. As the application grew, we switched more and more to setting state through the url state, and then kept the interactions focused on the test at hand. Complicated interactions we ran as acceptance tests.
 
 ## What if we use non-React libraries?
 One of key features of the app we built was a map.
@@ -313,7 +296,18 @@ getDate() {
 It was only a bit more difficult than this with Leaflet where we had to
 monkeypatch a few functions that Leaflet was calling internally.
 
-# Looking back
+# Do we need acceptance tests?
+Both test suites were quite similar and we want to avoid writing redundant tests. We decided that in the case of our application there was value in keeping both:
+
+- The acceptance tests exercised both frontend and backend - no stubs, real interactions.
+- The acceptance tests run in a browser and allowed to test a particular version of IE.
+- The acceptance tests were checking the app in warm start view, and JavaScript integration tests were exercising cold start more often.
+
+Interesting further research could have been to integrate a Contract Testing framework such as [Pact](https://docs.pact.io/)
+or [Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/)). With such a tool, it would be possible to verify the correctness of every stub, and orchestrate the stubs better. Perhaps that would have helped to increase the confidence in the integration tests further.
+
+
+# Looking back on integration tests with Enzyme
 Enzyme integration testing is a bit unusual and we weren't really sure where it was going to get us.
 Here are some good and bad sides we found:
 
@@ -336,47 +330,12 @@ Here are some good and bad sides we found:
 - Running in Node environment, Enzyme tests cannot fully replace browser testing that guarantees we are not
   missing some polyfill or lacking a hack required by IE.
 
-# What about acceptance tests?
-Being able to write very high level integration tests in JavaScript,
-one question that we found ourselves wondering about was:
-what do we need acceptance tests for?
-Both test suites were very similar, and we always want to avoid writing
-redundant tests. We decided that in the case of our app there was value
-in keeping both:
-
-- Our acceptance tests exercised both frontend and backend.
-- Acceptance tests run in a browser and allowed to test a particular version of IE.
-- Acceptance tests were checking the app in warm start view, and JavaScript integration tests were exercising cold start more often.
-
-However, it is conceivable that the above criteria will not be relevant in another project.
-For example, with help of a contract testing framework (e.g. [Pact](https://docs.pact.io/)
-or [Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/)),
-testing real frontend and real backend together may not be necessary.
-The other points above are not relevant to every single project either.
-If Enzyme can provide good coverage and fast feedback loop,
-in some cases it may not be necessary to bother with slow Selenium tests.
-
 # Summary
 We took an experimental path and used Enzyme for writing integration tests that mounted
 an entire React-Redux application.
 There were a few things that we had to figure out in order to make it work for a large application
 such as mocking server responses, testing the UI around asynchronous callbacks and testing
 integrations with non-React code.
-The tests were very fast and gave us a lot of confidence in the frontend before we
-started slow end-to-end suite.
-
-# Looking ahead
-Thinking of issues that were causing the integration tests to fail,
-many arose from the fact that we were writing in dynamically typed language.
-In Redux architecture everything revolves around the application state object.
-In a statically typed world, where compiler gives us type errors early,
-we get quicker feedback on certain defects and spend less time looking why the integration tests are red.
-
-We recently made an experiment of translating a React Native application from JavaScript to TypeScript.
-We were impressed by how easy it was to gradually introduce Typescript to the codebase
-and how much it improved developer's experience and efficiency.
-This is definitely an area we will continue to explore.
-
-
+There were about 500 tests which executed within seconds and gave us a lot of confidence in the frontend before we started the notoriously slow acceptance tests.
 
 *Thanks to Callum, Daniela and Gagan for reading early versions of this post!*
