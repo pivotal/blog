@@ -8,7 +8,7 @@ categories:
 - Javascript
 - Testing
 date: 2017-11-05T14:05:25Z
-draft: true
+draft: false
 short: |
   We used Enzyme, a popular React unit testing library, for full-on frontend integration tests.
   Find out how our setup greatly improves feedback and avoid the pitfalls we've come across.
