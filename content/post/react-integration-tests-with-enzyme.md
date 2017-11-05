@@ -17,9 +17,9 @@ image: /images/react-integration-tests-with-enzyme.gif
 ---
 
 # The beginning
-Earlier this year while setting up a React Redux project, we realised
-that multiple React starter-seeds were missing integration tests.
-The starter-seeds usually shipped configuration for unit tests and end-to-end tests.
+Earlier this year while setting up a React-Redux project, we realised
+that various React seeds were missing integration tests.
+The seeds usually shipped configuration for unit tests and acceptance tests.
 
 We found the lack of integration tests in a React Redux application was particularly painful
 because of the following two reasons:
@@ -47,7 +47,7 @@ and acting as an integration test engine.
 Enzyme can be run in node using [jsdom](https://github.com/tmpvar/jsdom) to simulate a browser.
 
 
-# The toy app
+# The example app
 React tutorials usually use a ToDo list app for demonstration purposes but that idea is a bit worn out now.
 All code examples below come from something else entirely: a shopping list app.
 
@@ -297,14 +297,13 @@ It was only a bit more difficult than this with Leaflet where we had to
 monkeypatch a few functions that Leaflet was calling internally.
 
 # Do we need acceptance tests?
-Both test suites were quite similar and we want to avoid writing redundant tests. We decided that in the case of our application there was value in keeping both:
+Our integration tests became so rich, they were quite similar to our acceptance tests in terms of interactions. Yet, we decided that in the case of our application there was value in keeping both:
 
 - The acceptance tests exercised both frontend and backend - no stubs, real interactions.
 - The acceptance tests run in a browser and allowed to test a particular version of IE.
 - The acceptance tests were checking the app in warm start view, and JavaScript integration tests were exercising cold start more often.
 
-Interesting further research could have been to integrate a Contract Testing framework such as [Pact](https://docs.pact.io/)
-or [Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/)). With such a tool, it would be possible to verify the correctness of every stub, and orchestrate the stubs better. Perhaps that would have helped to increase the confidence in the integration tests further.
+Interesting further research could have been to integrate a Contract Testing framework such as [Pact](https://docs.pact.io/) or [Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/)). With such a tool, it would be possible to verify the correctness of every stub, and orchestrate the stubs better. Perhaps that would have helped to increase the confidence in the integration tests further.
 
 
 # Looking back on integration tests with Enzyme
@@ -313,8 +312,7 @@ Here are some good and bad sides we found:
 
 ## The yeahs
 - Tests can run in Node, so they are *insanely* fast.
-  Hundreds of tests involving UI interactions and visiting multiple pages run in a matter of a few seconds.
-  Feedback is fast, coverage is vast.
+  Hundreds of tests involving UI interactions and visiting multiple pages run in a matter of a few seconds. Feedback is fast, coverage is vast.
 - There was less need to run full-blown end-to-end tests, which saves time.
 - No context switch for developers between unit and integration tests. It's React, Javascript and Enzyme (almost) all the time.
 - You *can* test how non-React libraries integrate with the React app.
@@ -336,6 +334,6 @@ an entire React-Redux application.
 There were a few things that we had to figure out in order to make it work for a large application
 such as mocking server responses, testing the UI around asynchronous callbacks and testing
 integrations with non-React code.
-There were about 500 tests which executed within seconds and gave us a lot of confidence in the frontend before we started the notoriously slow acceptance tests.
+As a result, we had roughly 500 tests running within seconds and providing us with important confidence before kicking off the few notoriously slow acceptance tests.
 
 *Thanks to Callum, Daniela and Gagan for reading early versions of this post!*
