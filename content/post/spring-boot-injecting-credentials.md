@@ -6,7 +6,7 @@ categories:
 - Cloud Foundry
 - CF
 
-date: 2017-11-02T00:00:00Z
+date: 2017-11-06T00:00:00Z
 draft: false
 short: |
   Configuring Spring Boot apps in Cloud Foundry is super easy once we take advantage of ConfigurationProperties and user-provided services.
@@ -118,7 +118,7 @@ public class DemoController {
 class DemoController(val catPictureServiceProperties: CatPictureServiceProperties) {/* ... */}
 ~~~
 
-Alternatively, we can omit the `@Configuration` annotation (leaving just `@ConfigurationProperties`) and annotate the class that needs the properties. Both work fine, but IntelliJ doesn't seem to know how to Autowire `@EnableConfigurationProperties`. If we did, we would replace `@AllArgsConstructor` with `@NoArgsConstructor`.
+Alternatively, we can omit the `@Configuration` annotation (leaving just `@ConfigurationProperties`) and annotate the class that needs the properties. Both work fine, but IntelliJ doesn't seem to know how to Autowire `@EnableConfigurationProperties`.
 
 ~~~java
 @RestController
