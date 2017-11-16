@@ -57,6 +57,7 @@ Understanding the how the runtime security model would be implemented cleared se
 
 ## How Developers continuously field software
 
+**Secure Software Delivery Pipeline**
 {{< responsive-figure src="/images/eyes-on-target/ssdp.png" alt="Secure Software Delivery Pipeline" class="center" >}}
 
 This was a fundamental change in how accreditation could be done. In order to take advantage of this opportunity, several threat vectors in the application delivery process had to be addressed.
