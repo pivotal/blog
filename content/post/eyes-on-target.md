@@ -7,6 +7,8 @@ categories:
 - Modernization
 - Pivotal Cloud Foundry
 - Agile
+- Secure fielding
+- Mission Control
 date: 2017-11-18T17:16:22Z
 draft: true
 short: Continuously Fielding Mission Driven Value
