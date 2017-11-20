@@ -7,8 +7,8 @@ categories:
 - Modernization
 - Pivotal Cloud Foundry
 - Agile
-- Secure fielding
-- Mission Control
+- Continuous Fielding
+- Mission Value
 date: 2017-11-18T17:16:22Z
 draft: true
 short: Continuously Fielding Mission Driven Value
@@ -16,19 +16,25 @@ title: (-0-0-) Eyes on Target
 image:
 ---
 
-**Sisu** - A Finnish term, meaning strength, perseverance and resilience.
+{{< responsive-figure src="/images/eyes-on-target/Eyes_on_Target.jpg" alt="The mean time between fielding" class="center small" >}}
 
->to commit oneself fully to a task and to bring that task to an end.
+**Sisu**  
 
-{{< responsive-figure src="/images/eyes-on-target/KPI.png" alt="The mean time between fielding" class="center" >}}
+> strength, perseverance and resilience to commit oneself fully to a task and to bring that task to an end.
 
-At Pivotal, when we entered the national security space we made a conscious effort to translate the shared values of our company into those that were culturally aligned with this community. We did this with the stubborn intent to not sacrifice the speed at which we enable our customers to deliver innovation. It required us to extensively collaborate with national security customers to define a new goal to align value and distill the non-value added work. This new primary goal was the development and implementation of a continuous fielding model. With a unified fielding platform strategy we are collectively working to overcome the delivery challenges of fielding to the last mile, out to the edge.
+At Pivotal, when we entered the national security space we made a conscious effort to translate the shared values of our company into those that were culturally aligned with this community. We did this with the stubborn intent to not sacrifice the speed at which we enable our customers to deliver innovation. 
+
+{{< responsive-figure src="/images/eyes-on-target/Effective_vs_Efficient.jpg" alt="Translating The Difference" class="right small" >}}
+
+It required us to extensively collaborate with national security customers to define a new goal to align value and distill the non-value added work. This new primary goal was the development and implementation of a continuous fielding model. With a unified fielding platform strategy we are collectively working to overcome the delivery challenges of fielding to the last mile, out to the edge.
 
 In the national security space its not how fast can you get an idea into production but how fast can you deliver a compliant solution to a mission need. This requires all of the pieces to be accounted for including compliancy. It drives a single KPI, the mean time between fielding. This KPI measures our  ability to deliver the velocity needed to maintain the Effective Operational Agility necessary to maintain a continuous advantage over our adversaries.
 
 ## Factors impeding Goals
 
 There were several challenges impeding our ability to deliver on the promise of velocity. In order to reach the field, every application must pass through various organizations corresponding to delivery phases. Each delivery phase had their own lead, review, and report generation time. There was no cross-functional platform or capability development teams. There was a general lack of transparency of an application’s progress across these silos.
+
+{{< responsive-figure src="/images/eyes-on-target/Factors_Impeding_Goals.jpg" alt="No Smooth Parallel Flow" class="center small" >}}
 
 These resulted in complex high risk deployments per vertical that required high touch specialized skill sets. These high touch processes were due to a lack of a consistent governance model limiting the acquisition community’s ability to respond to changes in the threat without accepting significant security risks and potential system impacts.
 
@@ -37,8 +43,6 @@ The fluctuating budgets of the delivery teams from code development through the 
 It is important to understand that failure due to inadequately addressing non-functional aspects has severe impacts in this environment. Requirements don’t sufficiently address non-functional needs. Budget drops result in even less interest in addressing non-functional requirements. So there are two basic approaches in addressing this impediment. We could have continued to respond to failures reactively or offload these concerns to a platform technology that has built in non-functional aspects as a first class citizen. We needed to combine the technical enablement with the cultural enablement necessary to move from reactive to proactive operations.
 
 ## How Operators deploy and run software
-
-{{< responsive-figure src="/images/eyes-on-target/fielding.png" alt="Secure Continuous Fielding" class="center small" >}}
 
 We began diligently working on the organizational transformation process but ran into several factors working against us. First, the federal acquisition process incentivizes schedule over performance. Couple this with the testing processes that often result in meeting minimum requirements and this leads to little incentive to deliver exceptional products. We decided to start with changing the engineering culture. We needed to convince engineering that functionally acceptable is not enough. We wanted to remind them that the the warfighter/analyst/operator demands an individual personal drive to excellence in addition to an exceptional synergy within a team.
 
@@ -52,15 +56,13 @@ Finding empathy with the delivery teams, meant understanding how difficult safe 
 
 One of the  necessary impedances to continuous fielding is  security and accreditation compliancy. From an operations perspective, this breaks down into a number of different smaller challenges to consider and improve upon. For instance, maintaining patched systems and the latest capabilities at the scale of the entire enterprise. Doing this without scheduling downtime or even having to notify the end users at all is fundamentally necessary when supporting mission critical workloads.
 
+{{< responsive-figure src="/images/eyes-on-target/Last_Mile.jpg" alt="Continuous Fielding Is Tough" class="right small" >}}
+
 In the past, this was an intricate dance between the developers and the operators. Operators needed to schedule and coordinate patch changes, developers needed to test those changes. There was a lot of back and forth between the groups needed to execute the timing of these patches into operations. By moving the demarcation line to the platform it allows the developers to offload the implementation responsibilities. It allows the operators to standup and test patches uniformly across the application portfolio and then report findings ahead of moving them into operations. Once the team agrees on the confidence of the CVE patch, Operators could move this patch across the entire operations enterprise in a canary style deployment maintaining 24/7 uptime in support of mission critical workloads. The platform enforces an unified governance model through api-level promises to each application within the foundation.
 
 Authentication is offloaded to the Enterprise Identity Provider like ADFS and the platform is authenticated using Single Sign On via SAML. Applications receive an OAuth token back and can secure their protected resources to whatever granularity makes sense within their subject matter domain. This allows developers to test both inside the platform and in isolation prior to pushing. It also offloads the heavy weight portions of security to an already approved solution by security. In the past, the security and IA teams had to do extensive reviews to understand how each delivery would affect the overall security posture of the enterprise slowing down the fielding process. This often required an entire infrastructure support team just to deliver application code.
 
 Understanding the implementation of runtime security cleared several challenges for continuous fielding. However we still had to address platform components and their updates and the new application feature developments. We approached these requirements by focusing on the application bits as the currency throughout the whole delivery process. We separated concerns via clearly defined API level coordination between distributed components. Our underlying release engineering and deployment lifecycle tool chain was defined via statically typed version controlled artifacts. These artifacts were executable and a microservice that is hashed and verifiable by the security team. This gave them a transparency into exactly what was running in operations. It has the secondary benefit of minimizing configuration drift. combined with the necessary security controls implemented and verified all the way to the container left just the changing application bits continuously accredit.
-
-## How Developers continuously field software
-
-{{< responsive-figure src="/images/eyes-on-target/ssdp.png" alt="Secure Continuous Fielding" class="center small" >}}
 
 This was a fundamental change in how accreditation could be done. In order to take advantage of this opportunity, several threat vectors in the application delivery process had to be addressed.
 
@@ -70,11 +72,9 @@ Next, once in the build process, a minimum set of security scans needed to be a 
 
 Finally, the operations pipeline would pick up the binary, ASG, and metadata, provision an ephemeral key promise, push the binary to a space within Cloud Foundry and apply the appropriate ASG. The runtime instance would ask for the authorization token and run time keys. This would guarantee only authorized instances in operations and eliminate configuration drift. This is where the biggest reduction on an order of magnitude in fielding time occurs. This is due to the smaller scope of application accreditation vs. stack/type accreditation, automated security scanning pipeline, runtime authorization and verification of the binary artifact in an independent build process.
 
-## How Operators continuously monitor and respond to running software
-
 So now that we are in operations, how do we improve the run time experience for the warfighter?  Several factors aid in this goal. One, by being on Cloud Foundry all logging and metrics are treated the same. This allows the operators to build enterprise-wide monitoring of several different aspects of the environment. All metrics and logs are event streams and can be drained to a number of different 3rd party tools that allow them to watch aggregates of app/component health across the platform. They also can monitor for any security events, container events, and resource access. Since all the distributed components and application containers adhere to the API contracts enterprise alerting can be activated for relatively minimal effort. This also ensures that future workloads won’t require any understanding of how the event streams work in order to be added to the watch list. These features combined with the built in resiliency and fault tolerance provide a comprehensive self-healing element to the platform. This removes most recovery burdens from the operator. These recovery capabilities include restarting failed system processes, recreating missing or unresponsive VMs, the deployment of new application instances if they crash or become unresponsive, application striping across availability zone and dynamic routing and load balancing all out of the box.
 
-## How Developers build Mission Critical Apps
+## How Developers Design Mission Critical Apps
 
 The key opportunity for developers is in designing mission critical resiliency into the application architecture by leveraging the distributed nature of the platform. By being able to field to the edge, you get performance improvements in end-user latency and transfer speed. This is due to a reduction in lag by eliminating the long haul physics. This will be especially evident in the increase in transfer speeds from imagery and command-and-control applications due to proximity of the provisioned resources.
 
