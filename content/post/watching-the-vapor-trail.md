@@ -14,7 +14,7 @@ categories:
 date: 2017-11-21T17:16:22Z
 draft: true
 short: User Centric Design in the DOD
-title:  ⌒ ‿‿ ⌒ Watching the Vapor Trail
+title: ⌒ ‿‿ ⌒ Watching the Vapor Trail
 image:
 ---
 
