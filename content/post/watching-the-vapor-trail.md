@@ -38,9 +38,9 @@ This continuous fielding alignment included helping the organization shift from 
 
 ### Continuous Fielding
 
-At Pivotal, we hoped this overhauling of how we established continuous fielding deliveries would culminate in a new social development model. In this model, the idea was to increase commercial market forces within the national security space by lowering the barrier to entry. The thinking is that this market would then produce the best value and migrate the greatest innovations to the field with security integrity built into the core of their DNA.
-
 {{< responsive-figure src="/images/watching-the-vapor-trail/velocity_to_the_edge.jpg" alt="The last mile is the hardest" class="right small" >}}
+
+At Pivotal, we hoped this overhauling of how we established continuous fielding deliveries would culminate in a new social development model. In this model, the idea was to increase commercial market forces within the national security space by lowering the barrier to entry. The thinking is that this market would then produce the best value and migrate the greatest innovations to the field with security integrity built into the core of their DNA.
 
 The reason we discuss user-centric software design and development in the context of continuous fielding is due to the fielding of software being the most restrictive and critical constraint. Fielding is what has traditionally sat between developers eliciting user feedback, the idea that software needs to be complete before it can be delivered, and general fear that every release will trigger a new and laborious accreditation cycle.
 
