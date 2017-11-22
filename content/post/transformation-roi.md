@@ -20,7 +20,15 @@ image: /images/experiment.png
 
 {{< responsive-figure src="/images/balloon.jpg" alt="OPEX + Experiment = Effective CAPEX" class="center" >}}
 
-What is the _value_ of going faster if we are not sure its achieving velocity ? When we set out to overhaul our customer's software delivery flow, we often find ourselves using speed and velocity interchangeably. There is a very distinct difference between the two terms - that of a vector. In software delivery it's important that the vector is in the direction of user delivered working code. However, there is more subtle understanding of speed vs. velocity in software delivery that actually resonates with a customer. This distinction is important in understanding how to quantify the real value of this cloud native movement and the opportunities a platform like Cloud Foundry facilitates in the managing of its complexity in order to discover _effective_ ways to resonate with new customer bases. It's time to stop framing the platform as just another datacenter consolidation effort to reduce our OPEX. The true promise in adopting a unified platform strategy is in moving the conversation forward from a reduction in OPEX to the effective use of CAPEX. We can now do this by making continuous experimentation a first class citizen in feedback loops to the CFO's internal investment decision-making process.  We can now show the decision makers in the company how we can reduce our software's technical debt sooner by sunsetting efforts that aren't producing in the market and removing them from the products code base. This has a twofold effect of freeing up resources and increasing the stickiness of our service offering. CFO's can now confidently approve continued budget for development and evolution of those features resonating in the market. The savings from pruning this technical debt early can be quickly reallocated to new experimentation allowing us the agility to respond to new market directions.
+**Disruption**
+
+> "... throughout the centuries there were men who took first steps, down new roads, armed with nothing but their own vision."
+> - Ayn Rand
+
+## Is it really faster we want? ##
+What is the _value_ of going faster if we are not sure its achieving velocity ? When we set out to overhaul our customer's software delivery flow, we often find ourselves using speed and velocity interchangeably. There is a very distinct difference between the two terms - that of a vector. In software delivery it's important that the vector is in the direction of user delivered working code. However, there is more subtle understanding of speed vs. velocity in software delivery that actually resonates with a customer. This distinction is important in understanding how to quantify the real value of this cloud native movement and the opportunities a platform like Cloud Foundry facilitates in the managing of its complexity in order to discover _effective_ ways to resonate with new customer bases. It's time to stop framing the platform as just another datacenter consolidation effort to reduce our OPEX. 
+
+The true promise in adopting a unified platform strategy is in moving the conversation forward from a reduction in OPEX to the effective use of CAPEX. We can now do this by making continuous experimentation a first class citizen in feedback loops to the CFO's internal investment decision-making process.  We can now show the decision makers in the company how we can reduce our software's technical debt sooner by sunsetting efforts that aren't producing in the market and removing them from the products code base. This has a twofold effect of freeing up resources and increasing the stickiness of our service offering. CFO's can now confidently approve continued budget for development and evolution of those features resonating in the market. The savings from pruning this technical debt early can be quickly reallocated to new experimentation allowing us the agility to respond to new market directions.
 
 The key to this continuous disruption of both the marketplace and competitors starts with the first principal in the Agile Manifesto with a particular focus on satisfying and valuable.
 
@@ -75,13 +83,7 @@ PCF creates the fundamental building blocks for reducing your wasteful software 
 
 Calculating the ROI after our initial Platform Phase I and II Dojos and Application Transformation engagements illustrated below looks like this:
 
-```
-ROI (iteration) = ( T(iteration) – OE(iteration) ) / I (iteration)
-ROI (release) = ( T(release) – OE(release)) / I (release)
-ROI (quarter) = ( T(quarter) – OE(quarter)) /I (quarter)
-```
-
-{{< responsive-figure src="/images/cloudroi.png"  >}}
+{{< responsive-figure src="/images/cloudroi.png" class="center small" >}}
 
 OPEX reductions can occur at the completion of the Platform phase I/II dojos and application transformation engagements. We can measure this by leveraging the PCF and Pivotal tracker instrumentation to understand the feature velocity of your new delivery teams.
 
@@ -95,9 +97,9 @@ This means that with the nature of new feature development, two thirds have zero
 
 ## Pivotal Cloud Foundry Enables Rapid Iterative Continuous Experiment Driven Development
 
-{{< responsive-figure src="/images/prices.jpg" >}}
-
 We enable, through the platform, your lines of business to hypothesize, test and receive immediate feedback from users. Teams can provide decision makers effective indicators for making sound investment decisions in a continuous fashion and minimize the lost revenue from missed market opportunities. This has the additional benefit of minimizing your maintenance footprint by distilling your applications complexity (OPEX) and by helping delivery teams focus on only those features that are wanted (Efficient CAPEX) thereby allowing you greater velocity and investment budgets for future feature additions that resonate more strongly with your user base.
+
+{{< responsive-figure src="/images/prices.jpg" class="right small" >}}
 
 This is the value proposition of the cloud native architecture design and microservices as the fundamental building blocks. By demarcating bounded contexts and implementing subdomains as a composition of microservices, you fundamentally change the economics of software delivery. This approach simplifies the delivery and releasability aspects, which reduces the overall risk and cost of delivery. Compartmentalizing the new features released as microservices minimizes the potential ripple effect across the architecture.
 
@@ -105,7 +107,7 @@ Our true value proposition is what you effectively target with your CAPEX and re
 
 ## Target Effective CAPEX
 
-{{< responsive-figure src="/images/signalNoise.jpg" caption="Reducing the noise of internal budget waste" >}}
+{{< responsive-figure src="/images/signalNoise.jpg" caption="Reducing the noise of internal budget waste" class="center" >}}
 
 Enable your lines of businesses to narrow in on which new features resonate the most with your users through continuous experimentation via the platform and efficient delivery model. We enable developers to do this by utilizing the platform to do hypothesis testing (Blue/Green and multi-variate A/B testing) with every new feature roll out leading to an overall revenue.App Modernization helps achieve this velocity and enables teams to practice HDD with frequent feature releases.  
 
