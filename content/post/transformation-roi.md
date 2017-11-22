@@ -111,8 +111,8 @@ Our true value proposition is what you effectively target with your CAPEX and re
 
 Enable your lines of businesses to narrow in on which new features resonate the most with your users through continuous experimentation via the platform and efficient delivery model. We enable developers to do this by utilizing the platform to do hypothesis testing (Blue/Green and multi-variate A/B testing) with every new feature roll out leading to an overall revenue.App Modernization helps achieve this velocity and enables teams to practice HDD with frequent feature releases.  
 
-  {{< responsive-figure src="/images/adventure1.png" class="left" >}}
-  {{< responsive-figure src="/images/adventure2.png" class="right" >}}
+  {{< responsive-figure src="/images/adventure1.png" class="center" >}}
+  {{< responsive-figure src="/images/adventure2.png" class="center" >}}
 
 The above images illustrate how a new world of customer understanding can be derived by instrumenting the highest bounce rate microservices with gamification to understand motivation and intent. We can understand what is most valuable to your product through B/G deployments that help isolate the attraction and understand how to expand the attraction to other areas in the product. A number of experiments can be run with UI/UX Heat Maps combined with A/B with Navigation and Design Layout Variations to determine the threshold  that signify the conversion tipping point and measure impact through the entire funnel.
 
