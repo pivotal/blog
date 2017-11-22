@@ -87,7 +87,7 @@ Calculating the ROI after our initial Platform Phase I and II Dojos and Applicat
 
 OPEX reductions can occur at the completion of the Platform phase I/II dojos and application transformation engagements. We can measure this by leveraging the PCF and Pivotal tracker instrumentation to understand the feature velocity of your new delivery teams.
 
-The next significant step is how effectively agile we can help you transform. We do this via our app transformation, and managed operations phases illustrated in the picture above. We perform a [SNAP](http://cloud.rohitkelapure.com/2016/10/snap-analysis-of-applications.html) analysis of the existing portfolio with a focus on efficient CAPEX/max revenue generation for all future deliveries.
+The next significant step is we can help your software delivery transform. We do this via our app transformation, and managed operations phases illustrated in the picture above. We perform a [SNAP](http://cloud.rohitkelapure.com/2016/10/snap-analysis-of-applications.html) analysis of the existing portfolio with a focus on efficient CAPEX/max revenue generation for all future deliveries.
 
 Why is this so effective ?
 
