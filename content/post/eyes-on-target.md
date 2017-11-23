@@ -28,7 +28,7 @@ At Pivotal, when we entered the national security space we made a conscious effo
 
 It required us to extensively collaborate with national security customers to define a new goal to align value and distill the non-value added work. This new primary goal was the development and implementation of a continuous fielding model. With a unified fielding platform strategy we are collectively working to overcome the delivery challenges of fielding to the last mile, out to the edge.
 
-In the national security space its not how fast can you get an idea into production but how fast can you deliver a compliant solution to a mission need. This requires all of the pieces to be accounted for including compliancy. It drives a single KPI, the mean time between fielding. This KPI measures our  ability to deliver the velocity needed to maintain the Effective Operational Agility necessary to maintain a continuous advantage over our adversaries.
+In the national security space its not how fast can you get an idea into production but how fast can you deliver a compliant solution to a mission need. This requires all of the pieces to be accounted for including compliancy. It drives a single KPI, the mean time between fielding. This KPI measures our  ability to deliver the velocity needed to maintain the Effective Operational Agility for a continuous advantage over our adversaries.
 
 ## Factors impeding Goals
 
