@@ -8,7 +8,7 @@ categories:
 - Mission Critical Development
 - Continuous Fielding
 - Pivotal Cloud Foundry
-date: 2017-11-21T17:16:22Z
+date: 2017-11-23T17:16:22Z
 draft: true
 short: Critical Team Composition For Day 2 Operations
 title: ✭ ✮ ✮ We The Few
