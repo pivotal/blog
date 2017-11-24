@@ -178,7 +178,7 @@ exception of our custom (`gce.yml`), the manifest operations files reside in the
 
 Here is the list of manifest operations files and their purpose:
 
-* `misc/powerdns.ym`: this is only needed for
+* `misc/powerdns.yml`: this is only needed for
 [dynamic networks](https://bosh.io/docs/networks.html#dynamic), where the IaaS,
 rather than the director, assigns IP addresses to the VMs deployed by the
 director. The BOSH development team is doing [interesting
@@ -210,13 +210,13 @@ We use a script to create our intermediate manifest; our script can be viewed on
 Our intermediate manifest (without secrets) can also be seen on
 [GitHub](https://github.com/cunnie/deployments/blob/980ae18de7d82b8e1c66b0d6b55eda05e2c7950c/bosh-gce.yml).
 
-### 2.5 Create a Secrets File
+### <a name="secrets_file">2.5 Create a Secrets File</a>
 
-We create a YAML file with our secrets (passwords and keys). These will
-be substituted during the second stage (`bosh create-env`). Below is a redacted
-version of our file (the passwords aren't the real passwords; don't even bother
-trying to use them) (the public ssh key, however, is the real deal) (the GCP
-credentials JSON values are mostly real, too):
+We create a YAML file with our secrets (passwords and keys). These will be
+substituted during the second stage (`bosh create-env`). Below is a redacted
+version of a portion of our file (the passwords aren't the real passwords; don't
+even bother trying to use them) (the public ssh key, however, is the real deal)
+(the GCP credentials JSON values are mostly real, too):
 
 ```yaml
 admin_password: IReturnedAndSawUnderTheSun
