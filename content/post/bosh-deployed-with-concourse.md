@@ -420,8 +420,10 @@ vSphere](https://github.com/cloudfoundry-incubator/bosh-vsphere-cpi-release),
 [Google Cloud
 Platform](https://github.com/cloudfoundry-incubator/bosh-google-cpi-release)
 (GCP),
-[OpenStack]() [Microsoft
-Azure](https://github.com/cloudfoundry-incubator/bosh-azure-cpi-release), among others)
+[OpenStack](https://github.com/cloudfoundry-incubator/bosh-openstack-cpi-release),
+[Microsoft
+Azure](https://github.com/cloudfoundry-incubator/bosh-azure-cpi-release), among
+others)).
 
 By April 30, 2015, `bosh-init` was production-ready, and the BOSH documentation
 was [updated](https://github.com/cloudfoundry/docs-bosh/commit/a159cc4f6633ca26d7c9ce1d4ace961b0d1bad20)
@@ -527,3 +529,10 @@ key format" when importing an EC public key).
 
 Where elliptic-curve cryptography is concerned, GitHub is ahead of the
 proverbial curve, and AWS, behind.
+
+## Corrections & Updates
+
+*2017-11-25*
+
+David McClure pointed out that the OpenStack link was missing; it has been
+added. Thanks, David.
