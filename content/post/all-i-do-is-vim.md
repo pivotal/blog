@@ -3,8 +3,7 @@ authors:
 - peter
 categories:
 - vim
-date: 2017-11-04T17:16:22Z
-draft: true
+date: 2017-11-26T17:16:22Z
 short: |
   A subset of useful vim commands for beginners
 title: All I do is VIM VIM VIM
