@@ -66,8 +66,12 @@ script which deploys the director.
 ### 1.0 Concourse Task Shell Script
 
 Here is our annotated [shell
-script](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/ci/tasks/bosh.sh)
+script](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/ci/tasks/bosh.sh)
 our Concourse tasks use to deploy our BOSH director:
+
+_[Note: see next section, [Simplify the Concourse Task](#simpler), for a simpler
+task shell script; it's a better starting point. We customize our BOSH directors
+in a manner which complicates our task shell script.]_
 
 ```bash
 #!/bin/bash
@@ -153,14 +157,35 @@ and the manifests they generate,  see the table below:
 
 | IaaS  | Script | Generated Manifest |
 |-------|--------|----------|
-| AWS   | [aws.sh](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/bin/aws.sh) | [bosh-aws.yml](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/bosh-aws.yml) |
-| Azure | [azure.sh](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/bin/azure.sh) | [bosh-azure.yml](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/bosh-azure.yml) |
-| GCP   | [gce.sh](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/bin/gce.sh) | [bosh-gce.yml](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/bosh-gce.yml) |
+| AWS   | [aws.sh](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bin/aws.sh) | [bosh-aws.yml](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bosh-aws.yml) |
+| Azure | [azure.sh](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bin/azure.sh) | [bosh-azure.yml](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bosh-azure.yml) |
+| GCP   | [gce.sh](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bin/gce.sh) | [bosh-gce.yml](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bosh-gce.yml) |
 
-### 1.1 Concourse Task Configuration file
+### <a name="simpler">1.1 Simplify the Concourse Task Script</a>
+
+<div class="alert alert-warning" role="alert">
+
+<b>Simplify the Concourse task script.</b> Specifically, inline the
+<code>bosh-${IAAS}.sh</code> script, then collapse the two <code>bosh
+interpolate</code> commands into the singular <code>bosh create-env</code>
+command.
+
+</div>
+
+<p />
+
+Start with a simple Concourse task script.
+Really. Don't use the task script we use,
+<sup><a href="#complicated" class="alert-link">[Why so complicated?]</a></sup> ,
+the one listed above. Instead, start with a
+simplified task script, like
+[`bosh-simple.sh`](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/ci/tasks/bosh-simple.sh).
+We have tested it; it successfully deploys a director.
+
+### 1.2 Concourse Task Configuration file
 
 Now that we have our task's shell script, we turn our attention to our task's
-(YAML) configuration file. It can be viewed on [GitHub](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/ci/tasks/bosh.yml),
+(YAML) configuration file. It can be viewed on [GitHub](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/ci/tasks/bosh.yml),
 and is displayed below, too:
 
 ```yaml
@@ -224,6 +249,11 @@ the branch in the `cunnie-deployments` repo. `IAAS` is either `aws`, `azure`, or
 deploy; sample contents can be viewed in an earlier [blog
 post](http://engineering.pivotal.io/post/bosh-ssl/#secrets_file).
 
+_[Note: you may opt to bypass the task configuration file completely and embed
+the necessary information into `pipeline.yml`;
+[here](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/ci/pipeline.yml#L54-L79)
+is an example of embedding the task configuration directly into the pipeline.]_
+
 ## 2. Concourse Jobs
 
 The Concourse job is straightforward:
@@ -259,7 +289,7 @@ jobs:
 ## 3. Concourse Pipeline
 
 The full Concourse pipeline (`pipeline.yml`) can be seen
-[here](https://github.com/cunnie/deployments/blob/86dd7d757aee8ca85c0db167f70fa357d6072430/ci/pipeline.yml).
+[here](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/ci/pipeline.yml).
 Below is an abbreviated portion which shows the Concourse resources and the first
 job (which deploys the AWS BOSH director):
 
@@ -358,6 +388,8 @@ Similarly, restrict access to your GitHub repo which has your director manifests
 and Concourse scripts.
 
 </div>
+
+<p />
 
 Our credentials are stored in our Concourse pipeline, and they can be easily
 revealed by a trusted user with the following command:
@@ -516,8 +548,99 @@ After interpolation, the pipeline looks like this:
       -----END EC PRIVATE KEY-----
 ```
 
-If your pipeline is not public, it may be easier to skip variable interpolation
-and embed the credential(s) directly.
+If your pipeline is not public, it may be easier to _skip variable interpolation
+and embed the credential(s) directly_.
+
+<a name="complicated"><sup>[Why so complicated?]</sup></a>
+Our Concourse task is complicated (i.e. `bosh.sh` calls `bosh-${IAAS}.sh`, calls
+`bosh` CLI three times) because we have requirements beyond merely deploying a
+BOSH director:
+
+* We retain intermediate BOSH manifests (e.g.
+  [`bosh-aws.yml`](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bosh-aws.yml),
+  manifests that are completely populated with the exception of the secrets
+  (passwords, credentials, private keys). The sole purpose of the first `bosh
+  interpolate` commands is to generate the intermediate manifest.<br/><br/> We
+  realize that our love of the intermediate manifests is not wholly rational:
+  time was when a working BOSH manifest was a precious thing, something to tend
+  to and to preserve. With the advent of `bosh-deployment`, which reliably
+  generates BOSH manifests, the intermediate manifests have diminished in
+  importance, and are now merely artifacts of a bygone age. And yet we still
+  cling to them, for they provide a sense of comfort, like a mother's hot apple
+  pie.
+
+* We prefer to set our own passwords rather than use the ones auto-generated
+  <sup><a href="#entropy" class="alert-link">[auto-passwords]</a></sup> by the
+  BOSH CLI. This has two implications:
+
+  * It forces us to set the password variables in a counter-intuitive manner (e.g.
+    `bosh interpolate ... -v admin_password='((admin_password))' ...`) (which
+    says, in effect, "replace all occurrences of '((admin_password))' with
+    '((admin_password))'."), which prevents the BOSH CLI from using its
+    auto-generated passwords and paves the way to subsequently interpolate our
+    passwords. This adds [several
+    lines](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bin/aws.sh#L42-L49)
+    to our scripts.
+
+  * It forces us to check to make sure that we haven't overlooked any variables
+    (i.e. we run `bosh interpolate --var-errs ...`), so that, for example, our
+    director's password is set to `IReturnedAndSawUnderTheSun` and not
+    `((admin_password))`).  This adds [several more
+    lines](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/ci/tasks/bosh.sh#L17-L23)
+    to our scripts.
+
+* Our BOSH director uses certificates issued by a recognized CA ([Certificate
+  Authority](https://en.wikipedia.org/wiki/Certificate_authority)) (in our case,
+  [Comodo](https://en.wikipedia.org/wiki/Comodo_Group)). This requires us to
+  create a manifest operations file (e.g.
+  [`etc/aws.yml`](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/etc/aws.yml#L29-L41))
+  which we [pass to `bosh
+  interpolate`](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bin/aws.sh#L24)
+  which overrides the auto-generated SSL certificate & key with our certificate &
+  key.
+
+* Some of our BOSH directors (e.g. bosh-aws.nono.io) are more than mere BOSH
+  directors — they are also nginx servers (web servers), DNS (Domain Name
+  System) servers, and NTP (Network Time Protocol) servers. This adds
+  [three more
+  lines](https://github.com/cunnie/deployments/blob/a8afca8f2aa8994b60d73a2cc1f48f1357a65cb5/bin/aws.sh#L25-L27)
+  to our scripts.
+
+Note: one advantage of using CA-issued certificates and easy-to-remember
+passwords is that it enables one to reach the BOSH director via the CLI without
+needing the `creds.yml` file — one can sit at a new workstation, type `bosh -e
+bosh-gce.nono.io login`, and proceed to manage deployments, releases, stemcells,
+etc....
+
+<a name="entropy"><sup>[auto-passwords]</sup></a> The BOSH CLI generates
+[high-entropy](https://en.wikipedia.org/wiki/Password_strength#Entropy_as_a_measure_of_password_strength)
+passwords when `--vars-store` flag is passed.
+
+Here is a list of sample passwords that `bosh create-env --vars-store=...` creates:
+
+```
+admin_password: qn7hc6zsq0nphhsvojx3
+blobstore_agent_password: iut5wdyeo5kkhvqoerj0
+blobstore_director_password: wm0qgnzdwgy8k1hnm4nq
+hm_password: plk829eob45khq6o9dl5
+mbus_bootstrap_password: nf16h5e9j120uqp35hlr
+nats_password: gr4s0xmj4s5iccqv69dt
+postgres_password: 7nxuq714hxcta513778g
+registry_password: ffxnhu4xtgh7lsxu7xpl
+```
+
+Note that the passwords are 20 bytes long and consist of random sequence of
+numbers and lowercase letters. Each byte can be one of 36 possibilites (10
+numbers plus 26 letters). Given that there are 20 bytes, the total number of
+combinations is 36<sup>20</sup>, 1.33 x 10<sup>31</sup>, effectively rendering
+the password immune to a brute-force attack (even if you could make a million
+attempts every second, it would still require 4 &times; 10<sup>17</sup> years to
+exhaust all combinations. In other words, you'd crack the password long after
+the [Stelliferous
+Era](https://en.wikipedia.org/wiki/The_Five_Ages_of_the_Universe#Stelliferous_Era)
+ended and you were well into the [Degenerate
+Era](https://en.wikipedia.org/wiki/The_Five_Ages_of_the_Universe#Degenerate_Era)).
+
 
 <a name="ECC"><sup>[Elliptic-curve]</sup></a>We use [elliptic-curve
 cryptography](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography) (ECC)
@@ -531,6 +654,13 @@ Where elliptic-curve cryptography is concerned, GitHub is ahead of the
 proverbial curve, and AWS, behind.
 
 ## Corrections & Updates
+
+*2017-12-01*
+
+We suggest simplifying the Concourse task script. The Concourse task script
+executes the BOSH CLI three times (`bosh int` twice and `bosh create-env` once),
+but need only execute it once (`bosh create-env`) when intermediate artifacts
+aren't desired.
 
 *2017-11-25*
 
