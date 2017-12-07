@@ -9,7 +9,7 @@ short: |
   A BOSH director is typically deployed with self-signed SSL (Secure Sockets
   Layer) certificates; however, the director can be deployed with certificates
   issued by a trusted CA (Certificate Authority). Here's how.
-title: Deploying a BOSH Director With SSL Certificates Issued by Recognized CA
+title: Deploying a BOSH Director With SSL Certificates Issued by Commercial CA
 ---
 
 ## 0. Abstract
@@ -187,7 +187,8 @@ operations file will likely be deprecated soon.
 * `gcp/cpi.yml`: this is needed for deploying a BOSH director to GCP, it sets
 properties such as `machine_type` (`n1-standard-1`).
 * `external-ip-not-recommended.yml`: this is not recommended for general use;
-it's for deploying a BOSH director with a publicly-accessible IP address.  <sup><a href="#security" class="alert-link">[Security]</a></sup>
+it's for deploying a BOSH director with a publicly-accessible IP address.
+<sup><a href="#security" class="alert-link">[Security]</a></sup>
 * `jumpbox-user.yml`: this creates an account, _jumpbox_, on the director. This
 account has `sudo` privileges and can be ssh'ed into using an ssh key. In our
 example, the interpolated variable `gce_jumpbox_user_public_key`, contains the
@@ -297,6 +298,108 @@ to the valid SSL certificate presented to the browser):
 | Microsoft Azure | <https://bosh-azure.nono.io:25555/info> | [bosh-azure.yml](https://github.com/cunnie/deployments/blob/17f8300550e5f3830ea56db91e1c7442cf026505/bosh-azure.yml) |
 | VMware vSphere | <https://bosh-vsphere.nono.io:25555/info> | [bosh-vsphere.yml](https://github.com/cunnie/deployments/blob/17f8300550e5f3830ea56db91e1c7442cf026505/bosh-vsphere.yml) |
 
+## 5. Addendum: UAA and CredHub
+
+[UAA](https://github.com/cloudfoundry/uaa) (CloudFoundry User Account and
+Authentication) and [CredHub](https://github.com/cloudfoundry-incubator/credhub)
+are optional BOSH director jobs that replace the built-in BOSH login mechanism
+<sup><a href="#uaa" class="alert-link">[login]</a></sup>.
+
+<div class="alert alert-warning" role="alert">
+
+Integrating UAA and CredHub into a BOSH director deployed with a commercial SSL
+certificate is very preliminary and may be <b>incomplete and even broken</b>. Although
+we have successfully deployed a BOSH director, logged in, and re-created a deployment,
+we have by no means fully exercised our BOSH director's capabilities. Use caution
+when following this process.
+
+</div>
+
+<p/>
+
+When deploying UAA and CredHub with our BOSH director, we must do additional
+modifications to the director manifest to ensure it deploys properly and that we
+can log in. Specifically, we need to add our certificate to UAA's endpoint (port
+8443) and modify the director's manifest to connect to the fully qualified
+domain name of that endpoint (e.g. `https://bosh-gce.nono.io:8443`)
+
+Deploying a BOSH director with an external IP and which is running the CredHub
+job  requires special modifications that have not yet, as of this writing, been
+incorporated into `bosh-deployment`. The following modifications were copied
+from a Slack channel (_caveat utor_), **but they are not enough for our
+purposes**:
+
+```
+- type: replace
+  path: /variables/name=credhub_tls/options/alternative_names/-
+  value: ((external_ip))
+
+- type: replace
+  path: /variables/name=credhub_tls/options/common_name
+  value: ((external_ip))
+
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/authentication/uaa/url
+  value: "https://((external_ip)):8443"
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/config_server/uaa/url
+  value: "https://((external_ip)):8443"
+```
+
+But the changes above aren't enough for our purposes: although they work well
+for BOSH directors with auto-generated (self-signed) certificates, they won't
+work with our commercial certificate (we'll see an error similar to the
+following: `x509: cannot validate certificate for 104.154.39.128 because it
+doesn't contain any IP SANs`).
+
+To address this, we set a variable that has FQDN ([fully qualified domain
+name](https://en.wikipedia.org/wiki/Fully_qualified_domain_name)) of the BOSH
+director (e.g. `bosh-gce.nono.io`). This must be the same domain name for which
+our SSL certificate is issued. The name of the variable is unimportant (we named
+our variable `external_fqdn`). We name our updated manifest operations file
+[TLS.yml](https://github.com/cunnie/deployments/blob/94247c79cbdf8a2aaff8a353005971788890249c/etc/TLS.yml#L31-L51)
+and inject not only the FQDN but also the commercial TLS certificate and key:
+
+```
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/sslCertificate?
+  value: ((nono_io_crt))
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/sslPrivateKey?
+  value: ((nono_io_key))
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=uaa/properties/uaa/url?
+  value: https://((external_fqdn)):8443
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/authentication/uaa/ca_certs/-
+  value: ((commercial_ca_crt))
+- type: replace
+  path: /instance_groups/name=bosh/jobs/name=credhub/properties/credhub/authentication/uaa/url?
+  value: https://((external_fqdn)):8443
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/config_server/uaa/url?
+  value: https://((external_fqdn)):8443
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/user_management/uaa/url?
+value: https://((external_fqdn)):8443
+```
+
+We also set our FQDN variable when invoking BOSH: [`bosh create-env -v
+external_fqdn="bosh-gce.nono.io ..."`](https://github.com/cunnie/deployments/blob/94247c79cbdf8a2aaff8a353005971788890249c/bin/gce.sh#L48).
+
+If we get an `i/o timeout` while logging in or performing a BOSH operation,
+then there's a good chance that we forgot to open up TCP port 8443.
+
+```
+Performing request GET 'https://bosh-gce.nono.io:25555/tasks?state=processing%!C(MISSING)cancelling%!C(MISSING)queued&verbose=2':
+  Performing GET request:
+    Requesting token via client credentials grant: Performing request POST 'https://bosh-gce.nono.io:8443/oauth/token': Performing POST request: Retry: Post https://bosh-gce.nono.io:8443/oauth/token: dial tcp bosh-gce.nono.io:8443: i/o timeout
+```
+
+To test if UAA and CredHub are working properly, log into your BOSH director
+(i.e. `bosh login`).
+
 ## Acknowledgements
 
 [Dmitriy Kalinin](https://github.com/cppforlife/) suggested collapsing the two
@@ -373,6 +476,15 @@ The author, for example, recollects fixing a problem where his web server's
 certificate was flagged as invalid on Android (but not on other platforms). It
 was fixed by removing the root certificate from the certificate chain file.
 
+<a name="uaa"><sup>[login]</sup></a>
+UAA's primary role is as an OAuth2 provider, issuing tokens for client
+applications to use when they act on behalf of BOSH users, and
+authenticate users with their BOSH credentials (e.g. `bosh login`).
+CredHub manages credentials like passwords, certificates, certificate
+authorities, SSH keys, RSA keys and arbitrary values (strings and JSON blobs),
+CredHub provides a CLI and API to get, set, generate and securely store such
+credentials.
+
 ## Bibliography
 
 <a name="bosh_deployment">
@@ -423,3 +535,10 @@ We refactored the SSL certificate into its own file, `nono.io.crt`.
 *2017-09-07*
 
 Added the section, _SSL Certificates on Other Infrastructures_.
+
+*2017-12-12*
+
+Changed the title from "... Recognized CA" to "... Commercial CA". "Commercial"
+is the term [Wikipedia uses](https://en.wikipedia.org/wiki/Certificate_authority).
+
+Added the section, _Addendum: UAA and CredHub_.
