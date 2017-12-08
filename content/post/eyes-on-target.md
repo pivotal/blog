@@ -10,7 +10,7 @@ categories:
 - Continuous Fielding
 - Mission Value
 date: 2017-11-18T17:16:22Z
-draft: false
+draft: true
 short: Continuously Fielding Mission Driven Value
 title: (-0-0-) Eyes on Target  
 image:
