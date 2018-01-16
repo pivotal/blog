@@ -45,3 +45,5 @@ We still aren't sure why the Buildpack execution was slower than `mvn spring-boo
 # KnowledgeBase Articles
 - Java application memory not being garbage collected https://discuss.pivotal.io/hc/en-us/articles/115009516387-Java-application-memory-not-being-garbage-collected
 - Remote Triggers for Applications on Cloud Foundry https://content.pivotal.io/blog/remote-triggers-for-applications-on-cloud-foundry
+- Dump Native Memory https://github.com/dmikusa-pivotal/cf-debug-tools#use-profiled-to-dump-the-jvm-native-memory
+- Java Buildpack Framework java opts https://github.com/cloudfoundry/java-buildpack/blob/master/docs/framework-java_opts.md
