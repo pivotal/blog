@@ -5,7 +5,7 @@ authors:
 categories:
 - BOSH
 - IPv6
-date: 2018-01-15T21:16:22Z
+date: 2018-01-16T07:39:22Z
 draft: true
 short: |
   Recent changes to the BOSH software suite enable the assignment of IPv6
@@ -32,6 +32,16 @@ and IPv6 addresses and which is running an nginx web server.
 
 We expect this blog post to be of interest to those who plan to deploy BOSH in
 IPv6-enabled environments on vSphere.
+
+<div class="alert alert-warning" role="alert">
+
+<b>BOSH with IPv6 is in beta!</b> It has never been used in a production
+environment; in fact, it has never been used outside a few development
+environments within Pivotal. We urge caution when deploying BOSH with IPv6 –
+limiting your deployments to test environments is a good idea. We welcome
+feedback.
+
+</div>
 
 ## 1. Prerequisites
 
@@ -243,7 +253,7 @@ Once IPv6 is enabled on a VM, it is enabled on _all_ interfaces. In other words,
 the IPv4 interface may pick up an IPv6 address as well, one that was not
 assigned by BOSH but rather acquired via Neighbor Discovery Protocol (NPD). For
 example, the web server we deployed acquired an additional IPv6 addresses on its
-"IPv4" interface: `2601:646:100:69f0:250:56ff:fe8c:86a9`
+"IPv4" interface: `2601:646:100:69f0:250:56ff:fe8c:86a9`.
 
 Having an IPv6 address on both interfaces of the deployed VM can sometimes cause
 odd networking behavior. For example, when using `bosh ssh` to connect to the
