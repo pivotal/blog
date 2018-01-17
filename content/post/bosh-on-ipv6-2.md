@@ -5,8 +5,8 @@ authors:
 categories:
 - BOSH
 - IPv6
-date: 2018-01-16T07:39:22Z
-draft: true
+date: 2018-01-16T19:12:22Z
+draft: false
 short: |
   Recent changes to the BOSH software suite enable the assignment of IPv6
   addresses to VMs deployed by the BOSH Director in a vSphere environment.
@@ -36,9 +36,7 @@ IPv6-enabled environments on vSphere.
 
 <div class="alert alert-warning" role="alert">
 
-<b>BOSH with IPv6 is in beta!</b> It has never been used in a production
-environment; in fact, it has never been used outside a few development
-environments within Pivotal. We urge caution when deploying BOSH with IPv6 –
+<b>BOSH with IPv6 is in beta!</b>  We urge caution when deploying BOSH with IPv6 –
 limiting your deployments to test environments is a good idea. We welcome
 feedback.
 
@@ -66,8 +64,9 @@ running an nginx web server.
 ## 3. Deploying the BOSH Director
 
 We use [bosh-deployment](https://github.com/cloudfoundry/bosh-deployment) to
-deploy our BOSH director. You can use your existing Director. If you need
-to deploy one, follow the instructions on [bosh.io](https://bosh.io/docs/init-vsphere).
+deploy our BOSH director. You can use your existing Director. If you need to
+deploy one, follow the instructions on
+[bosh.io](https://bosh.io/docs/init-vsphere).
 
 We set our BOSH Director's alias to "ipv4" and log in:
 
@@ -85,11 +84,15 @@ bosh -e ipv4 log-in
 
 ## 4. Upload the Cloud Config
 
-Assuming that you already have a cloud config with an IPv4 network, let's add an additional cloud config that defines IPv6 network.
+Assuming that you already have a Cloud Config with an IPv4 network, let's add an
+additional Cloud Config that defines the IPv6 network.
 
 ```bash
-bosh -e ipv4 upload-config cloud cloud-config-vsphere-ipv6.yml --name ipv6
+bosh -e ipv4 update-config cloud cloud-config-vsphere-ipv6.yml --name ipv6
 ```
+
+The IPv6 Cloud Config is shown below, and can also be seen on
+[GitHub](https://github.com/cunnie/deployments/blob/528e354d017e16a120bb505b14a3ba444e136c1a/cloud-config-vsphere-ipv6.yml).
 
 ```yaml
 networks:
@@ -108,9 +111,10 @@ networks:
 
 <div class="alert alert-warning" role="alert">
 
-<b>Don't <a href="https://en.wikipedia.org/wiki/IPv6_address#Representation">abbreviate</a>
-IPv6 addresses in BOSH manifests or Cloud Configs</b>
-<sup><a href="#dont_abbreviate" class="alert-link">[why no abbreviations?]</a></sup> .
+<b>Don't <a
+href="https://en.wikipedia.org/wiki/IPv6_address#Representation">abbreviate</a>
+IPv6 addresses in BOSH manifests or Cloud Configs</b> <sup><a
+href="#dont_abbreviate" class="alert-link">[why no abbreviations?]</a></sup> .
 Don't use double colons (<code>::</code>), don't strip leading zeroes. As an
 extreme example, the loopback address (<code>::1</code>) should be represented
 as <code>0000:0000:0000:0000:0000:0000:0000:0001</code>.
@@ -130,9 +134,10 @@ bosh -e ipv4 ur https://bosh.io/d/github.com/cloudfoundry-community/nginx-releas
 ## 5. Deploy the Web server
 
 We create a manifest for our deployment; it can be viewed on
-[Github](https://github.com/cunnie/deployments/blob/73349cf7ff19afdd8e4bfc0345368171d837545a/nginx-ipv46.yml).
+[Github](https://github.com/cunnie/deployments/blob/f5c5d939c574ca86a0c2c6ce2e26fc21d9d73a44/nginx-ipv46.yml).
 
-We assign our instance group to have two networks within our manifest as follows:
+We assign our instance group to have two networks within our manifest as
+follows:
 
 ```yaml
 instance_groups:
@@ -252,7 +257,7 @@ and BOSH deployment (e.g. commit
 
 There was also much help from groups within Pivotal, e.g. BOSH Core for merging
 the pull requests and fleshing-out the testing structure, Toolsmiths for
-creating the necessary environments, and IOPS for enabling IPv6 as needed.
+creating the necessary environments, and IOPS for enabling IPv6.
 
 ## Footnotes
 
