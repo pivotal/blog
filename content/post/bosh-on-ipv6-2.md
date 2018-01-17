@@ -28,7 +28,8 @@ enabled IPv6 networking within the BOSH Framework.
 
 In this blog post we show how we deployed a BOSH Director with an IPv4 address
 (no IPv6), and, in turn, used the BOSH Director to deploy a VM with both IPv4
-and IPv6 addresses and which is running an nginx web server.
+and IPv6 addresses and which is running an nginx web server. Future blog posts
+will describe installing a BOSH Director in a pure IPv6 network.
 
 We expect this blog post to be of interest to those who plan to deploy BOSH in
 IPv6-enabled environments on vSphere.
@@ -51,7 +52,7 @@ Use _at least_ the following versions:
 <sup><a href="#ubuntu" class="alert-link">[Ubuntu]</a></sup>
 - BOSH Director [264.5.0](https://bosh.io/releases/github.com/cloudfoundry/bosh?all=1)
 - BOSH CLI [2.0.45](https://bosh.io/docs/cli-v2.html#install)
-- `bosh-deployment` commit [218e6d50](https://github.com/cloudfoundry/bosh-deployment/tree/218e6d5030d89ca9f31c50b8b308e2a78d2a0997)
+- `bosh-deployment` commit [be379d8](https://github.com/cloudfoundry/bosh-deployment/commit/be379d8bd9701c5f08d469a8cd8e1d531eecf259)
 
 ## 2. Deployment Overview
 
@@ -65,14 +66,8 @@ running an nginx web server.
 ## 3. Deploying the BOSH Director
 
 We use [bosh-deployment](https://github.com/cloudfoundry/bosh-deployment) to
-deploy our BOSH director. Our script can be viewed
-[GitHub](https://github.com/cunnie/deployments/blob/f4fffca86ecf4fd662713ab4c8a30c9d63ec26d5/bin/vsphere-ipv4.sh).
-
-Our script has several customizations (e.g.
-[here](https://github.com/cunnie/deployments/blob/f4fffca86ecf4fd662713ab4c8a30c9d63ec26d5/bin/vsphere-ipv4.sh#L30-L32)).
-These customizations are unrelated to IPv6, and rest assured that using a
-vanilla deploy script will result in a BOSH Director that is able to deploy VMs
-with IPv6 addresses.
+deploy our BOSH director. You can use your existing Director. If you need
+to deploy one, follow the instructions on [bosh.io](https://bosh.io/docs/init-vsphere).
 
 We set our BOSH Director's alias to "ipv4" and log in:
 
@@ -90,31 +85,15 @@ bosh -e ipv4 log-in
 
 ## 4. Upload the Cloud Config
 
-We upload our [Cloud Config](https://bosh.io/docs/cloud-config.html) to our BOSH
-Director. Our Cloud Config contains the networks settings for our IPv4 and IPv6
-subnets.
+Assuming that you already have a cloud config with an IPv4 network, let's add an additional cloud config that defines IPv6 network.
 
 ```bash
-bosh -e ipv4 ucc cloud-config-vsphere-ipv4.yml
+bosh -e ipv4 upload-config cloud cloud-config-vsphere-ipv6.yml --name ipv6
 ```
-
-Our Cloud Config can be viewed on
-[GitHub](https://github.com/cunnie/deployments/blob/73349cf7ff19afdd8e4bfc0345368171d837545a/cloud-config-vsphere-ipv4.yml).
-The networking section is shown below. Note that we do not [abbreviate](https://en.wikipedia.org/wiki/IPv6_address#Representation)
-<sup><a href="#dont_abbreviate" class="alert-link">[why no abbreviations?]</a></sup>
-our IPv6 addresses:
 
 ```yaml
 networks:
-- name: IPv4
-  type: manual
-  subnets:
-  - range: 10.0.9.0/24
-    gateway: 10.0.9.1
-    static: [ 10.0.9.161-10.0.9.165 ]
-    cloud_properties:
-      name: VM Network
-- name: IPv6
+- name: ipv6
   type: manual
   subnets:
   - range: "2601:0646:0100:69f1:0000:0000:0000:0000/64"
@@ -122,14 +101,16 @@ networks:
     dns:
     - 2001:4860:4860:0000:0000:0000:0000:8888
     - 2001:4860:4860:0000:0000:0000:0000:8844
-    static: [  "2601:0646:0100:69f1:0000:0000:0000:0161-2601:0646:0100:69f1:0000:0000:0000:0170" ]
+    azs: [z1]
     cloud_properties:
       name: IPv6
 ```
 
 <div class="alert alert-warning" role="alert">
 
-<b>Don't  abbreviate IPv6 addresses in BOSH manifests or Cloud Configs</b>.
+<b>Don't <a href="https://en.wikipedia.org/wiki/IPv6_address#Representation">abbreviate</a>
+IPv6 addresses in BOSH manifests or Cloud Configs</b>
+<sup><a href="#dont_abbreviate" class="alert-link">[why no abbreviations?]</a></sup> .
 Don't use double colons (<code>::</code>), don't strip leading zeroes. As an
 extreme example, the loopback address (<code>::1</code>) should be represented
 as <code>0000:0000:0000:0000:0000:0000:0000:0001</code>.
@@ -139,8 +120,11 @@ as <code>0000:0000:0000:0000:0000:0000:0000:0001</code>.
 ## 4. Upload the Stemcell and the nginx Release
 
 ```bash
-bosh -e ipv4 us https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-3468.17-vsphere-esxi-ubuntu-trusty-go_agent.tgz
-bosh -e ipv4 ur https://github.com/cloudfoundry-community/nginx-release/releases/download/v1.12.2/nginx-1.12.2.tgz
+bosh -e ipv4 us https://bosh.io/d/stemcells/bosh-vsphere-esxi-ubuntu-trusty-go_agent?v=3468.17 \
+  --sha1 1691f18b9141ac59aec893a1e8437a7d68a88038
+
+bosh -e ipv4 ur https://bosh.io/d/github.com/cloudfoundry-community/nginx-release?v=1.12.2 \
+  --sha1 70a21f53d1f89d25847280d5c4fad25293cb0af9
 ```
 
 ## 5. Deploy the Web server
@@ -148,20 +132,15 @@ bosh -e ipv4 ur https://github.com/cloudfoundry-community/nginx-release/releases
 We create a manifest for our deployment; it can be viewed on
 [Github](https://github.com/cunnie/deployments/blob/73349cf7ff19afdd8e4bfc0345368171d837545a/nginx-ipv46.yml).
 
-We assign our IP addresses within our manifest as follows:
+We assign our instance group to have two networks within our manifest as follows:
 
 ```yaml
 instance_groups:
+- name: nginx
   networks:
-  - name: IPv4
-    static_ips:
-    - 10.0.9.165
-  - name: IPv6
-    static_ips:
-    - 2601:0646:0100:69f1:0000:0000:0000:0165
-    - default:
-      - dns
-      - gateway
+  - name: default
+  - name: ipv6
+    default: [dns, gateway]
 ```
 
 Note that we assign our default gateway to the _IPv6_ interface. This has the
@@ -186,7 +165,7 @@ bosh -e ipv4 -d nginx instances
   Using environment 'bosh-vsphere-ipv4.nono.io' as user 'admin' (openid, bosh.admin)
   ...
   Instance                                    Process State  AZ  IPs
-  nginx/821894df-9441-4325-92aa-2f4ded0e2bd9  running        -   10.0.9.165
+  nginx/821894df-9441-4325-92aa-2f4ded0e2bd9  running        z1  10.0.9.165
                                                                  2601:0646:0100:69f1:0000:0000:0000:0165
 ```
 
@@ -207,24 +186,7 @@ reachable from the internet.
 Don't abbreviate IPv6 addresses in BOSH manifests or Cloud Configs.
 
 Don't use large [`reserved`](https://bosh.io/docs/networks.html#manual) IP
-ranges (> 1k IP addresses); they will cause `bosh deploy` to hang.  We have
-cheerfully named the following Cloud Config "the fifth horseman of the BOSH
-apocalypse", for no deployment to that network will ever complete.
-
-```yaml
-networks:
-- name: IPv6
-  type: manual
-
-  subnets:
-  - range:    2601:0646:0100:69f1:0000:0000:0000:0000/64
-    gateway:  2601:0646:0100:69f1:020d:b9ff:fe48:9249
-    dns:
-    -         2001:4860:4860:0000:0000:0000:0000:8888
-    -         2001:4860:4860:0000:0000:0000:0000:8844
-    # This large range will cause `bosh deploy` to hang; don't do it
-    reserved: [ 2601:0646:0100:69f1:0000:0000:0000:0000-2601:0646:0100:69f1:ffff:ffff:ffff:ffff ]
-```
+ranges (> 1k IP addresses); they will cause `bosh deploy` to hang.
 
 Applications (e.g. nginx) must be designed to bind to the IPv6 address as well
 as the IPv4. Specifically, the underlying system call (kernel interface) to
@@ -264,12 +226,12 @@ interface), then the `bosh ssh` sessions will disconnect (TCP RESET) within 60
 seconds. A workaround would be to ssh to the IPv4 interface or the "near"
 IPv6 interface.
 
-BOSH doesn't have a concept of "dual-stack". In other words, when it deploys a
+Currently BOSH doesn't have a concept of "dual-stack". In other words, when it deploys a
 VM, BOSH assigns the VM's network interface either an IPv4 or an IPv6 address,
 but not both (though, as mentioned above, an IPv4 interface may acquire an IPv6
 address via NPD).
 
-BOSH requires the IPv6 default route to reside in the same subnet as the gateway
+Currently BOSH requires the IPv6 default route to reside in the same subnet as the gateway
 (which is not an IPv6 requirement (often the default route is an `fe80::...`
 address), though it is an IPv4 requirement).
 
@@ -278,9 +240,7 @@ zero](https://en.wikipedia.org/wiki/Subnetwork#Subnet_zero_and_the_all-ones_subn
 
 ## History
 
-Enabling IPv6 on BOSH was a side project we started a year ago, grossly
-underestimating the amount of time required — we thought it would take a couple
-of weeks at most; it took over a year. The changes spanned several BOSH
+The changes spanned several BOSH
 components: the BOSH Director (e.g commit
 [4a35c4b8](https://github.com/cloudfoundry/bosh/commit/4a35c4b8daac86522f07884274dc6fa2c870fecb)),
 the BOSH agent (e.g. commit
@@ -290,19 +250,15 @@ the BOSH CLI (e.g. commit
 and BOSH deployment (e.g. commit
 [214ebac4](https://github.com/cloudfoundry/bosh-deployment/commit/214ebac44cdd30a892feafc8c4a62662ab36665b)).
 
-Although both our names appeared on the commits, Dmitriy did much of the heavy
-lifting. The code is his. Brian contributed the IPv6-enabled vSphere
-infrastructure and network & kernel configuration requirements.
-
 There was also much help from groups within Pivotal, e.g. BOSH Core for merging
 the pull requests and fleshing-out the testing structure, Toolsmiths for
 creating the necessary environments, and IOPS for enabling IPv6 as needed.
 
 ## Footnotes
 
-<a name="ubuntu"><sup>[Ubuntu]</sup></a> IPv6 only works on Ubuntu stemcells; we
+<a name="ubuntu"><sup>[Ubuntu]</sup></a> IPv6 only works on Ubuntu Trusty stemcells; we
 haven't yet made changes to the `bosh-agent` to accommodate IPv6 on the
-CentOS-flavored stemcells. Pull requests are welcome.
+CentOS-flavored or Ubuntu Xenial stemcells. Pull requests are welcome.
 
 <a name="dual_stack"><sup>[why not dual stack?]</sup></a> Our deployed webserver
 VM is multihomed — it has two network interfaces: one which has the IPv4 address
@@ -318,10 +274,10 @@ understand both IPv4 and IPv6 packets.
 So why did we opt for the dual-homed single-stack approach instead of the
 single-homed, dual stack approach? The answer is that BOSH's networking model
 assumes one and only one IP address (be it IPv4 or IPv6) is assigned to a given
-network interface. To accommodate dual stack we would have had to make
-fundamental changes to BOSH's networking paradigm and BOSH's codebase — changes
-that would have required time we did not have. The multihomed single-stack
-approach was an expedient and technically valid choice.
+network interface. To accommodate dual stack we would have had to make changes
+to BOSH vSphere CPI and BOSH Agent - changes that would have required time
+we did not have. The multihomed single-stack approach was an expedient and
+technically valid choice.
 
 <a name="dont_abbreviate"><sup>[why no abbreviations?]</sup></a> The BOSH
 Director codebase represents IPv6 addresses (in most cases, such as the internal
