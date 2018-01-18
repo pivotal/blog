@@ -6,11 +6,12 @@ categories:
 - BOSH
 - Tutorial
 - Kubernetes
+- DevOps
 date: 2018-01-15T23:25:24-05:00
 draft: true
 short: |
   Cloud Foundry Container Runtime makes deploying Kubernetes easy with the power of BOSH.
-title: Deploying Kubernetes with Cloud Foundry Container Runtime
+title: Simplify Deploying Kubernetes with Cloud Foundry Container Runtime
 image: /images/cfcr-full.png
 ---
 
@@ -18,32 +19,34 @@ image: /images/cfcr-full.png
 
 # Kubernetes + BOSH = CFCR
 
-The goal of Cloud Foundry Container Runtime is to simplify deploying and maintaining a Kubernetes cluster. It does a lot to alleviate the day-to-day burdens.
-
-This is a walkthrough of how to install CFCR and deploy Kubernetes with it. CFCR used to be called Kubo, so you'll see lots of references to Kubo in this tutorial.
+The goal of Cloud Foundry Container Runtime is to simplify deploying and maintaining a Kubernetes cluster. It does a lot to alleviate the day-to-day burdens of an operator so they can focus on how to help their team execute.
 
 > *CFCR aims to delight the Kubernetes operator*
 
-It features:
+This is a walkthrough of how to install CFCR and deploy Kubernetes with it. CFCR used to be called Kubo, so you'll see lots of references to Kubo in this tutorial.
 
-* enable self-healing when there're VM failures or retirement
+CFCR's features include:
+
+* self-healing in case of VM failures or retirement
 * generating, installing, and managing certificates
 * monitoring the health of Kubernetes processes such as proxy and API server
 * support different infrastructure providers so you're not locked down (right now we support GCP, AWS, vSphere, and OpenStack)
-* make the deployment and scaling up process repeatable and easier to automate
+* making deployment and scaling up tasks repeatable and easier to automate
 * support rolling system upgrades
 
-That's a long list of stuff that operators have to worry about and CFCR is our solution that problem. How does it do that? Well it accomplishes many of these goals with the help of BOSH.
+That's a long list of stuff that operators have to worry about and CFCR is our solution those problem. How does it do that? Well it accomplishes many of these goals with the help of BOSH.
 
 ## How does BOSH work?
 
-Like I mentioned before, BOSH is a toolchain that helps people operate complex software. By deploying software with BOSH, your services will have multi-IaaS support, it'll be highly availble, self healing in the face of infrastructure failures, and be easy to scale.
+_If you already understand BOSH you can skip to the next section on CFCR architecture._
+
+BOSH is a toolchain that help teams operate complex software. By deploying software with BOSH, your services will have multi-IaaS support, it'll be highly availble, self healing in the face of infrastructure failures, and easy to scale.
 
 BOSH was designed with these features so it can deploy complex platforms like Cloud Foundry and now Kubernetes. Like Kubernetes, BOSH is made up of several components. In fact, if you understand the components of Kubernetes, you can often find direct analogues in BOSH.
 
-[architecture diagram]
+Here're a quick look at the key [components of BOSH](https://bosh.io/docs/bosh-components.html):
 
-Here're the key [components of BOSH](https://bosh.io/docs/bosh-components.html):
+{{< responsive-figure src="/images/bosh-architecture.png" alt="BOSH architecture diagram" class="center" >}}
 
 * Director (similiar the Kubernetes API server) - receives commands from the user and creates tasks to be run. It reconciles the current state of the system and the expected state.
 * VMs - where BOSH will install software.
@@ -51,13 +54,13 @@ Here're the key [components of BOSH](https://bosh.io/docs/bosh-components.html):
 * Health Monitor - monitors the health of VMs and notifies the director if a VM dies
 * Cloud Provider Interface (CPI) - Similar to Kubernetes cloud providers. This is a Cloud Foundry developers have already implemented this interface for all the popular IaaS (including AWS, GCP, vSphere, and OpenStack) and it allows BOSH to talks to each infrastructure  provider to procure resources.
 * CLI
-* BOSH release
+* BOSH release - software packaged up so that it's easy to distribute.
 
 ### BOSH Release
 
 While BOSH has many similarities with Kubernetes, the way they package software is different. You can think of packaged software in the BOSH world as tarballs called *releases*. Releases contain the libraries, source code, binaries, scripts, and configuration templates needed to deploy a system of software. 
 
-In case the case of the CFCR BOSH release, the packages in the tarball include Golang, CNI, flanneld, among others. The binaries include api-server, kubeproxy, kubelet, among others. The release also include configuration templates to configure these components. The whole thing is packaged together into a tarball, and the software vendor can then distribute this tarball however they like.
+In case the case of the [CFCR BOSH release](https://github.com/cloudfoundry-incubator/kubo-release), the packages in the tarball include Golang, CNI, flanneld, among others. The binaries include api-server, kubeproxy, kubelet, among others. The release also include configuration templates to configure these components. The whole thing is packaged together into a tarball, and the software vendor can then distribute this tarball however they like.
 
 When the user deploys this release, the resulting instance is called a deployment. The way a deployment is created goes like this:
 
@@ -72,9 +75,17 @@ When a new version of a release is published, the user goes through the same dep
 
 Deploying a director takes around 30 minutes. Ideally, the user rarely has to upgrade BOSH itself, but an upgrade can be faster than an initial deployment depending on how much has changed. The good thing is it doesn't involve any downtime for the deployments, meaning services are not disrupted.
 
+## CFCR architecture
+
+{{< responsive-figure src="/images/cfcr-architecture.png" alt="CFCR architecture diagram" class="center" >}}
+
+The Kubernetes cluster we're going to deploy today consists of the master and three worker nodes. Colocated on our master will be our etcd process as well as the core collection of Kubernetes system components. We'll set up a subnet dedicated to this cluster and use a load balancer to enable access to the master from the outside world. Even though the whole system is managed by BOSH, you won't need much BOSH experience to get a cluster up and running.
+
+We'll go into more detail later, let's get things rolling.
+
 ## GCP Prerequisites
 
-For this guide we're going to be using GCP. (However, the official CFCR docs also describe how to get it working in AWS, vSphere, and OpenStack.) Before we get started, here are some prerequestites you'll need from
+For this guide we're going to be using GCP. The official [CFCR docs](https://docs-cfcr.cfapps.io) also describe how to get it working in AWS, vSphere, and OpenStack. Before we get started, here's what we need:
 
 * A GCP project, in my case this is `cf-sandbox-twong`.
 * APIs enabled:
@@ -83,15 +94,15 @@ For this guide we're going to be using GCP. (However, the official CFCR docs als
 * A service account that can deploy BOSH, it has to have the `Owner` role. In this guide we'll call this service account `k1-bosh@cf-sandbox-twong.iam.gserviceaccount.com`
 * A VPC Network. We'll call it `cfcr-net` in this example.
 
-The official docs have a terrform plan that will create the next set of prerequisites for you. However, if you don't want to use terraform, I've listed out the individual elements you need below.
+The official docs have [a terrform plan](https://docs-cfcr.cfapps.io/installing/gcp/deploying-bosh-gcp/#step-2-set-up-a-gcp-account-for-terraform) that will create the next set of prerequisites for you. However, if you don't want to use terraform, I've listed out the individual elements you need below.
 
-* Another service account which will be used by the k8s nodes. In our case we'll call it `k1-node@cf-sandbox-twong.iam.gserviceaccount.com` and it needs these roles:
+* Another service account which will be used by the Kubernetes nodes. In our case we'll call it `k1-node@cf-sandbox-twong.iam.gserviceaccount.com` and it needs these roles:
   * `roles/compute.storageAdmin`
   * `roles/compute.networkAdmin`
   * `roles/compute.securityAdmin`
   * `roles/compute.instanceAdmin`
   * `roles/iam.serviceAccountActor`
-* A subnet under `cfcr-net` with at least /24 CIDR range. In our case we'll call the subnet `k1-us-west1-subnet`.
+* A subnet under our `cfcr-net` network with at least /24 CIDR range. We'll call our subnet `k1-us-west1-subnet`.
 * A [bastion VM](https://cloud.google.com/solutions/connecting-securely#bastion) so that the scripts we're going to run will have access to the subnet. We'll name this VM `k1-bosh-bastion`.
 * A firewall rule so that we'll have SSH access into the bastion.
 * A NAT VM so that internal VMs can send requests out to the internet. We'll name this VM `k1-nat-instance-primary`.
@@ -107,7 +118,13 @@ With all the prequisites out of the way, we're now ready to install BOSH.
 For most of this guide, we'll be working from within the bastion. Before you get started, copy the key for `k1-bosh@cf-sandbox-twong.iam.gserviceaccount.com` in this VM. We'll need it for later.
 
 ```sh
+$ gcloud compute scp k1-admin-service-account.key.json \
+    k1-bosh-bastion:~/k1-admin-service-account.key.json
 $ gcloud compute ssh k1-bosh-bastion
+```
+
+Inside the bastion:
+```
 $ ls
 k1-admin-service-account.key.json
 ```
@@ -202,9 +219,9 @@ bosh-cli -e cfcr-config vms
 
 ## Deploy CFCR
 
-### Set up k8s networking infrastructure
+### Set up Kubernetes routing
 
-Execute the terraform plan that will set up the networking infrastructure for our kubernetes cluster.
+Execute the terraform plan that will set up the routing infrastructure for our kubernetes cluster.
 
 ```sh
 $ cd ~
@@ -226,12 +243,12 @@ $ terraform apply \
     -state=${cfcr_terraform_state}
 ```
 
-This plan creates a target pool for the k8s master, a load balancer and firewall rule for ingress into the master. You can find them in the GCP cloud console.
+This plan creates a target pool for the Kubernetes master, a load balancer and firewall rule for ingress into the master. You can find them in the GCP cloud console.
 
 
 ### Update `director.yml`
 
-`director.yml` will be reused when we deploy our k8s cluster. First we need to use terraform to recall the target pool name and load balancer address.
+`director.yml` will be reused when we deploy our Kubernetes cluster. First we need to use terraform to recall the target pool name and load balancer address.
 
 ```sh
 # terraform has created a GCP instances pool to put our master
@@ -249,9 +266,9 @@ kubernetes_master_host: <replace with $kubernetes_master_host>
 master_target_pool: <replace with $master_target_pool>
 ```
 
-### Deploy our k8s cluster
+### Deploy our Kubernetes cluster
 
-Finally, it's time to deploy k8s. We have the handy script `deploy_k8s` which will uses the CFCR BOSH release to configure and launch our cluster. It'll create VMs for our k8s master and workers, set up the CAs and certs correctly, and well as launch all the k8s processes.
+Finally, it's time to deploy Kubernetes. We have the handy script `deploy_k8s` which will uses the CFCR BOSH release to configure and launch our cluster. It'll create VMs for our Kubernetes master and workers, set up the CAs and certs correctly, and well as launch all the Kubernetes processes.
 
 ```sh
 $ kubo-deployment/bin/deploy_k8s ~/cfcr-config my-k8s-cluster
@@ -259,7 +276,7 @@ $ kubo-deployment/bin/deploy_k8s ~/cfcr-config my-k8s-cluster
 
 The deployment process takes about twenty minutes on GCP. When it's complete, BOSH will begin monitoring VMs, maintaining logs, and restart any crashed components.
 
-If you look at the GCP cloud console, you'll see four new VMs. If you look at the their tags, you'll be able to tell that one of them is a k8s master, and the others are k8s nodes.
+If you look at the GCP cloud console, you'll see four new VMs. If you look at the their tags, you'll be able to tell that one of them is a Kubernetes master, and the others are Kubernetes nodes.
 
 ### Set Up kubeconfig
 
@@ -273,7 +290,7 @@ $ kubectl get svc --all-namespaces
 $ less .kube/config
 ```
 
-You can now access the k8s cluster from anywhere by exporting the kubeconfig to the machine you want to use. Exit the bastion and use the `gcloud compute scp` command to copy the kubeconfig.
+You can now access the Kubernetes cluster from anywhere by exporting the kubeconfig to the machine you want to use. Exit the bastion and use the `gcloud compute scp` command to copy the kubeconfig.
 
 ```sh
 $ gcloud compute scp k1-bosh-bastion:~/.kube/config ./kubeconfig
@@ -282,3 +299,13 @@ $ kubectl --kubeconfig=./kubeconfig get componentstatuses
 $ kubectl --kubeconfig=./kubeconfig get nodes
 $ kubectl --kubeconfig=./kubeconfig get svc --all-namespaces
 ```
+
+## Delight the Kubernetes Operator
+
+CFCR takes advantage of the many years of experience BOSH has in deploying complex distributed software and applies it to Kubernetes. The operator can sleep better at night using a tool that's built with reliability, security, and scaling in mind.
+
+Kubernetes is probably not the only complex sofware your operation has to support. By using CFCR a scrappy team can add a powerful platform to their stack while remaining agile, freeing up resources to focus on executing better.
+
+### Up next
+
+I'll be back with articles about how to use CFCR to easily scale your cluster and other headache-free operations.
