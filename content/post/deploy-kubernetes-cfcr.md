@@ -196,13 +196,13 @@ Getting familiar with BOSH is not a necessary part of this guide. However, it'll
 
 ```sh
 # make sure we have the right version
-$ bosh-cli -v
+$ bosh -v
 
 # each environment is like a kubeconfig
 $ bosh envs
 
 # you'll get an error saying you're unauthorized
-$ bosh-cli -e cfcr-config deployments
+$ bosh -e cfcr-config deployments
 
 $ cd cfcr-config
 $ ls
@@ -211,10 +211,10 @@ $ ls
 $ head creds.yml
 
 # user name admin
-bosh-cli -e cfcr-config login
+bosh -e cfcr-config login
 
-bosh-cli -e cfcr-config deployments
-bosh-cli -e cfcr-config vms
+bosh -e cfcr-config deployments
+bosh -e cfcr-config vms
 ```
 
 ## Deploy CFCR
