@@ -7,7 +7,7 @@ categories:
 - Tutorial
 - Kubernetes
 - DevOps
-date: 2018-01-15T23:25:24-05:00
+date: 2018-01-18T23:25:24-05:00
 draft: true
 short: |
   Cloud Foundry Container Runtime makes deploying Kubernetes easy with the power of BOSH.
