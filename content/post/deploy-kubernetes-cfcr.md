@@ -7,8 +7,8 @@ categories:
 - Tutorial
 - Kubernetes
 - DevOps
-date: 2018-01-18T23:25:24-05:00
-draft: true
+date: 2018-01-18T19:05:24-05:00
+draft: false
 short: |
   Cloud Foundry Container Runtime makes deploying Kubernetes easy with the power of BOSH.
 title: Simplify Deploying Kubernetes with Cloud Foundry Container Runtime
@@ -52,7 +52,7 @@ Here're a quick look at the key [components of BOSH](https://bosh.io/docs/bosh-c
 * VMs - where BOSH will install software.
 * Agent (a process running on each VM) - think of it like a kubelet, agents take orders from the director, checks with Monit to make sure processes on the VM are alive, and communicates with the health monitor.
 * Health Monitor - monitors the health of VMs and notifies the director if a VM dies
-* Cloud Provider Interface (CPI) - Similar to Kubernetes cloud providers. This is a Cloud Foundry developers have already implemented this interface for all the popular IaaS (including AWS, GCP, vSphere, and OpenStack) and it allows BOSH to talks to each infrastructure  provider to procure resources.
+* Cloud Provider Interface (CPI) - Similar to Kubernetes cloud providers. Cloud Foundry developers have already implemented this interface for all the popular IaaS (including AWS, GCP, vSphere, and OpenStack) and it allows BOSH to talk to each infrastructure provider to procure resources.
 * CLI
 * BOSH release - software packaged up so that it's easy to distribute.
 
@@ -67,7 +67,7 @@ When the user deploys this release, the resulting instance is called a deploymen
 1. Extract the contents of a release, compiling packages and source code
 1. Spin up the configured number of VMs
 1. Start the BOSH agent on each VM
-1. Snstall the of the compiled software on the VMs
+1. Install the of the compiled software on the VMs
 1. Set up the configuration for those software
 1. Start the software, also start monitoring for crashes
 
@@ -156,11 +156,11 @@ If you didn't use the terraform plan, here's a list of the properties you need t
 project_id: cf-sandbox-twong # your GCP project id
 network: cfcr-net
 subnetwork: k1-us-west1-subnet
-zone: us-west1-a # the zone where you subnet is located
+zone: us-west1-a # the zone where your subnet is located
 service_account: k1-node@cf-sandbox-twong.iam.gserviceaccount.com # the service account created in the earlier terraform script. It'll be used by the CPI
 
 internal_ip: 10.0.1.252 # decide the future IP address of your director, must be in your subnet
-deployments_network: my-cfcr-deployments-network # the internal name that BOSH will use place deployments. Can be whatever you want
+deployments_network: my-cfcr-deployments-network # the internal name that BOSH will use to place deployments. Can be whatever you want
 internal_cidr: 10.0.1.0/24 # your subnet's CIDR, or at least a subset of it that you want BOSH to use to deploy machines
 internal_gw: 10.0.1.1 # your subnet's gateway
 director_name: k1-bosh # decide the future name of your BOSH director, can be user friendly and can be whatever you want
@@ -182,7 +182,7 @@ Deploying BOSH takes about thirty minutes with GCP.
 
 If you take a look at the GCP console again, you'll see that there's a new VM with a name like `vm-123abc` (yours will have a unique ID). This is the BOSH director that I described at the beginning of the guide.
 
-Your SSH connection might have time out, so make sure you SSH into the bastion again.
+Your SSH connection might have timed out, so make sure you SSH into the bastion again.
 
 Inside the `cfcr-config` director you'll notice two new files:
 
@@ -268,13 +268,13 @@ master_target_pool: <replace with $master_target_pool>
 
 ### Deploy our Kubernetes cluster
 
-Finally, it's time to deploy Kubernetes. We have the handy script `deploy_k8s` which will uses the CFCR BOSH release to configure and launch our cluster. It'll create VMs for our Kubernetes master and workers, set up the CAs and certs correctly, and well as launch all the Kubernetes processes.
+Finally, it's time to deploy Kubernetes. We have the handy script `deploy_k8s` which uses the CFCR BOSH release to configure and launch our cluster. It'll create VMs for our Kubernetes master and workers, set up the CAs and certs correctly, as well as launch all the Kubernetes processes.
 
 ```sh
 $ kubo-deployment/bin/deploy_k8s ~/cfcr-config my-k8s-cluster
 ```
 
-The deployment process takes about twenty minutes on GCP. When it's complete, BOSH will begin monitoring VMs, maintaining logs, and restart any crashed components.
+The deployment process takes about twenty minutes on GCP. When it's complete, BOSH will begin monitoring VMs, maintaining logs, and restarting any crashed components.
 
 If you look at the GCP cloud console, you'll see four new VMs. If you look at the their tags, you'll be able to tell that one of them is a Kubernetes master, and the others are Kubernetes nodes.
 
