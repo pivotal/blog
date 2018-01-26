@@ -129,11 +129,11 @@ $ ls
 k1-admin-service-account.key.json
 ```
 
-Then, download the [latest version of `kubo-deployment`](https://github.com/cloudfoundry-incubator/kubo-deployment/releases). This tarball contains the scripts necessary to deploy BOSH and then CFCR, it also contains the CFCR BOSH release itself. In this example we're going to download version 0.12.0 but you should download the latest version available.
+Then, download the [latest version of `kubo-deployment`](https://github.com/cloudfoundry-incubator/kubo-deployment/releases). This tarball contains the scripts necessary to deploy BOSH and then CFCR, it also contains the CFCR BOSH release itself. In this example we're going to download version 0.13.0 but you should download the latest version available.
 
 ```sh
-$ wget https://github.com/cloudfoundry-incubator/kubo-deployment/releases/download/v0.12.0/kubo-deployment-0.12.0.tgz
-$ tar -xvf kubo-deployment-latest.tgz
+$ wget https://github.com/cloudfoundry-incubator/kubo-deployment/releases/download/v0.13.0/kubo-deployment-0.13.0.tgz
+$ tar -xvf kubo-deployment-0.13.0.tgz
 ```
 
 ### Set up your configuration
