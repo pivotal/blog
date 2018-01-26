@@ -226,7 +226,7 @@ Execute the terraform plan that will set up the routing infrastructure for our k
 
 ```sh
 $ cd ~
-$ cp kubo-deployment/docs/user-guide/routing/gcp/kubo-lbs.tf ./
+$ cp kubo-deployment/docs/terraform/gcp/routing/kubo-lbs.tf ./
 
 # specify where the terraform state will be created
 $ export cfcr_terraform_state=~/cfcr-config/terraform.tfstate
