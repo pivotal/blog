@@ -134,6 +134,7 @@ Then, download the [latest version of `kubo-deployment`](https://github.com/clou
 ```sh
 $ wget https://github.com/cloudfoundry-incubator/kubo-deployment/releases/download/v0.13.0/kubo-deployment-0.13.0.tgz
 $ tar -xvf kubo-deployment-0.13.0.tgz
+$ mv kubo-deployment-0.13.0/kubo-deployment ./
 ```
 
 ### Set up your configuration
