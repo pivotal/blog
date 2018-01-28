@@ -94,7 +94,7 @@ For this guide we're going to be using GCP. The official [CFCR docs](https://doc
 * A service account that can deploy BOSH, it has to have the `Owner` role. In this guide we'll call this service account `k1-bosh@cf-sandbox-twong.iam.gserviceaccount.com`
 * A VPC Network. We'll call it `cfcr-net` in this example.
 
-The official docs have [a terrform plan](https://docs-cfcr.cfapps.io/installing/gcp/deploying-bosh-gcp/#step-2-set-up-a-gcp-account-for-terraform) that will create the next set of prerequisites for you. However, if you don't want to use terraform, I've listed out the individual elements you need below.
+The official docs have [a terraform plan](https://docs-cfcr.cfapps.io/installing/gcp/deploying-bosh-gcp/#step-2-set-up-a-gcp-account-for-terraform) that will create the next set of prerequisites for you. However, if you don't want to use terraform, I've listed out the individual elements you need below.
 
 * Another service account which will be used by the Kubernetes nodes. In our case we'll call it `k1-node@cf-sandbox-twong.iam.gserviceaccount.com` and it needs these roles:
   * `roles/compute.storageAdmin`
