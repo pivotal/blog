@@ -153,6 +153,7 @@ implication that our IPv4 interface can only communicate on its local subnet
 (i.e. 10.0.9.0/24), which means that it must be deployed on the same subnet as
 the BOSH Director (otherwise the VM would be unable to communicate with the
 Director, hence would be unable to receive its configuration).
+<sup><a href="#routing" class="alert-link">[Routing]</a></sup>
 
 Deployment is straightforward:
 
@@ -188,65 +189,55 @@ reachable from the internet.
 
 ## Gotchas
 
-Don't abbreviate IPv6 addresses in BOSH manifests or Cloud Configs.
+**Don't abbreviate IPv6 addresses** in BOSH manifests or Cloud Configs.
 
-Don't use large [`reserved`](https://bosh.io/docs/networks.html#manual) IP
-ranges (> 1k IP addresses); they will cause `bosh deploy` to hang.
+**Don't use large [`reserved`](https://bosh.io/docs/networks.html#manual) IP
+ranges** (> 1k IP addresses); they will cause `bosh deploy` to hang.
 
-Applications (e.g. nginx) must be designed to bind to the IPv6 address as well
-as the IPv4. Specifically, the underlying system call (kernel interface) to
-create a socket [socket(2)](http://man7.org/linux/man-pages/man2/socket.2.html),
-requires the specification of the address family, which can either be IPv4
-(`AF_INET`) or IPv6 (`AF_INET6`). Certain applications bind to both IPv4 and
-IPv6 addresses seamlessly (e.g. `sshd`); however, that's not the case for the
-majority of applications. Even nginx, a popular webserver, requires a fairly
-cryptic directive to bind to both IPv4 & IPv6: `listen [::]:80 ipv6only=off;`
-(the directive to listen to IPv4 is a simple `listen 80;`).
+**Make sure your application binds to the IPv6 address** of your VM if you plan on
+using the IPv6 endpoint (e.g. <http://[2601:646\:100:69f1::165]/>). You may
+need to make additional configuration changes, possibly code changes.
 
-BOSH releases must be designed to either seamlessly bind to IPv6 interfaces or
-to expose a manifest property to allow binding to an IPv6 address (e.g. the
-nginx BOSH release).
+Tech notes: the underlying system call (kernel interface) to create a socket,
+[socket(2)](http://man7.org/linux/man-pages/man2/socket.2.html), requires the
+specification of the address family, which can either be IPv4 (`AF_INET`) or
+IPv6 (`AF_INET6`), which means that applications need to "opt-in" to binding to
+the IPv6 address (it's not automatic). Certain applications are coded to bind to
+both IPv4 and IPv6 addresses seamlessly (e.g. `sshd`); however, that's not the
+case for the majority of applications. Even nginx, a popular webserver, requires
+a fairly cryptic directive to bind to both IPv4 & IPv6: `listen [::]:80
+ipv6only=off;` (the directive to listen to IPv4 is a simple `listen 80;`).
 
-IPv6's [Neighbor Discovery
-Protocol](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol) (NPD)
-distorts the BOSH networking model. For example, on a multi-homed VM with both
-IPv4 interface and IPv6 interfaces, with IPv4 interface being set as the
-[default gateway](https://bosh.io/docs/networks.html#multi-homed) via BOSH, and
-a gateway assigned to the IPv6 via Router Advertisement, may result in non-local
-traffic going out _both_ the IPv4 _and_ IPv6 interfaces instead of solely the
-IPv4 interface. This may be viewed as a feature.
+Be aware of the **security implications of IPv6 Router Advertisements** BOSH
+stemcells are _currently_ configured to accept IPv6 router advertisements
+which expose the VM to man-in-the-middle attacks.
+<sup><a href="#router_ads" class="alert-link">[Router Advertisements]</a></sup>
 
-Once IPv6 is enabled on a VM, it is enabled on _all_ interfaces. In other words,
-the IPv4 interface may pick up an IPv6 address as well, one that was not
-assigned by BOSH but rather acquired via Neighbor Discovery Protocol (NPD). For
-example, the web server we deployed acquired an additional IPv6 addresses on its
-"IPv4" interface: `2601:646:100:69f0:250:56ff:fe8c:86a9`.
+IPv6 is **enabled on _all_ the VM's interfaces**. Once BOSH
+assigns an IPv6 address to an interface on a VM, the other interfaces may pick up
+an IPv6 address as well, one that was not assigned by BOSH but rather acquired
+via IPv6's Neighbor Discovery Protocol's (NP's) [stateless address
+autoconfiguration](https://en.wikipedia.org/wiki/IPv6_address#Stateless_address_autoconfiguration)
+(SLAAC). For example, the web server we deployed acquired an additional IPv6
+addresses on its "IPv4" interface: `2601:646:100:69f0:250:56ff:fe8c:86a9`.
 
-Having an IPv6 address on both interfaces of the deployed VM can sometimes cause
-odd networking behavior. For example, when using `bosh ssh` to connect to the
-IPv6 interface (i.e. the VM's "far" interface) of the web server VM from a
-workstation on the same subnet (same VLAN) as the VM's IPv4 interface, _and_ if
-the VM has acquired an IPv6 address on its IPv4 interface (i.e. the VM's "near"
-interface), then the `bosh ssh` sessions will disconnect (TCP RESET) within 60
-seconds. A workaround would be to ssh to the IPv4 interface or the "near"
-IPv6 interface.
+Currently **BOSH doesn't have a concept of "dual-stack"**. In other words, when
+it deploys a VM, BOSH assigns the VM's network interface either an IPv4 or an
+IPv6 address, but not both (though an IPv4 interface may acquire an IPv6 address
+via SLAAC).
 
-Currently BOSH doesn't have a concept of "dual-stack". In other words, when it deploys a
-VM, BOSH assigns the VM's network interface either an IPv4 or an IPv6 address,
-but not both (though, as mentioned above, an IPv4 interface may acquire an IPv6
-address via NPD).
-
-Currently BOSH requires the IPv6 default route to reside in the same subnet as the gateway
-(which is not an IPv6 requirement (often the default route is an `fe80::...`
-address), though it is an IPv4 requirement).
+Currently BOSH requires the **IPv6 default route to reside in the same subnet**
+as the gateway (often the IPv6 default route is an
+`fe80::...` address).
 
 BOSH won't allocate certain addresses, e.g. "[subnet
 zero](https://en.wikipedia.org/wiki/Subnetwork#Subnet_zero_and_the_all-ones_subnet)".
 
 ## History
 
-The changes spanned several BOSH
-components: the BOSH Director (e.g commit
+We began work in January 2017. Each week we picked one day to work in the late
+evening for three hours. The changes spanned several BOSH components: the BOSH
+Director (e.g commit
 [4a35c4b8](https://github.com/cloudfoundry/bosh/commit/4a35c4b8daac86522f07884274dc6fa2c870fecb)),
 the BOSH agent (e.g. commit
 [0962dce7](https://github.com/cloudfoundry/bosh-agent/commit/0962dce7801616f89ba2cd559e97b532379ba594)),
@@ -255,9 +246,14 @@ the BOSH CLI (e.g. commit
 and BOSH deployment (e.g. commit
 [214ebac4](https://github.com/cloudfoundry/bosh-deployment/commit/214ebac44cdd30a892feafc8c4a62662ab36665b)).
 
-There was also much help from groups within Pivotal, e.g. BOSH Core for merging
-the pull requests and fleshing-out the testing structure, Toolsmiths for
-creating the necessary environments, and IOPS for enabling IPv6.
+## Acknowledgements
+
+We'd like to thank the many people who made IPv6-on-BOSH possible: the BOSH
+Development Team (Danny Berger, Chris De Oliveira, Tom Viehman, Eve Quintana,
+Difan Zhao, Joshua Aresty) for merging the pull requests and fleshing-out the
+testing structure, Toolsmiths (Mark Stokan, Ken Lakin, and Der Wei Chan) for
+creating the necessary environments, and IOPS (Sachin Prasad, Quintin Donnelly,
+and Pablo Lopez) for enabling IPv6.
 
 ## Footnotes
 
@@ -284,6 +280,32 @@ to BOSH vSphere CPI and BOSH Agent - changes that would have required time
 we did not have. The multihomed single-stack approach was an expedient and
 technically valid choice.
 
+<a name="routing"><sup>[Routing]</sup></a> Most non-BOSH-deployed machines with
+both IPv4 and IPv6 addresses have two default routes: one for IPv4, and one for
+IPv6 (we discount the
+[link-local](https://en.wikipedia.org/wiki/Link-local_address) addresses (i.e.
+`fe80::/10`) which, by definition, don't have a route). The BOSH networking
+model, as it currently stands, only allows one default route.
+
+This restriction constrains the placement of the deployed VM: if the IPv6
+interface has the default route, then the IPv4 doesn't, which means that the VM
+must be deployed on the same subnet as the BOSH Director in order to communicate
+with it (the BOSH Director only communicates via IPv4, although we are actively
+working to change that).
+
+On the other hand, if the IPv4 interface of the deployed VM has the default
+route, then the IPv6 interface doesn't, which limits the usefulness of having a
+VM with an IPv6 address (the impetus to use IPv6 is driven by [IPv4 address
+exhaustion](https://en.wikipedia.org/wiki/IPv4_address_exhaustion),
+specifically routable addresses, and an IPv6 interface with no IPv6 route is not
+routable, and offers little value over an IPv4 address).
+
+However, all is not lost: the IPv6 interface of the deployed VM may acquire an
+IPv6 route via router advertisements.
+<sup><a href="#router_ads" class="alert-link">[Router Advertisements]</a></sup>
+That means it's possible to deploy a VM with _both_ IPv4 and IPv6 default
+routes.
+
 <a name="dont_abbreviate"><sup>[why no abbreviations?]</sup></a> The BOSH
 Director codebase represents IPv6 addresses (in most cases, such as the internal
 database) as strings, and many manipulations will fail if abbreviated IPv6
@@ -293,3 +315,46 @@ Although we'd like to have the capability to use abbreviated IPv6 addresses, and
 that may be a direction we take longer term, in the short term we must use
 fully-expanded IPv6 addresses. They are but a minor inconvenience to manifest
 writers.
+
+<a name="router_ads"><sup>[Router Advertisements]</sup></a>
+IPv6's [Neighbor Discovery
+Protocol](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol)'s (NP's)
+Router Advertisements allow for the discovery of IPv6 routes within an IPv6
+subnet. Unfortunately, they may also be used to enable man-in-the-middle attacks
+(Infoblox has a [blog
+post](https://community.infoblox.com/t5/IPv6-CoE-Blog/Why-You-Must-Use-ICMPv6-Router-Advertisements-RAs/ba-p/3416)
+describing the security issues).
+
+The BOSH agent will enable the acceptance of router advertisements if an IPv6 is
+assigned to the VM (source code: the kernel
+[settings](https://github.com/cloudfoundry/bosh-agent/blob/bbee23c0e055b66477a0bae7fc657f9b525a0a99/platform/net/kernel_ipv6.go#L58-L61)
+and
+[`/etc/network/interfaces`](https://github.com/cloudfoundry/bosh-agent/blob/ec9f5b2f5a09aae9f213bbd917af0ae010d50fbe/platform/net/ubuntu_net_manager.go#L372)),
+which undoes the default settings of the
+[stemcell](https://github.com/cloudfoundry/bosh-linux-stemcell-builder/blob/7eaa5facbfb53676d9c0de2a5866439ebe4f40c6/stemcell_builder/stages/bosh_sysctl/assets/60-bosh-sysctl.conf#L21-L25) (which disable router advertisements).
+
+We plan to disable the acceptance of IPv6's NP's router advertisements and
+to replace it with another mechanism to allow _both_ the IPv4 and IPv6 to have
+default routes (one idea we have been considering is a new property,
+`ipv6_gateway`).
+
+Similarly, we plan to disable [ICMPv6 Redirects](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#Redirect)
+on IPv6-enabled VMs in the future.
+
+Use caution when connecting to a VM that has acquired an IPv6 address on its
+IPv4 interface via SLAAC: having an IPv6 address on both interfaces of the
+deployed VM may cause odd networking behavior. For example, when using `bosh
+ssh` to connect to the IPv6 interface (i.e. the VM's "far" interface) of the web
+server VM from a workstation on the same subnet (same VLAN) as the VM's IPv4
+interface, _and_ if the VM has acquired an IPv6 address on its IPv4 interface
+(i.e. the VM's "near" interface), then the `bosh ssh` sessions will disconnect
+(TCP RESET) within 60 seconds. A workaround would be to ssh to the IPv4
+interface or the "near" IPv6 interface.
+
+## Corrections & Updates
+
+*2018-01-27*
+
+Trimmed Gotchas section; moved excessive detail into Footnotes section
+
+Created an Acknowledgements section
