@@ -28,8 +28,8 @@ enabled IPv6 networking within the BOSH Framework.
 
 In this blog post we show how we deployed a BOSH Director with an IPv4 address
 (no IPv6), and, in turn, used the BOSH Director to deploy a VM with both IPv4
-and IPv6 addresses and which is running an nginx web server. Future blog posts
-will describe installing a BOSH Director in a pure IPv6 network.
+and IPv6 addresses and which runs an nginx web server. Future blog posts will
+describe installing a BOSH Director in a pure IPv6 network.
 
 We expect this blog post to be of interest to those who plan to deploy BOSH in
 IPv6-enabled environments on vSphere.
@@ -216,7 +216,7 @@ which expose the VM to man-in-the-middle attacks.
 IPv6 is **enabled on _all_ the VM's interfaces**. Once BOSH
 assigns an IPv6 address to an interface on a VM, the other interfaces may pick up
 an IPv6 address as well, one that was not assigned by BOSH but rather acquired
-via IPv6's Neighbor Discovery Protocol's (NP's) [stateless address
+via IPv6's Neighbor Discovery Protocol's (ND's) [stateless address
 autoconfiguration](https://en.wikipedia.org/wiki/IPv6_address#Stateless_address_autoconfiguration)
 (SLAAC). For example, the web server we deployed acquired an additional IPv6
 addresses on its "IPv4" interface: `2601:646:100:69f0:250:56ff:fe8c:86a9`.
@@ -318,22 +318,23 @@ writers.
 
 <a name="router_ads"><sup>[Router Advertisements]</sup></a>
 IPv6's [Neighbor Discovery
-Protocol](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol)'s (NP's)
+Protocol](https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol)'s (ND's)
 Router Advertisements allow for the discovery of IPv6 routes within an IPv6
 subnet. Unfortunately, they may also be used to enable man-in-the-middle attacks
 (Infoblox has a [blog
 post](https://community.infoblox.com/t5/IPv6-CoE-Blog/Why-You-Must-Use-ICMPv6-Router-Advertisements-RAs/ba-p/3416)
 describing the security issues).
 
-The BOSH agent will enable the acceptance of router advertisements if an IPv6 is
-assigned to the VM (source code: the kernel
-[settings](https://github.com/cloudfoundry/bosh-agent/blob/bbee23c0e055b66477a0bae7fc657f9b525a0a99/platform/net/kernel_ipv6.go#L58-L61)
-and
-[`/etc/network/interfaces`](https://github.com/cloudfoundry/bosh-agent/blob/ec9f5b2f5a09aae9f213bbd917af0ae010d50fbe/platform/net/ubuntu_net_manager.go#L372)),
+The BOSH agent enables the acceptance of router advertisements when an IPv6 is
+assigned to the VM (`bosh-agent` source code: [`sysctl`
+settings](https://github.com/cloudfoundry/bosh-agent/blob/bbee23c0e055b66477a0bae7fc657f9b525a0a99/platform/net/kernel_ipv6.go#L58-L61)
+and [`/etc/network/interfaces`
+settings](https://github.com/cloudfoundry/bosh-agent/blob/ec9f5b2f5a09aae9f213bbd917af0ae010d50fbe/platform/net/ubuntu_net_manager.go#L372)),
 which undoes the default settings of the
-[stemcell](https://github.com/cloudfoundry/bosh-linux-stemcell-builder/blob/7eaa5facbfb53676d9c0de2a5866439ebe4f40c6/stemcell_builder/stages/bosh_sysctl/assets/60-bosh-sysctl.conf#L21-L25) (which disable router advertisements).
+[stemcell](https://github.com/cloudfoundry/bosh-linux-stemcell-builder/blob/7eaa5facbfb53676d9c0de2a5866439ebe4f40c6/stemcell_builder/stages/bosh_sysctl/assets/60-bosh-sysctl.conf#L21-L25)
+(which disable router advertisements).
 
-We plan to disable the acceptance of IPv6's NP's router advertisements and
+We plan to disable the acceptance of IPv6's ND's router advertisements and
 to replace it with another mechanism to allow _both_ the IPv4 and IPv6 to have
 default routes (one idea we have been considering is a new property,
 `ipv6_gateway`).
@@ -358,3 +359,7 @@ interface or the "near" IPv6 interface.
 Trimmed Gotchas section; moved excessive detail into Footnotes section
 
 Created an Acknowledgements section
+
+*2018-01-28*
+
+Neighbor Discovery Protocol is abbreviated "ND", not "NP"
