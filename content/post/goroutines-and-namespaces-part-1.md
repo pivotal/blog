@@ -11,6 +11,11 @@ short: |
 title: "Don't mix goroutines and namespaces: Part 1"
 ---
 
+> **Update: fixed!** In Go 1.10, [goroutines work correctly with linux namespaces](https://golang.org/doc/go1.10#runtime).
+> I'm leaving the post up in case it may be of historical interest.
+
+---
+
 Here's an obscure fact!
 
 ```text
@@ -55,17 +60,15 @@ But this is a post about namespaces.  So let's dive into namespaces.  Specifical
 
 ---
 
-We'll work through several examples that will require `root` access on a Linux environment.  If you're on Mac or Windows, or are a Linux user that would rather keep your network tinkering inside a sandbox, then you can set up a Linux virtual machine:
+We'll work through several examples that will require `root` access on a Linux environment.  If you're on Mac or Windows, or are a Linux user that would rather keep your network tinkering inside a sandbox, then you can set up a Linux virtual machine.
 
-0. Install [Vagrant](https://www.vagrantup.com/)
-0. Install [VirtualBox](https://www.virtualbox.org/)
-0. In an empty directory, open a terminal and run
-
-   ```bash
-   vagrant init ubuntu/xenial64
-   vagrant up
-   vagrant ssh
-   ```
+First install [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/).
+Then open a terminal, go into an empty directory and run:
+```bash
+vagrant init ubuntu/xenial64
+vagrant up
+vagrant ssh
+```
 
 ---
 
@@ -615,5 +618,5 @@ Next time, we'll dive into Go language *goroutines*, what problems they solve an
 ## UPDATE
 I got busy and never wrote parts 2 and 3, BUT the excellent folks at Weave Works have a
 [great blog post](https://www.weave.works/blog/linux-namespaces-and-go-don-t-mix) covering most of what I was aiming for.
-You may also be interested in [this GitHub issue](https://github.com/golang/go/issues/20676) which may provide a real fix
-in Go 1.10.
+
+Also, [this whole thing is actually fixed in Go 1.10](https://golang.org/doc/go1.10#runtime).
