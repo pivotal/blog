@@ -8,7 +8,7 @@ categories:
 - JPA
 - Spring Cloud Stream
 date: 2018-02-28T18:05:22Z
-draft: true
+draft: false
 short: |
   Demonstrating Event Sourcing with various methods using Kafka, RabbitMQ and JPA
 title: Event Sourcing with Kafka, RabbitMQ and JPA
