@@ -87,7 +87,7 @@ Once the `DomainEvent`s are in the topic, the command and query applications eac
 
 A `KStream` is an unbounded stream of data, in this case, `DomainEvent`s.  The stream acts both as a persistence layer as well as a notification layer. Events in the stream can then subscribed to, filtered, transformed, etc in any number of ways.
 
-A `KTable` uses the above `KStream` as input and first groups all of the events by their `boardUuid`.  The grouped events are continually updated as new events are to the stream by the Command application. The groups allow the data to be aggregated, essentiall folding the events in sequence to produce a `Board` view that respective to each application.
+A `KTable` uses the above `KStream` as input and first groups all of the events by their `boardUuid`.  The grouped events are continually updated as new events are to the stream by the Command application. The groups allow the data to be aggregated, essentially folding the events in sequence to produce a `Board` view that respective to each application.
 
 For instance, the Query application doesn't necessarily care about the maintaining an exact sequence of events in the materialized view, where as the Command application does, so that it can track the new change events from the existing ones.
 
@@ -118,9 +118,9 @@ The Command application will accept HTTP verbs POST, PATCH, PUT and DELETE throu
 
 As the Command application accepts new requests, they are validated and turned into `DomainEvent`s. Each `DomainEvent` is posted to the Event Store application. The Event Store will broadcast the `Domain Event` to the Event Notification Channel on RabbitMQ.
 
-Once the `DomainEvent`s are in the Event Store, the command and query applications can each perform an HTTP GET to get the `Domain Event`s for a `Board` which is used to build the aggregate view respective to each application.
+Once the `DomainEvent`s are in the Event Store, the command and query applications can each perform an HTTP GET to get the `DomainEvent`s for a `Board` which is used to build the aggregate view respective to each application.
 
-The Query application will also respond to the `Domain Event` notification from the rabbitmq channel by removing the changed `Board` from the local cache.
+The Query application will also respond to the `DomainEvent` notification from the rabbitmq channel by removing the changed `Board` from the local cache.
 
 ![event store architecture][event-store-architecture]
 
