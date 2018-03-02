@@ -207,6 +207,7 @@ All of the implemented capabilities are available in the API Documentation at [d
 ```bash
 $ curl 'http://localhost:8765/boards' -i -X POST
 ```
+Look for a `LOCATION` header to contain the URL of the new board.
 
 ### Rename an existing Board
 ```bash
