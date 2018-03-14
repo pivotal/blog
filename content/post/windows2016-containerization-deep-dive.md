@@ -62,6 +62,7 @@ another BOSH release.
 The pluggable nature of [Guardian](https://code.cloudfoundry.org/guardian) gives
 us the ability to focus on solely implementing the Runtime, Network, and Image
 plugins for windows2016.
+
 - [__winc__](https://code.cloudfoundry.org/winc): This is the
 OCI Runtime Plugin for creating and running containers in windows2016 stack.
 - [__winc-network__](https://code.cloudfoundry.org/winc): This is the
@@ -82,32 +83,30 @@ A Windows Server container shares a kernel with the container host and all conta
 
 Here are some of the details on how Garden-Windows secures applications:
 
-* __Filesystem isolation__: Windows Server Containers now by
-default use a temporary scratch space on the container host's system drive for storage
-during the lifetime of the container. This allows us to have a dedicated filesystem
-(e.g. Access to `C:\`) inside of the container. Any modifications made to the
-container filesystem or registry is captured in a sandbox managed by the host.
-As a result, we are now able to create and maintain a root filesystem (rootfs) that allows
-applications to receive security upgrades when running on the platform.
-
-* __Disk usage__: Disk usage limits are enforced by NTFS [disk
-  quotas](https://technet.microsoft.com/en-us/library/cc938945.aspx#XSLTsection128121120120)
-  in both Window2012R2 and Window2016 stack.
+- __Filesystem isolation__: Windows Server Containers now by default use a
+  temporary scratch space on the container host's system drive for storage during the lifetime of the container.
+  This allows us to have a dedicated filesystem (e.g. Access to `C:\`) inside of the container.
+  Any modifications made to the container filesystem or registry is captured
+  in a sandbox managed by the host. As a result, we are now able to create and
+  maintain a root filesystem (rootfs) that allows applications to receive security upgrades when running on the platform.
+<!-- -->
+- __Disk usage__: Disk usage limits are enforced by NTFS
+[disk quotas](https://technet.microsoft.com/en-us/library/cc938945.aspx#XSLTsection128121120120) in both Window2012R2 and Window2016 stack.
   Previously, this quota applied to all files owned by a given user,
   but with Windows Server Containers the quota is now applied to the Sandbox image.
   We used disk quotas because HCS currently doesn't have support for
   enforcing disk limits.
-
-* __Network isolation__: Windows Server Containers each have a network compartment
+<!-- -->
+- __Network isolation__: Windows Server Containers each have a network compartment
 which is analogous to how the Linux containers work. Containers function similarly
 to virtual machines in regards to networking. Each Container has a virtual network
 adapter (vNIC) which is connected to a virtual switch. Currently, we only support *nat*
 driver mode.
-
-* __Memory usage__: The Windows Host Compute Service (HCS) that manages Windows Server
+<!-- -->
+- __Memory usage__: The Windows Host Compute Service (HCS) that manages Windows Server
 Containers provides an API to set memory limits on containers at creation time.
-
-* __CPU usage__: Configuring CPU shares allocated to containers is now possible
+<!-- -->
+- __CPU usage__: Configuring CPU shares allocated to containers is now possible
 in Windows Server 2016 through the windows Host Computer Service (HCS).
 
 
