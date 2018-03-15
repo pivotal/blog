@@ -72,6 +72,14 @@ Network Plugin for [Guardian](https://code.cloudfoundry.org/guardian).
 Image Plugin for managing container images and setting up a root filesystem.
 This plugin can be used with local OCI image or remote docker URIs.
 
+
+Here’s a quick diagram, showing how these components interact.
+
+{{< responsive-figure src="/images/windows-containers-workflow.png" class="center small" caption="A close-up of Garden on Windows Server 2016">}}
+
+You’ll notice that the Garden components on a Windows Server 2016 Diego cell
+are the same as those on a Linux Diego cell...except for the new plugins mentioned above.
+
 Windows Container Isolation
 ---------------------------
 
