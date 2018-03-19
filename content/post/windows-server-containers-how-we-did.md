@@ -26,7 +26,7 @@ Hey, have you heard? Pivotal Cloud Foundry now supports running
 applications in [Windows Server Containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/about/).
 
 The platform has supported [.NET apps on Windows Server 2012 R2 for two years](http://engineering.pivotal.io/post/windows-containerization-deep-dive/).
-This move is a significant step for .NET developers, continued to improve on the .NET developer
+This move is a significant step for .NET developers, continuing to improve on the .NET developer
 experience.
 
 That effort got a huge boost with Windows Server 2016 and its native
@@ -39,8 +39,7 @@ in Pivotal Cloud Foundry. Specifically, with native Windows Server Containers de
 
 We launched this effort months ago, and planned to support Windows Containers from
 [Windows 1709 Fall Creators Update](https://blogs.windows.com/windowsexperience/2018/01/11/windows-10-fall-creators-update-1709-fully-available/).
-And that’s just what we’ve done! Let’s take a closer look at how we 
-engineered a mature platform like Cloud Foundry to support this new slant on containerization.
+And that’s just what we’ve done!
 
 Garden-runC Release and Windows
 -------------------------
@@ -85,8 +84,8 @@ Windows Container Isolation
 
 Windows Server 2016 comes with Windows Server Containers. The primitives here
 are similar to those Linux kernel. We use the official [hcsshim](https://github.com/Microsoft/hcsshim)
-Go library for instrumenting the Windows Server Containers in Cloud Foundry. HCS
-is the Windows Host Computer Service that performs the underlying container operation.
+Go library for instrumenting the Windows Server Containers in Cloud Foundry. The underlying container operations 
+are performed by the Windows Host Compute Service (HCS).
 Windows Server Containers provide application isolation through process and namespace isolation technology.
 A Windows Server container shares a kernel with the container host and all containers running on the host.
 
@@ -95,30 +94,28 @@ What about security? Here's how Garden-Windows secures applications:
 - __Filesystem isolation__: By default, Windows Server Containers use a
   temporary scratch space on the system drive of the container host.
   This space is used for storage during the life of the container.
-  This allows us to have a dedicated filesystem (e.g. Access to `C:\`) inside the container.
+  This allows us to have a dedicated filesystem per container (i.e. each container has its own `C:\` drive).
   Any modifications made to the container filesystem or registry are captured
   in a sandbox that's managed by the host. As a result, we are now able to create and
   maintain a root filesystem (rootfs) that allows applications to receive security upgrades when running on the platform.
 <!-- -->
 - __Disk usage__: Disk usage limits are enforced by NTFS
 [disk quotas](https://technet.microsoft.com/en-us/library/cc938945.aspx#XSLTsection128121120120)
-  in both windows2012R2 and windows2016 stack.
+  in both `windows2012R2` and `windows2016` stack.
   Previously, this quota applied to all files owned by a given user.
-  But, now with Windows Server Containers the quota is applied to the Sandbox image.
+  But, now with Windows Server Containers the quota is applied to the sandbox image.
   (We used disk quotas because HCS currently doesn't have support for
   enforcing disk limits.)
 <!-- -->
 - __Network isolation__: Each Windows Server Container has a network compartment
 that's analogous to Linux containers. Containers function similarly
 to virtual machines in regards to networking. Each Container has a virtual network
-adapter (vNIC) connected to a virtual switch. (Currently, we only support NAT 
-driver mode.)
+adapter (vNIC) connected to a virtual switch.
 <!-- -->
-- __Memory usage__: The Windows Host Compute Service (HCS) that manages Windows Server
-Containers provides an API to set memory limits on containers at creation time.
+- __Memory usage__: HCS provides an API to set memory limits on containers at creation time.
 <!-- -->
 - __CPU usage__: Configuring CPU shares allocated to containers is now possible
-in Windows Server Containers via the Windows Host Computer Service (HCS).
+in Windows Server Containers via HCS.
 
 Future Work
 -----------
