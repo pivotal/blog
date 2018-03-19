@@ -46,7 +46,6 @@ Garden-runC Release and Windows
 Previously, for applications running on the windows2012R2 stack, the
 garden-windows team implemented a Windows backend to the [garden API](https://code.cloudfoundry.org/garden)
 and maintained [garden-windows-bosh-release](https://github.com/cloudfoundry-incubator/garden-windows-bosh-release).
-(Long-time Cloud Foundry and .NET watchers will recall the Iron Foundry project. That’s the origin story for this tech).
 This allowed the team to have flexibility and ownership of their own code
 base. But, we felt some pains when integrating with new platform features.
 
@@ -122,7 +121,7 @@ Future Work
 
 There’s a .NET Renaissance underway, and we’re excited to be a part of it.
 That’s why we’re continuing to contribute to the cloud-native .NET movement,
-including .NET Core.
+including .NET Core and [Steeltoe](http://steeltoe.io/).
 
 The best part? Native Windows Server Containers feature makes it easier for
 us to add new capabilities. In the coming months, we plan to add support for
