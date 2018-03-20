@@ -20,8 +20,8 @@ title: Benchmarking the Disk Speed of IaaSes
 
 ## 0. Overview
 
-_[Disclaimer: the author works for Pivotal Software, a subsididiary of Dell,
-which owns VMware]_
+_[Disclaimer: the author works for Pivotal Software, of which Dell is an
+investor. Dell is also an owner of VMware]_
 
 It's helpful to know the performance characteristics of disks when selecting a
 disk type. For example, the performance of a database server will be greatly
@@ -336,3 +336,10 @@ it's not the Skull Canyon motherboard (it isn't) — it's the Supermicro
 motherboard.
 
 {{< responsive-figure src="https://lh3.googleusercontent.com/ePgrw43fR6l_Q48GohVVDA44S3SX9VdB1iraiDjdlNRW9lGKhp3zJbpyNmYSOX54wPc3SL370ClEIplGqDFeIil7NOnHq96CQfRtdMALC3onYmjTBGxTTX36G3uMujOBEApI_n_qX1qDq3VVyA6tnXUTTa3e4bcHlGpL1y_EZp98zQ33Hv6dI2KrqEtrhb4Cz8u3gBQ_g5EjM-T4hOP6x4PDn3mEhFe996MB8sMSBfkfpC3b4R0ulyUFuJ3HgQUcpkBUM3xLX46Y2J6_NA-2kkh1CfLFVholSvxU9Ux6NafgnJ-Y3Dw_G6Nd38u8N45plV9NXpkTxL-3gO7UDUPrA5q9HJERpFwyvPUO18ex0mr8IcAuvnGHHMkBWGkPUTndAF5d47KQrHouB1mxv2uu7g7rnTTevpkAM9iqr0KrtjODFaszxpQ_KFnL4KzzZTbCYOt995pkAv0VR0aHXCiyL1oSX1O85bATIXlkJ50Mz3y16xFO9mBZdqdJZmSg8U2AWCaKSMyz3-WcfBCzvELA1CxuyjnRCiEbAu7QVKrDQ-_b-txQsiH4RPvonRNTcodfyttQORBYU4BebWmDzu0Az3r9VcrmJAuz0cdhOOmO=w2290-h1016-no" >}}
+
+## Corrections & Updates
+
+*2018-03-19*
+
+Clarified Dell's relationship to Pivotal Software: Dell is an _investor_ in
+Pivotal; Dell is not the _owner_ of Pivotal.
