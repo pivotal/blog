@@ -5,12 +5,12 @@ categories:
 date: 2018-03-19T13:16:22Z
 draft: true
 short: |
- Failure is a necessary part of life. 
+ Failure is necessary
 title: Failure is a part of the game
 image: /images/pairing.jpg
 ---
 
-<p style="text-align: center; font-weight: bold">Fail forward!” “Fail fast!” “Failure is just a part of the game!”</p>
+<p style="text-align: center; font-weight: bold">“Fail forward!” “Fail fast!” “Failure is just a part of the game!”</p>
 
 Failure was an always-touted anthem I’d heard growing up. Failure was _necessary_. True grit came from failure. Grit was necessary for *success*. However, it was not until I experienced failure that those statements began to make sense. I began to understand why failure is so closely tied to success, and that you cannot succeed without failure.
 
@@ -63,7 +63,6 @@ No matter how I looked at it, however, SnapWedding was still a failure; it fell 
 **Success:** Using the learnings from Wattsly, it was easier to identify and realize product-market fit   
 **Success:** Using the learnings from Wattsly, it was easier to figure out if the product was worth working on, in the initial stages  
 **Success:** Using the learnings from Wattsly, it was easier to articulate the problems, and understand sooner that it made sense to stop working on the project  
-**Success:** Using the learnings from Wattsly, we did an MVP trial  
 **Success:** It was a product that I am proud to have worked on  
 **Failure:** It was not profitable  
 **Failure:** It did not gain mass market adoption  
@@ -90,6 +89,7 @@ It is not enough to simple be a part of an organization. In order to be successf
 **Failure:** Not being able to grow my skills in the role that I took on  
 
 
+## Summation
 Each failure taught me something new and different. In the beginning, it was hard to identify whether an idea was worth working on, worth walking away from, and trying to differentiate between a bad idea or a lack of effort on my part. However, it is now easier for me to understand the different components that can increase the likelihood of making a product successful - understanding product-market fit, user acquisition, user retention, the necessary team members for development, expansion, growth, and the importance of alignment of personal and organization values.
 
 The learnings from each endeavour are invaluable. Building a successful product is an issue that organizations face almost daily. Do you quit because there is a fundamental problem or do you keep trying? If you keep trying, what are you going to do differently to ensure that failure does not happen again? 
@@ -100,10 +100,20 @@ Although each of those failures stung and bothered me deeply for a very long tim
 
 Any success I have now is because of the failures I’ve experienced. Those are all successes that _could not have happened_ without failures. It is not necessary to experience failure yourself every single time though - mentors, experts, and books exist to help you not repeat the same mistakes again. However, no one can save or prevent you from failing at some point in life. You will fail. Multiple times. Ideally, you will be stronger, better, and wiser for it. Hopefully with time, you can understand what went wrong and how you can approach things differently to ensure a little more success the next time around.
 
+
+## Takeaways
+* When approaching a new problem / concept / endeavour, try to find the necessary data / individuals to make it more successful
+* Be able to clearly articulate the problems that you encounter and break them down into smaller chunks
+* Define the cut-off boundary or "fail" point, after which you will change your approach or walk away
+* Understand that with anything you do, you will fail. It is only by repeatedly trying over and over again that you will be able to have some sort of success
+
+
+
+
 Failure, after all, is simply a part of the game.
 
 
 
 --  
-Forever grateful to the people I’ve been lucky to cross paths with those who took the time to edit and make this post better: [Jennifer Chow](https://www.linkedin.com/in/jenniferchow1/), [Anam Alvi](https://www.linkedin.com/in/anamalvi/), [Iryna Shustava](https://www.linkedin.com/in/irynashustava/), [Rachel Heaton](https://www.linkedin.com/in/rachelheaton/).
+Forever grateful to the people / pivots I’ve been lucky to cross paths with who took the time to edit and make this post better: [Jennifer Chow](https://www.linkedin.com/in/jenniferchow1/), [Anam Alvi](https://www.linkedin.com/in/anamalvi/), [Iryna Shustava](https://www.linkedin.com/in/irynashustava/), [Rachel Heaton](https://www.linkedin.com/in/rachelheaton/).
 
