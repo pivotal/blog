@@ -115,5 +115,5 @@ Failure, after all, is simply a part of the game.
 
 
 --  
-Forever grateful to the people / pivots I’ve been lucky to cross paths with who took the time to edit and make this post better: [Jennifer Chow](https://www.linkedin.com/in/jenniferchow1/), [Anam Alvi](https://www.linkedin.com/in/anamalvi/), [Iryna Shustava](https://www.linkedin.com/in/irynashustava/), [Rachel Heaton](https://www.linkedin.com/in/rachelheaton/).
+Forever grateful to the people / pivots I’ve been lucky to cross paths with who took the time to edit and make this post better: [Jennifer Chow](https://www.linkedin.com/in/jenniferchow1/), [Anam Alvi](https://www.linkedin.com/in/anamalvi/), [Iryna Shustava](https://www.linkedin.com/in/irynashustava/), [Rachel Heaton](https://www.linkedin.com/in/rachelheaton/), [Brenda Chan](https://ca.linkedin.com/in/bsnchan/).
 
