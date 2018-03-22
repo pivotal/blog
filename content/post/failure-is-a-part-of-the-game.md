@@ -3,7 +3,7 @@ authors:
 - salvi 
 categories:
 date: 2018-03-19T13:16:22Z
-draft: true
+draft: false
 short: |
  Failure is necessary
 title: Failure is a part of the game
@@ -74,7 +74,7 @@ I experienced a different kind of failure when I joined an organization called [
 
 In addition, I realized that in the role I took on, I was not able to learn a lot of new skills. It did not allow growth, simply an implementation of pre-existing skills. Growth is important, in any role or task you take on.
 
-It is not enough to simple be a part of an organization. In order to be successful and fulfilled, you have to understand and embody the values of the organization. You have to believe in the values in order to lead, and to direct yourself to better influence and create impact. Most importantly, you have to grow.
+It is not enough to simple be a part of an organization. In order to be successful and fulfilled, you have to understand and embody the values of the organization. You have to live the values in order to lead, and to direct yourself to better influence and create impact. Most importantly, you have to grow.
 
 
 <p style="text-align: center">
