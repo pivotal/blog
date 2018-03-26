@@ -138,9 +138,10 @@ A newly introduced assertion uncovered some places which do not follow this rule
 
 Although we have a number of people on all kind of PostgreSQL related projects, the following people contributed to the development of PostgreSQL 11:
 
-* Ashwin Agrawal (Catalog and Storage)
-* Asim Rama Praveen (Catalog and Storage)
+* Ashwin Agrawal
+* Asim Rama Praveen
 * Daniel Gustafsson
 * Heikki Linnakangas
 * Jacob Champion
-* Xin Zhang (Catalog and Storage)
+* Melanie Plageman
+* Xin Zhang
