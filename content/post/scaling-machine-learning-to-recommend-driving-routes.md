@@ -19,6 +19,7 @@ image: /images/pairing.jpg
 In this blog post, we talk about creating a smooth and effective experience for taxi drivers, by exploiting ML-as-a-service which scales machine learning to comply with service-level-agreements(SLAs). We designed an end-to-end data-driven workflow. It encompasses establishing feature engineering pipeline from incoming streams of data, creating and updating models for estimations and producing metrics to weigh updated models. We use [Pivotal’s products](https://pivotal.io/products) such as Greenplum Database and Gemfire, and Cloud Foundry platform to analyze data, build & deploy models at scale, make predictions, and monitor accuracy to measure reliability at scale. In a nutshell, we showcase our strategy to build consistent and fail-safe channels to manage end-to-end ML tasks.
 </div>
 
+
 {{< responsive-figure src="/images/scaling-machine-learning-to-recommend-driving-routes/final_img_scale_ml_on_spark_with_legend.png" class="center" height="42" width="42">}}
 <p align="center">
  Figure 1. Driver earning prediction and next pickup location recommendation pipeline
