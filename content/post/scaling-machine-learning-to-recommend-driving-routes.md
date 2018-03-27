@@ -11,14 +11,14 @@ categories:
 date: 2018-03-24T17:16:22Z
 draft: true
 short: |
-  The Pivotal Data Science Labs helped a multinational customer build a scalable, real-time predictions and recommendations application to increase revenue. We built an end-to-end machine learning workflow which addresses online deployments and offline training using open source projects and Pivotal products.
+  <div style="text-align: justify">The Pivotal Data Science Labs helped a multinational customer build a scalable, real-time predictions and recommendations application to increase revenue. We built an end-to-end machine learning workflow which addresses online deployments and offline training using open source projects and Pivotal products.</div>
 title: Scaling Machine Learning to Recommend Driving Routes
-image: /images/pairing.jpg
 ---
-<div style="text-align: justify">
-In this blog post, we talk about creating a smooth and effective experience for taxi drivers, by exploiting ML-as-a-service which scales machine learning to comply with service-level-agreements(SLAs). We designed an end-to-end data-driven workflow. It encompasses establishing feature engineering pipeline from incoming streams of data, creating and updating models for estimations and producing metrics to weigh updated models. We use [Pivotal’s products](https://pivotal.io/products) such as Greenplum Database and Gemfire, and Cloud Foundry platform to analyze data, build & deploy models at scale, make predictions, and monitor accuracy to measure reliability at scale. In a nutshell, we showcase our strategy to build consistent and fail-safe channels to manage end-to-end ML tasks.
-</div>
 
+<div style="text-align: justify">
+In this blog post, we talk about creating a smooth and effective experience for taxi drivers, by exploiting ML-as-a-service which scales machine learning to comply with service-level-agreements(SLAs). We designed an end-to-end data-driven workflow. It encompasses establishing feature engineering pipeline from incoming streams of data, creating and updating models for estimations and producing metrics to weigh updated models. We use [Pivotal’s products](https://pivotal.io/products) such as Greenplum Database and Gemfire, and Cloud Foundry platform to analyze data, build & deploy models at scale, make predictions, and monitor accuracy to measure reliability at scale. We showcase our strategy to build consistent and fail-safe channels to manage end-to-end ML tasks.
+</div>
+</br>
 
 {{< responsive-figure src="/images/scaling-machine-learning-to-recommend-driving-routes/final_img_scale_ml_on_spark_with_legend.png" class="center" height="42" width="42">}}
 <p align="center">
@@ -26,6 +26,7 @@ In this blog post, we talk about creating a smooth and effective experience for 
 </p>
 ### Driver earning prediction and next pickup location recommendation app
 <div style="text-align: justify">
+
 We built an app to predict potential earnings of a driver given his current location for next 8 hours in successive time intervals. The App also provided recommendations of next best pickup locations ranked based on driver preferences and behavior. Potential earning per recommended locations is predicted for several time interval such as next 15 minutes, 30 minutes, one hour, two hours and four hours. These options further helped in learning driver behaviour which is feedback to create more relevant recommendations. Our main aim was to maximize the revenue of the taxi services company by maximizing earnings per driver.
 
 We leveraged a Hadoop cluster with HDFS for cold-store and Apache Spark’s fast computing framework for data transformation logic, modelling, and deploying large-scale analytics. Greenplum Database (GPDB) is used to store structured feature vectors and batch predictions (for example, to display historical trends in average earnings across grids in past few days). Pivotal Gemfire (based on Apache Geode) is used to cache near-real-time feature vectors and models and provide online predictions (such as earning predictions near a driver in the next 15 minutes).
