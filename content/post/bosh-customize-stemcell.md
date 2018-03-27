@@ -244,6 +244,8 @@ in the instructions above:
 if [ -f image-disk1.vmdk ]; then
   rm image-disk1.vmdk
   qemu-img convert root.img -O vmdk image-disk1.vmdk
+  # For Vmware Vsphere
+  # qemu-img convert -o subformat=streamOptimized,compat6 root.img -O vmdk image-disk1.vmdk
   rm root.img
   SHASUM=($(shasum image-disk1.vmdk))
   perl -pi -e "s/vmdk\)=\s\S+\$/vmdk\)= $SHASUM/" image.mf
