@@ -1,5 +1,5 @@
 +++
-authors = ["aagrawal", "dgustafsson", "hlinnakangas", "jchampion", "xinzweb"]
+authors = ["aagrawal", "apraveen", "dgustafsson", "hlinnakangas", "jchampion", "xinzweb"]
 categories = ["Greenplum Database", "PostgreSQL", "Greenplum", "Development"]
 date = 2018-03-21T15:16:22Z
 draft = true
