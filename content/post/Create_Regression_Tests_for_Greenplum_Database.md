@@ -91,7 +91,7 @@ For some tests it is not possible to provide idempotent results, because the out
 - regtest_2.out
 - regtest_3.out
 
-The regression test will compare the output against all available answer files, and as long as it matches one of the files, the test will pass.
+The regression test tool will run the test, and compare the output against all available answer files. If one answer file matches, the test will pass.
 
 
 ### Ignoring parts of the test
