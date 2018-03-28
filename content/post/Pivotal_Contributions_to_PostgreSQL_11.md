@@ -1,5 +1,5 @@
 +++
-authors = ["aagrawal", "apraveen", "dgustafsson", "hlinnakangas", "jchampion", "xinzweb"]
+authors = ["aagrawal", "apraveen", "dgustafsson", "hlinnakangas", "jchampion", "mplageman", "xinzweb"]
 categories = ["Greenplum Database", "PostgreSQL", "Greenplum", "Development"]
 date = 2018-03-21T15:16:22Z
 draft = true
@@ -145,3 +145,15 @@ Although we have a number of people on all kind of PostgreSQL related projects, 
 * Jacob Champion
 * Melanie Plageman
 * Xin Zhang
+
+
+
+## Outlook
+
+We have some ideas for upcoming PostgreSQL versions.
+
+Greenplum Database has table partitioning for a long time, that is a feature which was only recently added to PostgreSQL. We want to share some of the experiences we made around this feature, and enhance the functionality in PostgreSQL.
+
+Another existing limitation which we would like to remove is the length of text types. Currently that type can roughly hold 1 GB, but for some use cases that is not enough.
+
+
