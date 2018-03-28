@@ -154,6 +154,4 @@ We have some ideas for upcoming PostgreSQL versions.
 
 Greenplum Database has table partitioning for a long time, that is a feature which was only recently added to PostgreSQL. We want to share some of the experiences we made around this feature, and enhance the functionality in PostgreSQL.
 
-Another existing limitation which we would like to remove is the length of text types. Currently that type can roughly hold 1 GB, but for some use cases that is not enough.
-
-
+Another existing limitation which we would like to loosen is the length of text type. Currently that type can hold roughly 1 GB, but for some use cases that is not enough.
