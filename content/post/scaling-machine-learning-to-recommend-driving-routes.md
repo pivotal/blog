@@ -9,7 +9,7 @@ categories:
 - driver revenue prediction
 - Scale Machine Learning as a service
 date: 2018-03-24T17:16:22Z
-draft: true
+draft: false 
 short: |
   <div style="text-align: justify">The Pivotal Data Science Labs helped a multinational customer build a scalable, real-time predictions and recommendations application to increase revenue. We built an end-to-end machine learning workflow which addresses online deployments and offline training using open source projects and Pivotal products.</div>
 title: Scaling Machine Learning to Recommend Driving Routes
