@@ -11,9 +11,9 @@ categories:
 - Containers
 - .NET
 
-date: 2018-03-12T11:25:15-04:00
+date: 2018-03-30T11:25:15-04:00
 
-draft: true
+draft: false
 
 short: |
   Technical details for how we implemented containers on Windows Server Core 2016 for Pivotal
