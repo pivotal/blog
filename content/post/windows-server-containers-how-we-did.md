@@ -38,7 +38,7 @@ in Pivotal Cloud Foundry. Specifically, with native Windows Server Containers de
 - Enjoy improved isolation and resource management for their apps
 
 We launched this effort months ago, and planned to support Windows Containers from
-[Windows 1709 Fall Creators Update](https://blogs.windows.com/windowsexperience/2018/01/11/windows-10-fall-creators-update-1709-fully-available/).
+[Windows Server 1709](https://docs.microsoft.com/en-us/windows-server/get-started/get-started-with-1709).
 And that’s just what we’ve done!
 
 Garden-runC Release and Windows
