@@ -62,20 +62,20 @@ And we record them for the following IaaSes:
 
 The table below summarizes our findings:
 
-| IaaS      | Disk Type             | IOPS  | Write MB/s | Read MB/s   |
-| --------- | --------------        | ---:  | -----:     | ----------: |
-| AWS       | standard              | 1913  | 99         | 87          |
-|           | gp2                   | 3634  | 103        | 92          |
-|           | io1 (1000 IOPS)       | 1210  | 102        | 94          |
-| Azure     | Standard 20 GiB       | 121   | 28         | 15          |
-|           | Premium 256 GiB       | 1106  | 106        | 90          |
-| Google    | pd-standard 20 GiB    |  162  | 74         | 43          |
-|           | pd-standard 256 GiB   |  239  | 78         | 65          |
-|           | pd-ssd 20 GiB         |  6150 | 29         | 27          |
-|           | pd-ssd 256 GiB        | 11728 | 149        | 138         |
-| vSphere   | FreeNAS               | 7776  |  91        | 104         |
-|           | SATA SSD              | 26075 | 462        | 470         |
-|           | NVMe SSD              | 28484 | 1577       | 1614        |
+| IaaS      | Disk Type             | IOPS  | Read MB/s   | Write MB/s |
+| --------- | --------------        | ---:  | ----------: | -----:     |
+| AWS       | standard              | 1913  | 87          | 99         |
+|           | gp2                   | 3634  | 92          | 103        |
+|           | io1 (1000 IOPS)       | 1210  | 94          | 102        |
+| Azure     | Standard 20 GiB       | 121   | 15          | 28         |
+|           | Premium 256 GiB       | 1106  | 90          | 106        |
+| Google    | pd-standard 20 GiB    |  162  | 43          | 74         |
+|           | pd-standard 256 GiB   |  239  | 65          | 78         |
+|           | pd-ssd 20 GiB         |  6150 | 27          | 29         |
+|           | pd-ssd 256 GiB        | 11728 | 138         | 149        |
+| vSphere   | FreeNAS               | 7776  | 104         |  91        |
+|           | SATA SSD              | 26075 | 470         | 462        |
+|           | NVMe SSD              | 28484 | 1614        | 1577       |
 
 
 <div class="alert alert-warning" role="alert">
@@ -605,37 +605,6 @@ throughput of the NVMe (~1500 MB/s) or even the SATA (450 MB/s); however, what
 the FreeNAS offers that the NVMe and the SATA don't is redundancy: a disk
 failure on the FreeNAS is not a calamitous event.
 
-<a id="azure"><sup>[Azure]</sup></a>
-
-The [Azure
-website](https://azure.microsoft.com/en-us/pricing/details/managed-disks/) notes
-that the Standard Managed Disks "use Hard Disk Drive (HDD) based Storage media"
-and should only be used by apps that are "less sensitive to performance
-variability"; whereas Premium Managed Disks "high performance Solid State Drive
-(SSD) based" and "support I/O intensive workloads with significantly high
-throughput".
-
-However, those differences were not borne out in the tests. For a given disk
-size, the two types performed identically. Caution: this identical-performance
-effect may be localized to the Azure Singapore datacenter, where the test was
-run.
-
-Given that the Premium Disks cost ~3× a Standard Disk of the same size, it may be cost-effective to deploy with Azure Standard Disks.
-
-Azure allocates increased performance with disk size for its Premium Managed
-Disks (<https://azure.microsoft.com/en-us/pricing/details/managed-disks/>) — in
-other words, Azure specifies a 32 GiB disk will get you 120 IOPS and 25 MB/s
-throughput, and a 256 GiB disk will get you 1,100 IOPS and 125 MB/s throughput.
-
-We took that into account — we benchmarked the Azure Premium Managed Disk with a
-sizes of both 20 GiB (the standard for our benchmark) and 256 GiB, with the
-understanding the results for Azure Premium are inherently flawed — we could
-have made the results better by benchmarking an even-bigger disk, or worse with
-a smaller.
-
-Why 256 GiB? It was big enough to demonstrate Azure's Premium's superiority
-to Azure Standard, but not too big to be uncommon.
-
 <a id="samsung"><sup>[Samsung]</sup></a>
 The [Samsung SSD 960 2TB M.2 2280
 PRO](http://www.samsung.com/semiconductor/minisite/ssd/product/consumer/ssd960/)
@@ -709,3 +678,11 @@ Shrunk the presented size of several images — they took up almost the entire
 page!
 
 Fixed the Azure VM type (included the "s").
+
+*2018-04-02*
+
+Switched the order of the columns of the chart at the top (IOPS, write, read →
+IOPS, read, write) to match the remainder of the post.
+
+Removed the _Azure_ footnote — nothing was referring to it, and it had no
+information that wasn't already mentioned elsewhere in the post.
