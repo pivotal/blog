@@ -283,7 +283,7 @@ CPPCMS_VERSION=1.0.5
 TARBALL="${BUILDPACKS_DIR}/vendor/${CF_STACK}/cppcms-${CPPCMS_VERSION}-linux-x64.tgz"
 if [[ ! -f $TARBALL ]] ; then
   ls ${BUILDPACKS_DIR}/vendor/${CF_STACK}
-  error "could not find a cppcms libary for the '${CF_STACK}' stack."
+  error "could not find a cppcms library for the '${CF_STACK}' stack."
 fi
 mkdir -p cppcms
 tar -m --directory cppcms -zxf $TARBALL
@@ -438,4 +438,3 @@ I'd also love to hear your thoughts on whether there are better ways
 to configure the app at startup time.
 
 Go Forth and Prosper with C++!
-

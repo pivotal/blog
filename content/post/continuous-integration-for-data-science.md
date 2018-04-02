@@ -133,7 +133,7 @@ In Concourse, this can be easily achieved. We just need to `get` the two differe
         args: ["Integrate and run tests here."]
 ~~~
 
-A typical integration could be that having embedded the machine learning feature into the application, a set of tests is automatically run to test the behavior of the user interface with the ML feature e.g. Apple has this QuickType predictive text feature which suggests the next words given a certain word before. In the integration part, we could test if the output of the suggestion bar is given as expected (see Figure 8). There are many other examples how we could test the intergration part but you should understand the concept through this simple example though.
+A typical integration could be that having embedded the machine learning feature into the application, a set of tests is automatically run to test the behavior of the user interface with the ML feature e.g. Apple has this QuickType predictive text feature which suggests the next words given a certain word before. In the integration part, we could test if the output of the suggestion bar is given as expected (see Figure 8). There are many other examples how we could test the integration part but you should understand the concept through this simple example though.
 
 {{< responsive-figure src="/images/continuous-integration-for-data-science/apple-quick-type.jpeg" class="center" >}}
 <p align="center">
@@ -158,4 +158,3 @@ If you want to learn more:
 * [What can data scientists learn from DevOps?](http://redmonk.com/dberkholz/2012/11/06/what-can-data-scientists-learn-from-devops/)
 * [8 Pro Tips for Using Concourse CI with Cloud Foundry](https://blog.altoros.com/concourse-ci-architecture-features-and-usage.html)
 * [Concourse CI](https://concourse.ci/)
-

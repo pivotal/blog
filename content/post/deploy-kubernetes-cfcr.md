@@ -40,7 +40,7 @@ That's a long list of stuff that operators have to worry about and CFCR is our s
 
 _If you already understand BOSH you can skip to the next section on CFCR architecture._
 
-BOSH is a toolchain that help teams operate complex software. By deploying software with BOSH, your services will have multi-IaaS support, it'll be highly availble, self healing in the face of infrastructure failures, and easy to scale.
+BOSH is a toolchain that help teams operate complex software. By deploying software with BOSH, your services will have multi-IaaS support, it'll be highly available, self healing in the face of infrastructure failures, and easy to scale.
 
 BOSH was designed with these features so it can deploy complex platforms like Cloud Foundry and now Kubernetes. Like Kubernetes, BOSH is made up of several components. In fact, if you understand the components of Kubernetes, you can often find direct analogues in BOSH.
 
@@ -48,7 +48,7 @@ Here're a quick look at the key [components of BOSH](https://bosh.io/docs/bosh-c
 
 {{< responsive-figure src="/images/bosh-architecture.png" alt="BOSH architecture diagram" class="center" >}}
 
-* Director (similiar the Kubernetes API server) - receives commands from the user and creates tasks to be run. It reconciles the current state of the system and the expected state.
+* Director (similar the Kubernetes API server) - receives commands from the user and creates tasks to be run. It reconciles the current state of the system and the expected state.
 * VMs - where BOSH will install software.
 * Agent (a process running on each VM) - think of it like a kubelet, agents take orders from the director, checks with Monit to make sure processes on the VM are alive, and communicates with the health monitor.
 * Health Monitor - monitors the health of VMs and notifies the director if a VM dies
@@ -58,7 +58,7 @@ Here're a quick look at the key [components of BOSH](https://bosh.io/docs/bosh-c
 
 ### BOSH Release
 
-While BOSH has many similarities with Kubernetes, the way they package software is different. You can think of packaged software in the BOSH world as tarballs called *releases*. Releases contain the libraries, source code, binaries, scripts, and configuration templates needed to deploy a system of software. 
+While BOSH has many similarities with Kubernetes, the way they package software is different. You can think of packaged software in the BOSH world as tarballs called *releases*. Releases contain the libraries, source code, binaries, scripts, and configuration templates needed to deploy a system of software.
 
 In case the case of the [CFCR BOSH release](https://github.com/cloudfoundry-incubator/kubo-release), the packages in the tarball include Golang, CNI, flanneld, among others. The binaries include api-server, kubeproxy, kubelet, among others. The release also include configuration templates to configure these components. The whole thing is packaged together into a tarball, and the software vendor can then distribute this tarball however they like.
 
@@ -305,7 +305,7 @@ $ kubectl --kubeconfig=./kubeconfig get svc --all-namespaces
 
 CFCR takes advantage of the many years of experience BOSH has in deploying complex distributed software and applies it to Kubernetes. The operator can sleep better at night using a tool that's built with reliability, security, and scaling in mind.
 
-Kubernetes is probably not the only complex sofware your operation has to support. By using CFCR a scrappy team can add a powerful platform to their stack while remaining agile, freeing up resources to focus on executing better.
+Kubernetes is probably not the only complex software your operation has to support. By using CFCR a scrappy team can add a powerful platform to their stack while remaining agile, freeing up resources to focus on executing better.
 
 ### Up next
 

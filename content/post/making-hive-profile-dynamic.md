@@ -16,7 +16,7 @@ title: Making Hive profile dynamic
 # Introduction
 ## Two ways of accesing unmanaged data using PXF
 ### Generally speaking there are two ways of accessing Hive tables using PXF:
- * Create HAWQ external table using "pxf" protocol and certain profile(or fragmenter, accessor, resolver) 
+ * Create HAWQ external table using "pxf" protocol and certain profile(or fragmenter, accessor, resolver)
   * User has to know underlying Hive table's metadata
   * In case when table is heterogeneous(has multiple partitions with different storage formats) user has to use ultimate and generic "Hive" profile, which obviously not optimized for particular storage format
  * Use HCatalog integration
@@ -33,7 +33,7 @@ title: Making Hive profile dynamic
 2. It's unable to query Hive tables directly(without creation of extarnal HAWQ table) and use efficient profile(i.e. HiveORC).
 
 # Solution
-Therefore it was obvoius to come up with solution, which could leverage existing heritage, be more fine-grained when reading data. Following Apache issues cover scope - https://issues.apache.org/jira/browse/HAWQ-1177, https://issues.apache.org/jira/browse/HAWQ-1228 of PXF using optimal profile based on table's format(s). 
+Therefore it was obvious to come up with solution, which could leverage existing heritage, be more fine-grained when reading data. Following Apache issues cover scope - https://issues.apache.org/jira/browse/HAWQ-1177, https://issues.apache.org/jira/browse/HAWQ-1228 of PXF using optimal profile based on table's format(s).
 ### Briefly describing changes were made:
 * All text Hive profiles(HiveText, HiveRC) now could supply data to HAWQ in two formats: TEXT and GPDBWritable.
 * Metadata PXF API now has additional format-related information(i.e. delimiter etc) needed for deserialization.
@@ -45,16 +45,16 @@ Therefore it was obvoius to come up with solution, which could leverage existing
 ```
 hive> desc reg_heterogen;
 OK
-t0                  	string              	                    
-t1                  	string              	                    
-num1                	int                 	                    
-d1                  	double              	                    
-fmt                 	string              	                    
-	 	 
-# Partition Information	 	 
-# col_name            	data_type           	comment             
-	 	 
-fmt                 	string              	                    
+t0                  	string
+t1                  	string
+num1                	int
+d1                  	double
+fmt                 	string
+
+# Partition Information
+# col_name            	data_type           	comment
+
+fmt                 	string
 Time taken: 0.06 seconds, Fetched: 10 row(s)
 hive> show partitions reg_heterogen;
 OK
@@ -62,14 +62,14 @@ fmt=orc
 fmt=rc
 fmt=seq
 fmt=txt
-Time taken: 0.117 seconds, Fetched: 4 row(s) 
+Time taken: 0.117 seconds, Fetched: 4 row(s)
 ```
 
 As it was mentioned before, there are two ways accessing data, we can start from more convenient for user.
 Thus we just have to know table name:
 ```
 pxfautomation=# SELECT * FROM hcatalog.default.reg_heterogen;
-  t0   |  t1  | num1 | d1 | fmt 
+  t0   |  t1  | num1 | d1 | fmt
 -------+------+------+----+-----
  row1  | s_6  |    1 |  6 | orc
  row2  | s_7  |    2 |  7 | orc
@@ -83,7 +83,7 @@ pxfautomation=# SELECT * FROM hcatalog.default.reg_heterogen;
 ```
 
 What happens under the hood:
-{{< responsive-figure src="/images/making-hive-profile-dynamic/HAWQ-to-PXF-http.png" alt="HTTP comminication between HAWQ and PXF" >}}
+{{< responsive-figure src="/images/making-hive-profile-dynamic/HAWQ-to-PXF-http.png" alt="HTTP communication between HAWQ and PXF" >}}
 As we can see, when user issues HCatalog query, one Metadata, two Fragments and four Bridge calls(one Bridge call per each fragment) being sent from HAWQ to PXF.
 
 
