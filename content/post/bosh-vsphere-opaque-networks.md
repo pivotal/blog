@@ -198,6 +198,6 @@ computers.]
 The short answer is no, opaque networks do not require a multi-homed BOSH
 director.  The reason we're deploying a multi-homed director is a side-effect
 of the manner in which the opaque network was created for our environment: it
-was created without routable IP addressess and without a router. Had it been
+was created without routable IP addresses and without a router. Had it been
 created with routable IP addresses and had a default gateway attached, a
 multi-homed director would not have been necessary.

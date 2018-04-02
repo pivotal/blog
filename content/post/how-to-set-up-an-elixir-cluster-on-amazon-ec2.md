@@ -12,8 +12,8 @@ categories:
 date: 2016-09-06T11:57:56+08:00
 draft: false
 short: |
-  Learn how to set up an Elixir cluster and how to deploy a Phoenix application on Amazon EC2. The techniques outlined in this article can equally apply to other providers such as Digital Ocean and Linode. 
-  
+  Learn how to set up an Elixir cluster and how to deploy a Phoenix application on Amazon EC2. The techniques outlined in this article can equally apply to other providers such as Digital Ocean and Linode.
+
 title: How to Set up a Distributed Elixir Cluster on Amazon EC2
 ---
 
@@ -44,7 +44,7 @@ You are going to need the following installed:
 On each of the instances, you will need the following:
 
 * Ubuntu 14.04 box. (You could use another distribution, but you would have to adapt the commands as we go along.)
-* HA-Proxy 1.4.X should be installed on the server that the domain name is pointing to. 
+* HA-Proxy 1.4.X should be installed on the server that the domain name is pointing to.
 * Git
 * Elixir
 
@@ -52,7 +52,7 @@ This article assumes little Elixir and/or Phoenix knowledge. In fact, you can re
 
 ## Introduction to Distribution in Elixir
 
-Some background to distributed Elixir is in order. When you run `iex`, or _interactive Elixir_, you are running a REPL (read eval print loop) in a single Erlang runtime. So opening more `iex` sessions mean that you are running each session in a separate runtime. By default, each of the runtimes cannot see nor talk to each other. You can run start each runtime in distributed-mode and the connect to other nodes. When a node joins another node, a cluster is formed. When a node succesfully connects to another node, that node becomes a member of the cluster. In other words, when Node E succesfully connects to Node A, it is automatically connected to Nodes A thru D: 
+Some background to distributed Elixir is in order. When you run `iex`, or _interactive Elixir_, you are running a REPL (read eval print loop) in a single Erlang runtime. So opening more `iex` sessions mean that you are running each session in a separate runtime. By default, each of the runtimes cannot see nor talk to each other. You can run start each runtime in distributed-mode and the connect to other nodes. When a node joins another node, a cluster is formed. When a node successfully connects to another node, that node becomes a member of the cluster. In other words, when Node E successfully connects to Node A, it is automatically connected to Nodes A thru D:
 
 <img src="http://i.imgur.com/kyD5kBZ.png" width="100%" />
 
@@ -144,7 +144,7 @@ iex(barry@frankel)> :rpc.multicall(:inets, :start, [])
 {[:ok, :ok, :ok], []}
 ```
 
-Here's something that might not be immediately apparent. Even though the computation is performed on each individual node, the results are collected and presented on the _calling node_. In other words, when I make a HTTP request on `barry`, `barry` will get all the results. If you look at `maurice` and `robin`, you will _not_ see any output. 
+Here's something that might not be immediately apparent. Even though the computation is performed on each individual node, the results are collected and presented on the _calling node_. In other words, when I make a HTTP request on `barry`, `barry` will get all the results. If you look at `maurice` and `robin`, you will _not_ see any output.
 
 Let's see this for real:
 
@@ -157,20 +157,20 @@ Here's an example output:
 ```
 {[ok: {{'HTTP/1.1', 200, 'OK'},
    [...
-   '{ "type": "success", 
-      "value": { "id": 297, 
+   '{ "type": "success",
+      "value": { "id": 297,
                "joke": "Noah was the only man notified before Chuck Norris relieved himself in the Atlantic Ocean.", "categories": [] } }'},
   ok: {{'HTTP/1.1', 200, 'OK'},
    [...,
-   '{ "type": "success", 
-      "value": { "id": 23, 
+   '{ "type": "success",
+      "value": { "id": 23,
                "joke": "Time waits for no man. Unless that man is Chuck Norris.", "categories": [] } }'},
   ok: {{'HTTP/1.1', 200, 'OK'},
    [...,
-   '{ "type": "success", 
-      "value": { "id": 69, 
+   '{ "type": "success",
+      "value": { "id": 69,
                "joke": "Scientists have estimated that the energy given off during the Big Bang is roughly equal to 1CNRhK (Chuck Norris Roundhouse Kick).", "categories": ["nerdy"] } }'}],
- []} 
+ []}
 ```
 
 Sweet! Now you know how to manually set up a cluster on a single host.
@@ -233,10 +233,10 @@ defmodule YourApp.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:edeliver, "~> 1.4.0"}, # <--- 
+     {:edeliver, "~> 1.4.0"}, # <---
      {:exrm, "~> 1.0.3"}]     # <---
   end
-end 
+end
 ```
 
 Once you get the dependencies included, remember to install the dependencies:
@@ -287,7 +287,7 @@ SG="ec2-1.2.3.4.compute.amazonaws.com"
 US="ec2-3.4.5.6.compute.amazonaws.com"
 UK="ec2-5.7.8.9.compute.amazonaws.com"
 
-# 3. Specify a user 
+# 3. Specify a user
 
 USER="ubuntu"
 
@@ -302,7 +302,7 @@ BUILD_AT="/tmp/edeliver/$APP/builds"
 # STAGING_HOSTS=$SG
 # STAGING_USER=$USER
 # DELIVER_TO="/home/ubuntu"
- 
+
 #6. Specify which host(s) the app is going to be deployed to
 
 PRODUCTION_HOSTS="$SG $US $UK"
@@ -323,15 +323,15 @@ pre_erlang_get_and_update_deps() {
       ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
 
       cd '$BUILD_AT'
-      
+
       mkdir -p priv/static
-      
+
       mix deps.get
 
       npm install
-      
+
       brunch build --production
-      
+
       APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
     "
   fi
@@ -350,7 +350,7 @@ Here I have named the servers based on their geographical location. You can pick
 
 <img src="http://i.imgur.com/bsfg9wz.png" width="100%" />
 
-### 3. Specify a user 
+### 3. Specify a user
 
 This is the user that has SSH and folder access on each of the previously declared servers. Note that all the servers should have the same user name.
 
@@ -425,7 +425,7 @@ We'll cover the `your_app.config` file next. As with `vm.args`, we need to creat
 ```erlang
 [{kernel,
   [
-    {sync_nodes_optional, ['us@ec2-3.4.5.6.compute.amazonaws.com', 
+    {sync_nodes_optional, ['us@ec2-3.4.5.6.compute.amazonaws.com',
                            'uk@ec2-5.7.8.9.compute.amazonaws.com']},
     {sync_nodes_timeout, 30000}
   ]}
@@ -437,19 +437,19 @@ We'll cover the `your_app.config` file next. As with `vm.args`, we need to creat
 ```erlang
 [{kernel,
   [
-    {sync_nodes_optional, ['sg@ec2-1.2.3.4.compute.amazonaws.com', 
+    {sync_nodes_optional, ['sg@ec2-1.2.3.4.compute.amazonaws.com',
                            'uk@ec2-5.7.8.9.compute.amazonaws.com']},
     {sync_nodes_timeout, 30000}
   ]}
 ].
 ```
 
-#### UK 
+#### UK
 
 ```erlang
 [{kernel,
   [
-    {sync_nodes_optional, ['sg@ec2-1.2.3.4.compute.amazonaws.com', 
+    {sync_nodes_optional, ['sg@ec2-1.2.3.4.compute.amazonaws.com',
                            'us@ec2-3.4.5.6.compute.amazonaws.com']},
     {sync_nodes_timeout, 30000}
   ]}
@@ -482,7 +482,7 @@ The only thing that you need to configure for Amazon EC2 is which ports are open
 Ports for:
 
 * Phoenix: `8080`
-* Erlang Port Mapper Daemon (epmd): `4369` 
+* Erlang Port Mapper Daemon (epmd): `4369`
 * Distributed communication: `9100-9155`
 
 You might recall that port `8080` was configured previous in `config/prod.exs`, while the port range of `9100-9155` was specified in `vm.args`. Here's an example:
@@ -502,7 +502,7 @@ Now we configure HA Proxy. Assuming you have it installed, open/create the follo
 ```
 
 The file will look something like this:
- 
+
 ```
 global
     log 127.0.0.1 local0 notice
@@ -594,5 +594,3 @@ Getting the nodes to communicate with each other in Elixir is not that hard at a
 ## Acknowledgments
 
 Thanks to Pivotal for letting me work on this. Mike Mazur, Gabe Hollombe, and Alan Yeo for proof-reading this and giving lots of constructive feedback. And thank you for taking the time to read this!
-
-

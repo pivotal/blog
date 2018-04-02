@@ -49,7 +49,7 @@ Team discussions can take place on the communication platforms mentioned above, 
 {{< figure src="/images/distributed_pairing/teamspeak.png" class="center" >}}
 
 
-We use the [TeamSpeak BOSH release](https://github.com/pivotal-cf-experimental/teamspeak-bosh-release) to deploy a teamspeak server. Using [BOSH](http://bosh.io/) to deploy software allows us to not worry about services failing or the vm dissapearing as BOSH will monitor your vm's health for you, and fix it or recreate it when needed. If you're interested in learning more about BOSH and its capabilities, I strongly recommend you read the document ["What Problems does BOSH solve?"](http://bosh.io/docs/problems.html).
+We use the [TeamSpeak BOSH release](https://github.com/pivotal-cf-experimental/teamspeak-bosh-release) to deploy a teamspeak server. Using [BOSH](http://bosh.io/) to deploy software allows us to not worry about services failing or the vm disappearing as BOSH will monitor your vm's health for you, and fix it or recreate it when needed. If you're interested in learning more about BOSH and its capabilities, I strongly recommend you read the document ["What Problems does BOSH solve?"](http://bosh.io/docs/problems.html).
 
 ## Working with other teams
 

@@ -36,7 +36,7 @@ Gather Motion
                 Filter: id = 1 OR id = 2 OR id = 3
 ```
 
-So there's at least one good optimization here, but unfortunately there's a couple of ugly things as well. Can you spot them? 
+So there's at least one good optimization here, but unfortunately there's a couple of ugly things as well. Can you spot them?
 
 One thing you'll notice is that there is a constraint on `bar` which wasn't present in the original query. This is because of a trick known as *constraint propagation*. Constraint propagation is a technique which helps speed up execution time of a query. Note that the attributes `foo.id` and `bar.id` are equivalent, and therefore ORCA knows that any condition on `foo.id` must also be true for `bar.id`. A smart optimizer will derive these conditions, generating a plan with as many conditions on attributes as possible. This reduces the amount of data that must be copied and moved around in the executor, generating faster queries. Constraint propagation is one of the good things going on in this query plan.
 
@@ -44,7 +44,7 @@ Going back to the condition on `bar`, there is something strange going on. Inste
 
 ## Issues with Arrays
 
-Going back to the join example we see that `id = ANY {1,2,3} AND (id = 1 OR id = 2 OR id = 3)` is redundant. It's logically correct and therefore returns correct results, but it is wordy, like some kind of cancerous outgrowth. We want succinct, clean expressions. This blemish is one of the rough edges of ORCA. What was actually happening there was the constraint propagated first from `foo` to `bar` and then back from `bar` to `foo`. Since ORCA didn't understand logical equivilence between arrays and OR statements, it appended it as a new constraint. Not wrong, just ugly.
+Going back to the join example we see that `id = ANY {1,2,3} AND (id = 1 OR id = 2 OR id = 3)` is redundant. It's logically correct and therefore returns correct results, but it is wordy, like some kind of cancerous outgrowth. We want succinct, clean expressions. This blemish is one of the rough edges of ORCA. What was actually happening there was the constraint propagated first from `foo` to `bar` and then back from `bar` to `foo`. Since ORCA didn't understand logical equivalence between arrays and OR statements, it appended it as a new constraint. Not wrong, just ugly.
 
 In fact, the real problem is not with the unsightliness of the expression, but in what happens when the `IN` array becomes large. When a query as simple as `SELECT * FROM foo, bar WHERE foo.id = bar.id AND foo.id IN (1,2, [...], 100 )` has 100 elements, the internal representation and manipulation of a 100 element OR/Equality expression became a major performance and memory bottleneck. Some customers commonly run queries with hundreds of elements in an IN list and were experiencing hangups. When we investigated this query, it took over a minute to optimize on one of our development machines, and larger IN lists would crash the optimizer. Intrigued, we performed a trace of large array case using Apple's Instrumentation Tools. Performance tools gave us a simple GUI overlay of the code and relative amount of time take for each preprocessing stage, and then a time breakdown of the longest running calls of each preprocessing stage.
 
@@ -144,4 +144,3 @@ In comparison to adding the knob to control the expansion of arrays, this fix to
 ## Key Takeaways
 
 The original method of handling arrays in ORCA was convenient because it could leverage logical equivalence to reuse existing code, however it was painfully slow when the input grew reasonably large. Our fix took advantage of the fact that optimizations are optional, so we could disable troublesome ones while working on a permanent fix. Even though both versions of handling array optimization produce logically equivalent plans, one has remarkably better performance as it takes into account ORCA's architecture.
-

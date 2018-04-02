@@ -269,7 +269,7 @@ a very light wrapper)
 Google-chrome can manually be run with the `google-chrome` command. Helpful tips:
 
 - `curl -XPOST http://127.0.0.1:9515/session -d '{"desiredCapabilities": {}}'` to create your own session - this is
-analagous to Agouti's `NewPage`. When run after a `chromedriver --verbose`, it will give you a bunch of useful info.
+analogous to Agouti's `NewPage`. When run after a `chromedriver --verbose`, it will give you a bunch of useful info.
 - Each `curl -XPOST http://127.0.0.1:9515/session -d '{"desiredCapabilities": {}}'` starts a `google-chrome` process. Each
 of these processes is a page!
 - Change how the `google-chrome` process is spun up by adding [capabilities](https://sites.google.com/a/chromium.org/chromedriver/capabilities).
@@ -341,4 +341,3 @@ Xlib:  extension "RANDR" missing on display ":99".
 ```
 
 [You can ignore this error.](http://askubuntu.com/questions/754382/how-do-i-start-chromium-browser-in-headless-mode-extension-randr-missing-on-d)
-

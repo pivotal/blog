@@ -3,8 +3,8 @@ title: Using Postgres to analyze ride data
 
 short: |
   Postgres provides some fantastic functionality to help out with basic data analysis. This article will show you how to generate leaderboards and find streaks in raw sql data.
-  
-authors: 
+
+authors:
 - joseph
 
 categories:
@@ -16,7 +16,7 @@ date: 2016-04-28T20:54:48-06:00
 draft: false
 ---
 
-Many web applications show some sort of data analysis based on the state of the database. These analyses are sometimes used for dashboards, to power charts, graphs, and tables, or in more advanced cases to determine decisions that the application will make (smart apps). 
+Many web applications show some sort of data analysis based on the state of the database. These analyses are sometimes used for dashboards, to power charts, graphs, and tables, or in more advanced cases to determine decisions that the application will make (smart apps).
 
 Far too often application developers query the database for the raw data and perform aggregates and other basic analysis in the programming language of choice (aka our "comfort zone"). This not only wastes valuable CPU cycles (especially for larger data sets), but introduces more opportunities for bugs.
 
@@ -41,7 +41,7 @@ CREATE TABLE ride (
 );
 ```
 
-This gives us two relations that we'll base all of our exercises off of. The `trail` table is quite straight forward with just a name and id (primary key). The `ride` table is used to store records that represent a person (user_id) completing a ride on a given trail (trail_id). We also know how long the user took to complete the ride given the start and end timestamps. 
+This gives us two relations that we'll base all of our exercises off of. The `trail` table is quite straight forward with just a name and id (primary key). The `ride` table is used to store records that represent a person (user_id) completing a ride on a given trail (trail_id). We also know how long the user took to complete the ride given the start and end timestamps.
 
 
 ## Generating a dataset
@@ -71,13 +71,13 @@ Then we update each ride, setting the completed_at (which we didn't set during t
 
 Let's kick things off by finding out how many times each trail has been ridden each month. Let's aim for our result set to look like this:
 
- id       | trail_name   | month        | count  
+ id       | trail_name   | month        | count
 ----------|--------------|--------------|-------
- 4        | Picture Rock | Jan 2014     | 127           
- 2        | Betasso      | Mar 2014     | 126           
- 3        | Walker Ranch | Aug 2015     | 124           
- 2        | Betasso      | Mar 2015     | 123           
- ...      |              |              |               
+ 4        | Picture Rock | Jan 2014     | 127
+ 2        | Betasso      | Mar 2014     | 126
+ 3        | Walker Ranch | Aug 2015     | 124
+ 2        | Betasso      | Mar 2015     | 123
+ ...      |              |              |
 
 We can see that information from both of our tables (trail and ride) will be needed here, so we'll probably need a join. Also the times_ridden column show the `count` over the month and trail, so we'll need to group by both of those. We can use `date_trunc()` on the ride.started_at to remove the day and time information, followed by `to_char()` to format the month and year to be human readable.
 
@@ -93,10 +93,10 @@ GROUP BY 1, 2, 3
 ORDER BY 4 DESC;
 ```
 
-And that should do it! Notice we need to group by both the trail_id (or trail.id) and the trail.name. Once `GROUP BY` is used in conjuction with our aggregate function (count), everything else that we want to select needs to be squashed or collapsed.
+And that should do it! Notice we need to group by both the trail_id (or trail.id) and the trail.name. Once `GROUP BY` is used in conjunction with our aggregate function (count), everything else that we want to select needs to be squashed or collapsed.
 
 Also notice the ordinal reference used in both `GROUP BY` and `ORDER BY`. This is purely for convenience, but be careful: if you reorder your selects and forget to change your ordinal references, it's game over.
- 
+
 ## Filling in the gaps
 
 There is a subtle issue with the previous query. If a trail wasn't ridden during any month the result will not include a row at all. It would be much nicer to include the row with a 0 value for times_ridden. One solution is to approach the query from the `months` perspective: first let's generate a set of all months that we would like to consider, then we can join from there to our previous query:
@@ -127,7 +127,7 @@ GROUP BY 1, 2, 3
 ORDER BY 4;
 ```
 
-Whoa! A couple of new concepts here. If you haven't seen [common table expressions](http://www.postgresql.org/docs/9.5/static/queries-with.html) (more commonly refered to as "with queries") before, this query will look a strange. CTEs allow us to store a temporary relation by name (ride_range) and then use that relation in a subsequent query. Keep in mind you could always use a subquery in place, but CTEs greatly improve code readability as they allow you to think through problems sequentially. This tool can be very powerful; we can now solve some tough problems by breaking it down step by step, massaging the data along the way. 
+Whoa! A couple of new concepts here. If you haven't seen [common table expressions](http://www.postgresql.org/docs/9.5/static/queries-with.html) (more commonly referred to as "with queries") before, this query will look a strange. CTEs allow us to store a temporary relation by name (ride_range) and then use that relation in a subsequent query. Keep in mind you could always use a subquery in place, but CTEs greatly improve code readability as they allow you to think through problems sequentially. This tool can be very powerful; we can now solve some tough problems by breaking it down step by step, massaging the data along the way.
 
 Additionally, you should recognize the generate_series function from earlier. In addition to integers `generate_series()` can also be used with timestamps and an interval (1 month). This gives us the full set of months between the 2 dates.
 
@@ -138,19 +138,19 @@ The final query should look pretty similar. It's nearly identical to the previou
 
 Now let's see who the top 3 fastest riders are for each trail:
 
- id       | user_id | ride_time | rank  
-----------|---------|-----------|------ 
- 1        | 10      | 01:00:01  | 1     
- 1        | 8       | 01:00:19  | 2     
- 1        | 6       | 01:00:27  | 3     
- 2        | 1       | 01:00:02  | 1     
- 2        | 8       | 01:00:06  | 2     
+ id       | user_id | ride_time | rank
+----------|---------|-----------|------
+ 1        | 10      | 01:00:01  | 1
+ 1        | 8       | 01:00:19  | 2
+ 1        | 6       | 01:00:27  | 3
+ 2        | 1       | 01:00:02  | 1
+ 2        | 8       | 01:00:06  | 2
  ...      |         |           |
 
 We can accomplish this with 2 new tools:
 
 ### Window functions
-While tremendously powerful, window functions are one of the less understood features of SQL. They allow you to perform aggregate like functions over a set of rows, but they do not force you to squash or collapse those rows into one. We can use this feature to assign an ordered rank by "partitioning" the data into buckets (one bucket per trail). 
+While tremendously powerful, window functions are one of the less understood features of SQL. They allow you to perform aggregate like functions over a set of rows, but they do not force you to squash or collapse those rows into one. We can use this feature to assign an ordered rank by "partitioning" the data into buckets (one bucket per trail).
 
 ### DISTINCT ON
 While `DISTINCT` lets you find a unique set of values, `DISTINCT ON` works a bit differently. It will help to find a distinct row in a grouping while maintaining identity, unlike GROUP BY. Since our leaderboard shouldn't show the same user more than once, even if they have the three fastest times, DISTINCT ON will be our friend.
@@ -187,16 +187,16 @@ The all_ranks CTE is where things get a bit more interesting. As previously ment
 
 * * *
 ## Finding streaks with subtraction
- 
+
 What if we wanted to find out the longest consecutive number of days each trail has been ridden? Let's aim for the following result:
- 
- id       | trail_name    | streak  
-----------|---------------|-------- 
- 3        | Walker Ranch  | 128     
- 4        | Picture Rock  | 78      
- 2        | Betasso       | 75      
- 5        | Hall Ranch    | 32      
- 1        | Dirty Bismark | 21      
+
+ id       | trail_name    | streak
+----------|---------------|--------
+ 3        | Walker Ranch  | 128
+ 4        | Picture Rock  | 78
+ 2        | Betasso       | 75
+ 5        | Hall Ranch    | 32
+ 1        | Dirty Bismark | 21
 
 This shows us that Walker Ranch trail has the longest streak at 128 consecutive days ridden (by all users), while the Dirty Bismark trail has the shortest streak at 21 days.
 
@@ -221,7 +221,7 @@ WITH trail_day_ridden AS (
     GROUP BY 1, 2
 )
 SELECT
-  trail_id, 
+  trail_id,
   day,
   day - now() :: DATE -
   row_number()
@@ -234,13 +234,13 @@ FROM trail_day_ridden
 
 This is very cool! Consecutive days get the same `grouping`:
 
- trail_id | day        | grouping  
-----------|------------|---------- 
- 1        | 2014-02-21 | -812      
- 1        | 2014-02-23 | -811      
- 1        | 2014-02-24 | -811      
- 1        | 2014-02-25 | -811      
- 1        | 2014-02-28 | -809      
+ trail_id | day        | grouping
+----------|------------|----------
+ 1        | 2014-02-21 | -812
+ 1        | 2014-02-23 | -811
+ 1        | 2014-02-24 | -811
+ 1        | 2014-02-25 | -811
+ 1        | 2014-02-28 | -809
 
 ### Putting it all together
 
@@ -256,7 +256,7 @@ WITH trail_day_ridden AS (
 )
   , consecutive_groups AS (
     SELECT
-      trail_id, 
+      trail_id,
       day,
       day - now() :: DATE -
       row_number()
@@ -286,9 +286,9 @@ And finally we select the `max()` streak only (per trail_id) and voila!
 
 Credit goes out to Erwin Brandstetter on this [stackoverflow answer](http://stackoverflow.com/questions/28227371/how-to-add-a-running-count-to-rows-in-a-streak-of-consecutive-days). Thanks Erwin!
 
-* * * 
+* * *
 ## Closing Thoughts
- 
+
 After learning some of the tools like DISTINCT ON, CTEs, and window functions, you will feel much more comfortable using SQL to manipulate medium to large datasets. While SQL and relational databases aren't necessarily the right tool for "big data" or advanced analysis, they do serve most business applications quite well for most use cases and reporting needs.
 
 I hope that next time you feel the need to pull raw data back from the database and perform some type of manipulation in your comfort zone, you'll first try and do it in a faster, simpler, and less bug prone sql query!

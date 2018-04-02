@@ -1,5 +1,5 @@
 ---
-authors: 
+authors:
 - kai
 categories:
 - BOSH
@@ -37,7 +37,7 @@ Here is how we roll it:
 * Deploy a second BOSH cluster with the first BOSH.
 
 Note: We put the nats job into another vm, in order to be able to scale it separately,
-This is not recommended, we assume we will see the CPU contention but it doesn't happend,
+This is not recommended, we assume we will see the CPU contention but it doesn't happened,
 it bring extra complexity without significant benefit, more points of failure in the control plane.
 
 A deployment manifest snippet as below:
@@ -62,7 +62,7 @@ jobs:
     password: <REPLACE WITH NATS PASSWORD>
     address: 10.0.0.8
     port: 4222
- 
+
 - name: bosh
   templates:
   - name: redis
@@ -90,7 +90,7 @@ jobs:
     - <REPLACE WITH IPs>
 ```
 
-* Create a deployment manifest for [dummy BOSH release](https://github.com/pivotal-cf-experimental/dummy-boshrelease), create a dummy BOSH release and upload to the second BOSH director. 
+* Create a deployment manifest for [dummy BOSH release](https://github.com/pivotal-cf-experimental/dummy-boshrelease), create a dummy BOSH release and upload to the second BOSH director.
 * BOSH deploy, 2000 vms get created and deployed.
 * Make some changes to dummy release, create a new version of dummy release and do BOSH deploy again, 2000 vms get updated with the new code.
 
@@ -102,7 +102,7 @@ First issue we found is AWS doesn't offer us 2000 instances in one AZ(availabili
 
 This one is easily overcome by creating 2 resource pools in BOSH manifest, each resource pool utilize one AZ. Then BOSH will automatically figure out how to place the vms into 2 AZ separately.
 
-Another difficulty we found in the deploy is it will takes a lot of time if we can only update one vm at a time. Luckily, BOSH has a max_in_flight option which can specify how many vms to update concurrently. 
+Another difficulty we found in the deploy is it will takes a lot of time if we can only update one vm at a time. Luckily, BOSH has a max_in_flight option which can specify how many vms to update concurrently.
 
 But we would like to push it higher see how fast we can go, we found another hard limitation in BOSH which most people don't know, which is the max_threads in [BOSH director configuration](https://github.com/cloudfoundry/bosh/blob/master/release/jobs/director/spec#L73).
 
@@ -112,12 +112,12 @@ So we try increasing that max_threads to 256, (you need target the first BOSH an
 
 Error 100: Request limit exceeded.
 AWS::EC2::Errors::RequestLimitExceeded Request limit exceeded
- 
+
 After talking to Amazon about it, this is a general limitation in AWS EC2 and we can't easily increase it in AWS side.
- 
+
 So we step back a bit to find out what the biggest parameter we can use on AWS, and 50 seems to be what we can do in Max in our account.
 
-(BTW: We also submit some feature request to BOSH so it will retry when the limit exceeded, 
+(BTW: We also submit some feature request to BOSH so it will retry when the limit exceeded,
 and the story is now in the [backlog](https://www.pivotaltracker.com/n/projects/956238/stories/103449734)
 
 This is not an ideal speed but still something acceptable, after this tuning, we managed to deploy 2000 vms in 2 hours, update 2000 vms in next 2 hours and delete the whole deployment in next 1.5 hour.

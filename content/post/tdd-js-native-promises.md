@@ -106,7 +106,7 @@ describe('.fetchCurrentTemperature', function() {
 
 	describe('on successful fetch', function() {
 		beforeEach(function() {
-			// We need to simulate a succesful network response
+			// We need to simulate a successful network response
 		});
 
 		it('resolves its promise with the current temperature', function() {

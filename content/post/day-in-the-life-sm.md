@@ -55,7 +55,7 @@ class, I race home, get ready for work, and pick up a latte on my way.
 
 Everyone gets to the office before 9 AM because we have **catered breakfast**!
 You don’t want to miss out on the
-[omlette or juice bar](https://hbr.org/2017/05/why-my-company-serves-free-breakfast-to-all-employees?mkt_tok=eyJpIjoiTXpZNE0yUmtOamMyTm1OaiIsInQiOiJ6TWtWSENrRncwNVZtZUM3dmdWdFVvTjQ1NVRUa3I3SlY4NlZOd1Z1OU1yQTlkSFBHV0xrVE9pWlFqZ0pQMyswN2NiNEM1eG9ZR1VjSnllSG1YSklTZ1JvR3p4WGZxeFBTbWpXdjd0cUJWRFQrRVgyMHcyejZramtRS1FUWU54QSJ9).
+[omelet or juice bar](https://hbr.org/2017/05/why-my-company-serves-free-breakfast-to-all-employees?mkt_tok=eyJpIjoiTXpZNE0yUmtOamMyTm1OaiIsInQiOiJ6TWtWSENrRncwNVZtZUM3dmdWdFVvTjQ1NVRUa3I3SlY4NlZOd1Z1OU1yQTlkSFBHV0xrVE9pWlFqZ0pQMyswN2NiNEM1eG9ZR1VjSnllSG1YSklTZ1JvR3p4WGZxeFBTbWpXdjd0cUJWRFQrRVgyMHcyejZramtRS1FUWU54QSJ9).
 
 
 
@@ -285,5 +285,3 @@ work on an iOS/Go application just to change it up!
 ## SUPER IMPORTANT NOTE
 
 We have a yoga class in the office on Monday nights!
-
-

@@ -57,7 +57,7 @@ You can go to the official GemFire docs for more information on how GemFire hand
 Cloud Cache for PCF will attempt to be as highly available as possible by using BOSH's resurrection features. BOSH resurrection monitors all the locator and cache server processes running on the Cloud Cache nodes and will apply the solutions listed below if any of the scenarios mentioned below occurs:
 
 * Restart the locator cache server process if the locator or cache server process is not running.
-* Recreate the VM if the VM has dissapeared from the cloud.
+* Recreate the VM if the VM has disappeared from the cloud.
 * Replace the VM if the VM has become unresponsive.
 
 ## What does testing all this look like?

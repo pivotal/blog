@@ -151,7 +151,7 @@ This example reads - in parallel - from 6 different _gpfdist_ daemons, running o
 
 In a typical old-fashion data warehouse, data is loaded from a single ETL host. Using gpfdist, the data source is no longer the bottleneck of the data loading process, but instead now the database itself is under pressure to handle the flow of incoming data.
 
-This can be solved by scaling out the GPDB database, adding more segment hosts and therefore providing more raw disk bandwith to load the data. [Expanding the database](https://gpdb.docs.pivotal.io/43120/admin_guide/expand/expand-main.html) is an one-time operation, and does only require a short downtime to finish the expansion.
+This can be solved by scaling out the GPDB database, adding more segment hosts and therefore providing more raw disk bandwidth to load the data. [Expanding the database](https://gpdb.docs.pivotal.io/43120/admin_guide/expand/expand-main.html) is an one-time operation, and does only require a short downtime to finish the expansion.
 
 
 
@@ -472,7 +472,7 @@ The parameter name is _gp_external_max_segs_:
 
 ```
 SELECT name, setting, category, short_desc FROM pg_settings WHERE name = 'gp_external_max_segs';
-         name         | setting |    category     |                            short_desc                            
+         name         | setting |    category     |                            short_desc
 ----------------------+---------+-----------------+------------------------------------------------------------------
  gp_external_max_segs | 64      | External Tables | Maximum number of segments that connect to a single gpfdist URL.
 (1 row)
