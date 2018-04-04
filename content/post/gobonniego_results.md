@@ -210,6 +210,13 @@ _"[io1 should be used for] Critical business applications that require sustained
 IOPS performance, or more than 10,000 IOPS or 160 MiB/s of throughput per
 volume"_
 
+And io1 is certainly expensive; of our AWS charges for the month during which
+these benchmarks were run, the io1 storage accounted for over half the cost
+(which included the cost of the EC2 instances, network bandwidth, etc.). And
+when one considers that the io1 was configured with a very modest 1k IOPS, it
+becomes apparent how expensive io1 is (we suspect that io1 storage with 10k IOPS
+may radically eclipse other AWS costs for many customers).
+
 The difference between Amazon's "[Previous
 Generation](https://aws.amazon.com/ebs/previous-generation/)" standard storage
 and its gp2 storage is mostly IOPS, for half the price ($0.05/GB-month vs.
@@ -614,13 +621,12 @@ motherboard with a soldered-on 1.7 GHz 8-core [Intel Xeon Processor
 D-1537](https://ark.intel.com/products/91196/Intel-Xeon-Processor-D-1537-12M-Cache-1_70-GHz),
 and 128 GiB RAM.
 
-
 The results of the _CPU-constrained_ bonnie++ v1.97 benchmarks of the Samsung
 960 PRO are viewable
 [here](https://github.com/cunnie/freenas_benchmarks/blob/9ecd5736db87902ee955f096012c39527f778ef5/bonnie%2B%2B_1.97/vsphere_nvme.txt#L4).
 
 {{< responsive-figure
-src="https://lh3.googleusercontent.com/CD6DLntvhwM6T8toGYVJ3spQKrdofD14_pOZ10xyAxrFuRJx_SbMJj1pB9cnV_KQLXRM_w0HVU3JCKwHEaDjKOUILyMbQz7RlPYJosxTJeWJYb4hA7bmIdCBhVs41erlgIC6-DeK_dh4ln6aPzOebhxIwCDOTGVPE_tSJNS17ozPg1a70uBZqA9zpTUXQ6YN3u6LoQ0mWyq4a1uOTSuAd9RiVSVsyRB-ZInN8gESgWLQGyEID2yjQ8shqCHSruf8JOocGqOcq78d-4UYpp0NWvlpnoCuY0aQISttWiV2dxYkEVEyW7Feq_ovfhBSUft7qCO9EpQTRW2gBQnrUDslFb-JUbtG4tP7--tRPyafeHxW8dW5irVL7SA8aAWRtWreaGoTf9QxsHae9chTf29nc1e8RGzXmIUG6tLn9iliFYPblUGpevN-tNc2YuskA6fporufbu4oa5F1V0ISoe29YoR68s0dlN2SDSMG28EREgFaZWXiDIi_GNZ_VSGi5rof6XAyHWuASnyyoJuFLNlqth7Cpx_MlqIG9_9o2v4jfoMgKuWNvnfhsj7bdK3GegRd7FYJw7VBGJ-x7j3f2IEO7_bdT3t3TO6esThMM2gL=w2290-h1134-no"
+src="https://user-images.githubusercontent.com/1020675/38319873-cde69b1a-37e7-11e8-8204-692ac250a934.jpg"
 class="left small" >}}
 
 ###### Above is a photo of the Samsung NVMe mounted in the Supermicro motherboard:
@@ -636,7 +642,7 @@ it's not the Skull Canyon motherboard (it isn't) — it's the Supermicro
 motherboard.
 
 {{< responsive-figure
-src="https://lh3.googleusercontent.com/ePgrw43fR6l_Q48GohVVDA44S3SX9VdB1iraiDjdlNRW9lGKhp3zJbpyNmYSOX54wPc3SL370ClEIplGqDFeIil7NOnHq96CQfRtdMALC3onYmjTBGxTTX36G3uMujOBEApI_n_qX1qDq3VVyA6tnXUTTa3e4bcHlGpL1y_EZp98zQ33Hv6dI2KrqEtrhb4Cz8u3gBQ_g5EjM-T4hOP6x4PDn3mEhFe996MB8sMSBfkfpC3b4R0ulyUFuJ3HgQUcpkBUM3xLX46Y2J6_NA-2kkh1CfLFVholSvxU9Ux6NafgnJ-Y3Dw_G6Nd38u8N45plV9NXpkTxL-3gO7UDUPrA5q9HJERpFwyvPUO18ex0mr8IcAuvnGHHMkBWGkPUTndAF5d47KQrHouB1mxv2uu7g7rnTTevpkAM9iqr0KrtjODFaszxpQ_KFnL4KzzZTbCYOt995pkAv0VR0aHXCiyL1oSX1O85bATIXlkJ50Mz3y16xFO9mBZdqdJZmSg8U2AWCaKSMyz3-WcfBCzvELA1CxuyjnRCiEbAu7QVKrDQ-_b-txQsiH4RPvonRNTcodfyttQORBYU4BebWmDzu0Az3r9VcrmJAuz0cdhOOmO=w2290-h1016-no"
+src="https://user-images.githubusercontent.com/1020675/38319872-cdcbe9f0-37e7-11e8-80c9-10d60c21fef8.jpg"
 class="left small" >}}
 
 ## Corrections & Updates
@@ -686,3 +692,13 @@ IOPS, read, write) to match the remainder of the post.
 
 Removed the _Azure_ footnote — nothing was referring to it, and it had no
 information that wasn't already mentioned elsewhere in the post.
+
+*2018-04-04*
+
+Modified the URL of the images to point to their location on GitHub, not Google
+Photos. Google Photos has the [unfortunate habit of expiring
+URLs](https://productforums.google.com/forum/#!msg/picasa/08ba8idWrW8/ZuIwpin9DAAJ)
+after a few days, and we are disappointed with them.
+
+Added anecdotal evidence of the expense of AWS's io1 storage type (it's quite
+expensive).
