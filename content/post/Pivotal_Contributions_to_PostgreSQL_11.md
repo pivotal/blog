@@ -1,7 +1,7 @@
 +++
-authors = ["aagrawal", "apraveen", "dgustafsson", "hlinnakangas", "jchampion", "mplageman", "xinzweb"]
+authors = ["aagrawal", "apraveen", "dgustafsson", "hlinnakangas", "jchampion", "mplageman", "xzhang"]
 categories = ["Greenplum Database", "PostgreSQL", "Greenplum", "Development"]
-date = 2018-03-21T15:16:22Z
+date = 2018-04-04T15:16:22Z
 draft = true
 short = "Summary of Pivotal Contributions to PostgreSQL 11"
 title = "How Pivotal contributes to the Development of PostgreSQL 11"
