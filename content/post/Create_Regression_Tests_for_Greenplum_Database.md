@@ -6,7 +6,7 @@ categories:
 - Databases
 - Testing
 - Regression Tests
-date: 2018-03-07T12:16:22Z
+date: 2018-04-04T12:16:22Z
 draft: true
 short: |
   How to create new regression tests for Greenplum Database
@@ -129,7 +129,7 @@ To work around this problem, the results of a regression test query, and the ans
 
 ## Conclusion
 
-It's not complicated to add new regression tests, and every new feature should be covered by tests. This also applies for most bugfixes.
+It's not complicated to add new regression tests, and every new feature should be covered by tests. This also applies for most major bugfixes.
 
 If unsure, ask the following questions:
 
