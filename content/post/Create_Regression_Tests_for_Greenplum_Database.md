@@ -6,8 +6,8 @@ categories:
 - Databases
 - Testing
 - Regression Tests
-date: 2018-04-04T12:16:22Z
-draft: true
+date: 2018-04-05T17:19:22Z
+draft: false
 short: |
   How to create new regression tests for Greenplum Database
 title: Create Regression Tests for Greenplum Database
