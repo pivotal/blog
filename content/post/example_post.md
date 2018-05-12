@@ -20,7 +20,7 @@ Posts are written in [Markdown](https://help.github.com/articles/github-flavored
 
 ## Writing a _Good_ Post
 
-_copied from [the README](https://github.com/pivotal/blog#writing-a-good-post)..._
+_copied from [the README](https://github.com/pivotal-legacy/blog#writing-a-good-post)..._
 
 ### Keep it technical.
 

@@ -13,7 +13,7 @@ deploy:
   organization: pivotal
   space: blog
   on:
-    repo: pivotal/blog
+    repo: pivotal-legacy/blog
     branch: master
   password:
     secure: gd75PtNvDs6gabtlde7Yzg7BxHrJQ2gp05uSs5xTEfZ4LFfOO9TIVedr/yilnd4C42j2XrfpjbJFKJDVk3DlmpA0jqt0WJguBO9e3Ehth+adV8yRF2ysA00CSwOro8nx+JFnE5Xyr3MkZ75g5YjU23j+P43xyxwBfjvRK1PLghU8oCSK0ju7rTmpI8U8z+NZdlS1j+KqdcEPO2caoldIjVMf/FawEnhCppQHygewGugVOCmDycpDOfLRwJHdbopMNjt0YvJzdv5unhBYK+VTwOPHpT+Je+8lbit4HI1/Fyqma3GZmsTQeI90cqgzHlyee1FBth8num0L+TO2dGgq5SlgnUvRToGK2J/59OIRMXKmh7CyniBRR27rHOUK6SG7V9a4JUGxGUXv+piAOEsSsoLwdVEw9nEIR0pzqchnyxjFoX1cMrRJr+cxEJveb+O7Daa0YABEwimx7826KFLxBz/4gSEKtt1fJuKIPSYJsNper4zobIxV5xadKOOGKh9F9NZc7Y6+6fTorAaoxldfE6PbyH1v3DgRYwQURTUGveqnXvDQHhTVSTTtrutmwAPcaPrMIhDAd1FxIO4qyI5NMgfEkp8ND4inC26E3jsWsXDW48JpnTwyShJ5Osq0oSpaimtCGYQUM26vBxLnmoikABWrm3JSnfah/qEqA3tPmOE=
