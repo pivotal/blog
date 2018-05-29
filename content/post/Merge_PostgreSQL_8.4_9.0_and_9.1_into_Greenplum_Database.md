@@ -39,7 +39,9 @@ The merges bring many new features into Greenplum Database, and the list is too 
 
 ## Open items
 
-Although the majority of the code base from PostgreSQL 8.4, 9.0 and 9.1 is merged in, a small number of items are still open, and we have to decide if these will be worked on, or are not necessary in Greenplum Database. To name a few:
+With the current process we are adding features as they come into Greenplum. The exceptions are those features that need additional work to make them [MPP}(https://en.wikipedia.org/wiki/Massive_parallel_processing) aware. Those features are added as stories in the backlogs of teams to implement them in a prioritized manner. These include features such as the contrib modules, recursive and writable CTEs, etc.
+
+And although the majority of the code base from PostgreSQL 8.4, 9.0 and 9.1 is merged in, a small number of items are still open. To name a few of them:
 
 * UUID module: this is useful, but support for the external libraries needs to be solved first
 * Recursive CTE: this is quite useful, but needs changes in the planner
