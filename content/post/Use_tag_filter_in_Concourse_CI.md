@@ -5,8 +5,8 @@ categories:
 - git
 - GitHub
 - Concourse
-date: 2018-06-01T17:16:22Z
-draft: true
+date: 2018-06-06T17:16:22Z
+draft: false
 short: |
   How to use "tag_filter" in "git" resources in Concourse CI
 title: How to use "tag_filter" in "git" resources in Concourse CI
