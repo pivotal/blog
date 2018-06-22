@@ -10,13 +10,16 @@ categories:
 - Cloud Controller
 - Ruby
 - Ruby Memory Management
-date: 2018-06-14T00:00:00Z
+date: 2018-06-22T00:00:00Z
 draft: true
 short: |
   How the Cloud Foundry CAPI team diagnosed Ruby memory usage issues in the Cloud Controller API
 title: Diagnosing Ruby Memory Issues in Cloud Foundry's API Server
-image: placeholder
+image: /images/debugging-ruby-memory-issues/ccng-memory-usage.png
 ---
+
+{{< responsive-figure src="/images/debugging-ruby-memory-issues/ccng-memory-usage.png" class="center" alt="Grafana dashboard displaying abnormal Cloud Controller memory usage in a test environment" >}}
+
 
 ## Introduction
 
@@ -26,7 +29,9 @@ Debugging memory issues in software is a notoriously difficult problem. Thankful
 
 Cloud Controller is the the API server that [Cloud Foundry](https://www.cloudfoundry.org/application-runtime/) users use to view and interact with the rest of the system. For instance, whenever a developer uses the Cloud Foundry CLI to deploy their applications or view their applications' status in Apps Manager, they are ultimately making requests that are served by Cloud Controller. Cloud Controller is a Ruby application and is deployed in data centers throughout the world as part of Cloud Foundry.
 
-Occasionally our end-users will use the platform in ways we might not have predicted, which results in unique and difficult-to-reproduce issues. For instance, one such customer reported that their Cloud Controller instances were consuming excessive amounts of system memory and restarting every few minutes. Clearly not working as intended.
+Occasionally our end-users will use the platform in ways we might not have predicted, which results in unique and difficult-to-reproduce issues. For instance, several months back a customer reported that their Cloud Controller instances were consuming excessive amounts of system memory and restarting very frequently. By default, Cloud Controller servers are configured to restart themselves after sustained high memory usage -- but these situations are rare and unexpected. Something was clearly wrong.
+
+{{< responsive-figure src="/images/debugging-ruby-memory-issues/ccng-memory-usage-close-up.png" class="center" alt="Sawtooth memory usage pattern showing frequent restarts of the Cloud Controller server" caption="Cloud Controller instance exhibiting abnormal memory usage" >}}
 
 ## Understanding the Problem
 
@@ -34,7 +39,7 @@ We did not see the restarting behavior in our own test environments, so reproduc
 
 ## Collecting Ruby Heap Dumps
 
-By default, Cloud Controller does not trace object allocations or dump its heap, so we needed to get a bit creative. Fortunately, we already had [code in place](https://github.com/cloudfoundry/cloud_controller_ng/blob/3a72dbc5288c0a27498740dc1b2abb1fc39eebe0/lib/cloud_controller/runner.rb#L106-L112) to dump basic diagnostics when the `"USR1"` signal is sent to the Cloud Controller process. Taking advantage of this, we constructed a patch for the customer that would extend this diagnostics dump to include the heap before and after a forced garbage collection. [This patch](https://github.com/cloudfoundry/cloud_controller_ng/wiki/How-To-Get-a-Ruby-Heap-Dumps-&-GC-Stats-from-CC) resulted in the code looking something like this:
+By default, Cloud Controller does not trace object allocations or dump its heap, so we needed to get a bit creative. Fortunately, we already had [code in place](https://github.com/cloudfoundry/cloud_controller_ng/blob/3a72dbc5288c0a27498740dc1b2abb1fc39eebe0/lib/cloud_controller/runner.rb#L106-L112) to dump basic diagnostics when the `"USR1"` signal is sent to the Cloud Controller process. Taking advantage of this, we constructed a patch for the customer that would extend this diagnostics dump to include the heap before and after a forced garbage collection. [This patch](https://github.com/cloudfoundry/cloud_controller_ng/wiki/How-To-Get-a-Ruby-Heap-Dumps-&-GC-Stats-from-CC) modified the code to look something like this:
 
 <pre class="pre-scrollable"><code class="language-ruby">
 ...
