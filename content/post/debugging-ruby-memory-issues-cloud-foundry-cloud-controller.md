@@ -10,7 +10,7 @@ categories:
 - Cloud Controller
 - Ruby
 - Ruby Memory Management
-date: 2018-06-22T00:00:00Z
+date: 2018-06-22T20:01:53Z
 draft: true
 short: |
   How the Cloud Foundry CAPI team diagnosed Ruby memory usage issues in the Cloud Controller API
@@ -27,7 +27,7 @@ Debugging memory issues in software is a notoriously difficult problem. Thankful
 
 ## Background
 
-Cloud Controller is the the API server that [Cloud Foundry](https://www.cloudfoundry.org/application-runtime/) users use to view and interact with the rest of the system. For instance, whenever a developer uses the Cloud Foundry CLI to deploy their applications or view their applications' status in Apps Manager, they are ultimately making requests that are served by Cloud Controller. Cloud Controller is a Ruby application and is deployed in data centers throughout the world as part of Cloud Foundry.
+Cloud Controller is the API server that [Cloud Foundry](https://www.cloudfoundry.org/application-runtime/) users rely on to view and interact with the rest of the system. For instance, whenever a developer uses the Cloud Foundry CLI to deploy their applications or view their applications' status in Apps Manager, they are ultimately making requests that are served by Cloud Controller. Cloud Controller is a Ruby application and is deployed in data centers throughout the world as part of Cloud Foundry.
 
 Occasionally our end-users will use the platform in ways we might not have predicted, which results in unique and difficult-to-reproduce issues. For instance, several months back a customer reported that their Cloud Controller instances were consuming excessive amounts of system memory and restarting very frequently. By default, Cloud Controller servers are configured to restart themselves after sustained high memory usage -- but these situations are rare and unexpected. Something was clearly wrong.
 
@@ -35,7 +35,7 @@ Occasionally our end-users will use the platform in ways we might not have predi
 
 ## Understanding the Problem
 
-We did not see the restarting behavior in our own test environments, so reproducing the problem required a better understanding of the customer’s environment and API usage. We began by asking the the customer about the size and shape of their data (e.g. number of running apps, spaces, apps per space, etc.) and proceeded to comb through thousands of lines of Cloud Controller logs to get a feel for what type of API requests were typically made in the environment. Unfortunately, this knowledge alone was not enough to reproduce the memory usage. We needed to get a better view into what was consuming the memory on their environment. We needed to get a Ruby heap dump.
+We did not see this restarting behavior in our own test environments, so reproducing the problem required a better understanding of the customer’s environment and API usage. We began by asking the customer about the size and shape of their data (e.g. number of running apps, spaces, apps per space, etc.) and proceeded to comb through thousands of lines of Cloud Controller logs to get a feel for what type of API requests were typically made in the environment. Unfortunately, this knowledge alone was not enough to reproduce the issue. We needed to get a better view into what was consuming the memory on their environment. We needed to get a Ruby heap dump!
 
 ## Collecting Ruby Heap Dumps
 
@@ -87,11 +87,11 @@ end
 
 ## Understanding Ruby Heap Dumps
 
-A Heap dump shows all of the objects that exist in the Ruby heap when the dump is generated. These objects are tagged with useful information like when and where they were allocated and what objects have pointers to them. Time is divided into a series of "generations" -- the periods between when the garbage collector runs. These generations do not directly correspond to clock time, but they do give a sense of when objects were created relative to the other objects in memory.
+A Heap dump shows all of the objects that exist in the Ruby heap when the dump is generated. These objects are tagged with useful information like when and where they were allocated and what objects have pointers to them. Time is divided into a series of "generations" -- the periods between when the garbage collector runs. These generations do not directly correspond to clock time, but do give a sense of when objects were created relative to other objects in memory.
 
 There is a lot of raw data in heap dumps, but they are not very easy for humans to understand. To help reason about what objects are sticking around at the time of the heap dump, we used the gem [heapy](https://github.com/schneems/heapy). Heapy processes the heap dump and groups objects by creation generation, allocation location, and storage location. This makes it easy to see when and where the objects in the heap were allocated.
 
-For a typical, healthy ruby program, one would expect most of the objects in the heap dump to be allocated either during the early generations or the late generations. Objects from early generations are allocated when the program first starts and include core Ruby classes (remember Ruby classes are objects) or classes used by the web server across multiple requests. If there are many objects persisting from intermediate generations, this can be a sign that something is going wrong (long-lived requests, leaked objects, etc).
+For a typical, healthy ruby program, one would expect most of the objects in the heap dump to be allocated either during the early or late generations. Objects from early generations are allocated when the program first starts and include core Ruby classes (remember Ruby classes are objects) or classes used by the web server across multiple requests. If there are many objects persisting from intermediate generations, this can be a sign that something is going wrong (long-lived requests, leaked objects, etc).
 
 Our heaps looked similar to this:
 
@@ -295,7 +295,7 @@ High Ref Counts
 
 ## Sifting Through the Dump
 
-With the help of our friend heapy, we got a sense of where all of these objects were coming from. The allocation point for our leaked objects was where our ORM loads objects out of the database. Unfortunately most of what we do is load ORM models out of our database, so this was not immediately helpful. Since classes in Ruby are also objects, we were able to [write a script](https://github.com/cloudfoundry/capi-release/blob/b9bba0c47b7cc7c9ee466b2eba9fc7f069577029/scripts/heap-utils/count-uniq-objects-by-class) to count the number of instances of different classes in the heap dump.
+With the help of our friend heapy, we were able to get a sense of where all of these objects were coming from. The allocation point for our leaked objects was where our ORM loads objects out of the database. Unfortunately most of what we do is load ORM models out of our database, so this was not immediately helpful. Since classes in Ruby are also objects, we were able to [write a script](https://github.com/cloudfoundry/capi-release/blob/b9bba0c47b7cc7c9ee466b2eba9fc7f069577029/scripts/heap-utils/count-uniq-objects-by-class) to count the number of instances of different classes in the heap dump.
 
 ```bash
 421453 "0x5642f6a6fa88"
@@ -319,7 +319,7 @@ With the help of our friend heapy, we got a sense of where all of these objects 
    1 "0x5642fa82c240"
 ```
 
-Once we had the frequencies of certain objects, we focused on one of the objects with an extremely high frequency, such as `0x5642f933aa80`. We needed to find out the class of this object, so we searched through the raw dump again using `ag` ([the Silver Searcher](https://github.com/ggreer/the_silver_searcher)).
+Once we had frequencies of certain objects, we focused on one of the objects with an extremely high frequency, such as `0x5642f933aa80`. We needed to find out the class of this object, so we searched through the raw dump again using `ag` ([the Silver Searcher](https://github.com/ggreer/the_silver_searcher)).
 
 ```bash
 $ ag --mmap 0x5642f933aa80 heap_dump_after_gc | grep '"type":"CLASS"'
@@ -337,7 +337,7 @@ Based on the output above, we saw that `0x5642f933aa80` corresponded to the `VCA
 
 ## Tracing the Referenced Objects
 
-Once we knew the identities of the most frequently occurring objects, we just needed to figure out where they were coming from. The relative quantities of the different types of objects might be a clue: if the heap is full of a particular resource, maybe it is the list endpoint for that resource or another endpoint that we know loads it. This was not enough information in our case, so we looked at some instances of the leaked classes and traced up their memory addresses to see what objects were holding on to them so tightly.
+Once we knew the identities of the most frequently occurring objects, we just needed to figure out where they were coming from. The relative quantities of different types of objects might be a clue: if the heap is full of a particular resource, maybe it is the list endpoint for that resource or another endpoint that we know loads it. This was not enough information in our case, so we looked at some instances of the leaked classes and traced up their memory addresses to see what objects were holding on to them so tightly.
 
 Every time we searched for a given object address, we also found out its class using the same process as earlier. For example:
 
@@ -389,7 +389,7 @@ Since we found this `VCAP::CloudController::Space`, however, we were able to sta
 
 After tracing the leaked objects all the way to the top, we found the `EventMachine` thread that holds on to all requests. Short of intentionally writing a bunch of objects to `Thread.current`, the only explanation to this was that the requests were still in progress. With an understanding of the shape of the data, we were able to identify the problem endpoint. This endpoint needed to see whether or not a `User` belonged to a `Space` so it searched through an array of in-memory `User` objects in Ruby, rather than executing a simple SQL query. Worse yet, the array of `User` objects was reloaded and searched through for each of the API user's applications. This meant that an individual with access to many applications would trigger the same expensive operation for each application.
 
-We learned that the environment that was exhibiting this behavior was a "sandbox" environment that gave all developers access to all other applications. To compound the problem, the environment also had a API consumer that was polling and fetching the entire list of applications every 30 seconds. Once enough of these requests stacked up, the Cloud Controller was no longer able to serve requests and eventually hit its memory quota, triggering a restart. We replaced the offending line with a SQL query and everything recovered. Like any good bug, the issue came down to fixing a [few lines of code](https://github.com/cloudfoundry/cloud_controller_ng/commit/d4d757d3ef205690839e6bc0960e9825199edcc7).
+We learned that the environment that was exhibiting this behavior was a "sandbox" environment that gave all developers access to all other applications. To compound the problem, the environment also had an API consumer that was polling and fetching the entire list of applications every 30 seconds. Once enough of these requests stacked up, the Cloud Controller was no longer able to serve requests and eventually hit its memory quota, triggering a restart. We replaced the offending line with an SQL query and everything recovered. Like any good bug, the issue came down to fixing a [few lines of code](https://github.com/cloudfoundry/cloud_controller_ng/commit/d4d757d3ef205690839e6bc0960e9825199edcc7).
 
 ## Takeaways
 
