@@ -148,4 +148,4 @@ LastPass.
 
 ## Next...
 
-Let's [configure vault for your team]({{< ref "configure-vault-for-team" >}})
+Let's [configure vault for your team]({{< relref "configure-vault-for-team" >}})
