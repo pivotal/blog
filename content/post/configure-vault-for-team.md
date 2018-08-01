@@ -16,10 +16,23 @@ draft: true
 # Open Sesame!!
 
 This post provides a guideline of simplest commands that are required to setup
-vault instead of having to wade through all of Hashicorp's extensive
-documentation.
+vault locally for your team instead of having to wade through all of
+Hashicorp's extensive documentation.
 
 {{< responsive-figure src="/images/vault/vault-open.gif" class="center" >}}
+
+## Agenda
+
+This is what we are going to cover in this post:
+
+- [Initialize the Vault](#initialize-the-vault)
+- [Unsealing the Vault](#unsealing-the-vault)
+- [Upgrade Secrets Engine](#upgrade-secrets-engine)
+- [Create user accounts for team members](#create-user-accounts-for-team-members)
+- [Next...Configure Vault for your CI]({{<
+ref "configure-vault-for-ci" >}})
+
+## Initialize the Vault
 
 To make sure everything is working,
 ```bash
@@ -50,7 +63,7 @@ the respective team memebers via LastPass.
 Having a threshold of two ensures that at least two Pivots are required to
 generate root tokens in the future to perform root operations.
 
-# Unsealing the Vault
+## Unsealing the Vault
 As mentioned in their docs, the vault is sealed upon start. So we'll have to
 use the unseal keys to open the vault.
 
@@ -66,7 +79,7 @@ After the vault has been unsealed, you can login with the root token.
 vault login
 ```
 
-# Upgrade Secrets Engine
+## Upgrade Secrets Engine
 
 By default vault has the following secret engines available.
 ```bash
@@ -103,9 +116,9 @@ For more information regarding versioned secrets which were introduced in
 Vault v0.10, [see
 here](https://www.vaultproject.io/guides/secret-mgmt/versioned-kv.html).
 
-# Create user accounts for team members
+## Create user accounts for team members
 
-## Enable userpass authentication
+### Enable userpass authentication
 Vault supports multiple ways allowing users to authenticate against it.
 For our purposes, we will be using the `userpass` auth method, which is simply
 a username/password combination.
@@ -120,7 +133,7 @@ vault kv get sys/auth
 ```
 **More Info:** [Other authentication methods](https://www.vaultproject.io/docs/auth/index.html)
 
-## Create policies for users
+### Create policies for users
 
 Before we actually create the user accounts we want to define some user
 policies that will allow the users to write to `secret/`.
@@ -140,7 +153,7 @@ vault policy list
 vault policy read devs
 ```
 
-## Create users
+### Create users
 
 ```bash
 vault kv put auth/userpass/users/<username> policies=default,devs password=<generate-a-password>
@@ -159,7 +172,7 @@ These issues have more details on the password reset limitation:
 [Issue 1](https://groups.google.com/forum/#!topic/vault-tool/15O9GzGAsLw),
 [Issue 2](https://groups.google.com/forum/#!topic/vault-tool/gEONXuCsJFc)
 
-### Login
+#### Login
 
 ```bash
 # Login with the username
@@ -168,19 +181,19 @@ vault login -method=userpass <username>
 vault token lookup
 ```
 
-### Logout
+#### Logout
 ```bash
 vault token revoke -self
 ```
 
-# Cleanup
+## Cleanup
 
 If you think you are done configuring Vault, then you should delete the root
 token which can be done this way:
 ```bash
 vault token revoke <root-token>
 ```
-# Next...
+## Next...
 
 We will go into details for how to [configure vault for your concourse CI]({{<
 ref "configure-vault-for-ci" >}})
