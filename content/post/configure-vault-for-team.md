@@ -182,6 +182,7 @@ vault token revoke <root-token>
 ```
 # Next...
 
-We will go into details for how to configure vault for your concourse CI
+We will go into details for how to [configure vault for your concourse CI]({{<
+ref "configure-vault-for-ci" >}})
 
 
