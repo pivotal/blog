@@ -188,6 +188,7 @@ vault token revoke -self
 
 ## Cleanup
 
+{{< responsive-figure src="/images/vault/cleanup-cat.gif" class="left" >}}
 If you think you are done configuring Vault, then you should delete the root
 token.
 ```bash

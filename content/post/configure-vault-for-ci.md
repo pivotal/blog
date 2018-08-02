@@ -145,11 +145,11 @@ you can use the `vault-resource` to store the entire state directory in Vault.
 
 **More Info:**
 
-- [Concourse Vault
-Resource](https://github.com/wfernandes/vault-resource)
+- [Concourse Vault Resource](https://github.com/wfernandes/vault-resource)
 
 ## Cleanup
 
+{{< responsive-figure src="/images/vault/cleanup-roomba.gif" class="left" >}}
 Make sure the root token is revoked as soon as y'all are done using it.
 
 ```

@@ -6,18 +6,19 @@ categories:
 - Kubernetes
 - Vault
 - Credhub
-title: "Let's use Vault - Part 1: Deploying Vault On Kubernetes"
+title: "Let's use Vault - Part 1: Deploying Vault"
 short: |
   How to deploy Vault on Kubernetes using Google Cloud Storage as its backend
 date: 2018-07-21T21:54:40-06:00
 draft: true
 ---
 
+{{< responsive-figure src="/images/vault/fallout.gif" class="center" >}}
 # Why are we doing this?
 
 The reason for this post's existence is to encourage more teams to make the
-effort of transitioning to a proper secrets storage to store their credentials,
-certificates and other relevant *files* - think `bbl up`.
+effort to move their credentials, certificates and other relevant *files* -
+think `bbl up` to a proper secret store.
 
 Most of us are guilty of taking the easy way out by checking in all our
 secrets and certs into a private git repo .  And although we install tools
@@ -37,8 +38,13 @@ deploy, configure and use Vault as part of our workday lives and CI systems.
 This will **NOT** be a post to debate the pros and cons of other tools like
 `credhub` or `lpass` and how those tools can be used to mitigate this problem.
 
-# Install Vault via the Helm Chart
-## Prep Work
+## Agenda
+- [Create bucket and artifacts](#create-bucket-and-artifacts)
+- [Configure the helm chart values](#configure-the-helm-chart-values)
+- [Helm Install](#helm-install)
+- [Other Manual Steps Required](#other-manual-steps-required)
+
+## Create bucket and artifacts
 1. Log into your GCP account.
 1. Create a service account and restrict its access to the
    `storage.objectAdmin` role.
@@ -51,8 +57,11 @@ store bucket.
    - Our team decided to generate certs from [LetsEncrypt](https://www.sslforfree.com/).
    - Follow the instructions to generate the cert for the appropriate domain
      and add the `TXT` record in Route 53.
-1. Configure the helm chart values.
-   - There are comments in the config to explain the what and why of the properties.
+   - In this example, the URL the cert was generated for was
+     `https://myteam.vault.ci.cf-app.com`
+
+## Configure the helm chart values.
+There are comments in the config to explain the what and why of the properties.
 
 > ~~~yaml
 # We create an Ingress service to expose vault and restrict it to https
@@ -62,12 +71,12 @@ service:
 ingress:
   enabled: true
   hosts:
-  - vault.ci.cf-app.com
+  - myteam.vault.ci.cf-app.com
   annotations:
     kubernetes.io/ingress.allow-http: false
   tls:
   - hosts:
-    - vault.ci.cf-app.com
+    - myteam.vault.ci.cf-app.com
     # The LetsEncrypt signed certs are stored as a k8s secret as well.
     secretName: vault-tls
 vault:
@@ -79,7 +88,7 @@ vault:
   - secretName: vault-gcs-service-account
     mountPath: /vault/sa
   config:
-    api_addr: "https://vault.ci.cf-app.com"
+    api_addr: "https://myteam.vault.ci.cf-app.com"
     storage:
       gcs:
         bucket: myteam-vault-bucket
@@ -87,7 +96,7 @@ vault:
         credentials_file: /vault/sa/key.json
 ~~~
 
-## Install
+## Helm Install
 
 ```bash
 export NAMESPACE_NAME="myteam-vault"
@@ -114,38 +123,47 @@ helm install incubator/vault \
 ## Other Manual Steps Required
 
 After vault is deployed we need to manually edit the ingress service.
+See the github issue below descrbing the reason for this change.
+
 This will show you the ingress service.
 ```
 kuebctl get ingresses --namespace $NAMESPACE_NAME
 ```
 By default the name of the ingress will be `<ReleaseName>-<ChartName>` which
 in this case will be `vault-vault`. If you'd like to override it, specify the
-property `nameOverride` in the helm config. See
-[here](https://github.com/helm/charts/blob/e64ba7aa8b2743715e0177dfc78a3a070e3a2b2d/incubator/vault/templates/_helpers.tpl#L13)
- for more details.
+property `nameOverride` in the helm config.
 
 Edit the ingress service and remove `path: /`
 ```
 kubectl edit ingresses vault-vault --namespace $NAMESPACE_NAME
 ```
-More details of why we need to do this can be found in [this Github
-issue](https://github.com/helm/charts/issues/6719).
 
-## Voila!
+**More Info:**
 
-You may now target your vault using the vault CLI at
-https://vault.ci.cf-app.com
+- [`nameOverride`](https://github.com/helm/charts/blob/e64ba7aa8b2743715e0177dfc78a3a070e3a2b2d/incubator/vault/templates/_helpers.tpl#L13): If you'd like to override the ingress service name.
+- [Github Issue](https://github.com/helm/charts/issues/6719): the reason we have to remove `path: /`
+
+---
+{{< responsive-figure src="/images/vault/tada.gif" class="center"
+title="Tada!!" >}}
+
+You may now target your vault using the `vault` CLI
+```bash
+export VAULT_ADDR=https://myteam.vault.ci.cf-app.com
+vault status
+```
+Understandably this is a bit of a 🐔 and 🥚 problem where we need some
+secrets to stand up our secret store. We've decided to store these secrets in
+LastPass.
 
 ## Cleanup
+
+{{< responsive-figure src="/images/vault/cleanup-chris.gif" class="left" >}}
 
 - Make sure to destroy sensitive information like the service account key and
 certs from your local machine.
 - Remove the `TXT` record from Route 53 once the domain has propogated.
 
-Understandably this is a bit of a 🐔 and 🥚 problem where we need some
-secrets to stand up our secret store. We've decided to store these secrets in
-LastPass.
-
 ## Next...
 
-Let's configure vault for your team
+Let's [configure vault for your team]({{< ref "configure-vault-for-team" >}})
