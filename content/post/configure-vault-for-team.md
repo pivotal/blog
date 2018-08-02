@@ -189,7 +189,7 @@ vault token revoke -self
 ## Cleanup
 
 If you think you are done configuring Vault, then you should delete the root
-token which can be done this way:
+token.
 ```bash
 vault token revoke <root-token>
 ```
