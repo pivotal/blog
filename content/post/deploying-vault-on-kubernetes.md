@@ -31,8 +31,12 @@ Eventually our hasty human nature coupled with `--no-verify` will lead us
 to expensing the costly mistake of leaking credentials into a repo that is
 public or *may become public in the future* - OSS for the win!.
 
-**FACT:** We need to take the stance of not storing any credentials in git.
+{{< responsive-figure src="/images/vault/git-secret.jpeg" class="left"
+title="" >}}
 
+<br/> <br/> <br/> <br/> <br/> <br/>
+We need to take the stance of not storing any credentials in git.
+<br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
 This post is one of a multi-part post that will be published to help us
 deploy, configure and use Vault as part of our workday lives and CI systems.
 This will **NOT** be a post to debate the pros and cons of other tools like
@@ -54,11 +58,12 @@ store bucket.
 1. Create a bucket in GCS.
    - In this example, we just named it `myteam-vault-bucket`
 1. Genereate TLS certs for the ingress service so we can expose it via https.
-   - Our team decided to generate certs from [LetsEncrypt](https://www.sslforfree.com/).
+   - Our team decided to generate certs from [SSL For Free](https://www.sslforfree.com/)
+     which leverages Let's Encrypt for generating the certs.
    - Follow the instructions to generate the cert for the appropriate domain
      and add the `TXT` record in Route 53.
    - In this example, the URL the cert was generated for was
-     `https://myteam.vault.ci.cf-app.com`
+     `https://vault.myteam.ci.cf-app.com`
 
 ## Configure the helm chart values.
 There are comments in the config to explain the what and why of the properties.
@@ -71,12 +76,12 @@ service:
 ingress:
   enabled: true
   hosts:
-  - myteam.vault.ci.cf-app.com
+  - vault.myteam.ci.cf-app.com
   annotations:
     kubernetes.io/ingress.allow-http: false
   tls:
   - hosts:
-    - myteam.vault.ci.cf-app.com
+    - vault.myteam.ci.cf-app.com
     # The LetsEncrypt signed certs are stored as a k8s secret as well.
     secretName: vault-tls
 vault:
@@ -88,7 +93,7 @@ vault:
   - secretName: vault-gcs-service-account
     mountPath: /vault/sa
   config:
-    api_addr: "https://myteam.vault.ci.cf-app.com"
+    api_addr: "https://vault.myteam.ci.cf-app.com"
     storage:
       gcs:
         bucket: myteam-vault-bucket
@@ -149,7 +154,7 @@ title="Tada!!" >}}
 
 You may now target your vault using the `vault` CLI
 ```bash
-export VAULT_ADDR=https://myteam.vault.ci.cf-app.com
+export VAULT_ADDR=https://vault.myteam.ci.cf-app.com
 vault status
 ```
 Understandably this is a bit of a 🐔 and 🥚 problem where we need some
@@ -162,7 +167,6 @@ LastPass.
 
 - Make sure to destroy sensitive information like the service account key and
 certs from your local machine.
-- Remove the `TXT` record from Route 53 once the domain has propogated.
 
 ## Next...
 

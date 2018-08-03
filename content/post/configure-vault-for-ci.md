@@ -52,11 +52,12 @@ you will need at least two Pivots to use their unseal keys (assuming the
 
 ```bash
 otp=$(vault operator generate-root -generate-otp)
-vault operator generate-root -otp="$otp"
 vault operator generate-root -otp="$otp" --init
 # This will prompt for entering the unseal keys to achieve quorum.
-# Once that is done, it will display a root token.
+# Once that is done, it will display an encoded token.
 vault operator generate-root
+# To get the actual root token which can be used for `vault login`.
+vault operator generate-root -decode="$encoded_token" -otp="$otp"
 ```
 With the root token you can now `vault login` and perform the root operations
 below.
@@ -121,10 +122,12 @@ path you made accessible in the policy. In this case, it would be
 Concourse itself will store any secrets it uses for its pipelines under
 `secret/ci/<team-name>`.
 
-{{< responsive-figure src="/images/vault/what-do-you-do.gif" class="center" >}}
+But
 
-But what if y'all want to access secrets from different paths and not give
-the approle access to everything?
+- What if y'all want to access secrets from different paths and not give the
+  approle access to everything?
+- What if y'all want to write secrets back into vault directly from your CI
+  tasks?
 
 
 {{< responsive-figure src="/images/vault/drumroll.gif" class="center" >}}

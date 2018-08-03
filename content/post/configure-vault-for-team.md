@@ -36,11 +36,11 @@ ref "configure-vault-for-ci" >}})
 
 To make sure everything is working,
 ```bash
-export VAULT_ADDR=<https://myteam-vault.ci.cf-app.com>
+export VAULT_ADDR=<https://vault.myteam.ci.cf-app.com>
 vault status
 ```
 
-When vault is first starts up, it is in a *sealed* state. As part of the
+When vault first starts up it is in a *sealed* state. As part of the
 initialization process, the operators need to generate unseal keys so they can
 *unseal* the vault.
 
