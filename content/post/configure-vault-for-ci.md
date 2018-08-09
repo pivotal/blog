@@ -10,7 +10,6 @@ title: "Let's use Vault - Part 3: Setting up Vault"
 short: |
   How to configure Vault for your CI
 date: 2018-07-29
-draft: true
 ---
 
 

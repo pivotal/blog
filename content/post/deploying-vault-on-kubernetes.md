@@ -10,7 +10,6 @@ title: "Let's use Vault - Part 1: Deploying Vault"
 short: |
   How to deploy Vault on Kubernetes using Google Cloud Storage as its backend
 date: 2018-07-21T21:54:40-06:00
-draft: true
 ---
 
 {{< responsive-figure src="/images/vault/fallout.gif" class="center" >}}

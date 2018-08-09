@@ -10,7 +10,6 @@ title: "Let's use Vault - Part 2: Setting up Vault"
 short: |
   How to configure Vault for your team
 date: 2018-07-28
-draft: true
 ---
 
 # Open Sesame!!
