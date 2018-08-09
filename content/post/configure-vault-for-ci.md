@@ -17,14 +17,14 @@ draft: true
 # Coming back full circle...Why.
 {{< responsive-figure src="/images/vault/full-circle.gif" class="center" >}}
 
-We now to come to the final leg of our journey. We will be integrating
+We have now come to the final leg of our journey. We will be integrating
 Vault with Concourse CI and exploring some tooling that was built specifically
 to make your lives easier.
 
 Traditionally, when you deploy concourse via bosh, it could be deployed with
-a secret store like `credhub` such that concourse and any pipelines could
+a secret store like `credhub` such that the concourse pipelines could
 seamlessly access the secrets. **BUT** the team would usually not use that
-secret store for any other secrets the team would need. This is another
+secret store for any other credentials they would need. This is another
 reason why teams usually took the easy way out by storing secrets in Github.
 
 What we've done here is create a separate store outside the confines of the CI
@@ -76,12 +76,20 @@ vault auth enable approle
 
 Add the following contents to `/tmp/approle-policy`
 ```
+# allow logins
 path "auth/approle/login" {
   capabilities = [ "create", "read" ]
 }
 
+# this allows the concourse pipeline to obtain secrets
 path "secret/ci/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
+  capabilities = [ "read", "list" ]
+}
+
+# this allows the concourse vault-resource to read and write creds.
+# What concourse vault-resource? Keep reading...
+path "secret/resources/*" {
+  capabilities = [ "read", "list", "update", "create" ]
 }
 ```
 As done before create a policy,
@@ -135,8 +143,7 @@ But
 
 Introducing the [Concourse Vault
 Resource](https://github.com/wfernandes/vault-resource)!!
-
-We built this resource so that y'all can pull/push secrets directly from
+We built this resource so that y'all can read/write secrets directly from
 Vault. But more importantly, entire directories.
 
 ### Cloud Foundry Example
@@ -145,6 +152,17 @@ Most of us use `bbl` to create and destroy environments in our CI. As a side
 effect `bbl` generates an entire state directory full of secrets and certs.
 Now instead of doing a `put` on a `git` resource to store the state directory
 you can use the `vault-resource` to store the entire state directory in Vault.
+
+**IMPORTANT**: Currently, the vault-resource **only supports the KV Secret
+Engine v1** because Concourse only supports that. We are working to have
+it support KV Engine v2 (versioned secrets) however since Concourse itself
+doesn't retrieve secrets from v2 we thought it prudent to keep the
+vault-resource in-step with Concourse for now.
+
+Otherwise, you'd have pipeline
+secrets stored in KV Engine v1 and other team secrets stored in KV Engine v2
+and you'd have to update the app role policies to have appropriate access to
+both.
 
 **More Info:**
 
@@ -158,3 +176,13 @@ Make sure the root token is revoked as soon as y'all are done using it.
 ```
 vault token revoke <root-token>
 ```
+
+## The End!!
+
+{{< responsive-figure src="/images/vault/credits.gif" class="right" >}}
+I'd like to thank [Jason Keene](https://github.com/jasonkeene) for his
+feedback on this multi-part post and also for pairing with me to quickly
+create the vault-resource.
+
+If y'all have any questions feel free to reach out to me via slack:
+`wfernandes`
