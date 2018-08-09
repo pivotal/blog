@@ -79,7 +79,7 @@ After the vault has been unsealed, you can login with the root token.
 vault login
 ```
 
-## Upgrade Secrets Engine
+## Secrets Engines
 
 By default vault has the following secret engines available.
 ```bash
@@ -92,29 +92,27 @@ secret/       kv           kv_cb795fa8           key/value secret storage
 sys/          system       system_f29e7832       system endpoints used for control, policy and debugging
 ```
 Although, we can very easily add another key/value secret engine, we are going
-to use `secret/` for our team sharing purposes. However, by default `secret/`
+to use `secret/` for our team sharing purposes. By default `secret/`
 is KV secret engine v1 which doesn't provide versioning or ability to roll
 back secrets.
-
-So we are going to upgrade it to KV secret engine v2. Run the following
-commands to enable versioning to the `secret/` engine.
 
 ```bash
 # Check the verison of current `secret/` engine. You should see an object
 # "options": { "version": "1" }
 vault kv get -format=json -field=secret/ /sys/mounts/
-
-# Enable versioning
-vault kv enable-versioning secret/
-
-# Check the verison of current `secret/` engine. You should see an object
-# "options": { "version": "2" }
-vault kv get -format=json -field=secret/ /sys/mounts/
+# OR
+vault secrets list -format=json
 ```
 
-For more information regarding versioned secrets which were introduced in
-Vault v0.10, [see
-here](https://www.vaultproject.io/guides/secret-mgmt/versioned-kv.html).
+**NOTE:**
+
+We are not upgrading our KV Engine to v2 because at the time of writing this
+post, Concourse doesn't support retrieval of secrets from the vesioned engine
+(KV Engine v2).
+
+**More Info:**
+
+- [Versioned secrets introduced in Vault v0.10](https://www.vaultproject.io/guides/secret-mgmt/versioned-kv.html).
 
 ## Create user accounts for team members
 
@@ -131,7 +129,9 @@ vault auth enable userpass
 # This should show `/userpass` in the list now.
 vault kv get sys/auth
 ```
-**More Info:** [Other authentication methods](https://www.vaultproject.io/docs/auth/index.html)
+**More Info:**
+
+- [Other authentication methods](https://www.vaultproject.io/docs/auth/index.html)
 
 ### Create policies for users
 
@@ -168,7 +168,8 @@ any personal access token that belongs to the user to be used for
 authentication.
 
 **More Info:**
-These issues have more details on the password reset limitation:
+
+- These issues have more details on the password reset limitation:
 [Issue 1](https://groups.google.com/forum/#!topic/vault-tool/15O9GzGAsLw),
 [Issue 2](https://groups.google.com/forum/#!topic/vault-tool/gEONXuCsJFc)
 
