@@ -181,7 +181,7 @@ vault token revoke <root-token>
 {{< responsive-figure src="/images/vault/credits.gif" class="right" >}}
 I'd like to thank [Jason Keene](https://github.com/jasonkeene) for his
 feedback on this multi-part post and also for pairing with me to quickly
-create the vault-resource.
+create the [vault-resource](https://github.com/wfernandes/vault-resource).
 
 If y'all have any questions feel free to reach out to me via slack:
 `wfernandes`
