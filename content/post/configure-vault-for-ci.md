@@ -158,7 +158,6 @@ Engine v1** because Concourse only supports that. We are working to have
 it support KV Engine v2 (versioned secrets) however since Concourse itself
 doesn't retrieve secrets from v2 we thought it prudent to keep the
 vault-resource in-step with Concourse for now.
-
 Otherwise, you'd have pipeline
 secrets stored in KV Engine v1 and other team secrets stored in KV Engine v2
 and you'd have to update the app role policies to have appropriate access to
