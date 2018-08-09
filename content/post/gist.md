@@ -3,6 +3,7 @@ authors:
 - axue
 - ekhanna
 - bchaudhary
+- mplageman
 - shardikar
 - vraghavan
 categories:
@@ -16,7 +17,6 @@ date: 2018-08-09
 short: |
   We look at how GIST indexes can be supported in GPORCA, allowing GPORCA to generate plans providing better query execution times.
 title: GiST Support In GPORCA
-image: /images/pairing.jpg
 ---
 
 # Introduction
