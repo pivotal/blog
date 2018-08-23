@@ -167,6 +167,6 @@ gpadmin=# select * from stock_fact_external limit 10;
 
 
 ### Conclusion
-This post provides examples how to configure Greenplum to access Minio. For more details, please read this example on this [github repository](https://github.com/kongc-organization/greenplum-minio).  
+This post provides examples how to configure Greenplum to access Minio. For more details, please read this example on this [github repository](https://github.com/kongc-organization/greenplum-minio). For more information about S3 extension, please read this [page](https://gpdb.docs.pivotal.io/5100/admin_guide/external/g-s3-protocol.html)
 
 In summary, you can use Minio, distributed object storage to dynamically scale your Greenplum clusters.
