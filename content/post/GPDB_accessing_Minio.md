@@ -4,31 +4,33 @@ authors:
 - user
 categories:
 - Greenplum
-- PostgreSQL
-- Greenplum Database
 - Minio
-- Docker
+
 date: 2018-03-07T17:16:22Z
 draft: true
 short: |
-  Using Greenplum to access Minio, high performance distributed object storage server
-title: Using Greenplum to access Minio, high performance distributed object storage server
+  Parallel data transfer data between Greenplum and Minio
+title: Using Greenplum to access Minio, distributed object storage server
 
 ---
 Pivotal Greenplum Database® (GPDB) is an advanced, fully featured, open source data warehouse. GPDB provides powerful and rapid analytics on petabyte scale data volumes. It provides S3 extension to access Amazon Simple Storage Service, a secure, durable, highly-scalable object storage.
 
 Minio is a high performance distributed object storage server, designed for
-large-scale private cloud infrastructure. Since Minio supports S3 protocol, GPDB can also access Minio server that is deployed on-premise or cloud.
+large-scale private cloud infrastructure. Since Minio supports S3 protocol, GPDB can also access Minio server that is deployed on-premise or cloud. One of the advantages of using Minio is pluggable storage backend that supports DAS, JBODs, external storage backends such as NAS, Google Cloud Storage and as well as Azure Blob Storage.
 
-One of the advantages of using Minio is pluggable storage backend that supports DAS, JBODs, external storage backends such as NAS, Google Cloud Storage and as well as Azure Blob Storage.
-
-In this post, you can quickly learn how to use Greenplum to access Minio.  
+In this post, you will learn to setup Greenplum with Minio in 10 minutes.  
 
 ## Use cases:
 **Storing cold data:**
-Enterprises are leveraging external storages to store cold data such as sales data, customer data with transaction dates more than 2 years ago. Those data can be effectively stored on external storage such as Minio, distributed object storage. Whenever Greenplum customers want to analyze those cold data, customers can use S3 extension to dynamically load those data from Minio.
+
+Enterprises are leveraging external storages to store cold data such as sales data, customer data with transaction dates more than 1 year ago. Those data can be effectively stored on external storage such as Minio, distributed object storage. Whenever Greenplum customers want to analyze those cold data, customers can use S3 extension to dynamically load those data from Minio.
+Since Minio provides virtual storage for Kubernetes, local drive, NAS, Azure, GCP, Cloud Foundry and DC/OS, this use cases enable import / export operations to those virtual storages.
 
 **Sharing data with external systems**
+
+Typically, enterprises have needs to share data with multiple RDBMS and systems across the organization. One of the data sharing patterns is to store the data in an distributed object storage system such as Minio.  Greenplum users  export existing data into Minio so other applications can access the shared data from Minio.
+
+
 
 ### How to setup and configure MINIO
 In this post, we will use docker to download and setup Minio image on your local machine.
@@ -56,25 +58,10 @@ Object API (Amazon S3 compatible):
    .NET:       https://docs.minio.io/docs/dotnet-client-quickstart-guide
 ```
 
-[Minio client](https://minio.io/downloads.html#download-client)(mc) provides a modern alternative to UNIX commands like ls, cat, cp, mirror, diff, find etc. It supports filesystems and Amazon S3 compatible cloud storage service (AWS Signature v2 and v4).
-
-You can use mc to create testbucket and copies examples such as stocks.csv, testdata.csv to this testbucket.
-
-```
-/usr/bin/mc config host add minio http://minio1:9001 minio minio123;
-/usr/bin/mc mb minio/testbucket;
-/usr/bin/mc cp /data/S3Examples/stocks.csv minio/testbucket;
-/usr/bin/mc cp /data/S3Examples/testdata.csv minio/testbucket;
-/usr/bin/mc cp /data/S3Examples/read_stocks.sql minio/testbucket;
-/usr/bin/mc policy download minio/testbucket;"
-```
-
-
-
 ### How to configure GPDB
-You can configure GPDB to access external tables such as Minio, S3 and any S3 compatible object storage such as [Dell EMC Elastic Cloud Storage](https://www.dellemc.com/en-us/storage/ecs/index.htm) (ECS).
+You can configure GPDB to access external tables such as Minio, S3 and any S3 compatible object storage including [Dell EMC Elastic Cloud Storage](https://www.dellemc.com/en-us/storage/ecs/index.htm)(ECS).
 
-1. Configure S3 feature by creating configuration file (s3.conf). The example below is configured to access Minio service with S3 API version 2
+1.Create S3 configuration file (s3.conf). The example below is configured to access Minio service with S3 API version 2.
 ```
 cat <<EOF > /home/gpadmin/s3.conf
 [default]
@@ -96,20 +83,53 @@ server_side_encryption = ""
 gpcheckcloud_newline = "\n"
 EOF
 ```
-
-2. Configure your database to enable S3 protocol and external tables.
-
-```
-CREATE OR REPLACE FUNCTION write_to_s3() RETURNS integer AS
-   '$libdir/gps3ext.so', 's3_export' LANGUAGE C STABLE;
-   CREATE OR REPLACE FUNCTION read_from_s3() RETURNS integer AS
-      '$libdir/gps3ext.so', 's3_import' LANGUAGE C STABLE;
-CREATE PROTOCOL s3 (writefunc = write_to_s3, readfunc = read_from_s3);
+2. Verify the S3.conf is working by using gpcloudcheck.
 
 ```
-### How to use GPDB to access Minio
-1. Use psql to create external table
+$ gpcheckcloud -c "s3://minio1:9000/testbucket/ config=/home/gpadmin/s3.conf"
+File: read_stocks.sql, Size: 1759
+File: stocks.csv, Size: 12246
+File: testdata.csv, Size: 138
+```
+3. Next, you can enable S3 Protocol on gpdb
 
+Use psql on the Greenplum docker instance.
+```
+docker exec -it gpdbminio bash
+ root@gpdb-minio:/#
+root@gpdb-minio:/code/minio/S3Examples# psql -h localhost -U gpadmin gpadmin
+psql (9.5.12, server 8.3.23)
+Type "help" for help.
+gpadmin=#
+```
+
+4. Type these commands to create read and write function for S3
+`CREATE OR REPLACE FUNCTION read_from_s3() RETURNS integer AS'$libdir/gps3ext.so','s3_import' LANGUAGE C STABLE;`
+
+`CREATE OR REPLACE FUNCTION write_to_s3() RETURNS integer AS '$libdir/gps3ext.so', 's3_export' LANGUAGE C STABLE;`
+
+`CREATE PROTOCOL s3 (writefunc = write_to_s3,readfunc = read_from_s3);`
+
+For example:
+```
+psql (9.5.12, server 8.3.23)
+Type "help" for help.
+
+gpadmin=# CREATE OR REPLACE FUNCTION read_from_s3() RETURNS integer AS
+gpadmin-#     '$libdir/gps3ext.so', 's3_import' LANGUAGE C STABLE;
+CREATE FUNCTION
+gpadmin=# -- Declare the S3 protocol and specify the function that is used
+gpadmin=# -- to read from an S3 bucket
+gpadmin=# CREATE PROTOCOL s3 (writefunc = write_to_s3,readfunc = read_from_s3);
+ERROR:  protocol "s3" already exists
+CREATE PROTOCOL
+gpadmin=# CREATE OR REPLACE FUNCTION write_to_s3() RETURNS integer AS
+gpadmin-# '$libdir/gps3ext.so', 's3_export'
+gpadmin-# LANGUAGE C STABLE;
+CREATE FUNCTION
+```
+
+5.Use psql to create external table that uses S3 location.
 ```
 CREATE EXTERNAL TABLE stock_fact_external (
 stock text,
@@ -119,21 +139,34 @@ price text
 LOCATION('s3://minio1:9000/testbucket/stocks.csv config=/home/gpadmin/s3.conf')
 FORMAT 'TEXT'(DELIMITER=',');
 ```
-2. Use sql query to retrieve data from Minio.
-
+4.Use sql query to retrieve data from Minio. This query returns the resultset from Minio servers that are preloaded with sample files under `testbucket`.
 
 ```
--- query external s3 table
-select count(*) from stock_fact_external;
+gpadmin=# select count(*) from stock_fact_external;
+ count
+-------
+   561
+(1 row)
+gpadmin=# select * from stock_fact_external limit 10;
+ stock  | stock_date | price
+--------+------------+-------
+ symbol | date       | price
+ MSFT   | Jan 1 2000 | 39.81
+ MSFT   | Feb 1 2000 | 36.35
+ MSFT   | Mar 1 2000 | 43.22
+ MSFT   | Apr 1 2000 | 28.37
+ MSFT   | May 1 2000 | 25.45
+ MSFT   | Jun 1 2000 | 32.54
+ MSFT   | Jul 1 2000 | 28.4
+ MSFT   | Aug 1 2000 | 28.4
+ MSFT   | Sep 1 2000 | 24.53
+(10 rows)
 ```
-
-
--- https://discuss.pivotal.io/hc/en-us/articles/235063748-Troubleshooting-Guide-Configuring-Amazon-S3-with-Greenplum
-drop external table stock_fact_external;
+--
 
 
 
 ### Conclusion
-This post helps you to use Greenplum with Minio. The [github repository](https://github.com/kongc-organization/greenplum-minio) demonstrates how to  setup and configure GPDB, in order to access Minio.
+This post provides examples how to configure Greenplum to access Minio. For more details, please read this example on this [github repository](https://github.com/kongc-organization/greenplum-minio).  
 
-TBD
+In summary, you can use Minio, distributed object storage to dynamically scale your Greenplum clusters.
