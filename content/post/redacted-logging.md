@@ -10,7 +10,9 @@ categories:
 - Aspect
 date: 2018-09-01T17:16:22Z
 draft: true
-short: 
+short: |
+  How we simplified the logging of requests and responses in a Spring application to only annotations
+title: Redacted Logging with Spring
 ---
 
 ## Simplifying Logging with Custom Redaction
