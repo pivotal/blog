@@ -1,6 +1,7 @@
 ---
 authors:
 - rowan
+- yeshwant
 - cunnie
 categories:
 - NSX-T
@@ -23,17 +24,16 @@ use a combination of customized Operations Manager [resource
 configs](https://docs.pivotal.io/pivotalcf/2-2/customizing/config-er-vmware.html#resources)
 and BOSH [VM Extensions](https://bosh.io/docs/terminology/#vm-extension).
 
-_Note: Beginning with Operations Manager 2.3, BOSH expects to "own" the
-membership of the NSX-T load balancer pools; however, the manual addition of IP
-addresses to the load balancer pools blindsides BOSH—BOSH doesn't know to
-attach the VMs to the appropriate pool on VM recreation. This procedure
-remedies that blindness by informing the BOSH director that the VMs (BOSH
-instance groups) belong in the appropriate NSX-T load balancer pools, enabling
-BOSH, when creating VMs, to place them in NSX-T server pools as appropriate._
+_Operations Manager 2.3 introduces the capability to manage the full lifecycle
+of the membership of the NSX-T load balancer pools, which relieves customers of
+the burden of manually assigning VMs to server pools.  This allows
+uninterrupted availability of the foundation even during upgrades, re-deploys,
+and IP address re-assignment._
 
-_This procedure places the PCF foundation in a good position: subsequent
-upgrades and redeploys will happen seamlessly, for BOSH will add and remove VMs
-from the load balancer server pool as needed._
+_To enable these features, one must migrate membership from out-of-band VM
+assignment to BOSH-managed assignment. This blog post describes that migration
+process._
+
 
 ## 0. Procedure
 
