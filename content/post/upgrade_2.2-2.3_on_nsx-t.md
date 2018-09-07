@@ -31,6 +31,10 @@ remedies that blindness by informing the BOSH director that the VMs (BOSH
 instance groups) belong in the appropriate NSX-T load balancer pools, enabling
 BOSH, when creating VMs, to place them in NSX-T server pools as appropriate._
 
+_This procedure places the PCF foundation in a good position: subsequent
+upgrades and redeploys will happen seamlessly, for BOSH will add and remove VMs
+from the load balancer server pool as needed._
+
 ## 0. Procedure
 
 - Review manually-created static NSX-T Load Balancer Server Pools
@@ -169,7 +173,7 @@ corresponding GUIDs in our foundation are `router-1a40bb1433cd790d3920`,
 
 If you have `jq` installed,
 you may use the following command to isolate the important components:
-`jq -r '.jobs[] | select(.name=="router" or .name=="diego_brain" or .name=="tcp_router")'`
+`jq -r '.jobs[] | select(.name=="router" or .name=="diego_brain" or .name=="tcp_router")'`.
 
 <!-- {"jobs":[{"name":"consul_server","guid":"consul_server-8ad14bfd8618c97de8ce"},{"name":"nats","guid":"nats-6be11c3f099126c60ef1"},{"name":"nfs_server","guid":"nfs_server-2dfef76a89ec89887cce"},{"name":"mysql_proxy","guid":"mysql_proxy-86ca13c9e7ae8f4c5576"},{"name":"mysql","guid":"mysql-c2156702dce38b439e75"},{"name":"backup-restore","guid":"backup-restore-0399ae58267bf0056c44"},{"name":"diego_database","guid":"diego_database-cb7e5f6c141e0ada5654"},{"name":"uaa","guid":"uaa-3a9a51f5f6f77e6a9da5"},{"name":"cloud_controller","guid":"cloud_controller-62d932d15269c0a93834"},{"name":"ha_proxy","guid":"ha_proxy-441ee77ed12ee8b86dff"},{"name":"router","guid":"router-1a40bb1433cd790d3920"},{"name":"mysql_monitor","guid":"mysql_monitor-a736ca63cd9ab8aa913c"},{"name":"clock_global","guid":"clock_global-889e0927aa33ad48cdab"},{"name":"cloud_controller_worker","guid":"cloud_controller_worker-2ab643dc6b2f5f71fc7f"},{"name":"diego_brain","guid":"diego_brain-247c1f4a616b5d43546e"},{"name":"diego_cell","guid":"diego_cell-11b55994dd4964379ac1"},{"name":"loggregator_trafficcontroller","guid":"loggregator_trafficcontroller-f1e490f8f159450cca7f"},{"name":"syslog_adapter","guid":"syslog_adapter-491cfdfce6ef86abed17"},{"name":"syslog_scheduler","guid":"syslog_scheduler-e0eb55476c1557f84d35"},{"name":"doppler","guid":"doppler-aa3abe9d191298ecb78f"},{"name":"tcp_router","guid":"tcp_router-93c7a99605c109f53f8c"},{"name":"credhub","guid":"credhub-2c2724686e7bb260e32b"}]} -->
 
@@ -185,7 +189,7 @@ Where `CF_GUID` is set to the GUID from step 3.1, `JOB_GUID` is set to the GUID
 from step 3.2, and `JOB_NAME` is set to the name of the BOSH instance group for
 this job.
 
-This produces a result like `{"instance_type":{"id":"automatic"},"instances":2,"nsx_security_groups":null,"nsx_lbs":[],"additional_vm_extensions":[]}`
+This produces a result like `{"instance_type":{"id":"automatic"},"instances":2,"nsx_security_groups":null,"nsx_lbs":[],"additional_vm_extensions":[]}`.
 
 ### 3.4 Write New Resource Configs For Each Job
 
@@ -193,7 +197,7 @@ Edit each file from the previous step to add the name of the corresponding load
 balancer (see table in step 1), in quotes, to the `additional_vm_extensions`
 array. <a href="#resource_config"><sup>[Resource Config]</sup></a>
 
-We do this once for each load balanced job (`router`, `diego_brain`, and `tcp_router`).
+We do this once for each load-balanced job (`router`, `diego_brain`, and `tcp_router`).
 
 ## 4. Upgrade Operations Manager to Version 2.3
 
@@ -248,6 +252,14 @@ VM Extensions we used for our deployment:
 - [Router](https://github.com/cunnie/deployments/blob/1ed754e555722df3ce5f503d4d4d27820ac0a2ad/nsx-t/gorouter-443-80-vm-extension.json)
 - [Diego Brain](https://github.com/cunnie/deployments/blob/1ed754e555722df3ce5f503d4d4d27820ac0a2ad/nsx-t/ssh-proxy-vm-extension.json)
 - [TCP Router](https://github.com/cunnie/deployments/blob/1ed754e555722df3ce5f503d4d4d27820ac0a2ad/nsx-t/tcp-router-vm-extension.json)
+
+Our BASH commands we followed when we upgraded: [script](https://github.com/cunnie/deployments/blob/018c61d891a68bb78f3750b466165b00f3176817/nsx-t/scripts.md).
+
+## Acknowledgements
+
+Josh Gray of the PEZ Team was instrumental in discovering the behavior and
+providing resources to test remediation. The BOSH vSphere CPI Team provided
+invaluable support.
 
 ## Footnotes
 
