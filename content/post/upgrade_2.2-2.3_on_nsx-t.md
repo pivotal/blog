@@ -37,7 +37,7 @@ process._
 
 ## 0. Procedure
 
-- Review manually-created static NSX-T Load Balancer Server Pools
+- Review manually-created static <a href="#dynamic"><sup>[or Dynamic]</sup></a> NSX-T Load Balancer Server Pools
 - Craft BOSH VM Extensions
 - Craft Operations Manager resource configs
 - Upgrade Operations Manager to version 2.3
@@ -262,6 +262,11 @@ providing resources to test remediation. The BOSH vSphere CPI Team provided
 invaluable support.
 
 ## Footnotes
+
+<a id="dynamic"><sup>[or Dynamic]</sup></a> This blog post focuses on static
+pools, but the procedure is identical for dynamic pools since the BOSH
+vSphere CPI ["looks up the NSGroup [of the server pool] and adds the VM to the
+NSGroup"](https://bosh.io/docs/vsphere-cpi/#resource-pools).
 
 <a id="resource_config"><sup>[resource_config]</sup></a> In a prettified JSON file, our change would look like the following:
 
