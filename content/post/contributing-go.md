@@ -22,10 +22,6 @@ coalesced from multiple sources and my own troubleshooting.
 We are going to cover Gerrit...but don't be disheartened. Interacting with
 Gerrit has evolved into an effortless process using the available tooling.
 
-So let's...
-
-{{< responsive-figure src="/images/contributing-go/slj-goon.gif" class="center"  >}}
-
 ## Agenda
 
 1. [Step 0: Initial Setup](#step-0-initial-setup)
@@ -97,7 +93,7 @@ go get -u golang.org/x/tools/cmd/go-contrib-init
 ```
 Ensure that the binary is available on the `$PATH`.
 
-This tool will
+This tool will:
 
 - Check your CLA is valid
 - Check the repo’s remote origin to make sure that it is pointing to a Gerrit
@@ -154,13 +150,9 @@ Go](https://docs.google.com/presentation/d/14TfQtrsnz1yvOrX3uRa7ebkbOI3aByUB6dvv
 presentation.
   - [Contribution Guide](https://golang.org/doc/contribute.html)
 
-Now let's get to the contributing to Go
-
 
 ## Step 2: Contributing...
 ### Let's write an example
-
-{{< responsive-figure src="/images/contributing-go/slj-example.gif" class="center" >}}
 
 A good way to contribute is by looking for a function that
 requires an example or even better, a simple typo!
@@ -177,10 +169,7 @@ vim example_test.go
 By convention all the examples are written in `example_test.go` files.
 
 Check out the link below to see how to write an example, or just look at the
-examples already there and mess around. Y'all are smart folks, I'm sure y'all
-can figure this out.
-
-{{< responsive-figure src="/images/contributing-go/smart.gif" class="center" >}}
+examples already there and mess around.
 
 __More Info:__
 
@@ -190,7 +179,6 @@ __More Info:__
 
 Once you've written your example, you want to make sure that it runs and looks
 good.
-{{< responsive-figure src="/images/contributing-go/jt-justchecking.gif" class="center" >}}
 
 #### 1. Run the example test
 
@@ -271,6 +259,3 @@ Go](https://docs.google.com/presentation/d/14TfQtrsnz1yvOrX3uRa7ebkbOI3aByUB6dvv
 presentation.
 - [Contribution Guide](https://golang.org/doc/contribute.html)
 
-Now get up and dance!!
-
-{{< responsive-figure src="/images/contributing-go/ut-dance.gif" class="center" >}}
