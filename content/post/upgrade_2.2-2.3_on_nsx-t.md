@@ -26,14 +26,14 @@ and BOSH [VM Extensions](https://bosh.io/docs/terminology/#vm-extension).
 
 _Operations Manager 2.3 introduces the capability to manage the full lifecycle
 of the membership of the NSX-T load balancer pools, which relieves customers of
-the burden of manually assigning VMs to server pools.  This allows
-uninterrupted availability of the foundation even during upgrades, re-deploys,
-and IP address re-assignment._
+the responsibility of manually assigning VMs to server pools.  This allows
+uninterrupted availability of the BOSH instance group VMs that use NSX-T load
+balancers even during upgrades, re-deploys, and IP address re-assignment._
 
-_To enable these features, one must migrate membership from out-of-band VM
-assignment to BOSH-managed assignment. This blog post describes that migration
-process._
-
+_To enable these features without downtime for deployments using Operations
+Manager 2.2, one must migrate membership from out-of-band VM assignment to
+BOSH-managed assignment prior to upgrading to Operations Manager 2.3. This blog
+post describes that migration process._
 
 ## 0. Procedure
 
