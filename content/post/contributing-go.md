@@ -49,9 +49,6 @@ These are the links you need to care about:
 ### Git
   You will need to have git installed and configured with the email address
 you intend to use for making contributions.
-```
-git config --global user.email name@gmail.com
-```
 You will also need to configure git authentication with Google's Gerrit
 servers.
 
@@ -210,7 +207,7 @@ Now this is the part you all have been waiting for...
 
 1. Once you are satisfied, create a branch and add your changes.
 
-    ```
+    ```bash
     git checkout -b mybranch
     git add
     ```
@@ -220,7 +217,7 @@ Now this is the part you all have been waiting for...
 commit messages. This is __important__!! Your CL will be asked to update the CL commit message  Ideally, you'd be referencing a pre-existing Github issue
 with the `NeedsFix` label.
 
-    ```
+    ```bash
     git change
     # or
     git codereview change
@@ -228,7 +225,7 @@ with the `NeedsFix` label.
 
 1. Submit the patch
 
-    ```
+    ```bash
     git mail
     # or
     git codereview mail
@@ -236,7 +233,7 @@ with the `NeedsFix` label.
 
 1. If you'd like to make further changes just redo the steps above.
 
-    ```
+    ```bash
     git add .
     git change
     git mail
