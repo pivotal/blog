@@ -214,8 +214,11 @@ Now this is the part you all have been waiting for...
 
 1. Commit the change using [the following
    guidelines](https://golang.org/doc/contribute.html#commit_messages) for
-commit messages. This is __important__!! Your CL will be asked to update the CL commit message  Ideally, you'd be referencing a pre-existing Github issue
-with the `NeedsFix` label.
+commit messages.
+
+    This is __important__!! You will be asked to update the
+CL commit message if the message isn't formatted correctly. And ideally, you'd
+be referencing a pre-existing Github issue with the `NeedsFix` label.
 
     ```bash
     git change
