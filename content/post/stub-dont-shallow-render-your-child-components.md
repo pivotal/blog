@@ -140,7 +140,7 @@ TypeError: Cannot read property 'gold' of undefined
 
 Turns out that the heirlooms prop needed to have more specificity than was originally thought when the Ancestor component was first written.  Now you have to go back to to `ancestor_spec.jsx` and update the heirlooms fixture to support the new implementation of the Child component, even though none of the Ancestor specs require it.  This is tedious, and you shouldn't need to do this. This, is a test smell.
 
-<iframe src='https://gfycat.com/ifr/ImaginativeSecondBighornsheep' style="display: block; margin: 0 auto; padding: 20px 0;" frameborder='0' scrolling='no' width='640' height='360' allowfullscreen></iframe>
+<!-- <iframe src='https://gfycat.com/ifr/ImaginativeSecondBighornsheep' style="display: block; margin: 0 auto; padding: 20px 0;" frameborder='0' scrolling='no' width='640' height='360' allowfullscreen></iframe> -->
 
 ## Shallow rendering to the rescue?
 
