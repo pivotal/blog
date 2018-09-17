@@ -6,7 +6,7 @@ categories:
 - contributing
 - OSS
 date: 2018-09-10
-draft: true
+draft: false
 short: |
   How to start contributing to the Golang project with an example
 title: Let's Contribute to Golang!
