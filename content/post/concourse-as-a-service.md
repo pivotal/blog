@@ -6,9 +6,10 @@ authors:
 - kmacoskey
 categories:
 - BOSH
-- Agile
-date: 2018-09-07T14:30:22Z
-draft: true
+- Concourse
+- GCP
+- Infrastructure
+date: 2018-09-18T14:30:22Z
 short: |
   Leveraging a singular BOSH director to manage Concourse for multiple teams
 title: Concourse as a Service and Multi-CPI
