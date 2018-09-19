@@ -314,15 +314,16 @@ could make Standard disks *much* more expensive than Premium:
 
 > We charge $0.0005 per 10,000 transactions for Standard Managed Disks
 
-As a worst-case scenario, we could spend close to $1.5k in a month if we push
-our 256 GiB Standard disk to its limit (1100 IOPS):
+As a worst-case scenario, we could spend close to $65 in a month if we push our
+256 GiB Standard disk to its limit ([500
+IOPS](https://azure.microsoft.com/en-us/pricing/details/managed-disks/)):
 
 ( $0.0005 / 10000 IO operations )
-× ( 1100 IO operations / 1 second )
+× ( 500 IO operations / 1 second )
 × ( 3600 seconds / 1 hour )
 × ( 24 hours / 1 day )
 × ( 30 days / 1 month )
-= $1,425.60
+= $64.80
 
 #### 4.1.1 Azure IOPS
 
@@ -646,6 +647,12 @@ src="https://user-images.githubusercontent.com/1020675/38319872-cdcbe9f0-37e7-11
 class="left small" >}}
 
 ## Corrections & Updates
+
+*2018-09-18*
+
+The worst-case scenario for the cost of a 256 GiB Standard disk on Azure was
+~22× too high: it is $64.80, not $1,425.60. Thanks [Mike
+Taber](https://twitter.com/SingleFounder/status/1040787595775684609)!
 
 *2018-03-19*
 
