@@ -8,9 +8,6 @@ script: ./bin/build
 deploy:
   provider: cloudfoundry
   skip_cleanup: true
-  edge:
-    source: osis/dpl
-    branch: cloud_foundry_client_creds
   on:
     repo: pivotal-legacy/blog
     branch: master
