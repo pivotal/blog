@@ -8,7 +8,7 @@ categories:
 - Operations Manager
 - BOSH
 date: Thu Sep  6 10:44:30 PDT 2018
-draft: true
+draft: false
 short: |
   How to upgrade an NSX-T-based PAS 2.2 foundation to 2.3 without downtime
 title: Safely Upgrading PAS 2.2 → 2.3 with NSX-T Load Balancers
