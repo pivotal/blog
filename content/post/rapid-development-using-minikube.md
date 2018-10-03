@@ -1,7 +1,8 @@
  ---
 authors:
-- gtadi
 - xzhang
+- gtadi
+- dsharp
 categories:
 - Greenplum
 - Kubernetes
