@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-[ -z $1 ] && echo "Usage: $0 post-name" && exit 1
+[ -z "$1" ] && echo "Usage: $0 post-name" && exit 1
 
-hugo new post/$1.md -k yaml
+new_name="$@"
+new_name="${new_name// /_}"
+hugo new "post/$new_name.md" -k yaml
