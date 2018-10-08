@@ -199,6 +199,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 RUN apt-get update
 RUN apt-get -y install google-chrome-stable
+
+# install chromedriver
+# NOTE: this is a relatively old version.  Try a newer version if this does not work.
 RUN wget -N http://chromedriver.storage.googleapis.com/2.25/chromedriver_linux64.zip
 RUN unzip chromedriver_linux64.zip
 RUN chmod +x chromedriver
@@ -341,3 +344,7 @@ Xlib:  extension "RANDR" missing on display ":99".
 ```
 
 [You can ignore this error.](http://askubuntu.com/questions/754382/how-do-i-start-chromium-browser-in-headless-mode-extension-randr-missing-on-d)
+
+---
+
+If all else fails, try upgrading to a newer version of ChromeDriver in your Dockerfile.  The latest release can be identified here: http://chromedriver.storage.googleapis.com/LATEST_RELEASE
