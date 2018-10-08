@@ -6,7 +6,7 @@ applications:
   disk: 200M
   command: bundle exec pushpop jobs:run
   no-route: true
-  health-check-type: none
+  health-check-type: process
   services:
     - keen.io
     - pushpop-sendgrid-account
