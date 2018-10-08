@@ -11,6 +11,7 @@ ENV["KEEN_READ_KEY"]     = svs["user-provided"][0]["credentials"]["read_key"]
 require "pushpop-keen"
 require "pushpop-sendgrid"
 require "roadie"
+require 'active_support/time'
 
 job "keen email" do
   every 1.week, :at => 'Sunday 01:00'
