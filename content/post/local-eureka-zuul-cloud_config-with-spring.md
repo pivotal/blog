@@ -6,8 +6,8 @@ categories:
 - Spring
 - Annotations
 - Spring Boot
-date: 2018-08-01T00:00:00Z
-draft: true
+date: 2018-10-01T00:00:00Z
+draft: false
 short: |
   Example and explanation of how to set up a common use case with the Spring Cloud Netflix stack to prototype for local development.
 title: Eureka, Zuul, and Cloud Configuration - Local Development
