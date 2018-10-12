@@ -10,19 +10,19 @@ short: |
 title: Quoted and unqouted template variables in Concourse CI
 ---
 
-[Concourse CI](https://concourse-ci.org/) is a powerful testing tool, and it is highly flexible and configurable. The integrated template engine replaces [placeholders](https://en.wikipedia.org/wiki/Placeholder) (named "variables" in CI) with content from external input. This system allows to create a pipeline definitions without exposing credentials to any outsider, or it allows to store volatile data (like version numbers) in external files, close together.
+[Concourse CI](https://concourse-ci.org/) is a powerful testing tool, and it is highly flexible and configurable. The integrated template engine replaces [placeholders](https://en.wikipedia.org/wiki/Placeholder) (named "variables" in CI) with content from external input. This system allows to create a pipeline definitions without exposing credentials to anyone except the person setting up the pipeline, or it allows to store volatile data (like version numbers) in external files, close together.
 
 A lesser known fact is that Concourse supports two different types of placeholders, quoted and unquoted.
 
 
 # What is a placeholder?
 
-A placeholder is a piece in the pipeline definition which is defined somewhere else. This can be a name, a version number, a password, a ssh key, basically anything. Often this is used to hide credentials from anyone who can see or modify the code for the pipeline. Only in the end, when the pipeline is loaded using "[fly set-pipeline](https://concourse-ci.org/setting-pipelines.html)", the placeholders are replaced with the real data.
+A placeholder is a string in the pipeline definition which is defined somewhere else. This can be a name, a version number, a password, a ssh key, basically anything. Often this is used to hide credentials from anyone who can see or modify the code of the pipeline. Only in the end, when the pipeline is loaded using "[fly set-pipeline](https://concourse-ci.org/setting-pipelines.html)", the placeholders are replaced with the real data.
 
 
 ### How to specify a placeholder
 
-A variable, or placeholder, is specified using one of two different syntax:
+A variable, or placeholder, is specified using one of two different syntax forms:
 
 - ((variable))
 - {{variable))
@@ -36,14 +36,14 @@ A variable, or placeholder, is specified using one of two different syntax:
 - --var "key=value"
 - --load-vars-from <filename>
 
-Both parameters can be specified multiple times, values loaded later will overwrite values loaded earlier. All formats are loaded as [YAML](https://en.wikipedia.org/wiki/YAML), the files specified with "--load-vars-from" must contain valid YAML.
+Both parameters can be specified multiple times, values loaded later will overwrite values loaded earlier. All formats are loaded as [YAML](https://en.wikipedia.org/wiki/YAML), the files specified with `--load-vars-from` must contain valid YAML.
 
 
 # Different types of placeholders
 
 ### Unquoted placeholders
 
-The version which is most common today, and which is documented in the "set-pipeline" documentation, is using two opening and two closing parenthesis.
+The version which is most common today, and which is documented in the `set-pipeline` documentation, is using two opening and two closing parenthesis.
 
 Pipeline example:
 
@@ -51,7 +51,7 @@ Pipeline example:
 product-((version)).tar.gz
 ```
 
-Let's assume the $version variable is "11", upon "flying" the pipeline this will be replaced to:
+Let's assume the value of the `$version` variable is "11", upon "flying" the pipeline this will be replaced to:
 
 
 ```
@@ -63,7 +63,7 @@ product-11.tar.gz
 
 The older version of placeholders, but still valid and working is quoted placeholders. They use two opening and two closing curly braces.
 
-For the example above, quoted placeholders would surely not be useful, the final pipeline would look like this:
+For the example above, quoted placeholders will surely not be useful, the final pipeline would look like this:
 
 ```
 product-"11".tar.gz
