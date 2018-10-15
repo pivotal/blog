@@ -58,6 +58,8 @@ Let's assume the value of the `$version` variable is "11", upon "flying" the pip
 product-11.tar.gz
 ```
 
+If the variable specified in (()) is not defined, no error will be raised. This is ignored by `fly`.
+
 
 ### Quoted placeholders:
 
@@ -80,6 +82,4 @@ Instead this can be used for places like when a variable is used as shell parame
 /usr/bin/transmit-message "Alert" "This is just a Test Message"
 ```
 
-
-
-
+`fly` will raise an error during `set-pipeline`, if the variable specified in {{}} is not defined.
