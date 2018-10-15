@@ -8,7 +8,7 @@ categories:
 - Kubernetes
 - Agile
 date: 2018-10-02T16:01:25Z
-draft: true
+draft: false
 short: |
   Speed up agile developing process using a minikube
 title: Development of Greenplum for Kubernetes using Minikube
