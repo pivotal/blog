@@ -3,8 +3,8 @@ authors:
 - ascherbaum
 categories:
 - Concourse
-date: 2018-10-05T13:18:37Z
-draft: true
+date: 2018-10-18T17:00:00Z
+draft: false
 short: |
   How to use quoted and unquoted variables in Concourse CI templates
 title: Quoted and unqouted template variables in Concourse CI
