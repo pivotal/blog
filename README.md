@@ -1,6 +1,6 @@
 # The Pivotal Engineering Journal
 
-Welcome to our little slice of the internets!  [This blog](http://engineering.pivotal.io/) is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
+Welcome to our little slice of the internets!  [This blog](https://engineering.pivotal.io/) is dedicated to technical (and cultural) posts by the Pivotal Engineering team.  If that's you, then *please*, *please*, *please* contribute!
 
 This blog is built and maintained entirely by *you*!  Feel free to propose or just implement any improvement you believe in.  ANARCHY!!!!
 
@@ -9,7 +9,7 @@ To discuss the blog, [join the Google Group](https://groups.google.com/a/pivotal
 ## Contributing
 
 1. [Write your post](https://github.com/pivotal-legacy/blog#writing-a-post) as a draft.
-1. [Preview it](http://pivotal-cf-blog-staging.cfapps.io/) on staging.
+1. [Preview it](https://pivotal-cf-blog-staging.cfapps.io/) on staging.
 1. [Make it good](https://github.com/pivotal-legacy/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
 1. [Ship it!](https://github.com/pivotal-legacy/blog#publishing-your-copy)
 
@@ -60,7 +60,7 @@ Currently, if you have links or line breaks in your `short:` description it will
 
 ## Running Locally
 
-This site uses [Hugo](http://gohugo.io) v0.18, which is easy to install:
+This site uses [Hugo](https://gohugo.io/) v0.18, which is easy to install:
 
 ~~~
 $ brew install hugo
@@ -74,7 +74,7 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 
 ## Viewing on Staging
 
-You can also double check your work by looking on [the staging site](http://pivotal-cf-blog-staging.cfapps.io/).  Draft posts are only published there.
+You can also double check your work by looking on [the staging site](https://pivotal-cf-blog-staging.cfapps.io/).  Draft posts are only published there.
 
 ## Errors???
 
@@ -88,7 +88,7 @@ Then you _may_ have forgotten to include a property in your `data/authors/foo.ym
 
 ## Publishing Your Copy
 
-Every commit to master is [auto-deployed](https://travis-ci.org/pivotal-legacy/blog) to both [production](http://engineering.pivotal.io/) and [staging](http://pivotal-cf-blog-staging.cfapps.io/) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
+Every commit to master is [auto-deployed](https://travis-ci.org/pivotal-legacy/blog) to both [production](https://engineering.pivotal.io/) and [staging](https://pivotal-cf-blog-staging.cfapps.io/) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
 
 ## Changing the style
 

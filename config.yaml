@@ -7,7 +7,7 @@ taxonomies:
   author: "authors"
 Params:
   SubTitle: Technical articles from Pivotal engineers.
-baseURL: "http://engineering.pivotal.io"
+baseURL: "https://engineering.pivotal.io"
 googleAnalytics: UA-39702075-1
 rssLimit: 25
 ...
