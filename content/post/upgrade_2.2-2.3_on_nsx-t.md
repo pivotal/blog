@@ -10,19 +10,23 @@ categories:
 date: Thu Sep  6 10:44:30 PDT 2018
 draft: false
 short: |
-  How to upgrade an NSX-T-based PAS 2.2 foundation to 2.3 without downtime
-title: Safely Upgrading PAS 2.2 → 2.3 with NSX-T Load Balancers
+  How to upgrade an NSX-T-based PAS 2.2 → 2.3 foundation without downtime
+title: Safely Upgrading PAS 2.2 with NSX-T Load Balancers
 ---
 
-When customers with vSphere+NSX-T-based foundations upgrade PAS (Pivotal
-Application Service) from 2.2 to 2.3, their Cloud Foundry may become
-unreachable as their NSX-T static load balancer server pools have been
-emptied.
+When customers with vSphere+NSX-T-based foundations apply a stemcell update,
+update a tile, or upgrade PAS (Pivotal Application Service) from 2.2 to 2.3,
+their Cloud Foundry may become unreachable as their NSX-T static load balancer
+server pools have been emptied.
 
 This blog post describes a method to ensure availability during upgrades. We
 use a combination of customized Operations Manager [resource
 configs](https://docs.pivotal.io/pivotalcf/2-2/customizing/config-er-vmware.html#resources)
 and BOSH [VM Extensions](https://bosh.io/docs/terminology/#vm-extension).
+
+The sample workflow in this post is for upgrading PAS 2.2 to PAS 2.3 with an
+Operations Manager upgrade; however, it can also be adapted to stemcell or
+tile upgrades as well.
 
 _Operations Manager 2.3 introduces the capability to manage the full lifecycle
 of the membership of the NSX-T load balancer pools, which relieves customers of
@@ -245,6 +249,27 @@ At the end of this step, you will have a PAS 2.3.0 foundation, with networking
 optionally provided by VMware NSX-T tile 2.3.0, where each job VM is located in
 the appropriate NSX-T load balancer server pool.
 
+## 9. Gotchas
+
+An incident occurred where the NSX-T load balancer was unable to forward traffic
+to the newly-deployed gorouters.
+
+Rebooting one of the NSX-T Edges restored the flow of traffic from the NSX-T
+load balancer to the gorouters. We are unsure of the root cause; however, since
+existing load balancer pools continued to function, we suspect the Edge had
+become incapable of honoring updates.
+
+## 10. Troubleshooting
+
+We find the Traceflow (*Tools → Traceflow*) networking tool
+invaluable when debugging network failures. In the screenshot below, we examine
+the `gorouter/0` VM's ability to communicate with the load balancer (IP address
+10.144.15.4) on port 443 (HTTPS). In this case, we determined the gorouter's CID
+using the  `bosh vms` command, but we could have just as easily determined it by
+looking it up on the *Status* page of the PAS tile on Operations Manager:
+
+{{< responsive-figure src="https://user-images.githubusercontent.com/1020675/48797866-2beead80-ecb8-11e8-8be2-ceb62b5a503c.png" >}}
+
 ## References
 
 VM Extensions we used for our deployment:
@@ -260,6 +285,16 @@ Our BASH commands we followed when we upgraded: [script](https://github.com/cunn
 Josh Gray of the PEZ Team was instrumental in discovering the behavior and
 providing resources to test remediation. The BOSH vSphere CPI Team provided
 invaluable support.
+
+Bryan Kelly of Cerner provided invaluable feedback, pointing out that this
+process is relevant not only to 2.2 → 2.3 upgrades but also to stemcell upgrades
+and tile upgrades.
+
+## Corrections & Updates
+
+*2018-11-20*
+
+Added _Gotchas_ and _Troubleshooting_ sections after suggestions from Bryan Kelly.
 
 ## Footnotes
 
