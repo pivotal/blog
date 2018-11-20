@@ -54,7 +54,7 @@ We will use the dockerfile to build an image. Note that when we build, GPDB will
 git submodule update --init --recursive
 
 # Build Docker image
-docker build -t pivotaldata/gpdb-devel -f ./docker/base/Dockerfile .
+docker build -t pivotaldata/gpdb-devel -f ./src/tools/docker/[base]/Dockerfile .
 
 # Run Docker image
 docker run -it pivotaldata/gpdb-devel
