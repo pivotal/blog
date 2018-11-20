@@ -7,7 +7,7 @@ date: 2018-10-18T17:00:00Z
 draft: false
 short: |
   How to use quoted and unquoted variables in Concourse CI templates
-title: Quoted and unqouted template variables in Concourse CI
+title: Quoted and Unquoted Template Variables in Concourse CI
 ---
 
 [Concourse CI](https://concourse-ci.org/) is a powerful testing tool, and it is highly flexible and configurable. The integrated template engine replaces [placeholders](https://en.wikipedia.org/wiki/Placeholder) (named "variables" in CI) with content from external input. This system allows to create a pipeline definitions without exposing credentials to anyone except the person setting up the pipeline, or it allows to store volatile data (like version numbers) in external files, close together.
