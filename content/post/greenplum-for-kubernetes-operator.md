@@ -63,3 +63,4 @@ Steps: 2-4 and 6-9 are behind the scenes steps
 
 # References
 1. https://coreos.com/operators/
+2. http://greenplum-kubernetes.docs.pivotal.io
