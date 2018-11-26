@@ -5,7 +5,7 @@ categories:
 - Greenplum
 - Kubernetes
 - Agile
-date: 2018-11-20T16:01:25Z
+date: 2018-11-26T00:00:00Z
 draft: false
 short: |
   Enabling Declarative Style Greenplum Deployment in Kubernetes
