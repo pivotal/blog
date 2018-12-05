@@ -81,7 +81,7 @@ Which begs the question: given the expense, why do it? We have several motives:
 service is a modest way of giving back.
 
 * Our day job is a developer on
-[BOSH](https://en.wikipedia.org/wiki/BOSH_(bosh_outer_shell), a tool which, at
+[BOSH](https://en.wikipedia.org/wiki/BOSH_(software)), a tool which, at
 its simplest, creates VMs in the cloud based on specifications passed to it in a
 file. We use BOSH to deploy our NTP servers, and on at least two occasions we
 have uncovered obscure bugs as a result.
