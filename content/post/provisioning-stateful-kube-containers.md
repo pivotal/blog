@@ -151,4 +151,4 @@ Having established the overall picture of resources, in particular how to maximi
 
 That list of responsibilities starts to sound like a resource management framework, of which Kubernetes itself is one. This points up the obvious: if any stateful app can be re-architected to become stateless, resource management can be outsourced to Kubernetes. Otherwise, a stateful app must devote a significant amount of logic to managing resource allocation.
 
-[Stateful Apps, a 4-part series](stateful-apps-toc.md)
+[Stateful Apps, a 4-part series](/post/stateful-apps-toc)

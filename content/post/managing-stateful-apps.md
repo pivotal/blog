@@ -59,4 +59,4 @@ Many stateful apps require complex orchestration to assemble various pieces into
 
 When developing a stateless app from scratch, consider putting off day-2 tasks in favor of starting small. Given manual intervention by administrators to help manage day-2 operations, a development team can postpone building those features to focus on making Day 1 work smoothly. For example, consider a typical day-2 task of upgrading, wherein an app release is upgraded. For a stateful app, an upgrade could easily mean a service outage. When users are given a choice between automated upgrades at unscheduled times, and manual upgrades with scheduling, users may choose to schedule. In that case, building out automated upgrading may be deprioritized.
 
-[Stateful Apps, a 4-part series](stateful-apps-toc.md)
+[Stateful Apps, a 4-part series](/post/stateful-apps-toc)

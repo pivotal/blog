@@ -41,6 +41,6 @@ What are some of the most important considerations for developing and running st
 
 Subsequent posts in this series of blogs about Stateful Apps in Kubernetes focus on topics that may require special attention for stateful apps:
 
-*   [Provisioning stateful Kubernetes containers that work hard and stay alive](provisioning-stateful-kube-containers.md)
-*   [Storing stateful data that outlives a container or a cluster; optimizing for local volumes](storing-stateful-data.md)
-*   [Managing Stateful Apps with the Operator Pattern; Orchestration Considerations](managing-stateful-apps.md)
+*   [Provisioning stateful Kubernetes containers that work hard and stay alive](/post/provisioning-stateful-kube-containers)
+*   [Storing stateful data that outlives a container or a cluster; optimizing for local volumes](/post/storing-stateful-data)
+*   [Managing Stateful Apps with the Operator Pattern; Orchestration Considerations](/post/managing-stateful-apps)

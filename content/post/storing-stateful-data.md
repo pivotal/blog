@@ -126,4 +126,4 @@ In other words, the steps include:
 
 This kind of deployment might fail if there is a gap in the storage, such as a local volume gone missing. At such times, manual intervention may be necessary.
 
-[Stateful Apps, a 4-part series](stateful-apps-toc.md)
+[Stateful Apps, a 4-part series](/post/stateful-apps-toc)
