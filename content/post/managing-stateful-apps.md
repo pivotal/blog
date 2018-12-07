@@ -17,30 +17,29 @@ draft: true
 title: Managing Stateful Apps with the Operator Pattern; Orchestration Considerations
 
 short: |
-  Managing stateful apps with the Operator Pattern, and other orchestration considerations, part 4 of a 4-part series on Stateless Kubernetes Apps
+  Stateful Kubernetes apps can be managed with the Operator Pattern, and have other considerations regarding their orchestration; the forth blog of a series of 4 on Stateless Kubernetes Apps
 
 
 ---
-## Managing stateful apps with the Operator Pattern; Orchestration Considerations
 
-### The Operator Pattern
+## The Operator Pattern
 
 The [Operator Pattern](https://coreos.com/blog/introducing-operators.html) stipulates a process that is registered with the Kubernetes system layer, listening to Kubernetes system events with the responsibility to manage a particular set of resources. All the logic that initializes and maintains a service is thereby encapsulated into a Kubernetes deployment, which we'll call the "Operator" hereafter. 
 
 This pattern aligns with many of the requirements for stateful apps, so the Operator Pattern is a popular implementation choice. An Operator is one way to orchestrate all the constituent pieces of a stateful app into a holistic service. An Operator can more generally be called an orchestrator. 
 
 
-### Recreating failed containers
+## Recreating failed containers
 
 When a container fails or is otherwise determined to be missing, Kubernetes may automatically attempt to recreate the container, depending on several factors. For example, the [StatefulSet resource](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) typically requires that Kubernetes recreates any missing member of such a set. Alternatively, an orchestrator can monitor a deployment of pods to maintain the required set of containers. 
 
 
-### Options for automation and self-healing
+## Options for automation and self-healing
 
 Given a container has failed and been recreated, consider its effect on a stateful app. The service may also have failed, or not. To the extent that the app guarantees [High Availability](https://en.wikipedia.org/wiki/High_availability) for the failure case, automated recovery of the service is expected. However, the wide range of potential error cases presents a challenge to cover entirely without manual intervention.
 
 
-### Liveness and readiness probes offer orchestration options; DNS entries contingent on readiness
+## Liveness and readiness probes offer orchestration options; DNS entries contingent on readiness
 
 Kubernetes offers both "liveness" and "readiness" health probes, which offer an excellent mechanism for orchestrating a service, but with important caveats. 
 
@@ -53,7 +52,7 @@ However, failing the readiness criteria means the Kubernetes will remove the DNS
 Thus, an orchestrator that is based on network communication can interact with unready containers, but they must address those containers with IP addresses, not with DNS addresses. To facilitate this, a container could, for example, add its IP address to a config map or other shared discovery location. The orchestrator would communicate with constituent containers to move them into the ready state.
 
 
-### Starting with fewer features
+## Starting with fewer features
 
 Many stateful apps require complex orchestration to assemble various pieces into a single service. On "Day 1", this orchestration must stand up and integrate all the pieces that constitute a service. On "Day 2", this orchestration must upgrade, repair, and resize all the pieces that constitute the (already-started) service.
 

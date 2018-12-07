@@ -21,8 +21,6 @@ short: |
 
 ---
 
-## Stateful Apps in Kubernetes
-
 Kubernetes is available across all public clouds nowadays, including Pivotal's own [PKS](https://pivotal.io/platform/pivotal-container-service), which runs in the cloud and can also be run "on prem", on the premises of an enterprise. Kubernetes promises to run any workload, including stateless and stateful applications.
 
 A typical distinction between two types of Kubernetes apps–between stateless and stateful apps–is based on the manner in which data within the app is saved. However, for this discussion of Kubernetes apps, let's adopt a definition of stateless/stateful that classifies apps by the resilience of their service. Services provided by **stateless** apps can be easily managed with a pool of containers that, together, deliver a redundant, resilient service. Removing a portion of the containers will not interrupt the ongoing delivery of the stateless app's service.

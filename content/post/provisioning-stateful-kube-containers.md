@@ -17,13 +17,11 @@ draft: true
 title: Provisioning Stateful Kubernetes Containers that Work Hard and Stay Alive
 
 short: |
-  How to configure and create Kubernetes containers that resist getting evicted, part 2 of a 4-part series on Stateless Kubernetes Apps
+  How to configure and create Kubernetes containers that resist getting evicted, the second blog of a series of 4 on Stateless Kubernetes Apps
 
 ---
 
-## Provisioning Stateful Kubernetes Containers that Work Hard and Stay Alive
-
-### By default, all containers are free from limits but subject to eviction
+## By default, all containers are free from limits but subject to eviction
 
 By default, Kubernetes places very few limits on a container. A default, "best effort" container can take as many resources as it needs until the Kubernetes system decides that the container should be evicted, typically because memory or storage have become scarce.
 
@@ -37,7 +35,7 @@ Each container runs within a virtual machine (VM) which is called a "node". By s
 This default configuration for resource contention implies that the eviction of a given container is no big deal. This assumption that is generally true for a stateless app, in which many containers may share the service load. However, for stateful apps, container eviction could cause some disruption in service.
 
 
-### How containers are monitored, and where to find evidence of evictions
+## How containers are monitored, and where to find evidence of evictions
 
 There are at least two concurrent systems for monitoring the resource usage of containers in Kubernetes. One is the [Kubernetes kubelet monitor](https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/#eviction-monitoring-interval) which observes whether containers are exceeding their stated limits. Another is the Linux [Out-of-memory (OOM) killer](https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/#node-oom-behavior) which runs on each node, watching the RAM available on that node. Fundamentally, these monitors are protecting the liveliness of the node and its Kubernetes system functions.
 
@@ -48,7 +46,7 @@ To see eviction in action, see [a sample](https://kubernetes.io/docs/tasks/confi
 The **Linux OOM Killer**, on the other hand, gets invoked when the node itself is starved for memory. In that situation, Kubernetes system containers, which control Kubernetes system logging, may be threatened and may not function as designed. Thus, there may not be much evidence of the Linux OOM killer in Kubernetes status reports. Evictions by the OOM tool may only show up in the syslog of a given node. To access that information, use the platform tools (_gcloud_ on GKE, _bosh_ on PKS) to obtain a shell on the node.
 
 
-### Setting limits on containers helps increase their priority, but does not prevent eviction
+## Setting limits on containers helps increase their priority, but does not prevent eviction
 
 Kubernetes literature emphasizes how a developer can set a container's [requested resources and its limits](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/node/resource-qos.md#qos-classes) inside the pod definition. These limits are not maintained in a benevolent way. Resource limits help the optimistic scheduling of containers onto nodes, but the limits also serve as explicit thresholds for eviction:
 
@@ -63,7 +61,7 @@ Kubernetes has [an algorithm](https://kubernetes.io/docs/tasks/administer-cluste
 In order to be the last to be evicted, a container must state limits for CPU and memory, and either state requests equal to those limits, or no request (so that implicitly, the requests are set to the limits). These requirements then qualify the container as a "guaranteed" container, the last to be evicted for resource issues (assuming that the container itself is well-behaved, staying inside those limits).
 
 
-### Noisy neighbors, controlling the neighborhood
+## Noisy neighbors, controlling the neighborhood
 
 How can stateful containers be protected against eviction when neighbors are using lots of resources?
 
@@ -79,7 +77,7 @@ In addition to considering a heterogeneous neighborhood, consider the stateful a
 **In summary, for the easiest configuration to assure a stateful app's performance and protection, dedicate the cluster to single-tenant, and dedicate a node per single stateful container. That way, each node can be tuned for the single purpose of running the stateful app. More complex topologies are possible. Start as simply as possible.**
 
 
-### Node capacity
+## Node capacity
 
 To determine the largest amount of resources available to any pod on a node, two key metrics are available: a node's "capacity" and its "allocatable" attribute, as shown in the following sample output, querying a Minikube instance that was given 4Gb to start with:
 
@@ -119,14 +117,14 @@ mem_units=$(echo ${mem_cap_string} | sed 's/[^A-z]*//g')
 This "mem_cap_int" value can be used as an upper bound for total container resources within the node.
 
 
-### Limits managed within the app itself
+## Limits managed within the app itself
 
 Even with the recommendations above, including a dedicated cluster, dedicated nodes, and LimitRanges that guarantee eviction last, a container can be evicted because of resource usage beyond stated limits. How can a stateful app assure that its containers are "well behaved" and stay within their limits?
 
 **An app must manage its own resource usage internally, particularly with regard to the measure that commonly causes eviction: memory.**
 
 
-### _cgroups_ to enforce limits: best choice for CPU
+## _cgroups_ to enforce limits: best choice for CPU
 
 One tool for an app to self-limit its resource usage is to enforce limits using Linux _cgroups_. [cgroups](https://en.wikipedia.org/wiki/Cgroups) are part of the Linux kernel. A cgroup setting can kill processes that go over, for example, memory limits, or can throttle processes to a maximum CPU usage. If an app manages _cgroups_ for all the child processes it creates, the app has a chance to successfully stay within the limits of the app's declared resource usage. 
 
@@ -137,7 +135,7 @@ _cgroups_ are extremely useful for CPU throttling of child processes because thi
 Getting access to _cgroups_ is a challenge for containers, one that includes, in Kubernetes 1.10, a remapping of the node's /sys/fs/cgroup file system and various configurations. 
 
 
-### Additional strategies for managing resources within an app
+## Additional strategies for managing resources within an app
 
 Having established the overall picture of resources, in particular how to maximize an app's usage of the capacity available within a node, the responsibility of resource management falls upon the app itself, to be well-behaved within its guaranteed limits. Assuming the app has an architecture wherein a parent process spawns child processes for each request, that app's responsibilities include:
 
