@@ -66,6 +66,8 @@ changes to a config map with standard file-status monitoring tools. When all the
 that will constitute a service become available in a wait state, an orchestrator can 
 manage initialization of the service.
 
+{{< responsive-figure src="/images/operator-discovery.png" class="center" caption="Operator Discovery Cycle" >}}
+
 ## Starting with fewer features
 
 Many stateful apps require complex orchestration to assemble various pieces into a single service. 
