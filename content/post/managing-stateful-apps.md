@@ -3,12 +3,6 @@ authors:
 - lhamel
 
 categories:
-- Kubernetes
-- Greenplum
-- Databases
-- Stateful Apps
-- Stateless Apps
-- Pivotal Container Service (PKS)
 
 date: 2018-12-06T17:16:22Z
 
@@ -21,6 +15,7 @@ short: |
 
 
 ---
+(This blog is the fourth installment of a [four-part series](/post/stateful-apps-toc))
 
 ## The Operator Pattern
 

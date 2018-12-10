@@ -3,12 +3,6 @@ authors:
 - lhamel
 
 categories:
-- Kubernetes
-- Greenplum
-- Databases
-- Stateful Apps
-- Stateless Apps
-- Pivotal Container Service (PKS)
 
 date: 2018-12-06T17:16:22Z
 
@@ -39,6 +33,6 @@ What are some of the most important considerations for developing and running st
 
 Subsequent posts in this series of blogs about Stateful Apps in Kubernetes focus on topics that may require special attention for stateful apps:
 
-*   [Provisioning stateful Kubernetes containers that work hard and stay alive](/post/provisioning-stateful-kube-containers)
-*   [Storing stateful data that outlives a container or a cluster; optimizing for local volumes](/post/storing-stateful-data)
+*   [Provisioning Stateful Kubernetes Containers that Work Hard and Stay Alive](/post/provisioning-stateful-kube-containers)
+*   [Storing Stateful Data that Outlives a Container or a Cluster; Optimizing for Local Volumes](/post/storing-stateful-data)
 *   [Managing Stateful Apps with the Operator Pattern; Orchestration Considerations](/post/managing-stateful-apps)
