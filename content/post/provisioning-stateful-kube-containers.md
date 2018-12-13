@@ -6,7 +6,7 @@ categories:
 
 date: 2018-12-06T17:16:22Z
 
-draft: true
+draft: false
 
 title: Provisioning Stateful Kubernetes Containers that Work Hard and Stay Alive
 
