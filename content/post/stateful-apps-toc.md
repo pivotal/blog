@@ -6,7 +6,7 @@ categories:
 
 date: 2018-12-06T17:16:22Z
 
-draft: true
+draft: false
 
 title: Stateful Apps in Kubernetes
 
