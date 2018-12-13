@@ -6,7 +6,7 @@ categories:
 
 date: 2018-12-06T17:16:22Z
 
-draft: true
+draft: false
 
 title: Storing Stateful Data that Outlives a Container or a Cluster; Optimizing for Local Volumes
 
