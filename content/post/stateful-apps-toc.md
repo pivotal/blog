@@ -10,6 +10,8 @@ draft: false
 
 title: Stateful Apps in Kubernetes
 
+image: /images/stateless-cluster-resilient.png
+
 short: |
   Defining stateful versus stateless applications in terms of Kubernetes service resiliency. The first blog post of a series of four about Stateful Kubernetes Apps.
 

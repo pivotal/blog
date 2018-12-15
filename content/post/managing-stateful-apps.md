@@ -10,6 +10,8 @@ draft: false
 
 title: Managing Stateful Apps with the Operator Pattern; Orchestration Considerations
 
+image: /images/operator-discovery.png
+
 short: |
   Stateful Kubernetes apps can be managed with the Operator Pattern, and have other considerations regarding their orchestration; the forth blog of a series of 4 on Stateless Kubernetes Apps
 
