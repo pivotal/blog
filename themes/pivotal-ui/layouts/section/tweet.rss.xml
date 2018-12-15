@@ -17,7 +17,7 @@
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      <author>{{ range $i, $author := $authors }}{{ with $a := (index $all $author)}}{{if (and $i $a.Name)}} and {{end}}{{ if $a.Twitter}}@{{$a.Twitter}}{{else}}{{$a.Name}}{{ end }}{{end}}{{end}}</author>
+      <author>{{ range $i, $author := $authors }}{{ with $a := (index $all $author)}}{{if (and $i $a.Name)}}, {{end}}{{ if $a.Twitter}}@{{$a.Twitter}}{{else}}{{$a.Name}}{{ end }}{{end}}{{end}}</author>
       <guid>{{ .Permalink }}</guid>
       <description>{{ .Params.short | html }}</description>
     </item>
