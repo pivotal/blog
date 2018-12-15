@@ -40,10 +40,11 @@
   {{ if .Params.Image }}
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:image" content="{{ .Params.image | absURL }}" />
-    <meta name="twitter:image:alt" content="{{ .Site.Title }}" />
   {{ else }}
     <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content="https://engineering.pivotal.io/images/twitter_card_default.png" />
   {{ end }}
+  <meta name="twitter:image:alt" content="{{ .Site.Title }}" />
   <meta name="twitter:site" content="@pivotaleng" />
   {{ $all := .Site.Data.authors }}
   {{ with $authors := .Params.authors }}
