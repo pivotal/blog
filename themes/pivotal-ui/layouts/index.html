@@ -24,7 +24,7 @@
                 </div>
                 <span class="list-timeline-title post">
                   <a class="h3" href="{{ .Permalink }}">
-                    {{ if .Draft }}<span class="type-xs label label-primary draft">Draft</span>{{ end }}
+                    {{ if .Draft }}<span class="pui-btn pui-btn-sm pui-btn-danger btn btn-danger draft">Draft</span>{{ end }}
                     {{ .Title }}
                     <span class="list-timeline-subtitle h5 type-dark-5">{{ .Params.short | markdownify }}</span>
                   </a>
@@ -44,6 +44,18 @@
                       {{ end }}
                     </span>
                   {{ end }}
+                  <div class="list-timeline-date mobile">
+                    <ul class="authors">
+                    {{ $all := .Site.Data.authors}}
+                    {{ $authors := .Params.authors}}
+                    {{ range $author := $authors }}
+                      {{ with $a := (index $all $author)}}
+                        <li><a href="/authors/{{ $author | urlize }}">{{ $a.Name }}</a></li>
+                      {{ end}}
+                    {{ end }}
+                    </ul>
+                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+                  </div>
                 </span>
               </li>
               {{ end }}

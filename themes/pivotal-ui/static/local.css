@@ -42,17 +42,23 @@ ul.list-breadcrumb { padding-left: 27px; }
 #author .list-cards li { min-height: 100px; }
 #author .phxxl.pvl { border-bottom: 1px solid #e0e4e5; padding: 60px; }
 
-#posts .list-timeline-date { width: 30%; border-bottom: 1px solid #e0e4e5; }
+#posts .list-timeline-date { width: 20%; border-bottom: 1px solid #e0e4e5; }
+#posts .list-timeline-date.mobile { display: none; }
 #posts .list-timeline-title { padding-top:    40px; padding-bottom: 40px; border-bottom: 1px solid #e0e4e5;}
 #posts ul.authors li { list-style: none; }
-.draft { position: absolute; left: 25px; top: 15px; }
+.draft { position: absolute; left: 25px; top: 12px; }
 
-#post h1 { clear: both; }
-#post h2 { clear: both; }
-#post h3 { clear: both; }
-#post h4 { clear: both; }
-#post h5 { clear: both; }
-#post h6 { clear: both; }
+#post h1, #post h2, #post h3, #post h4, #post h5, #post h6 {
+  clear: both;
+  padding-top: 0.107em;
+  padding-bottom: 0.107em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#post .h3 { 
+  line-height: 1.286em;
+}
 
 #post .post-summary { margin-bottom: 2em; }
 
@@ -68,6 +74,10 @@ ul.list-breadcrumb { padding-left: 27px; }
 figure img {
   margin-bottom: 1em;
   max-width: 100%;
+}
+
+figure {
+  margin: 0;
 }
 
 figure.left  img { float: left;  padding-right: 1em; }
@@ -95,16 +105,6 @@ blockquote {
   padding: 12px 24px;
 }
 
-ul, ol { list-style-position: inside; }
-
-h1, .h1    { font-size: 33px; }
-h2, .h2    { font-size: 27px; }
-h3, .h3    { font-size: 22px; }
-body       { font-size: 18px; }
-blockquote { font-size: 18px; }
-h4, .h4    { font-size: 20px; }
-h5, .h5    { font-size: 18px; }
-h6, .h6    { font-size: 15px; }
 
 /* "table" copied from PUI */
 
@@ -126,3 +126,125 @@ table {
     border-top: 2px solid #ddd; }
   table table {
     background-color: transparent; }
+
+
+  .pull-right { float: right; }
+
+    .list-timeline {
+  padding: 0;
+  display: table;
+  width: 100%; }
+
+.list-timeline-item {
+  display: table-row; }
+
+.list-timeline-date {
+  font-size: 14px;
+  color: #b4b4b4;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: right;
+  padding-right: 26px; }
+
+.list-timeline-subtitle {
+  font-size: 14px;
+  color: #b4b4b4;
+  font-weight: 400;
+  display: block; }
+
+.list-timeline-tags {
+  font-size: 14px;
+  color: #424242;
+  font-weight: 400;
+  display: block; }
+
+.list-timeline-categories {
+  font-size: 14px;
+  color: #424242;
+  font-weight: 400;
+  display: block; }
+
+.list-timeline-title {
+  font-size: 14px;
+  color: #424242;
+  font-weight: 600;
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
+  padding: 10px 26px; }
+  .list-timeline-title:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 1px;
+    background: #e0e4e5;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    top: 0;
+    bottom: 0; }
+  .list-timeline-title:after {
+    height: 20px;
+    width: 20px;
+    display: block;
+    content: "";
+    border: 2px solid #d4d9d9;
+    border-radius: 1000px;
+    background: white;
+    box-shadow: 0 0 0 2px white;
+    position: absolute;
+    left: -9px;
+    top: 50%;
+    z-index: 2;
+    transform: translatey(-50%);
+    -moz-transform: translatey(-50%);
+    -ms-transform: translatey(-50%);
+    -o-transform: translatey(-50%);
+    -webkit-transform: translatey(-50%); }
+
+@media only screen and (max-width : 480px) {
+  .list-timeline-item {
+    position: relative;
+  }
+
+  .list-timeline-title {
+    display: block;
+    padding: 20px !important;
+  }
+
+  .list-timeline-title::after {
+    display: none;
+  }
+
+  .list-timeline-date ul.authors {
+    padding: 0;
+  }
+  .list-timeline-date ul.authors li {
+    display: inline;
+  }
+
+  .list-timeline-date ul.authors li, .list-timeline-date time {
+  }
+
+  .list-timeline-date time {
+  }
+
+  .list-timeline-date ul.authors li:after {
+    content: ", ";
+  }
+  .list-timeline-date ul.authors li:last-child:after {
+    content: "";
+  }
+
+  .list-timeline-date {
+    padding-top: 15px;
+    display: none;
+    border-bottom: none !important;
+  }
+
+  .list-timeline-date.mobile {
+    display: block;
+    width: 100% !important;
+    text-align: left !important;
+  }
+}
