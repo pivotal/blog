@@ -15,59 +15,59 @@
         {{ partial "breadcrumb.html" . }}
         <div id="author">
           <div class="phxxl pvl">
-          <h2>{{ $name.Name }}</h2>
+            <h2>{{ $name.Name }}</h2>
 
-          <ul class="list-cards list-card-2 list-cards-xs fieldset">
-          {{ if (ne $name.Blog nil) }}
-            <li class="tile-item">
-              <div class="panel">
-                <div class="panel-body">
-                  <i class="fa fa-globe fa-lg" aria-hidden="true"></i><br/>
-                    {{ if (isset $name.Blog 0) }}
-                      {{ range $name.Blog }}
-                      <a href="{{ . }}">{{ . }}</a>
+            <div class="grid">
+            {{ if (ne $name.Blog nil) }}
+              <div class="col col-sm">
+                <div class="panel">
+                  <div class="panel-body">
+                    <i class="fas fa-globe fa-lg" aria-hidden="true"></i><br/>
+                      {{ if (isset $name.Blog 0) }}
+                        {{ range $name.Blog }}
+                        <a href="{{ . }}">{{ . }}</a>
+                        {{ end }}
+                      {{ else }}
+                        <a href="{{ $name.Blog }}">{{ $name.Blog }}</a>
+                      {{ end }}
+                  </div>
+                </div>
+              </div>
+              {{ end }}
+
+              {{ if (ne $name.Twitter nil) }}
+              <div class="col col-sm">
+                <div class="panel">
+                  <div class="panel-body">
+                    <i class="fab fa-twitter fa-lg" aria-hidden="true"></i><br/>
+                    {{ if (isset $name.Twitter 0) }}
+                      {{ range $name.Twitter }}
+                        <a href="https://twitter.com/{{ . }}">@{{ . }}</a><br/>
                       {{ end }}
                     {{ else }}
-                      <a href="{{ $name.Blog }}">{{ $name.Blog }}</a>
+                        <a href="https://twitter.com/{{ $name.Twitter }}">@{{ $name.Twitter }}</a>
                     {{ end }}
+                  </div>
                 </div>
               </div>
-            </li>
-            {{ end }}
-
-            {{ if (ne $name.Twitter nil) }}
-            <li class="tile-item">
-              <div class="panel">
-                <div class="panel-body">
-                  <i class="fa fa-twitter fa-lg" aria-hidden="true"></i><br/>
-                  {{ if (isset $name.Twitter 0) }}
-                    {{ range $name.Twitter }}
-                      <a href="https://twitter.com/{{ . }}">@{{ . }}</a><br/>
+              {{ end }}
+              {{ if (ne $name.Github nil) }}
+              <div class="col col-sm">
+                <div class="panel">
+                  <div class="panel-body">
+                    <i class="fab fa-github fa-lg" aria-hidden="true"></i><br/>
+                    {{ if (isset $name.Github 0) }}
+                      {{ range $name.Github }}
+                      <a href="https://github.com/{{ . }}">@{{ . }}</a><br/>
+                      {{ end }}
+                    {{ else }}
+                      <a href="https://github.com/{{ $name.Github }}">@{{ $name.Github }}</a>
                     {{ end }}
-                  {{ else }}
-                      <a href="https://twitter.com/{{ $name.Twitter }}">@{{ $name.Twitter }}</a>
-                  {{ end }}
+                  </div>
                 </div>
               </div>
-            </li>
-            {{ end }}
-            {{ if (ne $name.Github nil) }}
-            <li class="tile-item">
-              <div class="panel">
-                <div class="panel-body">
-                  <i class="fa fa-github fa-lg" aria-hidden="true"></i><br/>
-                  {{ if (isset $name.Github 0) }}
-                    {{ range $name.Github }}
-                    <a href="https://github.com/{{ . }}">@{{ . }}</a><br/>
-                    {{ end }}
-                  {{ else }}
-                    <a href="https://github.com/{{ $name.Github }}">@{{ $name.Github }}</a>
-                  {{ end }}
-                </div>
-              </div>
-            </li>
-            {{ end }}
-          </ul>
+              {{ end }}
+            </div>
           </div>
 
           <div class="pvl phxxl">Posts By {{ $name.Name }}</div>

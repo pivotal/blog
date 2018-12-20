@@ -39,7 +39,6 @@ ul.list-breadcrumb { padding-left: 27px; }
   ul.list-breadcrumb { padding-left: 7px; }
 }
 
-#author .list-cards li { min-height: 100px; }
 #author .phxxl.pvl { border-bottom: 1px solid #e0e4e5; padding: 60px; }
 
 #posts .list-timeline-date { width: 20%; border-bottom: 1px solid #e0e4e5; }
