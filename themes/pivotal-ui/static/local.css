@@ -144,7 +144,7 @@ table {
   display: table-cell;
   vertical-align: middle;
   text-align: right;
-  padding-right: 26px; }
+  padding: 26px; }
 
 .list-timeline-subtitle {
   font-size: 14px;
