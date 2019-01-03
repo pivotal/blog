@@ -159,9 +159,35 @@ We concluded that our `cf ssh` connection *actually* works this way:
   suite for key exchange, and can't establish a connection
 - When it can't establish a connection with the server, it sends a FIN to the
   client (`EOF`)
-- It proceeds to whitelist the client-IP, server-IP, server-port tuple for a period of
-  time (we think 15-20 minutes). It does not attempt to proxy during that time
+- It proceeds to whitelist the client-IP, server-IP, server-port tuple for a
+  little more than one hour <sup>[[timeout](#timeout)]</sup>. It does not attempt to proxy during that time
 - It will attempt to proxy new client connections from different IP addresses
   during that time
 
 Our final resolution to this issue was a workaround wherein each test suite that runs `cf ssh`, we "prime the pump" by running a `cf ssh` command, which we expect to fail, before running the test suite.
+
+## Footnotes
+
+<a id="timeout"><sup>[timeout]</sup></a>
+The exact timeout is a little more than an hour, somewhere between 3720 and 3840
+seconds.
+
+We wrote a
+[script](https://github.com/cunnie/bin/blob/c51fceac1a1af6361b4099957960958729e95046/pan_timeout.sh)
+to more precisely determine the timeout. As can be seen from the output below
+(edited for clarity), there was no proxy attempt at 3720 seconds (`Permission
+denied...`), but there was at 3840 seconds (`Connection closed...`)
+
+```
+Permission denied (password).
+Timeout: 3720
+Connection closed by 10.195.84.17 port 2222
+Timeout: 3840
+```
+
+## Corrections & Updates
+
+*2019-01-02*
+
+Include the amount of time that the PAN firewall waits after an unsuccessful
+proxy attempt before triggering the next attempt.
