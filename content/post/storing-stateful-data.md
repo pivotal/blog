@@ -102,34 +102,42 @@ spec:
 
 Kubernetes 1.10 added, as a beta feature, access to 
 [Local Persistent Volumes](https://kubernetes.io/docs/concepts/storage/volumes/#local). 
+
 Particularly in "raw block" mode, local persistent volumes imply a significant performance gain, 
 but at the cost of deployment challenges. If a stateful app's performance depends on storage 
-throughput, this tradeoff may be worthy of investigation. For example, 
+throughput, this trade-off may be worthy of investigation. For example, 
 [Salesforce has described](https://engineering.salesforce.com/provisioning-kubernetes-local-persistent-volumes-61a82d1d06b0) 
 their preference for local persistent volumes.
 
-Local persistent volumes are, by definition, local to the nodes on which they have been physically attached, 
-and cannot "travel" to another node in a manner like a network-mediated "remote persistent" volume.
- Therefore, when stateful data is present on a local persistent volume, a stateful app must manage to recreate 
- the app with containers landing on the same node that already has the data. This is much more complex 
- and much less flexible than having a standard, remote persistent volume where any node can generally 
+Local persistent volumes are, by definition, local to the nodes on which they have been physically attached
+and mounted. 
+This contrasts with remote persistent volumes, wherein Kubernetes causes a container to perceive
+a mounted volume, but the Kubernetes network layer meditates the communication between
+container and volume.
+In other words, a remote persistent volume can be easily remounted on another node, while a local persistent 
+ volume cannot. Therefore, when stateful data is already present on a local persistent volume, 
+ a stateful app must help the Kubernetes system schedule the 
+ the appropriate container on the appropriate node that has the appropriate local data. Managing this 
+  topology is much more complex 
+ and much less flexible than having a remote persistent volume where any node can generally 
  mount any remote volume.
 
 ## Rescheduling containers onto the nodes where their data already resides
 
 Kubernetes has some automatic affinity when replacing a container into an existing deployment. 
 Remote Persistent Volumes that were mounted when a container was initially launched will generally be matched 
-and remounted to a container that is recreated while the original deployment is still in effect.
+and remounted to a container that is recreated, on any node, while the original deployment is still in effect.
 
 However, when a wholesale change happens, such as when a Kubernetes cluster is wiped and a new one 
-is recreated to house an app, how can that app find any existing data, particularly in light of local volumes that cannot be moved with the benefit of networking as are remote volumes?
+is recreated, how can an app find any existing data, particularly in light of local volumes 
+that cannot be moved?
 
 One strategy is to use [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) to investigate all nodes and attach labels that will help Kubernetes assign containers to an appropriate location.
 
 In other words, the steps include:
 
-*   A daemon runs on each node, perhaps as a privileged container, investigating any storage found (particularly local), 
-initializing and validating as necessary, and finally labeling the node appropriately
+*   A short-lived daemon runs on each node, perhaps as a privileged container, investigating any storage found (particularly local), 
+mounting, initializing and validating as necessary, and finally labeling the node appropriately
 *   The stateful app's orchestration (e.g., an operator) adds selectors to container specifications to ensure 
 each stateful container will be scheduled on a node that matches its storage expectation
 
