@@ -63,7 +63,7 @@ eureka:
 ```
 <small><i>~/zuulreka-config/components/cloud-config/src/main/resources/bootstrap.yml</i></small>
 
-Because Spring Cloud Configuration needs the `config.server.git.uri` to be a Git repository, we can fake that by initializing the configurations directory as a Git repository and commit the latest properties we want the `netflix-protected` API to use.
+Because Spring Cloud Configuration needs the `config.server.git.uri` to be a Git repository, we can fake that by initializing the configurations directory as a Git repository and commit the latest properties we want the `netflix-protected` API to use.  This will create a submodule that we do not want to keep, so before you commit, make sure to run `rm -rf ~/zuulreka-config/configurations/.git`.
 
 {{< responsive-figure src="/images/pcf-eureka-zuul-cloud_config-with-spring/git_init_local.png" >}}
 
@@ -267,7 +267,7 @@ Now we can build and push the `zuul` component from the `~/zuulreka-config/compo
 
 [The service registry needs about a minute and a half to register both applications](http://cloud.spring.io/spring-cloud-netflix/single/spring-cloud-netflix.html#_why_is_it_so_slow_to_register_a_service).  When it does, we can send a GET request to the Zuul router to get a response from the api we deployed.  Using [httpie](https://httpie.org/), type `http get https://zuul.apps.pcfone.io/netflix-protected/hello` to see the response.  Note that your domain could differ from `apps.pcfone.io`.  
 
-Now, to check that the `@RefreshScope` annotation still works in PCF - change the `external.property` for the `netflix-protected` application to say `hello universe!`. Also add, commit, and push those changes to your repository.  Next, type `http post https://zuul.apps.pcfone.io/netflix-protected/refresh` to have the API refetch the updated properties.  Now typing `http get https://zuul.apps.pcfone.io/netflix-protected/hello` should yield the updated properties.
+Now, to check that the `@RefreshScope` annotation still works in PCF - change the `external.property` for the `netflix-protected` application to say `hello universe!`. Also add, commit, and push those changes to your repository.  Next, type `http post https://netflix-protected.apps.pcfone.io/actuator/refresh` to have the API refetch the updated properties.  Now typing `http get https://zuul.apps.pcfone.io/netflix-protected/hello` should yield the updated properties.
 
 I hope these tutorials have been useful!  Please reach out and leave me some feedback or just ask for some clarification at [bstokes@pivotal.io](mailto:bstokes@pivotal.io).
 
