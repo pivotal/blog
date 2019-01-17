@@ -6,7 +6,7 @@ categories:
 - Spring
 - Annotations
 - Spring Boot
-date: 2018-10-01T00:00:00Z
+date: 2019-01-15T00:00:00Z
 draft: false
 short: |
   Example and explanation of how to set up a common use case with the Spring Cloud Netflix stack to prototype for local development.
@@ -19,7 +19,7 @@ A couple of recent projects I have been on have started our engagement with the 
 
 I went with a single repository for all of the components because simply, it is easier to work with.  I would agree that eventually it would be better to move the Spring Cloud Configuration and API to be in their own separate repository and have all of the 'local only' components have their own repository.  For now, let's keep it simple.
 
-TO take a quick look into the future, the Eureka Server/Discovery Service will be the registry for all of the micro-services - Spring Cloud Configuration, Spring Cloud Zuul Router, and Spring Boot API.  Once everything is put together, the domain will look like this:
+To look ahead, the Eureka Server/Discovery Service will be the registry for all of the micro-services - Spring Cloud Configuration, Spring Cloud Zuul Router, and Spring Boot API.  Once everything is put together, the domain will look like this:
 
 {{< responsive-figure src="/images/local-eureka-zuul-cloud_config-with-spring/boxes-and-lines.png" class="center" >}}
 
@@ -95,7 +95,7 @@ public class EurekaApplication {
     }
 }
 ```
-<small><i>components/eureka/EurekaApplication.java</i></small>
+<small><i>~/zuulreka-config/components/eureka/EurekaApplication.java</i></small>
 
 Since we just want to discover other instances with this component (and not be considered a Eureka Client), I will make it so the application does not try to connect or get the registry from another Eureka Server.  I also set the application name and the port as to not conflict with the other components.
 
@@ -112,7 +112,7 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
 ```
-<small><i>components/eureka/src/main/resources/application.yml</i></small>
+<small><i>~/zuulreka-config/components/eureka/src/main/resources/application.yml</i></small>
 
 ### [Spring Cloud Configuration](http://cloud.spring.io/spring-cloud-config/single/spring-cloud-config.html)
 
@@ -148,7 +148,7 @@ public class CloudConfigApplication {
     }
 }
 ```
-<small><i>components/cloud-config/src/main/java/io/template/zuulrekaconfig/CloudConfigApplication.java</i></small>
+<small><i>~/zuulreka-config/components/cloud-config/src/main/java/io/template/zuulrekaconfig/CloudConfigApplication.java</i></small>
 
 Because of Spring Boot's [Application Context Hierarchies](https://cloud.spring.io/spring-cloud-static/spring-cloud-commons/2.0.0.M9/multi/multi__spring_cloud_context_application_context_services.html#_application_context_hierarchies), when the Eureka Clients start, they need to tell the Eureka Server as early as possible that they need to connect.  We can do this with a `bootstrap.yml`:
 
@@ -162,7 +162,7 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8282/eureka}
 ```
-<small><i>components/cloud-config/src/main/resources/bootstrap.yml</i></small>
+<small><i>~/zuulreka-config/components/cloud-config/src/main/resources/bootstrap.yml</i></small>
 
 The `application.yml` declares an explicit port and makes sure the `native` profile is set by default.  [The `native` profile](https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#_file_system_backend) will allow the `.yml` property files to reside within the cloud configuration component [instead of having to use a fake GitHub file](https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#_spring_cloud_config_server).
 
@@ -174,7 +174,7 @@ spring:
   profiles:
     active: native
 ```
-<small><i>components/cloud-config/src/main/resources/application.yml</i></small>
+<small><i>~/zuulreka-config/components/cloud-config/src/main/resources/application.yml</i></small>
 
 Later, I will show the `zuul` and `netflix-protected`, externalized properties that will reside in this component.
 
@@ -213,7 +213,7 @@ public class ZuulApplication {
     }
 }
 ```
-<small><i>components/zuul/src/main/java/io/template/zuulrekaconfig/ZuulApplication.java</i></small>
+<small><i>~/zuulreka-config/components/zuul/src/main/java/io/template/zuulrekaconfig/ZuulApplication.java</i></small>
 
 Next, set up the Spring application context to define the components name, how to connect to the Spring Cloud Configuration and Service Discovery using a `bootstrap.yml` file:
 
@@ -233,7 +233,7 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8282/eureka}
 ```
-<small><i>components/zuul/src/main/resources/bootstrap.yml</i></small>
+<small><i>~/zuulreka-config/components/zuul/src/main/resources/bootstrap.yml</i></small>
 
 By convention, the routes will be configured using the `spring.application.name` (with prefixes stripped) so there is no need to map a route the the `netflix-protected` component.  This is made possible by using a combination of Spring, Eureka, and Ribbon, which you can read about [here](http://cloud.spring.io/spring-cloud-static/Finchley.SR1/single/spring-cloud.html#netflix-zuul-reverse-proxy).  If/when the Zuul instance needs a set of properties, they would be added to the Spring Cloud Configuration Server at `src/main/resources/zuul.yml`.
 
@@ -267,7 +267,7 @@ public class NetflixProtectedApplication {
     }
 }
 ```
-<small><i>components/netflix-protected/src/main/java/io/template/zuulrekaconfig/NetflixProtectedApplication.java</i></small>
+<small><i>~/zuulreka-config/components/netflix-protected/src/main/java/io/template/zuulrekaconfig/NetflixProtectedApplication.java</i></small>
 
 This controller will get the `external.property` from the Spring Cloud Configuration Server and return it when you hit the controller through the Zuul router.  __This is how we will know that everything is connected the right way.__  Also note the [`@RefreshScope`](https://cloud.spring.io/spring-cloud-static/spring-cloud.html#_refresh_scope) annotation that, with a little bit of extra work, will save us some time by refreshing the properties once the Configuration Server has updated.  
 
@@ -291,7 +291,7 @@ public class DemoController {
     }
 }
 ```
-<small><i>components/netflix-protected/src/main/java/io/template/zuulrekaconfig/DemoController.java</i></small>
+<small><i>~/zuulreka-config/components/netflix-protected/src/main/java/io/template/zuulrekaconfig/DemoController.java</i></small>
 
 We should use the `bootstrap.yml` to define the [servlet context path](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#_custom_context_path), the application name, the location of the Spring Cloud Configuration and Eureka Servers.
 
@@ -312,7 +312,7 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8282/eureka}
 ```
-<small><i>components/netflix-protected/src/main/resources/bootstrap.yml</i></small>
+<small><i>~/zuulreka-config/components/netflix-protected/src/main/resources/bootstrap.yml</i></small>
 
 And similar to the `zuul` component, the `netflix-protected` component will have its properties defined in the `cloud-config` component:
 
@@ -326,7 +326,7 @@ management:
       exposure:
         include: refresh
 ```
-<small><i>components/cloud-config/src/main/resources/netflix-protected.yml</i></small>
+<small><i>~/zuulreka-config/components/cloud-config/src/main/resources/netflix-protected.yml</i></small>
 
 The management property shown will expose the actuator's refresh endpoint to tell the API to check for any property updates.  I should also point out that the Configuration Server would need to be restarted for this to work and the `@RefreshScope` annotation __must__ be applied to the component leveraging the property - not on the Application Class (I wanted that to work too).  The final step would be to post to the `actuator/refresh` endpoint:
 
