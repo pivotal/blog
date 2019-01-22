@@ -8,14 +8,13 @@ categories:
 date: 2019-01-21T11:16:22Z
 draft: false
 short: |
-  Time-based One-time Passwords (TOTP)authenticators apps are often deployed on
+  Time-based One-time Passwords (TOTP) authenticator apps are often deployed on
   smartphones to enhance security of sensitive online accounts; however,
   replacing the phone typically requires a burdensome reset of *all* TOTP
   passwords. In this blog post we describe the clever use of a QR code reader,
-  secure storage, bash scripting, a QR code generator to quickly configure a new
-  phone (no reset of TOTP required).
+  secure storage, bash scripting, and a QR code generator to quickly configure a
+  new phone (no reset of TOTP required).
 title: Transferring Time-based One-time Passwords to a New Smartphone
-image: /images/pairing.jpg
 ---
 
 ## Abstract
@@ -27,12 +26,12 @@ verification services using the Time-based One-time Password Algorithm (TOTP)
 and HMAC-based One-time Password algorithm
 (HOTP)"](https://en.wikipedia.org/wiki/Google_Authenticator)
 
-Smartphone TOTP, a form of Two-factor authentication (2FA), display a 6-digit
+Smartphone TOTP, a form of Two-factor authentication (2FA), displays a 6-digit
 code derived from a shared secret, updating every thirty seconds.
 
-The shared secret is presented only once to the user, typically in with a [QR
+The shared secret is presented only once to the user, typically with a [QR
 (Quick Response) Code](https://en.wikipedia.org/wiki/QR_code) which is scanned
-in by the authenticator app.
+by the authenticator app.
 
 By using a simple QR app (not an authenticator app) to read in the shared
 secret, and storing the shared secret in a secure manner, one can easily recover
@@ -57,7 +56,7 @@ keeps spare phones.
 
 ### 0. Scan in the QR URL
 
-When scanning in a new TOTP code, rather than bringing up Google Authenticator,
+When scanning in a new TOTP code, rather than launching Google Authenticator,
 we use Android Camera's builtin QR Code reader (we're not familiar with
 iOS/iPhones, but we assume there is an equivalent feature):
 
@@ -140,9 +139,9 @@ A parade of QR codes scrolls on our terminal, and we use our authenticator app
 to scan them in. We have been able to scan as many as 12 different QR codes in
 under a minute!
 
-We recommend adding the QR code on your terminal, not on the site's web page, to
-the authenticator to ensure that the URL (and secret) have been correctly
-copied.
+We point our authenticator app to the QR code on our terminal (not the
+QR code in the site's web page) to ensure that the URL (and secret) have been
+correctly copied.
 
 ## TOTP Alternatives
 
@@ -174,8 +173,8 @@ as of this writing.
 
 [CNET](https://www.cnet.com/how-to/how-to-move-google-authenticator-to-a-new-device/)
 describes a procedure which doesn't require storing the secrets but does require
-visiting each TOTP-enabled site to scan in the a new QR code. It also requires
-the old phone (it's not much help if you lose your phone).
+visiting each TOTP-enabled site to scan in a new QR code. It also requires the
+old phone (it's not much help if you lose your phone).
 
 [Protectimus](https://www.protectimus.com/blog/google-authenticator-backup/)
 suggests saving screenshots of your secret keys, a simple solution for the
