@@ -10,6 +10,13 @@ short: |
 title: Connecting To PCC with Spring Boot
 ---
 
+# NOTE
+_This blog makes use of the now deprecated `spring-cloud-gemfire-spring-connector`. Please use [Spring Boot for Apache Geode & Pivotal GemFire
+](https://github.com/spring-projects/spring-boot-data-geode) instead, to talk to PCC from a java client([Sample app](https://github.com/pivotal-cf/PCC-Sample-App-PizzaStore))._
+
+
+
+
 Ever since I started working with the Pivotal Cloud Cache (PCC) team, I wanted to write a sample application that demonstrated how easy it was to start to use GemFire with little to no configuration. 
 
 # The Scenario
