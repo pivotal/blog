@@ -298,8 +298,6 @@ We should use the `bootstrap.yml` to define the [servlet context path](https://d
 ```yaml
 server:
   port: 8181
-  servlet:
-    context-path: /netflix-protected
 spring:
   application:
     name: netflix-protected

@@ -110,7 +110,7 @@ These services can also be created through the user interface from the `Marketpl
 
 If you want to see how to create this component from scratch, check out my previous [post](http://engineering.pivotal.io/post/local-eureka-zuul-cloud_config-with-spring/).  For this post, however, I am only going to show how to update the `netflix-protected` component.  The only changes that will need to be made are to update the dependencies so that the application will connect to the PCS instances of the Service Registry and Cloud Configuration servers, update how it connects to those resources, disable security (opposed to configuring it because some of the added dependencies will add Spring Security to the classpath), and create a `manifest.yml` file that will describe to PCF how this application should run.
 
-To update the `netflix-protected` component, add to the `~/zuulreka-config/components/netflix-protected/build.gradle` file by changing the Spring dependency management plugin to also import the spring-cloud-services-dependencies from `io.pivotal.spring.cloud:spring-cloud-services-dependencies:${springBootVersion}`.  Also, include the `io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry` dependency within the `dependencies` section.
+To update the `netflix-protected` component, add to the `~/zuulreka-config/components/netflix-protected/build.gradle` file by changing the Spring dependency management plugin to also import the spring-cloud-services-dependencies from `io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.0.1.RELEASE`.  Also, include the `io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry` dependency within the `dependencies` section.
 
 ```
 buildscript {
@@ -233,7 +233,54 @@ Now we can build and push the `netflix-protected` component from the `~/zuulreka
 
 ### [Spring Zuul Router & Filtering](https://github.com/netflix/zuul)
 
-If you want to see how to create a Zuul Router & Filter, check out my previous [post](http://engineering.pivotal.io/post/local-eureka-zuul-cloud_config-with-spring/).  To update the `zuul` project to connect to the service registry when deployed to PCF and connect to your local instance when ran locally, update the property, `defaultZone` at `~/zuulreka-config/components/zuul/src/main/resources/bootstrap.yml`.
+If you want to see how to create a Zuul Router & Filter, check out my previous [post](http://engineering.pivotal.io/post/local-eureka-zuul-cloud_config-with-spring/).
+First, update `~/zuulreka-config/components/zuul/build.gradle` file by changing the Spring dependency management plugin to also import the spring-cloud-services-dependencies from `io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.0.1.RELEASE`.  Also, include the `io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry` dependency within the `dependencies` section.
+
+```
+buildscript {
+    ext {
+        springBootVersion = '2.0.2.RELEASE'
+        springCloudVersion = 'Finchley.SR1'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'io.template'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:2.0.1.RELEASE"
+    }
+}
+
+dependencies {
+    compile(
+            'org.springframework.cloud:spring-cloud-starter-config',
+            'org.springframework.cloud:spring-cloud-starter-netflix-zuul',
+            'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+            'io.pivotal.spring.cloud:spring-cloud-services-starter-service-registry')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+```
+
+Then to update the application to connect to the service registry when deployed to PCF and or your local instance when ran locally, change the property, `defaultZone` at `~/zuulreka-config/components/zuul/src/main/resources/bootstrap.yml`.
 
 ```yaml
 eureka:
