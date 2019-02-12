@@ -25,7 +25,7 @@ A placeholder is a string in the pipeline definition which is defined somewhere 
 A variable, or placeholder, is specified using one of two different syntax forms:
 
 - ((variable))
-- {{variable))
+- {{variable}}
 
 
 ### How to load variables
