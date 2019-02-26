@@ -1,7 +1,7 @@
 ---
 authors:
-- Kong-Yew, Chan
-- Francisco, Guerrero
+- kochan
+- frankgh
 - user
 categories:
 - Greenplum
@@ -42,92 +42,88 @@ Typically, enterprises have needs to share data with multiple RDBMS and systems 
 You can configure GPDB to access external tables such as [Minio](https://docs.pivotal.io/partners/minio-greenplum/index.html), S3 and any S3 compatible object storage including [Dell EMC Elastic Cloud Storage](https://www.dellemc.com/en-us/storage/ecs/index.htm)(ECS).
 
 1. Login as `gpadmin`.
-    ```bash
-    $ su - gpadmin
-    ```
+
+        $ su - gpadmin
+
 2. Create a PXF Server Configuration.
+
+        $ mkdir -p $PXF_CONF/servers/minio
+    *Note: A PXF server configuration in `$PXF_CONF/servers` is analogous to [Foreign Data Wrapper Servers](https://www.postgresql.org/docs/9.4/postgres-fdw.html) where each server represents a distinct remote system you want to connect to.
+
     ```bash
     $ mkdir -p $PXF_CONF/servers/minio
     ```
     *Note: A PXF server configuration in `$PXF_CONF/servers` is analogous to
     [Foreign Data Wrapper Servers](https://www.postgresql.org/docs/9.4/postgres-fdw.html)
     where each server represents a distinct remote system you want to connect to.
+
 3. Copy the provided minio template into the server.
-    ```bash
-    $ cp $PXF_CONF/templates/minio-site.xml $PXF_CONF/servers/minio
-    ```
-    ```bash
-    $ cat $PXF_CONF/servers/minio/minio-site.xml
-    ```
-    ```xml
-    <?xml version="1.0" encoding="UTF-8"?>
-    <configuration>
-        <property>
-            <name>fs.s3a.endpoint</name>
-            <value>YOUR_MINIO_URL</value>
-        </property>
-        <property>
-            <name>fs.s3a.access.key</name>
-            <value>YOUR_AWS_ACCESS_KEY_ID</value>
-        </property>
-        <property>
-            <name>fs.s3a.secret.key</name>
-            <value>YOUR_AWS_SECRET_ACCESS_KEY</value>
-        </property>
-        <property>
-            <name>fs.s3a.fast.upload</name>
-            <value>true</value>
-        </property>
-        <property>
-            <name>fs.s3a.path.style.access</name>
-            <value>true</value>
-        </property>
-    </configuration>
-    ```
-4. Configure **`YOUR_MINIO_URL`**, **`YOUR_AWS_ACCESS_KEY_ID`**,
-and **`YOUR_AWS_SECRET_ACCESS_KEY`** properties in `$PXF_CONF/servers/minio/minio-site.xml`.
-    ```bash
-    $ sed -i "s|YOUR_MINIO_URL|http://minio1:9000|" $PXF_CONF/servers/minio/minio-site.xml
-    $ sed -i "s|YOUR_AWS_ACCESS_KEY_ID|minio|" $PXF_CONF/servers/minio/minio-site.xml
-    $ sed -i "s|YOUR_AWS_SECRET_ACCESS_KEY|minio123|" $PXF_CONF/servers/minio/minio-site.xml
-    ```
-    *Note: sed in mac has some issues. If you have issues in mac use `sed -i '' -i ...` .
-5. Use psql to create external table that uses the `minio` server to access the `stocks.csv` text file
-    in our minio `testbucket`.
-    ```sql
-    CREATE EXTERNAL TABLE stock_fact_external (
-    stock text,
-    stock_date text,
-    price text)
-    LOCATION('pxf://testbucket/stocks.csv?PROFILE=s3:text&SERVER=minio')
-    FORMAT 'TEXT';
-    ```
+
+        $ cp $PXF_CONF/templates/minio-site.xml $PXF_CONF/servers/minio
+        $ cat $PXF_CONF/servers/minio/minio-site.xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <configuration>
+            <property>
+                <name>fs.s3a.endpoint</name>
+                <value>YOUR_MINIO_URL</value>
+            </property>
+            <property>
+                <name>fs.s3a.access.key</name>
+                <value>YOUR_AWS_ACCESS_KEY_ID</value>
+            </property>
+            <property>
+                <name>fs.s3a.secret.key</name>
+                <value>YOUR_AWS_SECRET_ACCESS_KEY</value>
+            </property>
+            <property>
+                <name>fs.s3a.fast.upload</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>fs.s3a.path.style.access</name>
+                <value>true</value>
+            </property>
+        </configuration>
+
+4. Configure **`YOUR_MINIO_URL`**, **`YOUR_AWS_ACCESS_KEY_ID`**, and **`YOUR_AWS_SECRET_ACCESS_KEY`** properties in `$PXF_CONF/servers/minio/minio-site.xml`.
+
+        $ sed -i "s|YOUR_MINIO_URL|http://minio1:9000|" $PXF_CONF/servers/minio/minio-site.xml
+        $ sed -i "s|YOUR_AWS_ACCESS_KEY_ID|minio|" $PXF_CONF/servers/minio/minio-site.xml
+        $ sed -i "s|YOUR_AWS_SECRET_ACCESS_KEY|minio123|" $PXF_CONF/servers/minio/minio-site.xml
+        *Note: sed in mac has some issues. If you have issues in mac use `sed -i '' -i ...`.
+
+5. Use psql to create external table that uses the `minio` server to access the `stocks.csv` text file in our minio `testbucket`.
+
+        CREATE EXTERNAL TABLE stock_fact_external (
+        stock text,
+        stock_date text,
+        price text)
+        LOCATION('pxf://testbucket/stocks.csv?PROFILE=s3:text&SERVER=minio')
+        FORMAT 'TEXT';
+
 6. Use SQL query to retrieve data from Minio. This query returns the resultset from Minio
 servers that are preloaded with sample files under `testbucket`.
-    ```sql
-    gpadmin=# select count(*) from stock_fact_external;
-     count
-    -------
-       561
-    (1 row)
-    ```
-    ```sql
-    gpadmin=# select * from stock_fact_external limit 10;
-     stock  | stock_date | price
-    --------+------------+-------
-     symbol | date       | price
-     MSFT   | Jan 1 2000 | 39.81
-     MSFT   | Feb 1 2000 | 36.35
-     MSFT   | Mar 1 2000 | 43.22
-     MSFT   | Apr 1 2000 | 28.37
-     MSFT   | May 1 2000 | 25.45
-     MSFT   | Jun 1 2000 | 32.54
-     MSFT   | Jul 1 2000 | 28.4
-     MSFT   | Aug 1 2000 | 28.4
-     MSFT   | Sep 1 2000 | 24.53
-    (10 rows)
-    ```
---
+
+        gpadmin=# select count(*) from stock_fact_external;
+        count
+        -------
+           561
+        (1 row)
+
+        gpadmin=# select * from stock_fact_external limit 10;
+         stock  | stock_date | price
+        --------+------------+-------
+         symbol | date       | price
+         MSFT   | Jan 1 2000 | 39.81
+         MSFT   | Feb 1 2000 | 36.35
+         MSFT   | Mar 1 2000 | 43.22
+         MSFT   | Apr 1 2000 | 28.37
+         MSFT   | May 1 2000 | 25.45
+         MSFT   | Jun 1 2000 | 32.54
+         MSFT   | Jul 1 2000 | 28.4
+         MSFT   | Aug 1 2000 | 28.4
+         MSFT   | Sep 1 2000 | 24.53
+        (10 rows)
 
 
 ## Conclusion
