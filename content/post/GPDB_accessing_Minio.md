@@ -21,7 +21,7 @@ large-scale private cloud infrastructure. Since Minio supports S3 protocol, GPDB
 
 In this post, you will learn to setup Greenplum with Minio in 10 minutes.  
 
-## Use cases:
+## Use cases
 ### Storing cold data
 
 Enterprises are leveraging external storage systems to store cold data such as
@@ -41,18 +41,18 @@ Typically, enterprises have needs to share data with multiple RDBMS and systems 
 ## How to configure Minio in Greenplum
 You can configure GPDB to access external tables such as [Minio](https://docs.pivotal.io/partners/minio-greenplum/index.html), S3 and any S3 compatible object storage including [Dell EMC Elastic Cloud Storage](https://www.dellemc.com/en-us/storage/ecs/index.htm)(ECS).
 
-1. Login as gpadmin
+1. Login as `gpadmin`.
    ```bash
    $ su - gpadmin
    ```
-2. Create a PXF Server
+2. Create a PXF Server Configuration.
    ```bash
    $ mkdir -p $PXF_CONF/servers/minio 
    ```
-   *Note: A PXF server configuration inside `$PXF_CONF/servers` is analogous to
+   *Note: A PXF server configuration in `$PXF_CONF/servers` is analogous to
    [Foreign Data Wrapper Servers](https://www.postgresql.org/docs/9.4/postgres-fdw.html)
    where each server represents a distinct remote system you want to connect to.
-3. Copy the provided minio template into the server
+3. Copy the provided minio template into the server.
    ```bash
    $ cp $PXF_CONF/templates/minio-site.xml $PXF_CONF/servers/minio
    ```
@@ -83,24 +83,24 @@ You can configure GPDB to access external tables such as [Minio](https://docs.pi
    </configuration>
    ```
 4. Configure **`YOUR_MINIO_URL`**, **`YOUR_AWS_ACCESS_KEY_ID`**,
-and **`YOUR_AWS_SECRET_ACCESS_KEY`** properties in `$PXF_CONF/servers/minio/minio-site.xml`
+and **`YOUR_AWS_SECRET_ACCESS_KEY`** properties in `$PXF_CONF/servers/minio/minio-site.xml`.
    ```bash
    $ sed -i "s|YOUR_MINIO_URL|http://minio1:9000|" $PXF_CONF/servers/minio/minio-site.xml
    $ sed -i "s|YOUR_AWS_ACCESS_KEY_ID|minio|" $PXF_CONF/servers/minio/minio-site.xml 
    $ sed -i "s|YOUR_AWS_SECRET_ACCESS_KEY|minio123|" $PXF_CONF/servers/minio/minio-site.xml
    ```
+   *Note: sed in mac has some issues. If you have issues in mac use `sed -i '' -i ...` .
 5. Use psql to create external table that uses the `minio` server to access the `stocks.csv` text file
    in our minio `testbucket`.
    ```sql
    CREATE EXTERNAL TABLE stock_fact_external (
    stock text,
    stock_date text,
-   price text
-   )
+   price text)
    LOCATION('pxf://testbucket/stocks.csv?PROFILE=s3:text&SERVER=minio')
    FORMAT 'TEXT';
    ```
-6. Use sql query to retrieve data from Minio. This query returns the resultset from Minio servers that are preloaded with sample files under `testbucket`.
+6. Use SQL query to retrieve data from Minio. This query returns the resultset from Minio servers that are preloaded with sample files under `testbucket`.
    ```sql
    gpadmin=# select count(*) from stock_fact_external;
     count
