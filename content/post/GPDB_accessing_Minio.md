@@ -6,6 +6,7 @@ authors:
 categories:
 - Greenplum
 - Minio
+- PXF
 
 date: 2019-02-25T12:30:00Z
 draft: false
