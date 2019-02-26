@@ -50,13 +50,6 @@ You can configure GPDB to access external tables such as [Minio](https://docs.pi
         $ mkdir -p $PXF_CONF/servers/minio
     *Note: A PXF server configuration in `$PXF_CONF/servers` is analogous to [Foreign Data Wrapper Servers](https://www.postgresql.org/docs/9.4/postgres-fdw.html) where each server represents a distinct remote system you want to connect to.
 
-    ```bash
-    $ mkdir -p $PXF_CONF/servers/minio
-    ```
-    *Note: A PXF server configuration in `$PXF_CONF/servers` is analogous to
-    [Foreign Data Wrapper Servers](https://www.postgresql.org/docs/9.4/postgres-fdw.html)
-    where each server represents a distinct remote system you want to connect to.
-
 3. Copy the provided minio template into the server.
 
         $ cp $PXF_CONF/templates/minio-site.xml $PXF_CONF/servers/minio
