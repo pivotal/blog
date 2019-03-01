@@ -7,8 +7,8 @@ categories:
 - Annotations
 - Spring Boot
 - Pivotal Cloud Foundry
-date: 2019-01-15T00:00:01Z
-draft: true
+date: 2019-02-28T00:00:01Z
+draft: false
 short: |
   Example and explanation of how to set up a common use case with the Spring Cloud Netflix stack within a PCF deployment.
 title: Eureka, Zuul, and Cloud Configuration - Pivotal Cloud Foundry

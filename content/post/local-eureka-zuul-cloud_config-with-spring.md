@@ -6,7 +6,7 @@ categories:
 - Spring
 - Annotations
 - Spring Boot
-date: 2019-01-15T00:00:00Z
+date: 2019-02-28T00:00:00Z
 draft: false
 short: |
   Example and explanation of how to set up a common use case with the Spring Cloud Netflix stack to prototype for local development.
