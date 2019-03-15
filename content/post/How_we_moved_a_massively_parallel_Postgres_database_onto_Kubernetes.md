@@ -1,6 +1,6 @@
 ---
 authors:
-- ozbasarir
+- obasarir
 categories:
 - Greenplum
 - Kubernetes
@@ -9,7 +9,7 @@ categories:
 
 
 date: 2019-03-14T12:30:00Z
-draft: true
+draft: false
 short: |
   Distributed applications that scale out, such as Greenplum, fit well with Kubernetes.
 title: How we moved a massively parallel Postgres database onto Kubernetes
