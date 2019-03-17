@@ -5,4 +5,4 @@ gem "pushpop"
 gem "pushpop-keen"
 gem "pushpop-sendgrid"
 gem 'roadie'
-gem 'json', '~> 1.8.6'
+gem 'json', '~> 2.2.0'
