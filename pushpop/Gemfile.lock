@@ -1,11 +1,11 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.2)
+    addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     clockwork (2.0.3)
       tzinfo
-    css_parser (1.6.0)
+    css_parser (1.7.0)
       addressable
     dotenv (2.4.0)
     json (2.2.0)
@@ -20,7 +20,7 @@ GEM
     mustermann (1.0.2)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
-    public_suffix (3.0.2)
+    public_suffix (3.0.3)
     pushpop (0.4.0)
       clockwork
       dotenv
@@ -35,7 +35,7 @@ GEM
     rack (2.0.6)
     rack-protection (2.0.1)
       rack
-    roadie (3.3.0)
+    roadie (3.4.0)
       css_parser (~> 1.4)
       nokogiri (~> 1.5)
     sinatra (2.0.1)
