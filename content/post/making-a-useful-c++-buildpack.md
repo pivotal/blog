@@ -226,7 +226,7 @@ python, ruby, and staticfile). One of these tools is
 which cross-compiles binaries for the CF container rootfs.
 
 I wrote a new "recipe" for CppCMS, which is on an
-[experimental branch](https://github.com/cloudfoundry/binary-builder/tree/flavorjones-cppcms),
+[experimental branch](https://github.com/flavorjones/binary-builder/tree/flavorjones-cppcms),
 that downloads and verifies a checksum for a source tarball, then
 configures and compiles it for the CF rootfs. It contains the header
 files and the libraries (both static and shared), and so contains
@@ -250,7 +250,7 @@ The pieces we need to assemble:
 ### The CppCMS Tarball
 
 The `binary-builder` job from the
-[experimental branch](https://github.com/cloudfoundry/binary-builder/tree/flavorjones-cppcms)
+[experimental branch](https://github.com/flavorjones/binary-builder/tree/flavorjones-cppcms)
 creates a file, `cppcms-1.0.5-linux-x64.tgz`, containing header files
 and both static and shared libraries.
 
