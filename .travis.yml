@@ -1,8 +1,8 @@
 language: go
 go: '1.7'
 install:
-- wget https://github.com/gohugoio/hugo/releases/download/v0.45.1/hugo_0.45.1_Linux-64bit.tar.gz
-- tar xzf hugo_0.45.1_Linux-64bit.tar.gz
+- wget https://github.com/gohugoio/hugo/releases/download/v0.55.1/hugo_0.55.1_Linux-64bit.tar.gz
+- tar xzf hugo_0.55.1_Linux-64bit.tar.gz
 - export PATH=$PATH:$PWD
 script: ./bin/build
 deploy:
