@@ -1,3 +1,6 @@
+# Note: secrets in this file are encrypted
+# See: https://docs.travis-ci.com/user/encryption-keys/ for details
+
 language: go
 go: '1.7'
 install:
