@@ -1,7 +1,7 @@
 ---
 title: Intro to the Patch Command
 authors:
-- forde
+- dforde
 categories:
 - Patch
 - Golang

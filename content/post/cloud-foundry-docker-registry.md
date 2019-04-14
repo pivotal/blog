@@ -1,6 +1,6 @@
 ---
 authors:
-- forde
+- dforde
 categories:
 - Docker
 - Cloud Foundry

@@ -1,7 +1,7 @@
 ---
 authors:
 - flavorjones
-- forde
+- dforde
 categories:
 - Agile
 - Humans
