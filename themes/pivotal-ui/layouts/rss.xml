@@ -22,6 +22,9 @@
         </author>
       <guid>{{ .Permalink }}</guid>
       <description>{{ .Content | html }}</description>
+      {{ range .Params.categories }}
+      <category>{{ . }}</category>
+      {{ end }}
     </item>
     {{ end }}
   </channel>
