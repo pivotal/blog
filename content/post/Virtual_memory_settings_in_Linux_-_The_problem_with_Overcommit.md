@@ -241,10 +241,10 @@ Based on the _Allocation Limit Formula_, Linux will not allocate all the memory:
 ~~~
 Memory Allocation Limit = Swap Space + RAM * (Overcommit Ratio / 100)
 Memory Allocation Limit = 32 GB + 256 GB * (50% / 100)
-Memory Allocation Limit = 131 GB
+Memory Allocation Limit = 160 GB
 ~~~
 
-Ooops! The system was expanded with 256 GB RAM, but is only using half of it. That is clearly not good.
+Ooops! The system was expanded with 256 GB RAM, but is only using nearly as much as half of it. That is clearly not good.
 
 ~~~
 Overcommit Ratio = 100 * ((RAM - Swap Space) / RAM)
