@@ -5,7 +5,7 @@ categories:
 - Logging & Metrics
 - FreeNAS
 date: 2019-05-25T17:16:22Z
-draft: true
+draft: false
 short: |
   Upgrading our iSCSI (Internet Small Computer System Interface) NAS
   (network-attached storage) server from 1 GbE (gigabit ethernet) to 10 GbE
@@ -49,8 +49,8 @@ timestamps aren't included in the graph above, they are included in the raw
 benchmark results, which can be viewed in the [References](#references) section
 below).
 
-As an aside, there are fewer 1 GbE tests than 10 GbE tests in the above chart
-(there are fewer blue dots than red dots). That is because the 1 GbE tests took
+As an aside, there are fewer 1 GbE tests than 10 GbE tests in the above chart.
+That is, there are fewer blue dots than red dots, for the 1 GbE tests took
 longer to run, hence there were fewer results reported within the three-hour
 test window.
 
@@ -61,15 +61,17 @@ test window.
 The sequential write performance, shown in the above graph, was the star of the
 show: a 10✕ increase, linear with the network bandwidth increase.
 
-There are some caveats: most importantly, we sacrificed safety for speed.
-Specifically, we did not override the default ZFS setting, `sync=standard`
-As pointed out in the, "[Sync writes, or: Why is my ESXi NFS so slow, and why is iSCSI faster?](https://www.ixsystems.com/community/resources/sync-writes-or-why-is-my-esxi-nfs-so-slow-and-why-is-iscsi-faster.40/)" article:
+There are some caveats. Most importantly, we sacrificed safety for speed.
+Specifically, we did not override the default ZFS setting, `sync=standard`. As
+pointed out in the article, "[Sync writes, or: Why is my ESXi NFS so slow, and
+why is iSCSI
+faster?](https://www.ixsystems.com/community/resources/sync-writes-or-why-is-my-esxi-nfs-so-slow-and-why-is-iscsi-faster.40/)":
 
 > iSCSI by default does not implement sync writes. As such, it often appears to
 > users to be much faster.... However, your VM data is being written async,
 > which is hazardous to your VM
 
-You may ask, "What are these sync writes to which you refer?". Robert Milkowski,
+You may ask, "What are these sync writes to which you refer?" Robert Milkowski,
 the author of the ZFS `sync` feature, describes it succinctly in his [blog
 post](http://milek.blogspot.com/2010/05/zfs-synchronous-vs-asynchronous-io.html):
 
@@ -81,8 +83,9 @@ In other words, these are system calls
 system calls ( [`open(2)`](http://man7.org/linux/man-pages/man2/open.2.html)'s
 '`O_DSYNC` and `O_SYNC`) to make sure that the data has really, truly been
 written out to disk before returning from a
-[`write(2)`](http://man7.org/linux/man-pages/man2/write.2.html). The data's on
-the disk, not in some buffer somewhere.
+[`write(2)`](http://man7.org/linux/man-pages/man2/write.2.html). When the system
+call returns, you know that the data's on the disk, not in some buffer
+somewhere.
 
 _[Editor's note: this is not always true. Linux *usually* writes the data to
 disk, but sometimes it doesn't. For the dirty details, see [this
@@ -113,8 +116,8 @@ file system may be corrupted beyond the ability of file system repair tools to
 fix. We witnessed this problem firsthand by cutting the power to the NAS server
 while actively exercising a Linux VM's iSCSI disk by running the `gobonniego`
 file system benchmark. Our Linux system's `btrfs` filesystem was corrupted
-beyond the ability of `btrfsck` to fix, emitting cryptic errors such as `child
-eb corrupted` and `parent transid verify failed` before finally giving up. We
+beyond the ability of `btrfsck` to fix, emitting cryptic errors such as "`child
+eb corrupted`" and "`parent transid verify failed`" before finally giving up. We
 lost our VM, and had to reinstall Linux from scratch.
 
 #### The IOPS Results:
@@ -176,6 +179,10 @@ previously took ~30 seconds to display in Apple's Finder, now displayed in
 sub-second time. We know the WiFi's throughput (200 Mb/s) was minuscule compared
 to the file server's (1 Gb/s, 10 Gb/s), so the reason for the speed-up lay
 elsewhere.
+
+Other VMs had disks that were placed on the iSCSI datastore; they may have
+contended with benchmark VM for disk access. We feel the contention was minor at
+most.
 
 ## <a name="references">References</a>
 
