@@ -2,69 +2,46 @@
 authors:
 - xiwei
 categories:
-- BOSH
-- CF Runtime
-- API
-- Logging & Metrics
-- Agile
-date: 2015-11-17T17:16:22Z
+- Greenplum
+- PXF
+- S3
+- S3 Select
+- AWS 
+date: 2019-07-17T09:00:00Z
 draft: true
 short: |
-  Short description for index pages, and under title when viewing a post. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-title: example_post
+  
+
+title: Utilizing S3 Select for Efficient S3 Object Retrieval via PXF
 image: /images/pairing.jpg
 ---
 
-Posts are written in [Markdown](https://help.github.com/articles/github-flavored-markdown/) -- tips below:
+## Overview
 
-## Writing a _Good_ Post
+This new feature of PXF enables our users to make more efficient queries against S3 object stores by allowing them to utilize S3 Select. With PXF's implementation on S3 Select support, query predicate and column projection pushdown to S3 is now available. This helps users to retrieve only a subset of data from an object with simple SQL expressions, reducing costs and increasing efficiency.
 
-_copied from [the README](https://github.com/pivotal-legacy/blog#writing-a-good-post)..._
+
+With support of S3 Select by PXF, users can retreive partial data more efficiently from their S3 object storages with simple SQL expressions. After setting up S3 object stores, users can [configure PXF](https://gpdb.docs.pivotal.io/6-0Beta/pxf/objstore_cfg.html) and have the option to enable S3 Select when querying to their S3 data sources. The SQL query strings they entered through Greenplum will be processed by PXF to determine whether the query can be optimized by S3 Select.
+
+{{< responsive-figure src="/images/s3select.png" class="center" >}}
 
 ### Keep it technical.
 
 People want to to be educated and enlightened.  Our audience are engineers, so the way to reach them is through code.  The more code samples, the better.
 
-### Nobody likes a wall of text.
-
-{{< responsive-figure src="/images/pairing.jpg" class="right small" >}}
-
-Use headers to break up your text.  Each image you add to your post increases its XP by 100.  Diagrams, screen shots, or humorous "meme" (_|memā|_) gifs...  They all add color.  If you don't have OmniGraffle, then submit an ask ticket.  There's no excuse for monotony.
-
-### Your 10th grade teacher was right.
-
-Make use of the hamburger technique.  Your audience doesn't have a lot of time.  Tell them what you're going to write, write it, and then tell them what you've written.  Spend time on your opening.  Make it click.
-
-### Pair all the time.
-
-We do everything as a team, and this is no different.  Get feedback from your friends and coworkers.  Show them the post on the staging site, and ask them to tear it apart.
-
-### Make it pretty.
-
 Pivotal-ui comes with a bunch of nice helpers.  Make use of them.  Check out the example styles below:
 
 ---
 
-# Header 1 
 
-Don't use this, since it looks like a main title.
-
-## Header 2
-
-### Header 3
-
-#### Header 4
-
-##### Header 5
-
-###### Header 6
 
 {{< responsive-figure src="/images/pairing.jpg" class="left" >}}
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-~~~ruby
-instance = Class.new("foo")
+~~~python
+def function_name(lst, str){
+  print(str)
+}
 ~~~
 
 | Header 1        | Header 2  | ...        |
@@ -75,4 +52,9 @@ instance = Class.new("foo")
 | Custom TCP Rule | TCP (6)   | 2222       |
 | Custom TCP Rule | TCP (6)   | 6868       |
 
-{{< responsive-figure src="/images/pairing.jpg" class="center" >}}
+
+
+### References:
+https://aws.amazon.com/about-aws/whats-new/2018/04/amazon-s3-select-is-now-generally-available/
+
+https://aws.amazon.com/blogs/aws/s3-glacier-select/
