@@ -10,51 +10,72 @@ categories:
 date: 2019-07-17T09:00:00Z
 draft: true
 short: |
-  
-
-title: Utilizing S3 Select for Efficient S3 Object Retrieval via PXF
-image: /images/pairing.jpg
+  With support of S3 Select from PXF, Greenplum users can now make highly efficient queries to external S3 data source at potentially cheaper cost.
+title: How PXF helps Greenplum users to make highly efficient queries with S3 Select
 ---
 
 ## Overview
 
-This new feature of PXF enables our users to make more efficient queries against S3 object stores by allowing them to utilize S3 Select. With PXF's implementation on S3 Select support, query predicate and column projection pushdown to S3 is now available. This helps users to retrieve only a subset of data from an object with simple SQL expressions, reducing costs and increasing efficiency.
+With support of S3 Select by PXF, users can make more efficient queries against S3 object stores with simple SQL expressions from Greenplum. When enabled, PXF utilizes S3 Select to do query predicate and column projection pushdown to S3. This helps users to retrieve only a subset of data from an object with simple SQL expressions rather than having the entire data object transmitted to Greenplum via PXF, and then letting Greenplum to filter data and return it to the users. Therefore with S3 Select, the cost of making query can be largely reduced and the efficiency increased significantly.
+
+{{< responsive-figure src="/images/s3-select/s3-select.png" class="center" >}}
 
 
-With support of S3 Select by PXF, users can retreive partial data more efficiently from their S3 object storages with simple SQL expressions. After setting up S3 object stores, users can [configure PXF](https://gpdb.docs.pivotal.io/6-0Beta/pxf/objstore_cfg.html) and have the option to enable S3 Select when querying to their S3 data sources. The SQL query strings they entered through Greenplum will be processed by PXF to determine whether the query can be optimized by S3 Select.
+## Preparation
+### Setting up S3 Bucket
+- Using AWS S4
+https://docs.aws.amazon.com/AmazonS3/latest/gsg/SigningUpforS3.html
+https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html
+- Using Minio: https://min.io/product
 
-{{< responsive-figure src="/images/s3select.png" class="center" >}}
+TODO: explaining what the DDL is :https://gpdb.docs.pivotal.io/6-0Beta/pxf/objstore_text.html#write_s3textsimple_example
 
-### Keep it technical.
+### Configuring PXF for S3 Bucket
+- https://gpdb.docs.pivotal.io/6-0Beta/pxf/access_objstore.html
 
-People want to to be educated and enlightened.  Our audience are engineers, so the way to reach them is through code.  The more code samples, the better.
 
-Pivotal-ui comes with a bunch of nice helpers.  Make use of them.  Check out the example styles below:
+After setting up their own S3 object storages, users can setup [GPDB (Greenplum Database)](https://gpdb.docs.pivotal.io/5200/install_guide/install_guide.html) and [configure PXF](https://gpdb.docs.pivotal.io/6-0Beta/pxf/objstore_cfg.html).
+
+With GPDB and PXF running, in the database CLI, users can create external tables and specify the option to enable S3 Select when preparing to query their S3 data sources. The SQL query strings they entered through Greenplum will be processed by PXF to determine whether the query can be optimized by S3 Select.
+
+Here is an example for creating an external table under command shell ([psql](http://postgresguide.com/utilities/psql.html)):
+```SQL
+CREATE EXTERNAL TABLE s3_select_table (id int, name text)
+LOCATION ('pxf://bucket-name/path/in/s3/?PROFILE=s3:parquet&s3-select=ON&SERVER=s3')
+FORMAT 'CSV';
+```
+
+## Performance Comparison
+The following output is the result of querying against S3 data object storage for a file of 10 GB. The first query is to the external table with S3 Select ON, and the second one is to another table with S3 Select OFF. Both table are pointing to the same file in the same S3 storage bucket:
+
+```console
+pxfautomation=# \timing               Timing is on.
+pxfautomation=# select l_orderkey, l_partkey, l_linenumber from lineitem_s3_select_10g where l_orderkey =3 and l_partkey = 42970;
+ l_orderkey | l_partkey | l_linenumber
+------------+-----------+--------------
+          3 |     42970 |            1
+(1 row)
+
+Time: 60862.229 ms
+pxfautomation=# select l_orderkey, l_partkey, l_linenumber from lineitem_s3_10g where l_orderkey =3 and l_partkey = 42970;
+ l_orderkey | l_partkey | l_linenumber
+------------+-----------+--------------
+          3 |     42970 |            1
+(1 row)
+
+Time: 1636251.519 ms
+pxfautomation=#
+```
+
+{{< responsive-figure src="/images/s3-select/S3-Select-diagram.jpg" class="center" >}}
+
+
 
 ---
+### Acknowledgement
+(to be completed)
 
-
-
-{{< responsive-figure src="/images/pairing.jpg" class="left" >}}
-
-
-~~~python
-def function_name(lst, str){
-  print(str)
-}
-~~~
-
-| Header 1        | Header 2  | ...        |
-| --------------  | :-------: | ---------: |
-| SSH (22)        | TCP (6)   | 22         |
-| HTTP (80)       | TCP (6)   | 80         |
-| HTTPS (443)     | TCP (6)   | 443        |
-| Custom TCP Rule | TCP (6)   | 2222       |
-| Custom TCP Rule | TCP (6)   | 6868       |
-
-
-
-### References:
+### References
 https://aws.amazon.com/about-aws/whats-new/2018/04/amazon-s3-select-is-now-generally-available/
 
 https://aws.amazon.com/blogs/aws/s3-glacier-select/
