@@ -23,7 +23,7 @@ With support of S3 Select by PXF, users can make more efficient queries against 
 
 ## Preparation
 ### Setting up S3 Bucket
-- Using AWS S4
+- Using AWS S3
 https://docs.aws.amazon.com/AmazonS3/latest/gsg/SigningUpforS3.html
 https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html
 - Using Minio: https://min.io/product
