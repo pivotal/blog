@@ -31,7 +31,7 @@ https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html
 TODO: explaining what the DDL is :https://gpdb.docs.pivotal.io/6-0Beta/pxf/objstore_text.html#write_s3textsimple_example
 
 ### Configuring PXF for S3 Bucket
-- https://gpdb.docs.pivotal.io/6-0Beta/pxf/access_objstore.html
+- https://gpdb.docs.pivotal.io/latest/pxf/access_objstore.html
 
 
 After setting up their own S3 object storages, users can setup [GPDB (Greenplum Database)](https://gpdb.docs.pivotal.io/5200/install_guide/install_guide.html) and [configure PXF](https://gpdb.docs.pivotal.io/6-0Beta/pxf/objstore_cfg.html).
