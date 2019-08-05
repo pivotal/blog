@@ -40,7 +40,7 @@ Currently, PXF is installed with JDBC, Hadoop, Hive, HBase, and Object Store con
 ## **Overview**
 Now that PXF supports [S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference.html), users can make more efficient queries against S3 object stores by running simple SQL queries on Greenplum. When enabled, PXF utilizes S3 Select to do query predicate pushdown and column projection to S3. This helps users retrieve only the subset of data they are interested in rather than having the entire S3 object transmitted via PXF to Greenplum for processing. By utilizing S3 Select, Greenplum users can see significant speedup on certain workloads.
 
-Currently, PXF supports Text and Parquet format of the object files stored on Amazon S3. It may support other formats such as JSON in the future.
+Currently, PXF supports CSV and Parquet format of the object files stored on Amazon S3. It may support other formats such as JSON in the future.
 
 {{< responsive-figure src="/images/s3-select/S3-Select-diagram.jpg" class="center" >}}
 
