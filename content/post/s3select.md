@@ -86,7 +86,7 @@ On the other hand, queries like this:
 ```sql
 SELECT * FROM orders_from_s3;
 ```
-will not be able to utilize S3 Select as it asks S3 to return all the data.
+although the query goes through S3 Select, all the data will be returned from the object file on S3 and the optimization from S3 Select is not showing in this case.
 
 ## **Performance Comparison**
 {{< responsive-figure src="/images/s3-select/benchmark.png" class="center" >}}
@@ -140,7 +140,7 @@ It is worth noting that, for queries without S3 Select, the time spent for these
 
 The benchmarking took place on a GPDB cluster with 16 segment nodes running on the Google Cloud Platform. Therefore, the performance may vary comparing to your deployment. It will be affected by many factors such as different simple SQL queries, network speed, bandwidth, and GPDB's cluster configuration (number of segment nodes deployed and so on).
 
-For example, although the following query is against an external table with S3 Select enabled, due to the lack of predicates, column projection, and/or the [LIMIT clause](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference-select.html), S3 will still return the data of the whole file to GPDB.
+For example, although the following query is against an external table with S3 Select enabled, due to the lack of predicates, and/or column projection, S3 will still return the data of the whole file to GPDB. (more reference [here]((https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference-select.html)))
 
 ```SQL
 SELECT * FROM s3_parquet_with_select;
