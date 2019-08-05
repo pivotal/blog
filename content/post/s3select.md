@@ -29,7 +29,7 @@ Greenplum Database is a massively parallel processing (MPP) database server with
 {{< responsive-figure src="/images/s3-select/pxfarch.jpg" class="left" >}}
 The Greenplum Platform Extension Framework (PXF) provides connectors that enable you to access data stored in sources external to your Greenplum Database deployment. These connectors map an external data source to a Greenplum Database external table definition. You can query the external table via Greenplum Database, leaving the referenced data in place. Or, you can use the external table to load the data into Greenplum Database for higher performance[[3](https://gpdb.docs.pivotal.io/latest/pxf/intro_pxf.html)].
 
-Currently, PXF is installed with Hadoop and Object Store connectors. These connectors enable you to read external data stored in text, Avro, JSON, RCFile, Parquet, SequenceFile, and ORC formats. You can use the JDBC connector to access an external SQL database[[4](https://gpdb.docs.pivotal.io/latest/admin_guide/external/pxf-overview.html)].
+Currently, PXF is installed with JDBC, Hadoop, Hive, HBase, and Object Store connectors. These connectors enable you to read external data stored in text, Avro, JSON, RCFile, Parquet, SequenceFile, and ORC formats. You can use the JDBC connector to access an external SQL database[[4](https://gpdb.docs.pivotal.io/latest/admin_guide/external/pxf-overview.html)].
 
 #### **What is Amazon Simple Storage Service (Amazon S3) and S3 Select?**
 {{< responsive-figure src="/images/s3-select/aws_s3_select.png" class="right" >}}
