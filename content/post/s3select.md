@@ -72,7 +72,7 @@ In above SQL string,
 - `LOCATION ('pxf://bucket-name/path/in/s3/?PROFILE=s3:parquet&S3_SELECT=ON&SERVER=s3')` provides information to GPDB such as:
   - the protocol `pxf`, 
   - path of the file object on S3 `bucket-name/path/in/s3/`, 
-  - options that PXF needs to process the queries to S3 `?PROFILE=s3:parquet&S3_SELECT=ON&SERVER=s3'`. 
+  - options that PXF needs to process the queries to S3 `?PROFILE=s3:parquet&S3_SELECT=ON&SERVER=s3&ACCESSKEY=YOUR_AWS_ACCESS_KEY&SECRETKEY=YOUR_AWS_SECRET_KEY'`. 
 
 Note: here `S3_SELECT=ON` is the option to enable the S3 Select feature through PXF. Click [here](https://gpdb.docs.pivotal.io/latest/pxf/objstore_text.html#profile_text) for more detail on creating external table to read data in an object store. 
 
@@ -138,7 +138,7 @@ SELECT l_orderkey, l_partkey, l_linenumber FROM s3_parquet_with_select WHERE l_o
 
 It is worth noting that, for queries without S3 Select, the time spent for these files of different sizes are quite consistent. While the queries with S3 Select enabled can have a relatively slower performance for the first time (comparing itself on the same query running at a later time). The same query gets constantly faster after the first time. This is due to the caching from the S3 store side.
 
-The benchmarking took place on a GPDB cluster with 16 segment nodes on the cloud. Therefore, the performance may vary comparing to your deployment. It will be affected by many factors such as different simple SQL queries, network speed, bandwidth, and GPDB's cluster configuration (like how many segment nodes been deployed and so on).
+The benchmarking took place on a GPDB cluster with 16 segment nodes running on the Google Cloud Platform. Therefore, the performance may vary comparing to your deployment. It will be affected by many factors such as different simple SQL queries, network speed, bandwidth, and GPDB's cluster configuration (number of segment nodes deployed and so on).
 
 For example, although the following query is against an external table with S3 Select enabled, due to the lack of predicates, column projection, and/or the [LIMIT clause](https://docs.aws.amazon.com/AmazonS3/latest/dev/s3-glacier-select-sql-reference-select.html), S3 will still return the data of the whole file to GPDB.
 
