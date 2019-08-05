@@ -23,7 +23,7 @@ This blog is about introducing a new feature of PXF which helps Greenplum Databa
 {{< responsive-figure src="/images/s3-select/highlevel_arch.jpg" class="right" >}}
 Greenplum Database is a massively parallel processing (MPP) database server with an architecture specially designed to manage large-scale analytic data warehouses and business intelligence workloads. It is based on PostgreSQL open-source technology, and therefore in most cases, very similar to PostgreSQL. Users can interact with Greenplum Database as they would with a PostgreSQL database[[1](https://gpdb.docs.pivotal.io/latest/admin_guide/intro/arch_overview.html)].
 
-**External Table**: Greenplum Database can read from and write to several types of external data sources, including text files, Hadoop file systems, Amazon S3, and web servers. This can be achieved by creating readable and writable external tables with the Greenplum Platform Extension Framework (PXF), and use these tables to load data into, or offload data from, Greenplum Database[[2](https://gpdb.docs.pivotal.io/latest/admin_guide/load/topics/g-loading-and-unloading-data.html)].
+**External Table**: Greenplum Database can read from and write to several types of external data sources, including text files, Hadoop file systems, Amazon S3, and web servers. This can be achieved by creating readable and writable external tables with the Greenplum Platform Extension Framework (PXF), and use these tables query external data or to load data into, or offload data from, Greenplum Database[[2](https://gpdb.docs.pivotal.io/latest/admin_guide/load/topics/g-loading-and-unloading-data.html)].
 
 #### **What is PXF (Greenplum Platform Extension Framework)?**
 {{< responsive-figure src="/images/s3-select/pxfarch.jpg" class="left" >}}
