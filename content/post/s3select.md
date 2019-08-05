@@ -62,7 +62,7 @@ Once GPDB and PXF are properly configured and running, users can go into Greenpl
 Now under GPDB's command line shell, users can create external tables to access files on S3 object store by providing external table definition and specifying options to enable S3 Select. Here is an example of creating an external table: 
 ```SQL
 CREATE EXTERNAL TABLE orders_from_s3 (id int, name text)
-LOCATION ('pxf://bucket-name/path/in/s3/?PROFILE=s3:parquet&S3_SELECT=ON&SERVER=s3')
+LOCATION ('pxf://bucket-name/path/in/s3/?PROFILE=s3:parquet&S3_SELECT=ON&SERVER=s3&ACCESSKEY=YOUR_AWS_ACCESS_KEY&SECRETKEY=YOUR_AWS_SECRET_KEY')
 FORMAT 'CSV';
 ```
 In above SQL string,
