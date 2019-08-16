@@ -19,17 +19,19 @@ Pivotal Application Service for Windows introduced the `-s windows` stack name i
 
 Pivotal Application Service for Windows 2.8 will remove support for the deprecated `-s windows2016` stack name, requiring developers and operators to use the `-s windows` stack name. **Prior to upgrading to PASW 2.8, you MUST update any apps using the `windows2016` stack, to use the `windows` stack. Apps that are not updated to the `windows` stack WILL NOT START after upgrading to PASW 2.8.**
 
-Operators can use the [Stack Auditor CF CLI plugin](https://network.pivotal.io/products/buildpack-extensions) to get an inventory of all apps and their current stack, in a given foundation. They can also use the plugin to update an app stack to `windows` without needing access to the app’s source or automation pipeline. Be aware, changing the stack of an app WILL cause the app to restart which may lead to temporary downtime.
+Operators can use the <a href="https://network.pivotal.io/products/buildpack-extensions" target="_blank">Stack Auditor CF CLI plugin</a> to get an inventory of all apps and their current stack, in a given foundation. They can also use the plugin to update an app stack to `windows` without needing access to the app’s source or automation pipeline. Be aware, changing the stack of an app WILL cause the app to restart which may lead to temporary downtime.
 
-The plugin is available for download in the [Buildpack Extensions](https://network.pivotal.io/products/buildpack-extensions) area of PivNet. Watch a video of running stack audit as well as upgrading apps, below. 
-
-[![running stack audit as well as upgrading apps](https://img.youtube.com/vi/jQLOztTjSFk/0.jpg)](https://www.youtube.com/watch?v=jQLOztTjSFk)
+The plugin is available for download in the <a href="https://network.pivotal.io/products/buildpack-extensions" target="_blank">Buildpack Extensions</a> area of PivNet. Watch a video of running stack audit as well as upgrading apps, below. 
 
 #### Mandatory actions before upgrading to PASW 2.8
 
 - [x] Find out which apps on your foundation are using the `-s windows2016` stack name, by using Stack Auditor `cf audit-stack` command
 - [x] Use the Stack Auditor `cf change-stack` command to update all apps to use the `windows` stack
 - [x] Update all app manifests and pipeline to specify the `windows` stack
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=jQLOztTjSFk" target="_blank"><img src="https://img.youtube.com/vi/jQLOztTjSFk/0.jpg" alt="video of running stack audit as well as upgrading apps" /></a>
+</p>
 
 #### Links & Resources
 
