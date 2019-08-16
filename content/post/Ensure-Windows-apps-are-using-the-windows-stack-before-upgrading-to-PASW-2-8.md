@@ -8,7 +8,6 @@ categories:
 - stack
 - cf
 date: 2019-08-15T17:16:22Z
-draft: true
 short: |
   Pivotal Application Service for Windows introduced the `-s windows` stack name in PASW 2.4, reducing the operator and developer need to concern themselves with specific Windows Server versions. From PASW 2.4 thru PASW 2.7, both the `windows2016` and `windows` stack names worked - giving sufficient time to migrate apps over to the new stack name.
 title: Ensure Windows apps are using the `windows` stack before upgrading to PASW 2.8
@@ -23,17 +22,17 @@ Operators can use the <a href="https://network.pivotal.io/products/buildpack-ext
 
 The plugin is available for download in the <a href="https://network.pivotal.io/products/buildpack-extensions" target="_blank">Buildpack Extensions</a> area of PivNet. Watch a video of running stack audit as well as upgrading apps, below. 
 
-#### Mandatory actions before upgrading to PASW 2.8
+### Mandatory actions before upgrading to PASW 2.8
 
 - [x] Find out which apps on your foundation are using the `-s windows2016` stack name, by using Stack Auditor `cf audit-stack` command
 - [x] Use the Stack Auditor `cf change-stack` command to update all apps to use the `windows` stack
 - [x] Update all app manifests and pipeline to specify the `windows` stack
 
-<p align="center">
+<p align="center"><br />
   <a href="https://www.youtube.com/watch?v=jQLOztTjSFk" target="_blank"><img src="https://img.youtube.com/vi/jQLOztTjSFk/0.jpg" alt="video of running stack audit as well as upgrading apps" /></a>
-</p>
+<br /><br /></p>
 
-#### Links & Resources
+### Links & Resources
 
 - Download [Buildpack Extensions](https://network.pivotal.io/products/buildpack-extensions) (contains Stack Auditor)
 - [PAS Windows 2.4 release notes](https://docs.pivotal.io/pivotalcf/2-4/pcf-release-notes/windows-rn.html#2.4.2) introducing `windows` stack
