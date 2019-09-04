@@ -11,7 +11,7 @@ categories:
 - Amazon S3
 - Amazon Simple Storage Service
 date: 2019-08-01T09:00:00Z
-draft: true
+draft: false
 short: |
   Greenplum's Platform Extension Framework (PXF) supports querying data on AWS S3. PXF now supports AWS S3 Select which will enable Greenplum users to run their queries on data stored in AWS S3 more efficiently with up to 4x performance improvements.
 title: Fast Access to Your S3 Data with Greenplum PXF
