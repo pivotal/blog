@@ -5,7 +5,7 @@ categories:
 - Research
 - Agile
 date: 2019-10-08T17:16:22Z
-draft: true
+draft: false
 short: |
   Anonymized Data from a research study.
 title: ESM Study Data
