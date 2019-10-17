@@ -9,7 +9,7 @@ categories:
 - Kubernetes
 - KubeBuilder
 - Test Driven Development
-date: 2019-10-14T16:00:00Z
+date: 2019-10-14T17:00:00Z
 draft: true
 short: |
   Lessons we learned while building a controller with KubeBuilder, and how we

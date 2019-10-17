@@ -8,7 +8,7 @@ categories:
 - Greenplum
 - Kubernetes
 - KubeBuilder
-date: 2019-10-14T17:00:00Z
+date: 2019-10-14T16:00:00Z
 draft: true
 short: |
   Lessons we learned while building a controller with KubeBuilder
