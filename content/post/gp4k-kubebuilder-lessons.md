@@ -119,10 +119,22 @@ detect a deleted CR to delete its sub-resources.
 
 ### Returning an error from Reconcile means requeue
 
-Errors returned from Reconcile() will be logged. But returning an error from
-Reconcile() also means the reconciliation will be requeued. If that's not
+Errors returned from `Reconcile()` will be logged. But returning an error from
+`Reconcile()` also means the reconciliation will be requeued. If that's not
 desirable, don't return an error. This means thinking carefully about simply
 returning downstream errors.
+
+When an error is returned from `Reconcile()`, KubeBuilder logging of the error
+is very verbose, and includes a stack trace. The verbose log message may be
+difficult for a user to parse. Our experience with this was for a _Secret_ that
+needs to be provided by the user for the PXF service to operate properly. If
+that _Secret_ is missing (perhaps it was `kubectl apply`-ed at the same but not
+available in the API yet), then we would return the error we got from
+`Get()`-ing the _Secret_. We did want the reconciliation to be requeue'd since
+we are not watching the _Secret_ resource and would not otherwise reconcile
+again once the _Secret_ did get created. To silence the stack trace, we decided
+to instead log a helpful error message, and return a `Result` with `Requeue` set
+to `true`.
 
 ### Ignore NotFound errors
 
