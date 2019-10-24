@@ -61,27 +61,38 @@ with an example Reconcile implementation.
 
 ### CreateOrUpdate
 
-_CreateOrUpdate_ is a helper method provided by controller-runtime. It does
+_[CreateOrUpdate]_ is a helper method provided by controller-runtime. It does
 what it says on the tin: Given an _Object_, it will either _Create_ it or
-_Update_ an existing object. Because of this functionality, it forms the core of
-many `Reconcile()` functions. However, its API makes it extremely easy to misuse
-without understanding some of its internals.
+_Update_ an existing object. Because of this functionality, it can be used for
+your dependent objects, and forms the core of many `Reconcile()` functions.
+However, its API makes it extremely easy to misuse without understanding some of
+its internals.
 
 `CreateOrUpdate()` takes a callback, "mutate", which is where all changes to the
 object must be performed. This point bears repeating: your mutate callback is
-the only place you should enact the contents of your object, aside from the
-name and namespace which must be filled in prior. Under the hood,
-_CreateOrUpdate_ calls `Get()` on the object. If the object does not exist, then
-`Create()` will be called. If it does exist, then `Update()` will be called. In
-either case, the mutate callback will be called first.
+the only place you should enact the contents of your object, aside from the name
+and namespace which must be filled in prior. Under the hood, _CreateOrUpdate_
+first calls `Get()` on the object. If the object does not exist, `Create()` will
+be called. If it does exist, `Update()` will be called. Just before calling
+either `Create()` or `Update()`, the mutate callback will be called.
 
-In the `Create()` path, the `Get()` does not modify your object, so initial
-testing may appear to work if you pass a no-op mutate. The object will get
-created as it was before CreateOrUpdate was called. However, an issue arises
-during `Update()`. In the `Update()` path, the object already exists, so the
-`Get()` call overwrites it. The `Update()` will never do anything, even if the
-actual object has diverged from the desired state. Therefore proper usage of
-"mutate" is essential to reconcile the object.
+> **`CreateOrUpdate(ctx, client, obj, mutate)`**<br>
+> `client.Get(obj)`<br>
+> `mutate(obj)`<br>
+> If `obj` did not exist, `client.Create(obj)`<br>
+> If `obj` did exist, `client.Update(obj)`<br>
+
+Initial testing may appear to work if you pass a no-op mutate and instead
+prepare `obj` before calling _CreateOrUpdate_. When the client has no object to
+return, because it does not exist as in the `Create()` path, `Get()` does not
+modify `obj`, and `obj` will remain as it was before entering _CreateOrUpdate_.
+The object would get passed to `Create()` in the same state as it was before
+_CreateOrUpdate_ was called. However, an issue arises during `Update()`. If the
+object exists (as in the `Update()` path), then `Get()` overwrites `obj`,
+merging the server's content over any content that was pre-filled. The
+`Update()` will never do anything, even if the actual object has diverged from
+the desired state. Therefore proper usage of "mutate" is essential to reconcile
+the object.
 
 In your mutate callback, you should surgically modify individual fields of the
 object. Don't overwrite large chunks of the object, or the whole object, as we
@@ -90,6 +101,8 @@ field, and cause _Update_ to fail, or overwrite the `status` field, losing
 state. It could also interfere with other controllers trying to make their own
 modifications to the object. Remember, you are only one controller in the whole
 Kubernetes cluster&mdash;play nice with others.
+
+[CreateOrUpdate]: https://github.com/kubernetes-sigs/controller-runtime/blob/v0.2.2/pkg/controller/controllerutil/controllerutil.go#L124
 
 ### Garbage Collection, OwnerReferences and ContollerRefs
 
@@ -106,7 +119,7 @@ created by a CustomResource controller, so that when the given CustomResource
 is deleted, the corresponding Deployment is also deleted.
 
 The `controller-runtime` package provides another method,
-`SetControllerReference`, to add a ControllerRef to objects that a controller
+_[SetControllerReference]_, to add a ControllerRef to objects that a controller
 creates. It takes care of correctly appending to existing OwnerReferences and
 checking for an existing ControllerRef.
 
@@ -116,6 +129,7 @@ detect a deleted CR to delete its sub-resources.
 
 [k8s-gc]: https://kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/
 [k8s-controllerref]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/controller-ref.md
+[SetControllerReference]: https://github.com/kubernetes-sigs/controller-runtime/blob/v0.2.2/pkg/controller/controllerutil/controllerutil.go#L56
 
 ### Returning an error from Reconcile means requeue
 
@@ -124,17 +138,19 @@ Errors returned from `Reconcile()` will be logged. But returning an error from
 desirable, don't return an error. This means thinking carefully about simply
 returning downstream errors.
 
-When an error is returned from `Reconcile()`, KubeBuilder logging of the error
-is very verbose, and includes a stack trace. The verbose log message may be
-difficult for a user to parse. Our experience with this was for a _Secret_ that
-needs to be provided by the user for the PXF service to operate properly. If
-that _Secret_ is missing (perhaps it was `kubectl apply`-ed at the same but not
-available in the API yet), then we would return the error we got from
-`Get()`-ing the _Secret_. We did want the reconciliation to be requeue'd since
-we are not watching the _Secret_ resource and would not otherwise reconcile
-again once the _Secret_ did get created. To silence the stack trace, we decided
-to instead log a helpful error message, and return a `Result` with `Requeue` set
-to `true`.
+When an [error is returned from `Reconcile()`][kb-reconcileHandler], KubeBuilder
+logging of the error is very verbose, and includes a stack trace. The verbose
+log message may be difficult for a user to parse. Our experience with this was
+for a _Secret_ that needs to be provided by the user for the PXF service to
+operate properly. If that _Secret_ is missing (perhaps it was `kubectl apply`-ed
+at the same but not available in the API yet), then we would return the error we
+got from `Get()`-ing the _Secret_. We did want the reconciliation to be
+requeue'd since we are not watching the _Secret_ resource and would not
+otherwise reconcile again once the _Secret_ did get created. To silence the
+stack trace, we decided to instead log a helpful error message, and return a
+`Result` with `Requeue` set to `true`.
+
+[kb-reconcileHandler]: https://github.com/kubernetes-sigs/controller-runtime/blob/v0.2.2/pkg/internal/controller/controller.go#L216
 
 ### Ignore NotFound errors
 
@@ -196,6 +212,36 @@ func (r *CustomReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 
 	return ctrl.Result{}, nil
+}
+
+func ModifyDeployment(cr myApi.CustomResource, deployment *appsv1.Deployment) {
+	labels := generateLabels(cr.Name)
+	if deployment.Labels == nil {
+		deployment.Labels = make(map[string]string)
+	}
+	for k, v := range labels {
+		deployment.Labels[k] = v
+	}
+	replicas := cr.Spec.Replicas
+	deployment.Spec.Replicas = &replicas
+	deployment.Spec.Template.Labels = labels
+
+	templateSpec := &deployment.Spec.Template.Spec
+
+	if len(templateSpec.Containers) == 0 {
+		templateSpec.Containers = make([]corev1.Container, 1)
+	}
+	container := &templateSpec.Containers[0]
+
+	container.Name = "myapp"
+	container.Args = []string{"/opt/myapp/bin/myapp"}
+	container.Image = "myrepo/myapp:v1.0"
+	container.Resources = corev1.ResourceRequirements{
+		Limits: corev1.ResourceList{
+			corev1.ResourceCPU:		 cr.Spec.CPU,
+			corev1.ResourceMemory: cr.Spec.Memory,
+		},
+	}
 }
 ```
 

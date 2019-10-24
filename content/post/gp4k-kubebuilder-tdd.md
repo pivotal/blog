@@ -191,10 +191,10 @@ later on change the delegate to a controller-runtime fake Client (see below).
 The challenges creating `reactive.Client` surrounded adapting the reactor
 actions developed for the client-go Client to the controller-runtime Client. The
 client-go fake client is generated, and can provide specific concrete
-runtime.Object implementations. The controller-runtime Client eschews generated
-code, and so uses the more generic interfaces. Converting between these two
-styles of API took some deep searching through parts of the Kubernetes API we
-had not explored previously.
+`runtime.Object` implementations. The controller-runtime Client eschews
+generated code, and so uses the more generic interfaces. Converting between
+these two styles of API took some deep searching through parts of the Kubernetes
+API we had not explored previously.
 
 ### Taking our tests from 20+ seconds to <1 second
 
@@ -227,20 +227,20 @@ intermittently failing tests by naming an object the same as another test’s
 object. To avoid this issue, we could instantiate a testenv for every test case.
 In order to run multiple testenvs, we would need to instantiate and wrangle
 multiple controller managers and associated `ReconcilerSpy`s and
-`reactive.Clients`. The more we thought about the complexity involved in such a
+`reactive.Client`s. The more we thought about the complexity involved in such a
 test system, we missed the simplicity of our Operator SDK tests. Even with
 parallelism, each test case still would take about 5 seconds to run, well above
 our sub-second ideal. In addition, we started to question the value of using a
 real api-server.
 
 We wanted to get away from using the heavier testenv and instead strip things
-down to use a fake client and call Reconcile() directly. Since `reactive.Client`
-wraps an existing client, it was pretty easy for us to substitute in the fake
-client from controller-runtime rather than the real client connected to the
-testenv.
+down to use a controller-runtime fake client and call `Reconcile()` directly.
+Since `reactive.Client` wraps an existing client, it was pretty easy for us to
+substitute in the fake client from controller-runtime rather than the real
+client connected to the testenv.
 
-At this point we were able to call Reconcile directly which and achieve
-sub-second test runs.
+At this point we were able to call Reconcile directly and achieve sub-second
+test runs.
 
 Before
 ```go
