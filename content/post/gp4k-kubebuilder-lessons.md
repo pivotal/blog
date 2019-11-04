@@ -32,6 +32,45 @@ developing our KubeBuilder controllers. In
 [_Part 2_](/post/gp4k-kubebuilder-tdd), we cover our journey of discovery of how
 to unit test our new controllers.
 
+## Background
+
+The [Kubernetes operator pattern][k8s-operator] is used to extend Kubernetes
+with custom resources and APIs. An operator can declare a resource by submitting
+a [_CustomResourceDefinition_][k8s-crd] to the api-server, and implement a
+control loop to listen for changes to those resources and react as necessary to
+manage underlying resources, which may be other Kubernetes resources, or
+entirely new resources like an external storage system.
+
+Our first controller for Greenplum was implemented using the Kubernetes code
+generators, workqueue, and hand-written code to react to create, update, and
+delete events from the _Informer_. This controller contains a lot of boilerplate
+and did not make it easy to follow some of the controller best practices. The
+greatest example of this is that we reacted to create, update, and delete in
+different ways, making our controller [edge driven rather than level
+driven][oreilly-edge-level]. While we haven't experienced any issues with it
+thus far, edge triggering could make our controller less resilient should we
+find ourselves in unexpected states.
+
+[KubeBuilder](https://github.com/kubernetes-sigs/kubebuilder) is a framework for
+building operators that integrates controller-runtime to implement a lot of the
+[responsibilities of an operator and its controllers][inside-controller][^1],
+including watching for resources, rate-limiting the control loop to reduce the
+chances of overloading the controller, and caching objects. Instead of relying
+on generated clients for custom types, KubeBuilder uses the controller-runtime
+client that works with any type registered. KubeBuilder generates scaffolding
+for controllers that need only one function implented: `Reconcile()`. This made
+it much simpler for us to incorporate the best-practice controller principles
+into our new controllers.
+
+[k8s-operator]: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
+[k8s-crd]: https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/
+[oreilly-edge-level]: https://www.oreilly.com/library/view/programming-kubernetes/9781492047094/ch01.html#edge-vs-level
+[inside-controller]: https://speakerdeck.com/govargo/inside-of-kubernetes-controller
+[^1]: [This slide deck][inside-controller] from _Kubernetes Meetup Tokyo_ is a
+    great overview based on the O'Reilly book _Programming Kubernetes_ of what a
+    K8s controller needs to do, and gives a sense of all the things that
+    KubeBuilder takes care of for you.
+
 ## Building the Controller
 
 The [KubeBuilder](https://book.kubebuilder.io/) book covers in detail [how to

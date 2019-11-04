@@ -259,3 +259,15 @@ Expect(err).NotTo(HaveOccurred())
 
 //make assertions
 ```
+
+## Conclusion
+
+At the end of our testing journey, we're happy with the rapid iteration cycle
+provided by direct unit tests using a fake Client with reactors, and
+ReconcilerSpy became unnecessary. Sub-second unit tests provide immediate
+feedback mean we can add features gradually, which leads to clearer tests and
+implementation that reveals itself naturally. Our experience with the
+KubeBuilder test scaffolding re-iterated old lessons of unit testing: Focus on
+the unit of testing (your `Reconcile()` method), and inject dependencies
+(controller-runtime `Client`) that have the behavior (reactors) needed to
+implement the scenario.
