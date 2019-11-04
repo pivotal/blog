@@ -277,7 +277,7 @@ func ModifyDeployment(cr myApi.CustomResource, deployment *appsv1.Deployment) {
 	container.Image = "myrepo/myapp:v1.0"
 	container.Resources = corev1.ResourceRequirements{
 		Limits: corev1.ResourceList{
-			corev1.ResourceCPU:		 cr.Spec.CPU,
+			corev1.ResourceCPU:    cr.Spec.CPU,
 			corev1.ResourceMemory: cr.Spec.Memory,
 		},
 	}
