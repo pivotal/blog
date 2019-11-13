@@ -8,12 +8,12 @@ To discuss the blog, [join the Google Group](https://groups.google.com/a/pivotal
 
 ## Contributing
 
-1. [Write your post](https://github.com/pivotal-legacy/blog#writing-a-post) as a draft.
+1. [Write your post](https://github.com/pivotal/blog#writing-a-post) as a draft.
 1. [Preview it](https://pivotal-cf-blog-staging.cfapps.io/) on staging.
-1. [Make it good](https://github.com/pivotal-legacy/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
-1. [Ship it!](https://github.com/pivotal-legacy/blog#publishing-your-copy)
+1. [Make it good](https://github.com/pivotal/blog#writing-a-good-post). Gather feedback from your engineering peers.  Iterate, repeat.
+1. [Ship it!](https://github.com/pivotal/blog#publishing-your-copy)
 
-Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal-legacy/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).
+Every commit to master is [auto-deployed to both production and staging](https://travis-ci.org/pivotal/blog/builds) (only staging shows drafts), and then automatically tweeted by [@pivotaleng](https://twitter.com/pivotaleng).
 
 If you don't have push access, then send an ask ticket to have yourself added to the `all-pivots` github team in this org.
 
@@ -88,7 +88,7 @@ Then you _may_ have forgotten to include a property in your `data/authors/foo.ym
 
 ## Publishing Your Copy
 
-Every commit to master is [auto-deployed](https://travis-ci.org/pivotal-legacy/blog) to both [production](https://engineering.pivotal.io/) and [staging](https://pivotal-cf-blog-staging.cfapps.io/) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
+Every commit to master is [auto-deployed](https://travis-ci.org/pivotal/blog) to both [production](https://engineering.pivotal.io/) and [staging](https://pivotal-cf-blog-staging.cfapps.io/) (only staging shows drafts).  If you don't have push access, then send an ask ticket to have yourself added to `all-pivots` in this org. To publish your draft post, simply remove the `draft: true` line from the top of your post.
 
 ## Changing the style
 
@@ -115,7 +115,7 @@ If the language auto-detection fails you can add a [language identifier](https:/
 
 ## Under the Hood...
 
-You'll notice that we're not building directly into `public`, but rather into all of `public/local`, `public/prod ` and `public/staging` &mdash; each representing a different environment.  This magic is done by the [bin/build](https://github.com/pivotal-legacy/blog/blob/master/bin/build) script.  `cf push` will [push all of the apps](https://github.com/pivotal-legacy/blog/blob/master/manifest.yml) one at a time.
+You'll notice that we're not building directly into `public`, but rather into all of `public/local`, `public/prod ` and `public/staging` &mdash; each representing a different environment.  This magic is done by the [bin/build](https://github.com/pivotal/blog/blob/master/bin/build) script.  `cf push` will [push all of the apps](https://github.com/pivotal/blog/blob/master/manifest.yml) one at a time.
 
 We also use:
 

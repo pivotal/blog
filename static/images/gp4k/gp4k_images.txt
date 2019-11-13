@@ -1,1 +1,1 @@
-images for https://github.com/pivotal-legacy/blog/pull/228
+images for https://github.com/pivotal/blog/pull/228

@@ -37,7 +37,7 @@
                 <br/>
               </span>
             {{ end }}
-            <a href="https://github.com/pivotal-legacy/blog/edit/master/content/{{.File.Path}}" class="type-sm">Edit this post on GitHub.</a>
+            <a href="https://github.com/pivotal/blog/edit/master/content/{{.File.Path}}" class="type-sm">Edit this post on GitHub.</a>
             <div class="pull-right">
               <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-via="{{ range $index, $author := $authors }}{{ with $a := (index $all $author) }}{{ if $a.Twitter }}{{ if eq $index 0 }}{{ printf "%s " $a.Twitter }}{{ else }}{{ printf "@%s " $a.Twitter }}{{ end }}{{ end }}{{ end }}{{ end }}">Tweet</a>
             </div>

@@ -95,7 +95,7 @@ password manager will do.
 
 _We are interested in alternative secure storage mechanisms (e.g. Vault,
 1Password) for the secrets. For those of you so inclined, [pull
-requests](https://github.com/pivotal-legacy/blog/edit/master/content/post/totp.md)
+requests](https://github.com/pivotal/blog/edit/master/content/post/totp.md)
 describing alternatives are welcome._
 
 We copy the URL to a "secure note", one line per URL. We name the secure note

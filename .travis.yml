@@ -12,7 +12,7 @@ deploy:
   provider: cloudfoundry
   skip_cleanup: true
   on:
-    repo: pivotal-legacy/blog
+    repo: pivotal/blog
     branch: master
   api: https://api.run.pivotal.io
   client_id:
