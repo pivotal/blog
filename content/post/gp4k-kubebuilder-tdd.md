@@ -9,8 +9,8 @@ categories:
 - Kubernetes
 - KubeBuilder
 - Test Driven Development
-date: 2019-10-14T17:00:00Z
-draft: true
+date: 2019-11-14T13:00:00Z
+draft: false
 short: |
   Lessons we learned while building a controller with KubeBuilder, and how we
   made our unit tests fast enough for test driving.

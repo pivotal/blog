@@ -8,8 +8,8 @@ categories:
 - Greenplum
 - Kubernetes
 - KubeBuilder
-date: 2019-10-14T16:00:00Z
-draft: true
+date: 2019-11-14T12:00:00Z
+draft: false
 short: |
   Lessons we learned while building a controller with KubeBuilder
 title: How we built a controller using KubeBuilder with Test Driven development, Part 1
