@@ -30,11 +30,13 @@ jobs:
         export PATH=$PATH:/opt/hugo
         ./bin/build
 
-        mkdir ./public/staging/$PR_NUMBER
-        mv ./public/staging/* ./public/staging/$PR_NUMBER/
-
         cf api 'https://api.run.pivotal.io'
         cf auth --client-credentials
         cf target -o $CF_ORG -s $CF_SPACE
+
+        pushd ./public/staging
+          mkdir $PR_NUMBER
+          mv !($PR_NUMBER) $PR_NUMBER
+        popd
 
         cf push -f manifest-pr.yml --var pr-number=$PR_NUMBER
