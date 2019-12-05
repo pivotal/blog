@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Install CF CLI
       run: |
@@ -20,8 +18,8 @@ jobs:
     - name: Install Hugo
       run: |
         mkdir /opt/hugo && cd /opt/hugo
-        wget https://github.com/gohugoio/hugo/releases/download/v0.55.1/hugo_0.55.1_Linux-64bit.tar.gz
-        tar xzf hugo_0.55.1_Linux-64bit.tar.gz
+        wget https://github.com/gohugoio/hugo/releases/download/v0.60.1/hugo_0.60.1_Linux-64bit.tar.gz
+        tar xzf hugo_0.60.1_Linux-64bit.tar.gz
     - uses: actions/checkout@v1
     - name: Build & Push
       env:
