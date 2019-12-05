@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install CF CLI
+      run: |
+        wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+        echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+        sudo apt-get update
+        sudo apt-get install cf-cli
+    - name: Install Hugo
+      run: |
+        mkdir /opt/hugo && cd /opt/hugo
+        wget https://github.com/gohugoio/hugo/releases/download/v0.55.1/hugo_0.55.1_Linux-64bit.tar.gz
+        tar xzf hugo_0.55.1_Linux-64bit.tar.gz
+        ln -s ./hugo /usr/bin/hugo
+    - uses: actions/checkout@v1
+    - name: Build & Push
+      env:
+        CF_API: https://api.run.pivotal.io
+        CF_USERNAME: ${{ secrets.pws_username }}
+        CF_PASSWORD: ${{ secrets.pws_password}}
+        CF_ORG: pivotal
+        CF_SPACE: blog
+      run: |
+        cf api 'https://api.run.pivotal.io'
+        cf auth --client-credentials
+        cf target -o $CF_ORG -s $CF_SPACE
+
+        ./bin/build
+        cf push
