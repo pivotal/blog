@@ -22,7 +22,7 @@ jobs:
         mkdir /opt/hugo && cd /opt/hugo
         wget https://github.com/gohugoio/hugo/releases/download/v0.55.1/hugo_0.55.1_Linux-64bit.tar.gz
         tar xzf hugo_0.55.1_Linux-64bit.tar.gz
-        ln -s ./hugo /usr/bin/hugo
+        sudo ln -nfs ./hugo /usr/bin/hugo
     - uses: actions/checkout@v1
     - name: Build & Push
       env:
