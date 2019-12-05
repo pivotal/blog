@@ -1,4 +1,4 @@
-name: Pull Request
+name: Pull Request Opened
 
 on: [pull_request]
 
@@ -20,5 +20,12 @@ jobs:
         CF_ORG: pivotal
         CF_SPACE: blog
       run: |
+        export PR_NUMBER=$(jq -r '.number' $GITHUB_EVENT_PATH)
         export PATH=$PATH:/opt/hugo
         ./bin/build
+
+        cf api 'https://api.run.pivotal.io'
+        cf auth --client-credentials
+        cf target -o $CF_ORG -s $CF_SPACE
+
+        cf push -f manifest-pr.yml --var pr-number=$PR_NUMBER

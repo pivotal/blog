@@ -30,10 +30,10 @@ jobs:
         CF_SPACE: blog
       run: |
         export PATH=$PATH:/opt/hugo
+        ./bin/build
 
         cf api 'https://api.run.pivotal.io'
         cf auth --client-credentials
         cf target -o $CF_ORG -s $CF_SPACE
 
-        ./bin/build
         cf push

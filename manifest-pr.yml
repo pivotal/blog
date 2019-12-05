@@ -1,0 +1,9 @@
+---
+applications:
+- name: pivotal-cf-blog-pr-((pr-number))
+  path: ./public/staging
+  memory: 64M
+  disk: 200M
+  buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git
+  routes:
+    - route: pivotal-cf-blog-staging.cfapps.io/((pr-number))

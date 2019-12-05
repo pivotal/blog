@@ -1,0 +1,27 @@
+name: Pull Request Closed
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clean Up
+      env:
+        CF_API: https://api.run.pivotal.io
+        CF_USERNAME: ${{ secrets.pws_username }}
+        CF_PASSWORD: ${{ secrets.pws_password}}
+        CF_ORG: pivotal
+        CF_SPACE: blog
+      run: |
+        export PR_NUMBER=$(jq -r '.number' $GITHUB_EVENT_PATH)
+        export PATH=$PATH:/opt/hugo
+        ./bin/build
+
+        cf api 'https://api.run.pivotal.io'
+        cf auth --client-credentials
+        cf target -o $CF_ORG -s $CF_SPACE
+
+        cf delete pivotal-blog-pr-${PR_NUMBER} -r -f

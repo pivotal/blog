@@ -15,8 +15,3 @@ applications:
   memory: 64M
   disk: 200M
   buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git
-- name: pivotal-cf-blog-staging
-  path: ./public/staging
-  memory: 64M
-  disk: 200M
-  buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git
