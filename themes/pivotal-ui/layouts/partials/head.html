@@ -20,11 +20,11 @@
   <title>{{ if eq $replace_title .Site.Title }}{{ $replace_title }}{{else}}{{ $replace_title }} &middot; {{ .Site.Title }}{{ end }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-  <link rel="stylesheet" href="/pui-components-17.1.0.css">
-  <link rel="stylesheet" href="/styleguide.css">
-  <link rel="stylesheet" href="/github.css">
-  <link rel="stylesheet" href="/local.css">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="{{ "/pui-components-17.1.0.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "/styleguide.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "/github.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "/local.css" | relURL }}">
+  <link rel="shortcut icon" href="{{ "/favicon.ico" | relURL }}" type="image/x-icon">
 
   <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
   <meta property="og:title" content="{{ .Title }}" />

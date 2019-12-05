@@ -74,7 +74,7 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 
 ## Viewing on Staging
 
-You can also double check your work by looking on [the staging site](https://pivotal-cf-blog-staging.cfapps.io/).  Draft posts are only published there.
+You can also double check your work by looking on [the staging site](https://pivotal-cf-blog-staging.cfapps.io/). Every PR deployed to it's own path ex. `/254`.  Draft posts are only published there.
 
 ## Errors???
 

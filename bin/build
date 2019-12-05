@@ -3,7 +3,8 @@
 set -e
 
 rm -rf public
-echo "Production..." && hugo --quiet -b http://engineering.pivotal.io             -d public/prod
-echo "Staging..."    && hugo --quiet -b http://pivotal-cf-blog-staging.cfapps.io/ -d public/staging --buildDrafts
+echo "Production..." && hugo --quiet -b https://engineering.pivotal.io             -d public/prod
+echo "hugo --quiet -b https://pivotal-cf-blog-staging.cfapps.io/$PR_NUMBER/ -d public/staging/$PR_NUMBER --buildDrafts"
+echo "Staging..."    && hugo --quiet -b "https://pivotal-cf-blog-staging.cfapps.io/$PR_NUMBER/" -d public/staging/$PR_NUMBER --buildDrafts
 echo "Local..."      && hugo --quiet -b http://localhost                          -d public/local --buildDrafts $@
 
