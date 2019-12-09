@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Install CF CLI
+      run: |
+        ./ci/install_cf_cli.sh
     - name: Clean Up
       env:
         CF_API: https://api.run.pivotal.io
