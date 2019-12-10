@@ -60,12 +60,12 @@ Currently, if you have links or line breaks in your `short:` description it will
 
 ## Running Locally
 
-This site uses [Hugo](https://gohugo.io/) v0.18, which is easy to install:
+This site uses [Hugo](https://gohugo.io/) v0.60.1, which is easy to install:
 
 ~~~
 $ brew install hugo
 $ hugo version
-Hugo Static Site Generator v0.18.1 BuildDate: 2016-12-29T09:12:41-08:00
+Hugo Static Site Generator v0.60.1/extended darwin/amd64 BuildDate: unknown
 ~~~
 
 After cloning this repository, navigate into the new directory, run `bin/watch` in a terminal and then browse to [http://localhost:1313](http://localhost:1313) to see your local copy of the blog.
@@ -74,7 +74,7 @@ Hugo has [LiveReload](http://livereload.com/) built in, so if you have that conf
 
 ## Viewing on Staging
 
-You can also double check your work by looking on [the staging site](https://pivotal-cf-blog-staging.cfapps.io/). Every PR deployed to it's own path ex. `/254`.  Draft posts are only published there.
+You can also double check your work by looking on [the staging site](https://pivotal-cf-blog-staging.cfapps.io/). Every PR deployed to a path that matches its number (ex. `/254`).  Draft posts are only published there.
 
 ## Errors???
 
