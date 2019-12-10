@@ -15,7 +15,7 @@ title: Benchmarking Apache Geode's Performance
 ---
 
 ## Measuring Geode's Performance
-[Apache Geode](https://geode.apache.org/) is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. Data is distributed throughout the cluster, consisting of servers, locators, and clients. Servers are responsible for hosting data, while locators are responsible for directing the requests from the clients. Due to the distributed and real-time nature of Geode deployments, performance is important - so what is Geode’s performance?
+[Apache Geode&trade;](https://geode.apache.org/) is an in-memory data grid that provides real-time, consistent access to data-intensive applications throughout widely distributed cloud architectures. Data is distributed throughout the cluster, consisting of servers, locators, and clients. Servers are responsible for hosting data, while locators are responsible for directing the requests from the clients. Due to the distributed and real-time nature of Geode deployments, performance is important - so what is Geode’s performance?
  
 Geode’s performance is shown in figure 1, with average throughput in operations per second on the vertical axis and four different performance tests on the horizontal axis. The graph shows that PartitionedGetBenchmark, when testing Geode 1.9.0, had an average throughput of 200,000 operations per second.
 
