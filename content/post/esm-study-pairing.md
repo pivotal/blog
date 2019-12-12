@@ -6,7 +6,7 @@ categories:
 - Agile
 - Pair Programming
 - Pairing
-date: 2019-12-12T17:16:22Z
+date: 2019-12-12T05:16:22Z
 draft: false
 short: |
   Anonymized Data from a pairing research study.
