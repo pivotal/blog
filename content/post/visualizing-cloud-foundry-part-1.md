@@ -39,7 +39,9 @@ figcaption {
 
 Using Cloud Foundry to deploy an application to the cloud is a really simple affair: `cf push my-app` and you are done.
 
-{{< tweet 598235841635360768 >}}
+> here is my source code \
+> run it on the cloud for me \
+> i do not care how
 
 But what happens behind the curtain? Cloud Foundry is actually a pretty complex distributed system. Trying to understand the many components and how they work together presents a steep learning curve. Operators and anyone with an interest that goes beyond deploying an application have to build their mental model of the platform by looking at docs, logs, metrics, configuration files, or actual source code. Until now, there was nothing that would allow them to visualize and explore Cloud Foundry in a more interactive and graphical way. Weave Scope provides exactly that: a novel tool that can be used to reveal Cloud Foundry’s topology and the interplay between the different components of the platform. This gives everyone, from newcomers to seasoned experts, new ways to learn about Cloud Foundry and to troubleshoot a running system if necessary.
 
