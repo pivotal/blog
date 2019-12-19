@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-export PR_NUMBER=909999898
+export PR_NUMBER=$(jq -r '.number' $GITHUB_EVENT_PATH)
