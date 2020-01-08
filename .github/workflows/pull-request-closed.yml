@@ -24,4 +24,4 @@ jobs:
 
         ./ci/cf_login.sh
 
-        cf delete pivotal-blog-pr-${PR_NUMBER} -r -f
+        cf delete pivotal-cf-blog-pr-${PR_NUMBER} -r -f
