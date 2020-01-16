@@ -75,6 +75,6 @@ Now scale your slow consumer and TC VMs. For simplicity, we recommend a scaling 
 Once you have achieved the right scaling to service the load coming from your foundation, you should see few dropped log messages or slow consumers. Keep in mind that bursts of load may cause these metrics and logs to briefly spike.
 
 
-## WNotes on Total Loggregator Size
+## Notes on Total Loggregator Size
    
 TC VMs create streams back to every Doppler VM for every consumer present in your system. As a result, the total size of a Loggregator pipeline is limited by the connection overhead between the TCs and the Dopplers. The maximum size for which the Loggregator scaling recommendations are valid is 40 Dopplers to 20 TC VMs. Much like the ratio of TC VMs to Consumers, this isn’t a hard rule so keep an eye on your VM vitals.   
