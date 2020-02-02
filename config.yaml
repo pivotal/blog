@@ -10,4 +10,7 @@ Params:
 baseURL: "https://engineering.pivotal.io"
 googleAnalytics: UA-39702075-1
 rssLimit: 25
+markup:
+  highlight:
+    style: native
 ...
