@@ -13,4 +13,6 @@ rssLimit: 25
 markup:
   highlight:
     style: native
-...
+  goldmark:
+    renderer:
+      unsafe: true
