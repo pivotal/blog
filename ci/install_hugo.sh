@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=0.65.2
+VERSION=0.65.3
 
 mkdir /opt/hugo && cd /opt/hugo
 wget https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz
