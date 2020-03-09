@@ -144,14 +144,6 @@ we get an intuitive sense of how our code was written:
 - Refactoring a test is not time consuming, and can be done in as few as fifteen
   minutes.
 
-- Patterning after the code makes sense for unit tests but not integration
-  tests.
-
-- The topmost
-  [`BeforeEach()`](https://onsi.github.io/ginkgo/#extracting-common-setup-beforeeach)
-  will grow; it requires _all_ the necessary setup for the happy path.
-
-
 ### References
 
 [_Code: Align the happy path to the left
