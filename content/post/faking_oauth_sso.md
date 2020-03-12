@@ -25,7 +25,7 @@ This article describes three ways to structure your tests so that they no longer
 
 * Bypass authentication entirely using MockMvc.
 * Use WireMock to simulate an OAuth2 SSO service.
-* Use MockLab's hosted [OAuth2 / OpenID Connect simulation](https://www.moocklab.io/oauth2/?utm_source=pivotal.io&utm_medium=blog&utm_campaign=oauth2-mock).
+* Use MockLab's hosted [OAuth2 / OpenID Connect simulation](https://www.mocklab.io/oauth2/?utm_source=pivotal.io&utm_medium=blog&utm_campaign=oauth2-mock).
 
 ## Setting up OAuth2 SSO
 
