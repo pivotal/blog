@@ -129,7 +129,52 @@ we get an intuitive sense of how our code was written:
 	It("displays staging logs and their warnings", func() {})
 ```
 
+#### 3. In Practice: Every "if" Should Have a "When"
 
+Every `if err != nil {` should have a corresponding `When("XXX returns an
+error", func() {`.
+
+Below is an example from the Cloud Foundry CLI `bind-security-group`:
+
+[Code](https://github.com/cloudfoundry/cli/blob/7bec15f19dee85c78de9e6fed7be936005e3da7a/command/v7/bind_security_group_command.go#L50-L54):
+
+```golang
+securityGroup, warnings, err := cmd.Actor.GetSecurityGroup(cmd.RequiredArgs.SecurityGroupName)
+cmd.UI.DisplayWarnings(warnings)
+if err != nil {
+	return err
+}
+```
+
+[Unit Test](https://github.com/cloudfoundry/cli/blob/7bec15f19dee85c78de9e6fed7be936005e3da7a/command/v7/bind_security_group_command_test.go#L108-L132):
+
+```golang
+It("gets the security group information", func() {
+	Expect(fakeActor.GetSecurityGroupCallCount).To(Equal(1))
+	securityGroupName := fakeActor.GetSecurityGroupArgsForCall(0)
+	Expect(securityGroupName).To(Equal(cmd.RequiredArgs.SecurityGroupName))
+})
+
+It("displays the warnings", func() {
+	Expect(testUI.Err).To(Say(getSecurityGroupWarning[0]))
+})
+
+When("an error is encountered getting the provided security group", func() {
+	var expectedErr error
+
+	BeforeEach(func() {
+		expectedErr = errors.New("get security group error")
+		fakeActor.GetSecurityGroupReturns(
+			resources.SecurityGroup{},
+			v7action.Warnings{"get security group warning"},
+			expectedErr)
+	})
+
+	It("returns the error and displays all warnings", func() {
+		Expect(executeErr).To(MatchError(expectedErr))
+	})
+})
+```
 
 ### Takeaways
 
@@ -162,4 +207,10 @@ is used in the [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood).
 
 ### Acknowledgements
 
-Belinda Liu: inspiration, suggestions & edits.
+Belinda Liu: inspiration, suggestions & edits; Mona Mohebbi: code samples.
+
+## Corrections & Updates
+
+*2020-04-02*
+
+We include a snippet of code with its corresponding test.
