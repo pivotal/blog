@@ -8,9 +8,102 @@ draft: false
 short: |
     We install a Transport Layer Security (TLS) certificate issued by a
     commercial Certificate Authority (CA) on a VMware VCSA 6.7 while avoiding
-    several pitfalls.
-title: How to Install a TLS Certificate on vCenter Server Appliance (VCSA) 6.7
+    several pitfalls. We also include a _Quickstart_ section for the newer
+    vCenter 7.
+title: How to Install a TLS Certificate on vCenter Server Appliance (VCSA) 6.7 [Updated for vCenter 7]
 ---
+
+<!--
+Install root certificate
+Install chain including root but not including vcenter certificate
+install vcenter certificate
+install vcenter key
+-->
+
+<div class="alert alert-success" role="alert">
+
+The following section is the new Quickstart for installing a TLS certificate on vCenter 7
+
+</div>
+
+## vCenter 7 Quickstart
+
+Acquire a certificate for your host from a Commercial CA. In our example, we
+acquired a certificate for our host `vcenter-70.nono.io`
+from [SSls.com](https://ssls.com), and we purchased
+their least-expensive offering, the _PositiveSSL 1 domain Comodo SSL_.
+
+_[We do not endorse either SSLs.com or Comodo (which has rebranded to
+Sectigo); We encourage you to use the reseller and the Certificate Authority
+(CA) with which you are most comfortable]_.
+
+We have 4 files:
+
+1. Our [private key
+   file](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/vcenter-70.nono.io.key).
+
+2. Our [certificate
+   file](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/vcenter-70_nono_io.crt).
+   This is a single (not a chain) certificate for our server,
+   [vcenter-70.nono.io](https://vcenter-70.nono.io).
+
+3. Our [chained
+   certificates](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/vcenter-70_nono_io.ca-bundle).
+   (CA Bundle) This chain should _not_ include the server certificate. It
+   _should_ include the root certificate, which should be at the bottom of the
+   chain.
+
+   We **manually appended the root certificate to the chained certificate** file
+   received from Comodo/Sectigo.
+
+4. Our [root certificate](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/addtrustexternalcaroot.crt). This must have a `.crt` extension.
+   <sup><a href="#hand_wavy" class="alert-link">[hand-wavy]</a></sup>
+
+<div class="alert alert-warning" role="alert">
+
+The biggest challenge is getting the correct root certificate; it can't be
+cross-signed: it needs to be self-signed. Check the `openssl` and `cfssl`
+commands at the bottom of this post to verify that your root certificate is
+self-signed. If it's not the correct root certificate, you'll see the dreaded,
+"the trustAnchors parameter must be non-empty" error message when replacing the
+certificates.
+
+</div>
+
+Browse to **Menu → Administration → Certificates → Certificate Management**
+
+Select **Trusted Root Certificates → Add**
+- Click **Browse**
+- Browse to your root certificate file and click **Add**
+
+Select ***__MACHINE_CERT*** **→ Actions → Import and Replace Certificate**
+
+{{< responsive-figure class="center" src="https://user-images.githubusercontent.com/1020675/78815274-e56d2200-7984-11ea-9894-2a226d7a1ab2.png" >}}
+
+- Choose **Replace with external CA certificate (requires private key)**; Click
+  **Next**
+- Fill in as follows:
+  - **Machine SSL Certificate**: paste your certificate file here (in our case,
+    the certificate for _vcenter-70.nono.io_).
+  - **Chain of trusted root certificates**: paste your chained certificates
+    here.
+  - **Private Key**: paste your certificate's private key file here.
+- Click **Replace**. If you see an error message, "Error occurred while fetching
+  tls: Exception found (the trustAnchors parameter must be non-empty)", then you
+  haven't added root certificate properly, or it's not appended at the end of
+  your chained certificate, or what you think is a self-signed root certificate
+  is really a cross-signed root certificate.
+
+<!-- vCenter server services will be automatically restarted after successful
+replacement of the machine SSL certificate. -->
+
+<div class="alert alert-success" role="alert">
+
+The following section is the original post for installing a TLS certificate on VCSA 6.7
+
+</div>
+
+## 0. Abstract
 
 We want a green padlock on our VCSA's web client; when we use our browser to
 navigate to our VCSA, we'd like it too look like the following:
@@ -32,7 +125,7 @@ interested in replacing _all_ the certificates, in which case they should refer
 to this [VMware Knowledge Base
 article](https://kb.vmware.com/s/article/2111219).
 
-## 0. Pre-requisites
+## 1. Pre-requisites
 
 Before we begin, we need a TLS key, a chained certificate, and a root
 certificate. Also, we need to enable ssh access to our VCSA, for when
@@ -40,7 +133,7 @@ certificates go horribly wrong the web interface may be unusable, and the only
 mechanism to recover (other than reinstalling) is to ssh onto the VCSA and reset
 the certificates.
 
-### 0.0 Enable OpenSSH
+### 1.0 Enable OpenSSH
 
 Enable ssh by browsing to the [Appliance Management User
 Interface](https://blogs.vmware.com/vsphere/2015/09/web-based-management-for-the-vcsa-is-back.html)
@@ -48,7 +141,7 @@ Interface](https://blogs.vmware.com/vsphere/2015/09/web-based-management-for-the
 navigating to *Access → Access Settings → Edit → Edit Access Settings → Enable
 SSH Login → toggle enabled → OK*.
 
-### 0.1 Acquire Certificate from a Commercial CA
+### 1.1 Acquire Certificate from a Commercial CA
 
 We won't discuss how to acquire a certificate, but we will point out that Heroku has a fairly succinct (and vendor-agnostic) [description](https://devcenter.heroku.com/articles/acquiring-an-ssl-certificate) of the process.
 
@@ -76,9 +169,9 @@ After the process is complete, we should have three files:
 <sup><a href="#hand_wavy" class="alert-link">[hand-wavy]</a></sup>
 .
 
-## 1. Install the Certificate
+## 2. Install the Certificate
 
-### 1.0 Install the Certificate via Web Interface
+### 2.0 Install the Certificate via Web Interface
 
 - Browse to the VCSA's web client <https://vcenter-67.nono.io>
 - Select "Launch vSphere Client (HTML5)" *(we use the HTML interface; Flash™ is too much for us)*
@@ -107,7 +200,7 @@ Browse to the VCSA Management Interface (VAMI),
 https://vcenter-67.nono.io:5480, and navigate to *Actions → Reboot →
 Reboot the system? → Yes*.
 
-### 1.1 Install the Certificate via CLI
+### 2.1 Install the Certificate via CLI
 
 For those who would prefer to bypass the GUI and install the certificate via the
 CLI, we offer this alternative. First, ssh into our VCSA and start a shell:
@@ -145,13 +238,13 @@ Unlike the GUI, which returns immediately, the CLI spends several minutes replac
 shutdown -r now
 ```
 
-### 1.2 Check: Refresh Your Browsers
+### 2.2 Check: Refresh Your Browsers
 
 Browse to the VCSA web client and confirm the certificate is installed (green
 padlock). You may need to refresh the page. As a bonus, the Appliance MUI (VAMI)
 has the new certificate, too!
 
-## 2. Gotchas
+## 3. Gotchas
 
 If you don't upload the root certificate but update the certificate & key, after rebooting you will see the following in a red banner at the top:
 
@@ -177,7 +270,7 @@ certification path to requested target.
 
 You'll need to reset your certificates; see the next section.
 
-### 2.0 Resetting the Certificates when things go wrong
+### 3.0 Resetting the Certificates when things go wrong
 
 If the web client is unusable, you'll need to ssh in and use
 `certificate-manager` to reset the certificates.
@@ -200,6 +293,8 @@ with a Custom Certificate Authority Signed Certificate"](https://kb.vmware.com/s
 - [This gist](https://gist.github.com/cunnie/1119b9b59c7a50391987987310c76e6d)
   contains our chained certificate, our root certificate, and our redacted key
   (our key with several lines removed).
+- This [VMware thread](https://communities.vmware.com/thread/577741) describes a
+  procedure to rmove old trusted root certificates from PSC.
 
 ## Footnotes
 
@@ -241,12 +336,23 @@ produces:
   "AddTrust External CA Root"
 ]
 ```
-With `openssl` we can use a simple `grep` to extract the information we need.
+With `openssl` we can use a simple `egrep` to extract the information we need.
 ```bash
 openssl x509 -in addtrustexternalcaroot.crt -noout -text |
   egrep "Issuer:|Subject:"
+```
+produces:
+```
+Issuer: C=SE, O=AddTrust AB, OU=AddTrust External TTP Network, CN=AddTrust External CA Root
+Subject: C=SE, O=AddTrust AB, OU=AddTrust External TTP Network, CN=AddTrust External CA Root
 ```
 
 Now, when faced with the above output, a reasonable might ask, "why on earth is
 Comodo using Addtrust's root certificate? Why don't they use their own
 certificate?" One can only speculate.
+
+# Corrections & Updates
+
+*2020-04-08*
+
+We include a Quickstart section for vCenter 7.
