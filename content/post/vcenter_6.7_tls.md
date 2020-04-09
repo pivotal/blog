@@ -61,12 +61,12 @@ We have 4 files:
 
 <div class="alert alert-warning" role="alert">
 
-The biggest challenge is getting the correct root certificate; it can't be
-cross-signed: it needs to be self-signed. Check the `openssl` and `cfssl`
-commands at the bottom of this post to verify that your root certificate is
-self-signed. If it's not the correct root certificate, you'll see the dreaded,
-"the trustAnchors parameter must be non-empty" error message when replacing the
-certificates.
+The biggest challenge is getting the correct root certificate; we strongly
+suspect it can't be cross-signed: it needs to be self-signed. Check the
+`openssl` and `cfssl` commands at the bottom of this post to verify that your
+root certificate is self-signed. If it's not the correct root certificate,
+you'll see the dreaded, "the trustAnchors parameter must be non-empty" error
+message when replacing the certificates.
 
 </div>
 
@@ -91,8 +91,9 @@ Select ***__MACHINE_CERT*** **→ Actions → Import and Replace Certificate**
 - Click **Replace**. If you see an error message, "Error occurred while fetching
   tls: Exception found (the trustAnchors parameter must be non-empty)", then you
   haven't added root certificate properly, or it's not appended at the end of
-  your chained certificate, or what you think is a self-signed root certificate
-  is really a cross-signed root certificate.
+  your chained certificate, or (we suspect but aren't sure that this is a
+  requirement) what you think is a self-signed root certificate is really a
+  cross-signed root certificate.
 
 <!-- vCenter server services will be automatically restarted after successful
 replacement of the machine SSL certificate. -->
