@@ -33,30 +33,29 @@ acquired a certificate for our host `vcenter-70.nono.io`
 from [SSls.com](https://ssls.com), and we purchased
 their least-expensive offering, the _PositiveSSL 1 domain Comodo SSL_.
 
-_[We do not endorse either SSLs.com or Comodo (which has rebranded to
-Sectigo); We encourage you to use the reseller and the Certificate Authority
+_[We do not endorse either SSLs.com or Sectigo (formerly
+Comodo); We encourage you to use the reseller and the Certificate Authority
 (CA) with which you are most comfortable]_.
 
 We have 4 files:
 
-1. Our [private key
-   file](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/vcenter-70.nono.io.key).
+1. Our private key file.
 
 2. Our [certificate
-   file](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/vcenter-70_nono_io.crt).
+   file](https://raw.githubusercontent.com/cunnie/docs/master/tls/vcenter-70_nono_io.crt).
    This is a single (not a chain) certificate for our server,
    [vcenter-70.nono.io](https://vcenter-70.nono.io).
 
 3. Our [chained
-   certificates](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/vcenter-70_nono_io.ca-bundle).
+   certificates](https://raw.githubusercontent.com/cunnie/docs/master/tls/vcenter-70_nono_io.ca-bundle).
    (CA Bundle) This chain should _not_ include the server certificate. It
    _should_ include the root certificate, which should be at the bottom of the
    chain.
 
    We **manually appended the root certificate to the chained certificate** file
-   received from Comodo/Sectigo.
+   received from Sectigo.
 
-4. Our [root certificate](https://github.com/cunnie/docs/blob/9fc5483256e373eef122f0f2092975cf9651bf77/tls/addtrustexternalcaroot.crt). This must have a `.crt` extension.
+4. Our [root certificate](https://raw.githubusercontent.com/cunnie/docs/master/tls/SHA-2%20Root%20%20USERTrust%20RSA%20Certification%20Authority.crt). This must have a `.crt` extension.
    <sup><a href="#hand_wavy" class="alert-link">[hand-wavy]</a></sup>
 
 <div class="alert alert-warning" role="alert">
@@ -75,6 +74,9 @@ Browse to **Menu → Administration → Certificates → Certificate Management*
 Select **Trusted Root Certificates → Add**
 - Click **Browse**
 - Browse to your root certificate file and click **Add**
+- If you get an error, `Error occurred while adding trusted root certificates:
+  Trusted root already exists`, don't worry, vCenter already has your root
+  certificate.
 
 Select ***__MACHINE_CERT*** **→ Actions → Import and Replace Certificate**
 
@@ -274,10 +276,13 @@ You'll need to reset your certificates; see the next section.
 ### 3.0 Resetting the Certificates when things go wrong
 
 If the web client is unusable, you'll need to ssh in and use
-`certificate-manager` to reset the certificates.
+`certificate-manager` to [reset the
+certificates](https://kb.vmware.com/s/article/2112283). We've tested this
+procedure on vCenter 6.7 & 7.0.
 
 ```
-ssh root@vcenter-67.nono.io
+ssh root@vcenter-70.nono.io
+shell
 /usr/lib/vmware-vmca/bin/certificate-manager
 ```
 
@@ -295,31 +300,39 @@ with a Custom Certificate Authority Signed Certificate"](https://kb.vmware.com/s
   contains our chained certificate, our root certificate, and our redacted key
   (our key with several lines removed).
 - This [VMware thread](https://communities.vmware.com/thread/577741) describes a
-  procedure to rmove old trusted root certificates from PSC.
+  procedure to remove old trusted root certificates from PSC.
 
 ## Footnotes
 
 <a name="not_what_you_think"><sup>[not-what-you-think]</sup></a>
+
 We're not publishing our private key, but not for the reasons you think. You probably think it's about security, about preventing man-in-the-middle (MITM) attacks. It's not. Our server is behind a firewall and can only be accessed from our internal network. If you were in a position to execute an MITM attack, it would mean that our network was grossly compromised, and the jig would be up (an MITM attack would be the least of our concerns).
 
 No, security is not the reason. Revocation is the reason. The last time that we published a private key, our certificate was revoked in a rather [spectacular manner](https://news.ycombinator.com/item?id=10184866), and the CA refused to issue us another one unless we promised not to publish it. We agreed, and we hew to our agreement, for we are men of our word.
 
 <a name="hand_wavy"><sup>[hand-wavy]</sup></a>
+
 This is the most hand-wavy part of the blog post, obtaining the root
 certificate. On one hand, root certificates are everywhere — every one of the
 billions of browsers has a copy of the [approximately
 160](https://wiki.mozilla.org/CA/Included_Certificates) root certificates.
 
 On the other hand, you may have to do some digging. Whichever CA you choose
-should publish their root certificate. Comodo, for example, publishes their root
+should publish their root certificate. Sectigo, for example, publishes their root
 certificate
 [here](https://support.comodo.com/index.php?/Knowledgebase/Article/View/854/75/root-addtrustexternalcaroot).
 
 If that's a dead-end, you may want to check [Mozilla's list](https://wiki.mozilla.org/CA/Included_Certificates) of root certificates.
 
+We had an interesting experience where one version of the [Sectigo root
+certificate](https://crt.sh/?id=1199354) whose canonical name (CN) was "USERTrust RSA
+Certification Authority", worked, but the intermediate certificate included in the chain,
+whose canonical name was also "USERTrust RSA Certification Authority", and which
+we mistakenly took for a root certificate, did not work.
+
 To determine if the certificate you have is a root certificate, confirm the
 subject is the same as the issuer. In the following example, we use two common
-TLS command line tools (`cfssl` and `openssl`) to examine the Comodo root
+TLS command line tools (`cfssl` and `openssl`) to examine the Sectigo root
 certificate `addtrustexternalcaroot.crt` and ensure the issuer is the same as
 the subject:
 
@@ -353,6 +366,14 @@ Comodo using Addtrust's root certificate? Why don't they use their own
 certificate?" One can only speculate.
 
 # Corrections & Updates
+
+*2020-05-22*
+
+Updated to include newly-issued TLS certificates to replace the ones that had
+been revoked, but this time we did not publish the private key (the cause of the
+revocation).
+
+We deprecate _Comodo_ in favor of _Sectigo_, the new name.
 
 *2020-04-08*
 
