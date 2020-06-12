@@ -48,7 +48,7 @@ $ git checkout wip
 [^old-checkout-desc]: That the `git checkout` command does a "checkout" of branches or files was in fact the description used in its documentation in earlier versions of Git, like in [v1.7.0](https://github.com/git/git/blob/v1.7.0/Documentation/git-checkout.txt).
 
 Let's add that our list of what `git checkout` does:
-- When given a filepath, `git checkout <filepath>` sets `<filepath>` to their contents in the index.
+- When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index.
 - When given a branch, `git checkout <branch>` sets the branch we're on to `<branch>` - or to be accurate, sets `HEAD` to point to `<branch>`.
 
 ## What is HEAD?
@@ -111,7 +111,7 @@ What if we had a tool that specifically deals with one or the other? Enter `git 
 
 Let's run through the 3 operations again to see how these 2 commands are used:
 
-1. *When given a filepath, `git checkout <filepath>` sets one or more `<filepath>` to their contents in the index*:
+1. *When given a file path, `git checkout <filepath>` sets one or more `<filepath>` to their contents in the index*:
 
    Use `git restore` for setting the contents of files, but not change what `HEAD` points to:
 
