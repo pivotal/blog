@@ -6,7 +6,7 @@ categories:
 date: 2020-05-31T18:44:22+0800
 draft: true
 title: Better specificity with git switch and restore
-image: /images/better-specificity-with-git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
+image: images/better-specificity-with-git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
 ---
 
 You probably work with Git everyday. If you've worked with Git for some time, you might have a couple of commands stored to your muscle memory - from `git commit` to record your changes, to `git log` to get a sense of "where" you are.
