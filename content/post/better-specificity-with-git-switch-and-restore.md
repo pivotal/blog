@@ -35,7 +35,7 @@ Let's put it down:
 
 [^content-trees]: I used "contents of files", when it is more accurate to talk about the "working tree" as something separate from the index. The ["Three Trees" section](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_the_three_trees) of the freely available Pro Git book explains what they are (with diagrams!)
 
-## ...another
+## Branches
 
 Say you wanted to return to a branch, `wip`, you had been working on previously; you can run the below to set it to be the branch you're on and "checkout" [^old-checkout-desc] its files:
 
@@ -71,7 +71,7 @@ One of Git's roles is to track content, and it helps us to know what changes we 
 
 [^HEAD-what]: I omitted providing a definition for `HEAD` as it didn't fit in with the post. Here goes - unlike references like branches and tags, `HEAD` is a symbolic reference. Think of it as a symlink - when you write to a symlink, the underlying backing file also changes. Apart from `HEAD`, are there other kinds of symbolic references? It turns out, there aren't many others - just one other, in fact. <https://stackoverflow.com/a/5000668>
 
-## ...and another
+## Detached HEAD
 
 Apart from setting `HEAD` to point to a named branch, you can also point it to a commit, which brings us to another `git checkout` operation. To see why we would want to do so, let's continue your hypothetical workday - you now start seeing, say, a page to be laid out weirdly, but you remember it being pixel-perfect when you last worked on it about a week ago, say commit `f7884`. To confirm your hypothesis, you can explore your project's state as-of commit `f7884` and set the contents of the files in your Git repository correspondingly via:
 
@@ -103,8 +103,8 @@ Phew, that is quite a few things that `git checkout` can do:
 
 This only scratches surface of the operations that `git checkout` can perform. But generally, we see that `git checkout` deals with 2 aspects of the Git repository:
 
-  1) Changing `HEAD` to point to a branch or a commit, and
-  2) Setting the contents of files.
+  1. Changing `HEAD` to point to a branch or a commit, and
+  2. Setting the contents of files.
 
 What if we had a tool that specifically deals with one or the other? Enter `git restore` and `git switch`.
 
