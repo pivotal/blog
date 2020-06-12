@@ -22,20 +22,19 @@ Perhaps you were trying something out and made some changes to the files in your
 $ git checkout path/to/file.lang
 ```
 
-To be precise, the above sets the specified files paths to their content [^content-trees] in the *index*. I'm assuming at this point your index should be clean and you haven't staged any changes.
-
-On top of glob patterns like `*` that your shell expands for you, `git checkout` also accepts patterns for file paths known as a *pathspec*. For example, if you were in a subdirectory of the repository, but wanted to discard edits in the entire repository, you can use the special `:` followed by `/`: [^pathspec]
+To be precise, the above sets the specified files paths to their content [^content-trees] in the *index*. If you'd like to set the files to their content in a *tree*, like a branch or a commit, instead of the index, specify it before the file paths. If it happens that the branch shares a name with the file, pass the `--` to separate the two. [^checkout-overwrites-index]
 
 ```bash
-$ git checkout :/
+$ git checkout wip path/to/file.lang
+$ git checkout wip -- path/to/file.lang
 ```
 
 Let's put it down:
 - `git checkout <filepath>` sets `<filepath>` to their contents in the index.
 
-[^content-trees]: I used "contents of files", when it is more accurate to talk about the "working tree" as something separate from the index. The ["Three Trees" section](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_the_three_trees) of the freely available Pro Git book explains what they are (with diagrams!)
+[^checkout-overwrites-index]: Note that the changes will be staged after running the command - or to use Git parlance, the index is overwritten.
 
-[^pathspec]: See [`pathspec` entry](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec) of the Git glossary for more on `:` and the magic signature `/`.
+[^content-trees]: I used "contents of files", when it is more accurate to talk about the "working tree" as something separate from the index. The ["Three Trees" section](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified#_the_three_trees) of the freely available Pro Git book explains what they are (with diagrams!)
 
 ## ...another
 
@@ -121,6 +120,12 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
    As a mnemonic, think back to our example - we wanted to *restore* the contents of `<filepath>` to the index and discard changes to those files.
 
+   For the variation `git checkout <branch/commit> <filepath>` where a tree is specified that we looked at, use the `--source` argument to `git restore`:
+
+   ```bash
+   $ git restore --source <branch/commit> <filepath>
+   ```
+
 2. *When given a branch, `git checkout <branch>` sets `HEAD` to point to `<branch>`*:
 
    Use `git switch` to set `HEAD` to point to a branch:
@@ -154,11 +159,9 @@ To help you get started, here's a mapping from a `git checkout` invocation you m
 | git checkout                                                              |Change HEAD to:| Which files are changed?    | git switch/restore                       |
 |---------------------------------------------------------------------------|---------------|-----------------------------|------------------------------------------|
 |`git checkout <filepath>`<br>`git checkout -- <filepath>`                  |no change      | Files listed in `<filepath>`|`git restore <filepath>`                  |
+|`git checkout <branch/commit> <filepath>`<br>`git checkout <branch/commit> -- <filepath>`|no change      | Files listed in `<filepath>`|`git restore --source <branch/commit> <filepath>`|
 |`git checkout <branch>`                                                    |`<branch>`     | All files in repo           |`git switch <branch>`                     |
 |`git checkout <commit>`<br>`git checkout --detach <commit>`                |`<commit>`     | All files in repo           |`git switch --detach`                     |
-|`git checkout <branch/commit> <filepath>`<br>`git checkout <branch/commit> -- <filepath>`|no change      | Files listed in `<filepath>`|`git restore --source <branch/commit> <filepath>`|
-
-The fourth shows an additional `git checkout` operation apart from the 3 we looked at; think of it as extending the first operation, but with the ability to use a branch or commit instead of the index as the source for the contents of the file paths. Unlike the 3 operations though, the changes will be staged after running the command - or to use Git parlance, the index is overwritten.
 
 ## #12SwitchRestoresSansCheckOuts Challenge
 
