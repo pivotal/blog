@@ -9,8 +9,7 @@ title: Better specificity with git switch and restore
 image: images/better-specificity-with-git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
 ---
 
-You probably work with Git everyday. If you've worked with Git for some time, you might have a couple of commands stored to your muscle memory - from `git commit` to record your changes, to `git log` to get a sense of "where" you are.
-
+You probably work with Git everyday. If you've worked with Git for some time, you might have a couple of commands stored to your muscle memory - from `git commit` for recording your changes, to `git log` for sensing "where" you are.
 
 I found `git checkout` to be a command that I reach for pretty frequently. This is not surprising, as it performs more than one operation. But in the spirit of "do one thing, and do it well", is this too many? Let's take a look at what `git checkout` can do to see what those operations are.
 
@@ -68,25 +67,23 @@ One of Git's roles is to track content, and it helps us to know what changes we 
 
 {{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/HEAD-diagram.svg" alt="Commit history illustration with HEAD and branches">}}
 
-And even in the first operation, `HEAD` figures here - while we did not change `HEAD`, we relied on there being no changes to have been staged - that is, the index was the same as `HEAD`/the branch we're on, so that when `git checkout <filepath>` sets the contents of `<filepath>` to the index, we'd see those files match their content in `HEAD`/the branch we're on. [^HEAD-what]
-
 [^HEAD-simple]: When determining what has changed, `HEAD` isn't the only factor - it depends on how you ask Git for changes. For example, `git diff` uses the index as the point of comparison, so even if your files didn't match their content in `HEAD` but had been staged, you'd get an empty output. It's also important to note that Git doesn't deal with changes or deltas - each commit is a complete snapshot of your files.
 
 [^HEAD-what]: I omitted providing a definition for `HEAD` as it didn't fit in with the post. Here goes - unlike references like branches and tags, `HEAD` is a symbolic reference. Think of it as a symlink - when you write to a symlink, the underlying backing file also changes. Apart from `HEAD`, are there other kinds of symbolic references? It turns out, there aren't many others - just one other, in fact. <https://stackoverflow.com/a/5000668>
 
 ## ...and another
 
-Apart from setting `HEAD` to point to a named branch, you can also point it to a commit, which brings us to another `git checkout` operation. To see why we would want to do so, let's continue your hypothetical workday - you now start seeing, say, a page to be laid out weirdly, but you remembered it being pixel-perfect when you last worked on it about a week ago, say commit `f7884`. To confirm your hypothesis, you can tell Git to set the contents of the files in your Git repository as-of commit `f7884`, via:
+Apart from setting `HEAD` to point to a named branch, you can also point it to a commit, which brings us to another `git checkout` operation. To see why we would want to do so, let's continue your hypothetical workday - you now start seeing, say, a page to be laid out weirdly, but you remember it being pixel-perfect when you last worked on it about a week ago, say commit `f7884`. To confirm your hypothesis, you can explore your project's state as-of commit `f7884` and set the contents of the files in your Git repository correspondingly via:
 
 ```bash
 $ git checkout f7884
 ```
 
-This sets `HEAD` to point to the commit `f7884` instead of a branch. Not only are the files in your repository set to their contents as-of commit `f7884`, the point of comparison for determining changes in your files is now `HEAD`, or equivalently the commit it points to, `f7884`.
+Apart from setting the contents of your files, it also sets `HEAD` to point to the commit `f7884`, unlike a branch in the second operation we looked at:
 
 {{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/detached-HEAD.svg" alt="Commit history illustration in detached HEAD state">}}
 
-This is known as a *detached `HEAD`* state - if you were to make a new commit in this, `HEAD` would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags.
+This is known as a *detached `HEAD`* state. If you were to make a new commit in this, `HEAD` would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags.
 
 {{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/detached-HEAD-commit.svg" alt="Commit history illustration of new commits in detached HEAD state">}}
 
@@ -104,7 +101,7 @@ Phew, that is quite a few things that `git checkout` can do:
 
 ## An alternative (or two)
 
-This does not completely enumerate the operations that `git checkout` can perform. But generally, we see that `git checkout` deals with 2 aspects of the Git repository:
+This only scratches surface of the operations that `git checkout` can perform. But generally, we see that `git checkout` deals with 2 aspects of the Git repository:
 
   1) Changing `HEAD` to point to a branch or a commit, and
   2) Setting the contents of files.
@@ -155,14 +152,16 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
 ## Sign me up - where can I use them?
 
-`git switch` and `git restore` were introduced in Git v2.23 [released on Aug 2019](https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61), so you should be able to use them on a machine with an up-to-date installation of Git. Note that their respective documentation pages describe these commands as experimental, but this probably speaks to the options that these commands take - that is, there is a possibility that a switch or argument may be added/removed/changed to have a different behaviour. I don't see these commands going away. Indeed:
+`git switch` and `git restore` were introduced in Git v2.23 [released on Aug 2019](https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61), so you should be able to use them on a machine with an up-to-date installation of Git. You might notice their respective manpages describe them as experimental, but this probably speaks to the options that these commands take - that is, there is a possibility that a switch or argument may be added/removed/changed to have a different behaviour. I don't see these commands going away. Indeed:
 
 - the documentation for `git checkout` links to `git switch` and `git restore`;
 - the advice printed by Git when entering detached `HEAD` state gives examples using `git switch` instead of `git checkout`;
 
 among others.
 
-To help you get started, here's a mapping from a `git checkout` invocation you may be using to the equivalent one using `git switch` and `git restore`:
+## A Rosetta Stone
+
+To help you get started with `git switch` and `git restore`, here's a mapping from a `git checkout` invocation you may already be using in your daily workflow:
 
 | git checkout                                                              |Change HEAD to:| Which files are changed?    | git switch/restore                       |
 |---------------------------------------------------------------------------|---------------|-----------------------------|------------------------------------------|
