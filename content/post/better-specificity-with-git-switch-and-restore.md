@@ -44,6 +44,14 @@ Say you wanted to return to a branch, `wip`, you had been working on previously;
 $ git checkout wip
 ```
 
+You might have encountered `-`:
+
+```bash
+$ git checkout -
+```
+
+This checks out the last branch you were on. This is much like how `cd -` in your shell changes you back to the last directory you were in.
+
 [^old-checkout-desc]: That the `git checkout` command does a "checkout" of branches or files was in fact the description used in its documentation in earlier versions of Git, like in [v1.7.0](https://github.com/git/git/blob/v1.7.0/Documentation/git-checkout.txt).
 
 Let's add that our list of what `git checkout` does:
