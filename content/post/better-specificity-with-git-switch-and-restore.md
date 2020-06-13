@@ -147,7 +147,7 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
 
    ```bash
-   $ git switch --detach <filepath>
+   $ git switch --detach <commit>
    ```
 
 ## Sign me up - where can I use them?
@@ -168,7 +168,7 @@ To help you get started with `git switch` and `git restore`, here's a mapping fr
 |`git checkout <filepath>`<br>`git checkout -- <filepath>`                  |no change      | Files listed in `<filepath>`|`git restore <filepath>`                  |
 |`git checkout <branch/commit> <filepath>`<br>`git checkout <branch/commit> -- <filepath>`|no change      | Files listed in `<filepath>`|`git restore --source <branch/commit> <filepath>`|
 |`git checkout <branch>`                                                    |`<branch>`     | All files in repo           |`git switch <branch>`                     |
-|`git checkout <commit>`<br>`git checkout --detach <commit>`                |`<commit>`     | All files in repo           |`git switch --detach`                     |
+|`git checkout <commit>`<br>`git checkout --detach <commit>`                |`<commit>`     | All files in repo           |`git switch --detach <commit>`            |
 
 ## #12SwitchRestoresSansCheckOuts Challenge
 
