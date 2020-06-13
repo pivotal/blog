@@ -83,7 +83,7 @@ Apart from setting the contents of your files, it also sets `HEAD` to point to t
 
 {{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/detached-HEAD.svg" alt="Commit history illustration in detached HEAD state">}}
 
-This is known as a *detached `HEAD`* state. If you were to make a new commit in this, `HEAD` would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags.
+This is known as a *detached HEAD* state. If you were to make a new commit in this, `HEAD` would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags.
 
 {{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/detached-HEAD-commit.svg" alt="Commit history illustration of new commits in detached HEAD state">}}
 
@@ -179,7 +179,7 @@ I hope this improved user experience will be a part of your daily workflow - bet
 ## Further Reading
 
 - [Git Koans](https://stevelosh.com/blog/2013/04/git-koans/#s2-one-thing-well) has an alternative take on the multitude of operations `git checkout` does.
-- The [git checkout](https://git-scm.com/docs/git-checkout) documentation has a full list of the options it takes. This is also where [detached `HEAD`](https://git-scm.com/docs/git-checkout#_detached_head) is explained.
+- The [git checkout](https://git-scm.com/docs/git-checkout) documentation has a full list of the options it takes. This is also where [detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head) is explained.
 
 ## Footnotes
 
