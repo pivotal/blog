@@ -55,11 +55,11 @@ This checks out the last branch you were on. This is much like how `cd -` in you
 
 Let's add that our list of what `git checkout` does:
 - When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index.
-- When given a branch, `git checkout <branch>` sets the branch we're on to `<branch>` - or to be accurate, sets `HEAD` to point to `<branch>`.
+- When given a branch, `git checkout <branch>` sets the branch we're on to `<branch>`.
+
+However, instead of saying "setting the branch we're on", it's more concrete to say that `git checkout` sets `HEAD` to point to `<branch>`. As the concept of `HEAD` is pretty important, I`d like to take a look at what `HEAD` is before continuing further our exploration of `git checkout`.
 
 ## What is HEAD?
-
-Before continuing, let's look at what `HEAD` is.
 
 One of Git's roles is to track content, and it helps us to know what changes we have. But for Git to know what changes been made, saying a file has changed - but against what? What point of comparison does Git use to determine changes in a file?
 
