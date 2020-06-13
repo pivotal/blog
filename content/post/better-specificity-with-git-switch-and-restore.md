@@ -18,14 +18,14 @@ I found `git checkout` to be a command that I reach for pretty frequently. This 
 Perhaps you were trying something out and made some changes to the files in your local Git repository, and you now want to discard those changes. You can do so by calling `git checkout` with one file path or more:
 
 ```bash
-$ git checkout path/to/file.lang
+$ git checkout app.js
 ```
 
 To be precise, the above sets the specified files paths to their content [^content-trees] in the *index*. If you'd like to set the files to their content in a *tree*, like a branch or a commit, instead of the index, specify it before the file paths. If it happens that the branch shares a name with the file, pass the `--` to separate the two. [^checkout-overwrites-index]
 
 ```bash
-$ git checkout wip path/to/file.lang
-$ git checkout wip -- path/to/file.lang
+$ git checkout wip app.js
+$ git checkout wip -- app.js
 ```
 
 Let's put it down:
