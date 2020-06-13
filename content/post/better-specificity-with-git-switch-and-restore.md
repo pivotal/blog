@@ -108,10 +108,10 @@ This only scratches surface of the operations that `git checkout` can perform. B
 
 What if we had a tool that specifically deals with one or the other? Enter `git restore` and `git switch`.
 
-<figure class="fig-responsive">
-<img src="/images/better-specificity-with-git-switch-and-restore/banana-slice.gif" style="margin-bottom: 0">
-<figcaption style="margin-bottom: 1rem"><a href="https://giphy.com/gifs/drone-cut-satisfy-Eeqkz0EAtAdvq">(Source: GIPHY)</a></figcaption>
-</figure>
+{{<responsive-figure
+  src="/images/better-specificity-with-git-switch-and-restore/banana-slice.gif"
+  attr="(Source: GIPHY)" attrlink="https://giphy.com/gifs/drone-cut-satisfy-Eeqkz0EAtAdvq"
+>}}
 
 Let's run through the 3 operations again to see how these 2 commands are used:
 
