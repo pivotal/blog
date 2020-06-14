@@ -37,6 +37,7 @@ $ git checkout wip -- app.js
 ```
 
 Let's put it down:
+
 - `git checkout <filepath>` sets `<filepath>` to their contents in the index; if `<tree>` is provided, `git checkout <tree> <filepath>` sets `<filepath>` to their contents in `<tree>`.
 
 [^checkout-overwrites-index]: Note that the changes will be staged after running the command - or to use Git parlance, the index is overwritten.
@@ -62,6 +63,7 @@ This checks out the last branch you were on. This is much like how `cd -` in you
 [^old-checkout-desc]: That the `git checkout` command does a "checkout" of branches or files was in fact the description used in its documentation in earlier versions of Git, like in [v1.7.0](https://github.com/git/git/blob/v1.7.0/Documentation/git-checkout.txt).
 
 Let's add that our list of what `git checkout` does:
+
 - When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index; if `<tree>` is provided, `git checkout <tree> <filepath>` sets `<filepath>` to their contents in `<tree>`.
 - When given a branch, `git checkout <branch>` sets the branch we're on to `<branch>`.
 
