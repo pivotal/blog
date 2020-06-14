@@ -11,7 +11,15 @@ image: images/better-specificity-with-git-switch-and-restore/git-checkout-git-sw
 
 You probably work with Git everyday. If you've worked with Git for some time, you might have a couple of commands stored to your muscle memory - from `git commit` for recording your changes, to `git log` for sensing "where" you are.
 
-I found `git checkout` to be a command that I reach for pretty frequently. This is not surprising, as it performs more than one operation. But in the spirit of "do one thing, and do it well", is this too many? Let's take a look at what `git checkout` can do to see what those operations are.
+I found `git checkout` to be a command that I reach for pretty frequently. This is not surprising, as it performs more than one operation. But a single command doing more than one thing might be a suboptimal user experience, as it can be confusing to someone learning Git. I could almost picture an XKCD:
+
+> Learner: What do I run for changing the branch I'm on?<br>
+> You: Use `git checkout <branch>`.<br>
+> Learner: What can I run to discard changes to a file?<br>
+> You: Use...`git checkout <file>`.<br>
+> Learner: Ok...
+
+Let's take a look at what `git checkout` can do, and an alternative (or two) that can make for a friendlier user experience in Git.
 
 ## Quick, what does `git checkout` do?
 
@@ -106,7 +114,9 @@ This only scratches surface of the operations that `git checkout` can perform. B
   1. Changing `HEAD` to point to a branch or a commit, and
   2. Setting the contents of files.
 
-What if we had a tool that specifically deals with one or the other? Enter `git restore` and `git switch`.
+Granted, these operations are intertwined, with the 2<sup>nd</sup> being a corollary of the 1<sup>st</sup>. For example, if you were switching a branch (the 1<sup>st</sup>), you'd probably also want Git to set the content of your files (the 2<sup>nd</sup>) to reflect their state in the branch you were switching to. But the business of changing the contents of files but not `HEAD`, like in the 1<sup>st</sup> operation, does come across as distinct from the 2<sup>nd</sup> and 3<sup>rd</sup>, where `HEAD` gets changed to point to something else, like a branch or a commit. Having a Git command for "setting the contents of files" and a separate one for "changing `HEAD`" would make for a better user experience, both to someone new to Git ("use command X to do Y operation"), and to an experienced user of Git ("*<types command X from heart and reads it&gt;* - yup, reads like what I want to do").
+
+Enter `git restore` and `git switch`.
 
 {{<responsive-figure
   src="/images/better-specificity-with-git-switch-and-restore/banana-slice.gif"
