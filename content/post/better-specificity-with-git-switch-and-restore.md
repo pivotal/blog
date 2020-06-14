@@ -29,7 +29,7 @@ $ git checkout wip -- app.js
 ```
 
 Let's put it down:
-- `git checkout <filepath>` sets `<filepath>` to their contents in the index.
+- `git checkout <filepath>` sets `<filepath>` to their contents in the index; if `<tree>` is provided, `git checkout <tree> <filepath>` sets `<filepath>` to their contents in `<tree>`.
 
 [^checkout-overwrites-index]: Note that the changes will be staged after running the command - or to use Git parlance, the index is overwritten.
 
@@ -54,7 +54,7 @@ This checks out the last branch you were on. This is much like how `cd -` in you
 [^old-checkout-desc]: That the `git checkout` command does a "checkout" of branches or files was in fact the description used in its documentation in earlier versions of Git, like in [v1.7.0](https://github.com/git/git/blob/v1.7.0/Documentation/git-checkout.txt).
 
 Let's add that our list of what `git checkout` does:
-- When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index.
+- When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index; if `<tree>` is provided, `git checkout <tree> <filepath>` sets `<filepath>` to their contents in `<tree>`.
 - When given a branch, `git checkout <branch>` sets the branch we're on to `<branch>`.
 
 However, instead of saying "setting the branch we're on", it's more concrete to say that `git checkout` sets `HEAD` to point to `<branch>`. As the concept of `HEAD` is pretty important, I`d like to take a look at what `HEAD` is before continuing further our exploration of `git checkout`.
@@ -95,7 +95,7 @@ $ git checkout --detach b2db3
 
 Phew, that is quite a few things that `git checkout` can do:
 
-- When given a filepath, `git checkout <filepath>` sets one or more `<filepath>` to their contents in the index.
+- When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index; if `<tree>` is provided, `git checkout <tree> <filepath>` sets `<filepath>` to their contents in `<tree>`.
 - When given a branch, `git checkout <branch>` sets `HEAD` to point to `<branch>`.
 - When given a commit, `git checkout <commit>` sets `HEAD` to point to `<commit>`.
 
@@ -125,10 +125,10 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
    As a mnemonic, think back to our example - we wanted to *restore* the contents of `<filepath>` to the index and discard changes to those files.
 
-   For the variation `git checkout <branch/commit> <filepath>` where a tree is specified that we looked at, use the `--source` argument to `git restore`:
+   For the variation `git checkout <tree> <filepath>` where a tree is specified, use the `--source` argument to `git restore`:
 
    ```bash
-   $ git restore --source <branch/commit> <filepath>
+   $ git restore --source <tree> <filepath>
    ```
 
 2. *When given a branch, `git checkout <branch>` sets `HEAD` to point to `<branch>`*:
@@ -163,12 +163,12 @@ among others.
 
 To help you get started with `git switch` and `git restore`, here's a mapping from a `git checkout` invocation you may already be using in your daily workflow:
 
-| git checkout                                                              |Change HEAD to:| Which files are changed?    | git switch/restore                       |
-|---------------------------------------------------------------------------|---------------|-----------------------------|------------------------------------------|
-|`git checkout <filepath>`<br>`git checkout -- <filepath>`                  |no change      | Files listed in `<filepath>`|`git restore <filepath>`                  |
-|`git checkout <branch/commit> <filepath>`<br>`git checkout <branch/commit> -- <filepath>`|no change      | Files listed in `<filepath>`|`git restore --source <branch/commit> <filepath>`|
-|`git checkout <branch>`                                                    |`<branch>`     | All files in repo           |`git switch <branch>`                     |
-|`git checkout <commit>`<br>`git checkout --detach <commit>`                |`<commit>`     | All files in repo           |`git switch --detach <commit>`            |
+| git checkout                                                          |Change HEAD to:| Which files are changed?    | git switch/restore                       |
+|-----------------------------------------------------------------------|---------------|-----------------------------|------------------------------------------|
+|`git checkout <filepath>`<br>`git checkout -- <filepath>`              |no change      | Files listed in `<filepath>`|`git restore <filepath>`                  |
+|`git checkout <tree> <filepath>`<br>`git checkout <tree> -- <filepath>`|no change      | Files listed in `<filepath>`|`git restore --source <tree> <filepath>`|
+|`git checkout <branch>`                                                |`<branch>`     | All files in repo           |`git switch <branch>`                     |
+|`git checkout <commit>`<br>`git checkout --detach <commit>`            |`<commit>`     | All files in repo           |`git switch --detach <commit>`            |
 
 ## #12SwitchRestoresSansCheckOuts Challenge
 
