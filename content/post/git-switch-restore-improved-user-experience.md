@@ -5,11 +5,11 @@ categories:
 - Git
 date: 2020-05-31T18:44:22+0800
 draft: true
-title: Better specificity with git switch and restore
-image: images/better-specificity-with-git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
+title: "git switch and restore: an improved user experience"
+image: images/git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
 ---
 
-You probably work with Git everyday. If you've worked with Git for some time, you might have a couple of commands stored to your muscle memory - from `git commit` for recording your changes, to `git log` for sensing "where" you are.
+You probably work with Git everyday. If you've worked with Git for some time, you might have a couple of commands committed to your muscle memory - from `git commit` for recording your changes, to `git log` for sensing "where" you are.
 
 I found `git checkout` to be a command that I reach for pretty frequently. This is not surprising, as it performs more than one operation. But a single command doing more than one thing might be a suboptimal user experience, as it can be confusing to someone learning Git. I could almost picture an XKCD:
 
@@ -71,11 +71,11 @@ However, instead of saying "setting the branch we're on", it's more concrete to 
 
 ## What is HEAD?
 
-One of Git's roles is to track content, and it helps us to know what changes we have. But for Git to know what changes been made, saying a file has changed - but against what? What point of comparison does Git use to determine changes in a file?
+One of Git's roles is to track content, and it helps us to know what changes we have. But for Git to say a file has changed - what does Git use to compare with to determine changes?
 
-`HEAD` plays a role in this - by setting `HEAD`, like to a branch in the second operation we looked at, Git would report changes by comparing it against the contents of the branch `HEAD` points to [^HEAD-simple]. Both `HEAD` and the branch would reference the same commit.
+`HEAD` plays a role in this - by setting `HEAD`, like to a branch in the second operation we looked at, Git would report changes by comparing it against the contents of the branch that `HEAD` points to [^HEAD-simple]. Both `HEAD` and the branch would reference the same commit.
 
-{{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/HEAD-diagram.svg" alt="Commit history illustration with HEAD and branches">}}
+{{<responsive-figure src="/images/git-switch-and-restore/HEAD-diagram.svg" alt="Commit history illustration with HEAD and branches">}}
 
 [^HEAD-simple]: When determining what has changed, `HEAD` isn't the only factor - it depends on how you ask Git for changes. For example, `git diff` uses the index as the point of comparison, so even if your files didn't match their content in `HEAD` but had been staged, you'd get an empty output. It's also important to note that Git doesn't deal with changes or deltas - each commit is a complete snapshot of your files.
 
@@ -91,11 +91,11 @@ $ git checkout f7884
 
 Apart from setting the contents of your files, it also sets `HEAD` to point to the commit `f7884`, unlike a branch in the second operation we looked at:
 
-{{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/detached-HEAD.svg" alt="Commit history illustration in detached HEAD state">}}
+{{<responsive-figure src="/images/git-switch-and-restore/detached-HEAD.svg" alt="Commit history illustration in detached HEAD state">}}
 
-This is known as a *detached HEAD* state. If you were to make a new commit in this, `HEAD` would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags.
+This is known as a *detached HEAD* state. If you were to make a new commit while in this state, `HEAD` would advance accordingly, but these commits would not be reachable through the usual Git references, like branches and tags.
 
-{{<responsive-figure src="/images/better-specificity-with-git-switch-and-restore/detached-HEAD-commit.svg" alt="Commit history illustration of new commits in detached HEAD state">}}
+{{<responsive-figure src="/images/git-switch-and-restore/detached-HEAD-commit.svg" alt="Commit history illustration of new commits in detached HEAD state">}}
 
 In fact, you can perform the same operation by invoking `git checkout` with the `--detach` argument, which is indicative of the state it results in!
 
@@ -111,7 +111,7 @@ Phew, that is quite a few things that `git checkout` can do:
 
 ## An alternative (or two)
 
-This only scratches surface of the operations that `git checkout` can perform. But generally, we see that `git checkout` deals with 2 aspects of the Git repository:
+This is not the entirety of what `git checkout` can do and possible variations through its long/short options. Indeed, this might have been a result of Git's growth from its open-source contributors.[^git-growth] But generally, we see that `git checkout` deals with 2 aspects of the Git repository:
 
   1. Changing `HEAD` to point to a branch or a commit, and
   2. Setting the contents of files.
@@ -121,11 +121,20 @@ Granted, these operations are intertwined, with the 2<sup>nd</sup> being a corol
 Enter `git restore` and `git switch`.
 
 {{<responsive-figure
-  src="/images/better-specificity-with-git-switch-and-restore/banana-slice.gif"
+  src="/images/git-switch-and-restore/banana-slice.gif"
   attr="(Source: GIPHY)" attrlink="https://giphy.com/gifs/drone-cut-satisfy-Eeqkz0EAtAdvq"
 >}}
 
 Let's run through the 3 operations again to see how these 2 commands are used:
+
+[^git-growth]:
+    In a 2011 interview on Geek Time by Google's Open Source Programs Office, Junio C Hamano, the maintainer of Git, [responds](https://www.youtube.com/watch?v=qs_xS1Y6nGc&t=12m48s) to the criticism of Git that it's hard to use:
+
+    > Another thing is because the system wasn’t really designed, but grew organically. So somebody came up with an idea of doing one thing. "Oh, this is a good idea, a good feature; let’s add it to this command as this option name." And the option name he chooses just gets stuck, but after a few months, somebody else notices, "Oh, this is a similar mode of operation with that existing command."
+
+    (This author bears *some* blame for expaind the plethora of options `git checkout` takes, having [contributed the `-B` option](https://github.com/git/git/commit/02ac98374eefbe4a46d4b53a8a78057ad8ad39b7), the "forced" counterpart to `git checkout -b branch`.)
+
+    A summary of the interview can be found [here](https://opensource.googleblog.com/2011/03/geek-time-with-junio-c-hamano.html). Via [an InfoQ post on the introduction of git switch and restore as well](https://www.infoq.com/news/2019/08/git-2-23-switch-restore/).
 
 1. *When given a file path, `git checkout <filepath>` sets one or more `<filepath>` to their contents in the index*:
 
@@ -137,7 +146,7 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
    As a mnemonic, think back to our example - we wanted to *restore* the contents of `<filepath>` to the index and discard changes to those files.
 
-   For the variation `git checkout <tree> <filepath>` where a tree is specified, use the `--source` argument to `git restore`:
+   For the variation where we'd set the files to their content in a tree (`git checkout <tree> <filepath>`), use the `--source` argument to `git restore`:
 
    ```bash
    $ git restore --source <tree> <filepath>
@@ -164,12 +173,7 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
 ## Sign me up - where can I use them?
 
-`git switch` and `git restore` were introduced in Git v2.23 [released on Aug 2019](https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61), so you should be able to use them on a machine with an up-to-date installation of Git. You might notice their respective manpages describe them as experimental, but this probably speaks to the options that these commands take - that is, there is a possibility that a switch or argument may be added/removed/changed to have a different behaviour. I don't see these commands going away. Indeed:
-
-- the documentation for `git checkout` links to `git switch` and `git restore`;
-- the advice printed by Git when entering detached `HEAD` state gives examples using `git switch` instead of `git checkout`;
-
-among others.
+`git switch` and `git restore` were introduced in Git v2.23 [released on Aug 2019](https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61), so you should be able to use them on a machine with an up-to-date installation of Git, without having to install an additional piece of software. You might notice their respective manpages describing them as experimental, but as [this commit notes](https://github.com/git/git/commit/4e43b7ff1ea4b6f16b93a432b6718e9ab38749bd), this is less about these commands going away tomorrow, but more to warn of a possibility that the user experience they expose (eg. long/short options) could change. Indeed, you may already have encountered references to `git switch` and `git restore` in the documentation for `git checkout`, and in the advice printed by Git when entering detached `HEAD` state, among others.
 
 ## A Rosetta Stone
 
@@ -184,14 +188,16 @@ To help you get started with `git switch` and `git restore`, here's a mapping fr
 
 ## #12SwitchRestoresSansCheckOuts Challenge
 
-Here's my challenge to you - start using `git switch` and `git restore`! To make things fun, once you've used them 12 times or more, post as proof a screenshot of the output `history | grep -e 'git switch' -e 'git restore'` with the tag [#12SwitchRestoresSansCheckOuts](https://twitter.com/search?q=%2333SwitchRestoresSansCheckOuts).
+Here's my challenge to you - start using `git switch` and `git restore`! To make things fun, once you've used them 12 times or more, post a screenshot as proof with the tag [#12SwitchRestoresSansCheckOuts](https://twitter.com/search?q=%2333SwitchRestoresSansCheckOuts). Here's my take on it. TBD
+
+If you've feedback on these commands, feel free to drop an email to the Git mailing list where development happens; refer to this note for [details](https://github.com/git/git/blob/todo/MaintNotes).
 
 I hope this improved user experience will be a part of your daily workflow - better yet, part of your muscle memory.
 
 ## Further Reading
 
-- [Git Koans](https://stevelosh.com/blog/2013/04/git-koans/#s2-one-thing-well) has an alternative take on the multitude of operations `git checkout` does.
-- The [git checkout](https://git-scm.com/docs/git-checkout) documentation has a full list of the options it takes. This is also where [detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head) is explained.
+- The [git checkout](https://git-scm.com/docs/git-checkout) documentation has a full list of the options it takes. That page is is also where [detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head) is explained.
+- The Github blog covers this in their [Highlights from Git 2.23 post](https://github.blog/2019-08-16-highlights-from-git-2-23/).
 
 ## Footnotes
 
