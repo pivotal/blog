@@ -133,7 +133,7 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
     > Another thing is because the system wasn’t really designed, but grew organically. So somebody came up with an idea of doing one thing. "Oh, this is a good idea, a good feature; let’s add it to this command as this option name." And the option name he chooses just gets stuck, but after a few months, somebody else notices, "Oh, this is a similar mode of operation with that existing command."
 
-    (This author bears *some* blame for expaind the plethora of options `git checkout` takes, having [contributed the `-B` option](https://github.com/git/git/commit/02ac98374eefbe4a46d4b53a8a78057ad8ad39b7), the "forced" counterpart to `git checkout -b branch`.)
+    (This author bears *some* blame for expanding the plethora of options `git checkout` takes, having [contributed the `-B` option](https://github.com/git/git/commit/02ac98374eefbe4a46d4b53a8a78057ad8ad39b7), the "forced" counterpart to `git checkout -b branch`.)
 
     A summary of the interview can be found [here](https://opensource.googleblog.com/2011/03/geek-time-with-junio-c-hamano.html). Via [an InfoQ post on the introduction of git switch and restore as well](https://www.infoq.com/news/2019/08/git-2-23-switch-restore/).
 
