@@ -197,7 +197,7 @@ I hope this improved user experience will be a part of your daily workflow - bet
 
 ## Further Reading
 
-- The [git checkout](https://git-scm.com/docs/git-checkout) documentation has a full list of the options it takes. That page is is also where [detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head) is explained.
+- The [git checkout](https://git-scm.com/docs/git-checkout) documentation has a full list of the options it takes. That page is also where [detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head) is explained.
 - The Github blog covers this in their [Highlights from Git 2.23 post](https://github.blog/2019-08-16-highlights-from-git-2-23/).
 
 ## Footnotes
