@@ -5,7 +5,8 @@ categories:
 - Git
 date: 2020-05-31T18:44:22+0800
 draft: true
-title: "git switch and restore: an improved user experience"
+title: |
+  git switch and restore: an improved user experience
 image: images/git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
 ---
 
