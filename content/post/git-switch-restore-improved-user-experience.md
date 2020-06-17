@@ -7,6 +7,8 @@ date: 2020-05-31T18:44:22+0800
 draft: true
 title: |
   git switch and restore: an improved user experience
+short: |
+  A look at how the two commands expands Git's vocabulary to specifically deal with a single aspect of the repository.
 image: images/git-switch-and-restore/git-checkout-git-switch-restore-rosetta-stone.png
 ---
 
