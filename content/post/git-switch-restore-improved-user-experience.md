@@ -70,7 +70,7 @@ Let's add that our list of what `git checkout` does:
 - When given a file path, `git checkout <filepath>` sets `<filepath>` to their contents in the index; if `<tree>` is provided, `git checkout <tree> <filepath>` sets `<filepath>` to their contents in `<tree>`.
 - When given a branch, `git checkout <branch>` sets the branch we're on to `<branch>`.
 
-However, instead of saying "setting the branch we're on", it's more concrete to say that `git checkout` sets `HEAD` to point to `<branch>`. As the concept of `HEAD` is pretty important, I`d like to take a look at what `HEAD` is before continuing further our exploration of `git checkout`.
+However, instead of saying "setting the branch we're on", it's more concrete to say that `git checkout` sets `HEAD` to point to `<branch>`. As the concept of `HEAD` is pretty important, I'd like to take a look at what `HEAD` is before continuing further our exploration of `git checkout`.
 
 ## What is HEAD?
 
@@ -114,10 +114,12 @@ Phew, that is quite a few things that `git checkout` can do:
 
 This is not the entirety of what `git checkout` can do and possible variations through its long/short options. Indeed, this might have been a result of Git's growth from its open-source contributors.[^git-growth] But generally, we see that `git checkout` deals with 2 aspects of the Git repository:
 
-  1. Changing `HEAD` to point to a branch or a commit, and
-  2. Setting the contents of files.
+<ol type="A">
+  <li>Changing `HEAD` to point to a branch or a commit, and</li>
+  <li>Setting the contents of files.</li>
+</ol>
 
-Granted, these operations are intertwined, with the 2<sup>nd</sup> being a corollary of the 1<sup>st</sup>. For example, if you were switching a branch (the 1<sup>st</sup>), you'd probably also want Git to set the content of your files (the 2<sup>nd</sup>) to reflect their state in the branch you were switching to. But the business of changing the contents of files but not `HEAD`, like in the 1<sup>st</sup> operation, does come across as distinct from the 2<sup>nd</sup> and 3<sup>rd</sup>, where `HEAD` gets changed to point to something else, like a branch or a commit. Having a Git command for "setting the contents of files" and a separate one for "changing `HEAD`" would make for a better user experience, both to someone new to Git ("use command X to do Y operation"), and to an experienced user of Git ("*<types command X from heart and reads it&gt;* - yup, reads like what I want to do").
+Granted, these aspects are intertwined, with B being a corollary of A. For example, if you were switching a branch (aspect A), you'd probably also want Git to set the content of your files to reflect their state in the branch you were switching to (aspect B). But the business of changing the contents of files while leaving `HEAD` unchanged, like in [the 1<sup>st</sup> operation](#quick-what-does-git-checkout-do), does come across as distinct from [the 2<sup>nd</sup>](#branches) and [the 3<sup>rd</sup>](#detached-head), where `HEAD` gets changed to point to something else, like a branch or a commit. Having a Git command for "setting the contents of files" and a separate one for "changing `HEAD`" would make for a better user experience, both to someone new to Git looking for a rule of thumb ("for X operation, use command X"), and to an experienced user of Git ("*&lt;types command X from heart and reads it&gt;* - yup, reads like what I want to do").
 
 Enter `git restore` and `git switch`.
 
@@ -174,7 +176,7 @@ Let's run through the 3 operations again to see how these 2 commands are used:
 
 ## Sign me up - where can I use them?
 
-`git switch` and `git restore` were introduced in Git v2.23 [released on Aug 2019](https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61), so you should be able to use them on a machine with an up-to-date installation of Git, without having to install an additional piece of software. You might notice their respective manpages describing them as experimental, but as [this commit notes](https://github.com/git/git/commit/4e43b7ff1ea4b6f16b93a432b6718e9ab38749bd), this is less about these commands going away tomorrow, but more to warn of a possibility that the user experience they expose (eg. long/short options) could change. Indeed, you may already have encountered references to `git switch` and `git restore` in the documentation for `git checkout`, and in the advice printed by Git when entering detached `HEAD` state, among others.
+`git switch` and `git restore` were introduced in Git v2.23 [released on Aug 2019](https://github.com/git/git/blob/master/Documentation/RelNotes/2.23.0.txt#L61), so you should be able to use them on a machine with an up-to-date installation of Git, without having to install an additional piece of software. Indeed, you may already have encountered references to `git switch` and `git restore` in the documentation for `git checkout`, and in the advice printed by Git when entering detached `HEAD` state, among others.
 
 ## A Rosetta Stone
 
