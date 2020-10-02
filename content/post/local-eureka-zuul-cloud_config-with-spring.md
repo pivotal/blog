@@ -227,6 +227,11 @@ spring:
   cloud:
     config:
       uri: http://localhost:9999
+    gateway
+      discovery
+        locator
+          enabled: true
+          lower-case-service-id: true
 
 eureka:
   client:
