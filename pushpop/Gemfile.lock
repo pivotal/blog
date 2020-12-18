@@ -8,7 +8,7 @@ GEM
     css_parser (1.7.0)
       addressable
     dotenv (2.4.0)
-    json (2.3.0)
+    json (2.4.1)
     keen (1.1.1)
       addressable (~> 2.5)
       multi_json (~> 1.12)
@@ -53,7 +53,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  json (~> 2.3.0)
+  json (~> 2.4.1)
   pushpop
   pushpop-keen
   pushpop-sendgrid
