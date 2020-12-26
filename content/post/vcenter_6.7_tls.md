@@ -28,6 +28,26 @@ The following section is the new Quickstart for installing a TLS certificate on 
 
 ## vCenter 7 Quickstart
 
+On your vCenter, navigate to **Menu → Administration → Certificates → Certificate Management**
+
+On the *__MACHINE_CERT* tile, click **Actions**, select **Generate Certificate
+Signing Request (CSR)**.
+
+Enter the appropriate info; for inspiration, this is what we entered:
+
+- Common name: **vcenter-70.nono.io**
+- Organization: **nono.io**
+- Organizational Unit: **homelab**
+- Country: **United States**
+- State/Province: **California**
+- Locality: **San Francisco**
+- Email Address: **yoyo@nono.io**
+- Host: **vcenter-70.nono.io**
+- Subject Alternative Name (Optional): **10.0.9.70,2601:646:100:69f0:250:56ff:fe84:2e4a**
+- Key Size: **2048**
+
+Click **Next** → **Download**. Save to a file. Click **Finish**.
+
 Acquire a certificate for your host from a Commercial CA. In our example, we
 acquired a certificate for our host `vcenter-70.nono.io`
 from [SSls.com](https://ssls.com), and we purchased
@@ -37,16 +57,14 @@ _[We do not endorse either SSLs.com or Sectigo (formerly
 Comodo); We encourage you to use the reseller and the Certificate Authority
 (CA) with which you are most comfortable]_.
 
-We have 4 files:
+We have 3 files:
 
-1. Our private key file.
-
-2. Our [certificate
+1. Our [certificate
    file](https://raw.githubusercontent.com/cunnie/docs/master/tls/vcenter-70_nono_io.crt).
    This is a single (not a chain) certificate for our server,
    [vcenter-70.nono.io](https://vcenter-70.nono.io).
 
-3. Our [chained
+2. Our [chained
    certificates](https://raw.githubusercontent.com/cunnie/docs/master/tls/vcenter-70_nono_io.ca-bundle).
    (CA Bundle) This chain should _not_ include the server certificate. It
    _should_ include the root certificate, which should be at the bottom of the
@@ -55,7 +73,7 @@ We have 4 files:
    We **manually appended the root certificate to the chained certificate** file
    received from Sectigo.
 
-4. Our [root certificate](https://raw.githubusercontent.com/cunnie/docs/master/tls/SHA-2%20Root%20%20USERTrust%20RSA%20Certification%20Authority.crt). This must have a `.crt` extension.
+3. Our [root certificate](https://raw.githubusercontent.com/cunnie/docs/master/tls/SHA-2%20Root%20%20USERTrust%20RSA%20Certification%20Authority.crt). This must have a `.crt` extension.
    <sup><a href="#hand_wavy" class="alert-link">[hand-wavy]</a></sup>
 
 <div class="alert alert-warning" role="alert">
@@ -69,7 +87,7 @@ message when replacing the certificates.
 
 </div>
 
-Browse to **Menu → Administration → Certificates → Certificate Management**
+Navigate to **Menu → Administration → Certificates → Certificate Management**
 
 Select **Trusted Root Certificates → Add**
 - Click **Browse**
@@ -82,14 +100,13 @@ Select ***__MACHINE_CERT*** **→ Actions → Import and Replace Certificate**
 
 {{< responsive-figure class="center" src="https://user-images.githubusercontent.com/1020675/78815274-e56d2200-7984-11ea-9894-2a226d7a1ab2.png" >}}
 
-- Choose **Replace with external CA certificate (requires private key)**; Click
+- Choose **Replace with certificate generated from vCenter server**; Click
   **Next**
 - Fill in as follows:
   - **Machine SSL Certificate**: paste your certificate file here (in our case,
     the certificate for _vcenter-70.nono.io_).
   - **Chain of trusted root certificates**: paste your chained certificates
     here.
-  - **Private Key**: paste your certificate's private key file here.
 - Click **Replace**. If you see an error message, "Error occurred while fetching
   tls: Exception found (the trustAnchors parameter must be non-empty)", then you
   haven't added root certificate properly, or it's not appended at the end of
@@ -366,6 +383,12 @@ Comodo using Addtrust's root certificate? Why don't they use their own
 certificate?" One can only speculate.
 
 # Corrections & Updates
+
+*2020-12-26*
+
+Re-wrote instructions to have vCenter generate the CSR. It appears to work
+better, specifically with regard to the update manager (though I can't find the
+links to bolster that assertion).
 
 *2020-05-22*
 
