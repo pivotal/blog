@@ -168,7 +168,7 @@ subjects:
   namespace: default
 roleRef:
   kind: ClusterRole
-  name: test-kubelet-api
+  name: kubelet-api
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
